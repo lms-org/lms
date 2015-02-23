@@ -1,6 +1,12 @@
+LightWeightModularSystem:
+
 TODO:
-Remove modules after tests from core!
+-Write brief
+-Remove modules after tests from core!
 
-Translate readme into english (inside lm...)
 
+
+Documentation:
+Translate readme,doku into english
+Write wiki
 ..

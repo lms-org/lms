@@ -1,4 +1,5 @@
 build/
+/config/image_loader.conf
 *.conf
 cbbuild
 codebuild
