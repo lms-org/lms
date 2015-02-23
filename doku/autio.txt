@@ -1,0 +1,25 @@
+Sound output:
+http://stackoverflow.com/questions/5738603/c-specific-sound-output
+http://www.portaudio.com/
+
+speech:
+http://stackoverflow.com/questions/637616/open-source-text-to-speech-library
+http://www.cstr.ed.ac.uk/projects/festival/download.html
+
+##############################################
+Sound input:
+http://freespeech.sourceforge.net/
+http://www.portaudio.com/
+
+Bauteile:
+Boxen:
+http://www.conrad.de/ce/de/product/719097/Minaturlautsprecher-S-Serie-Geraeusch-Entwicklung-98-dB-8--20-Nennbelastbarkeit-10-W-14-10-kHz-Inhalt-1-St?ref=list
+http://www.conrad.de/ce/de/product/710739/Miniaturlautsprecher-28-mm-Geraeusch-Entwicklung-75-dB-8-Nennbelastbarkeit-1-W-500-Hz-Inhalt-1-St?ref=list
+
+Mikrophon:
+http://www.conrad.de/ce/de/product/710854/Mikrofonkapsel-KPCM-Serie-Betriebsspannung-45-VDC-Empfindlichkeit-41-dB-3-dB-Frequenzbereich-100-10000-Hz?ref=list
+
+Klinkenstecker:
+//Wie liegen dort masse oder geht das überhaupt so einfach ohne xlr adapter/sonstige dinge?
+http://www.conrad.de/ce/de/product/710331/Klinken-Anschlusskabel-Klinkenstecker-35-mm-Kabel-offenes-Ende-Stereo-VOLTCRAFT-P106-12-m-1-St?ref=searchDetail
+

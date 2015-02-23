@@ -1,0 +1,47 @@
+###########################
+###Löschen:
+
+
+############################
+###MainHandler
+core-Refaktorisieren
+Wird gestartet
+-> Initialisiert usb/bluetooth/commandhandler etc.
+-->per Befehl (Commandhandler wird modul-config geladen)
+
+Module in der Laufzeit austauschen
+addModule(load...)
+removeModule()
+validateModules()
+-> Prüft ob ausgangs und eingangskanäle passen
+
+
+
+############################
+###Module:
+#ext:
+init methode etc. bleibt gleich
+
+#core:
+core-config für wifi/commandhandler etc
+Notification-system (Für fehler etc an wifi usw. schicken)
+
+############################
+###DatenKanäle:
+Alle nichtmodularen Datenkanäle üebrarbeiten (Den debug-mal-kanal löschen)
+Wenn ein DatenKanal nur reader und keine writer hat, den "Default-Datenkanal" mit einer Kennung setzen(Irgendwas in richtig "nicht verfügbar"). Zudem eine warnung in der konsole anzeigen und an wifi-clienten schicken
+
+############################
+###Logger:
+Logger zum loggen von printfs, mit listener
+
+
+############################
+###Sonstiges:
+Untermodule für module
+z.B.
+wifi (übermodul/ordner)
+ ->wifi_server
+ ->wifi_client
+
+config-dateien in kategorien aufteilen (Importer etc)
