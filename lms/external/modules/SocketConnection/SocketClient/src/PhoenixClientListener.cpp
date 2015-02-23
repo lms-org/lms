@@ -38,12 +38,13 @@ void PhoenixClientListener::receivedMessage(char* buff, int bytesRead){
         }
      //   printf("size to read %d\n",size);
 
-
+/*
         typedef void (*ParseFn) (char*, int,Wifi_client*);
         ParseFn fnPointers[6]={parseCommand,parseText, parseImg,parseEnvironmentRoad,parseTrajectory};
         fnPointers[type](&buff[5],size,wifi);
         buff = &buff[5+size];
         bytesRead -= 5+size;
+        */
     }
     client->index_of_buffer = 0;
 
