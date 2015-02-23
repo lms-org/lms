@@ -1,0 +1,5 @@
+set ( RUNTIME_MODULES
+	"testModule"
+	"SocketConnection"
+#	INSERT_FLAG_IMPORTER
+)

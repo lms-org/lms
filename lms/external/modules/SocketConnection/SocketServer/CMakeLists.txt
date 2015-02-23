@@ -1,0 +1,15 @@
+include_directories("include")
+
+set ( WIFI_SERVER_SOURCES 
+	"src/wifi_server.cpp"
+)
+
+set (WIFI_SERVER_PRIVATE_HEADERS
+	"include/wifi_server.h
+)
+set ( PUBLIC_HEADERS
+	
+	${PUBLIC_HEADERS}
+)
+
+add_library ( wifi_server SHARED ${WIFI_SERVER_SOURCES} ${PUBLIC_HEADERS} ${WIFI_SERVER_PRIVATE_HEADERS})

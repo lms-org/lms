@@ -1,0 +1,3 @@
+set (CORE_PUBLIC_HEADERS
+        "wasd.h"
+)

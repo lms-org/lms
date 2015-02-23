@@ -1,0 +1,4 @@
+set (SOCKET_MODULES
+	"SocketClient"
+#	"SocketServer"
+)

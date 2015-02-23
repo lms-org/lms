@@ -1,0 +1,4 @@
+set ( RUNTIME_MODULES
+	"testModule"
+	"SocketConnection"
+)

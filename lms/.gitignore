@@ -1,0 +1,15 @@
+build/
+/config/image_loader.conf
+*.conf
+cbbuild
+codebuild
+config/
+*build/
+*.save
+*.orig
+*.cpp~
+*.h~
+.metadata
+CMakeLists.txt.user
+
+
