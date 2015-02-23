@@ -1,4 +1,4 @@
-include_directories(include)
+#include_directories(include)
 include_directories(main)
 
 set (PUBLIC_HEADERS
