@@ -31,7 +31,7 @@ Loader::Loader() {
 }
 
 Loader::module_list Loader::getModules() {
-    std::string place = "modules/runtime_modules";
+    std::string place = "external/modules";
     module_list list;
 
 	DIR *dp;
@@ -151,7 +151,7 @@ char* Loader::make_filename(const char* module, const char* place) {
 }
 
 char* Loader::make_searchpath(char* buffer, const char* place) {
-	strcpy(buffer, programm_directory.c_str());
+    strcpy(buffer, programm_directory.c_str());
 	strcat(buffer, "/");
 	strcat(buffer, place);
 	return buffer;

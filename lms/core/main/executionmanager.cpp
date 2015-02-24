@@ -9,6 +9,7 @@
 
 ExecutionManager::ExecutionManager() : data(NULL) {
 	loader = new Loader();
+    loadAvailabelModules();
 }
 
 void ExecutionManager::init(DataManager *d) {
@@ -53,7 +54,8 @@ void ExecutionManager::loop() {
 }
 
 void ExecutionManager::loadAvailabelModules(){
-
+    printf("load AvailabelModules");
+    loader->getModules();
 }
 
 /**Enable module with the given name, add it to the cycle-queue */
