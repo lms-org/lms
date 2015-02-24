@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 2.6)
 
 project ("LightWeightModularSystem")
 
+#Braucht man das wirklich?
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake; ${CMAKE_MODULE_PATH}")
+
 set (CMAKE_CXX_FLAGS_MODULES "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pedantic -O0")
 set (CMAKE_CXX_FLAGS_CORE "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pedantic -O0 ")
 
 #Gather all config files
-file(GLOB_RECURSE ConfigFiles **/loadConfig.xml)
+file(GLOB_RECURSE ConfigFiles ${CMAKE_CURRENT_LIST_FILE} **/loadConfig.xml)
 message("ConfigFiles: " ${ConfigFiles})
 
 #TODO doesnt work yet!
