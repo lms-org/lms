@@ -8,6 +8,7 @@ config/
 *.orig
 *.cpp~
 *.xml~
+*.lms~
 *.h~
 *.txt~
 .metadata
