@@ -1,0 +1,16 @@
+build/
+*.conf
+cbbuild
+codebuild
+config/
+*build/
+*.save
+*.orig
+*.cpp~
+*.xml~
+*.h~
+*.txt~
+.metadata
+CMakeLists.txt.user
+
+
