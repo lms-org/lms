@@ -26,7 +26,8 @@ add_library(pugixml STATIC
 	"xml/pugixml-1.5/src/pugiconfig.hpp"
 )
 
-link_libraries("dl" configfile)
+#link libraries
+link_libraries("dl" configfile pugixml)
 
 add_executable (lms
         ${PUBLIC_HEADERS}

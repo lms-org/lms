@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 
 #include <core/shared_base.h>
-//#include <pugixml.cpp>
+//#include <pugixml.hpp>
 
 template<typename _Target> 
 union converter {
