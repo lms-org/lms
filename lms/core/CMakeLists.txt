@@ -10,6 +10,7 @@ set (PUBLIC_HEADERS
         "include/core/extra/colors.h"
         "include/core/datamanager.h"
         "include/core/argumentparser.h"
+        "include/core/logger.h"
 )
 
 add_library(configfile STATIC
@@ -32,5 +33,6 @@ add_executable (lms
         "main/framework.cpp"
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
+        "main/logger.cpp"
 )
 

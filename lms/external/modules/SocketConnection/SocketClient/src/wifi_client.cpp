@@ -3,7 +3,7 @@
 #include <core/configurationmanager.h>
 #include <sockets/SocketClient.h>
 
-bool Wifi_client::initialize() {
+bool Wifi_Client::initialize() {
 	printf("Init: wifi_client\n");
     first_run = false;
     PhoenixClientListener* listener = new PhoenixClientListener();
@@ -15,13 +15,13 @@ bool Wifi_client::initialize() {
 	return true;
 }
 
-bool Wifi_client::deinitialize() {
+bool Wifi_Client::deinitialize() {
 	printf("Deinit: wifi_client");
 	//TODO
 	return true;
 }
 
-bool Wifi_client::cycle () {
+bool Wifi_Client::cycle () {
     client->cycle();
 	return true;
 }

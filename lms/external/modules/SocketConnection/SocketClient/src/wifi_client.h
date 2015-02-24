@@ -3,7 +3,7 @@
 
 #include <sockets/SocketClient.h>
 
-class Wifi_client{
+class Wifi_Client{
     bool first_run;
 public:
 	bool initialize();

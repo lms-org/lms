@@ -12,7 +12,7 @@ class PhoenixClientListener: public SocketClientListener {
 
 public:
     SocketClient* client;
-    Wifi_client* wifi;
+    Wifi_Client* wifi;
 
 void receivedMessage(char* buff, int bytesRead);
 
