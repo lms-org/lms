@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 
 #include <core/shared_base.h>
+//#include <pugixml.cpp>
 
 template<typename _Target> 
 union converter {
@@ -32,7 +33,11 @@ Loader::Loader() {
 
 Loader::module_list Loader::getModules() {
     std::string place = "external/modules";
+    std::string directory = "external/modules";
     module_list list;
+
+    //get list of all module-folders
+
 
 	DIR *dp;
 	dirent *d;
@@ -149,7 +154,12 @@ char* Loader::make_filename(const char* module, const char* place) {
 	//		"/" + module + 
 	//		"/lib" + place + "_" + module + ".so";
 }
-
+/**
+ * @brief Adds the place to the programm-directory
+ * @param buffer
+ * @param place
+ * @return
+ */
 char* Loader::make_searchpath(char* buffer, const char* place) {
     strcpy(buffer, programm_directory.c_str());
 	strcat(buffer, "/");

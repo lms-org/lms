@@ -1,3 +1,6 @@
+###############
+taken from https://github.com/zeux/pugixml 
+###############
 pugixml 1.5 - an XML processing library
 
 Copyright (C) 2006-2014, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
