@@ -10,6 +10,7 @@ class Framework : public SignalHandler::Listener {
 public:
     Framework(int argc, char* const*argv);
     ~Framework();
+protected:
     /**
      * @brief initManagers override this method to set custom Managers!
      */
@@ -21,7 +22,7 @@ private:
 
     DataManager *dataManager;
     ExecutionManager *executionManager;
-    ArgumentHandler * argumentHandler;
+    ArgumentHandler argumentHandler;
 };
 
 #endif /* FRAMEWORK_H */
