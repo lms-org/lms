@@ -13,10 +13,17 @@ set (PUBLIC_HEADERS
         "include/core/logger.h"
         "include/core/executionmanager.h"
 )
+#Compile config file, may be moved to add_executable
 
 add_library(configfile STATIC
         ${PUBLIC_HEADERS}
         "configfile/configfile.cpp"
+)
+#Compile xml-parser pugi
+add_library(pugixml STATIC         
+	"xml/pugixml-1.5/src/pugixml.cpp"
+	"xml/pugixml-1.5/src/pugixml.hpp"
+	"xml/pugixml-1.5/src/pugiconfig.hpp"
 )
 
 link_libraries("dl" configfile)
