@@ -5,6 +5,8 @@
 
 Framework::Framework(int argc, char* const*argv) {
 
+    initManagers();
+
     // TODO überarbeiten für dynamisches modulladen
     argumentHandler = new ArgumentHandler();
     argumentHandler->parse_arguments(argc,argv);
@@ -22,7 +24,6 @@ Framework::Framework(int argc, char* const*argv) {
     //		usleep(9000);
             executionManager->loop();
         }
-        delete executionManager;
 
 }
 
@@ -32,6 +33,8 @@ void Framework::initManagers(){
 }
 
 Framework::~Framework() {
+    printf("Killing EXECMGR\n");
+    delete executionManager;
     printf("Killing DATAMGR\n");
     delete dataManager;
 }
