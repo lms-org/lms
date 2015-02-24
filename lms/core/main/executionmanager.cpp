@@ -29,17 +29,17 @@ ExecutionManager::~ExecutionManager () {
 }
 
 void ExecutionManager::loop() {
-    struct timeval tv;
+    //struct timeval tv;
     struct timeval tv_exe_start;
     struct timeval tv_exe_end;
-    struct timeval tv_module_start;
-    struct timeval tv_module_end;
+    //struct timeval tv_module_start;
+    //struct timeval tv_module_end;
 
     gettimeofday(&tv_exe_start, NULL);
 
-	for (auto it = queue.begin(); it != queue.end(); ++it) {
+/*	for (auto it = queue.begin(); it != queue.end(); ++it) {
 		gettimeofday(&tv_module_start, NULL);
-	}
+    }*/
 
 	//Has a mode change occurred?
     //if(new_mode != "")
@@ -47,7 +47,7 @@ void ExecutionManager::loop() {
 //		applyNewMode();
 //	}
 	gettimeofday(&tv_exe_end, NULL);
-	double delta = (tv_exe_end.tv_sec - tv_exe_start.tv_sec) * 1e3 + (tv_exe_end.tv_usec - tv_exe_start.tv_usec) * 1e-3;
+    double delta = (tv_exe_end.tv_sec - tv_exe_start.tv_sec) * 1e3 + (tv_exe_end.tv_usec - tv_exe_start.tv_usec) * 1e-3;
     //printf("\033[031m Execution time: %f ms \n \033[0m", delta);
     //printf("\033[2J\033[1;1H");
 }
