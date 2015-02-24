@@ -3,6 +3,19 @@ include_directories(include)
 #include pugixml headers (hpp-files)
 include_directories(xml/pugixml-1.5/src)
 
+#Gather all config files
+file(GLOB_RECURSE ConfigFiles  ../external/loadConfig.xml)
+message("ConfigFiles: " ${ConfigFiles})
+
+#Adds copy commands to the core (core compiled is called lms)
+#TODO doesnt work yet!
+foreach(ConfigFile ${ConfigFiles})
+    add_custom_command(TARGET lms PRE_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E
+                            copy ${ConfigFile} $<TARGET_FILE_DIR:lms>
+    )
+endforeach()
+
 #Set public headers so the ide finds it
 set (PUBLIC_HEADERS
         "include/core/configfile.h"
