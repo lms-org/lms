@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 
 #include <core/shared_base.h>
-//#include <pugixml.hpp>
+#include <pugixml.hpp>
 
 template<typename _Target> 
 union converter {
@@ -34,19 +34,38 @@ Loader::Loader() {
 Loader::module_list Loader::getModules() {
     std::string place = "external/modules";
     std::string directory = "external/modules";
+    std::string loadConfigName= "loadConfig.xml";
     module_list list;
 
-    //get list of all module-folders
+    DIR *dp = NULL;
+    dirent *d = NULL;
+    //TODO get list of all module-folders
+    char* pathToModules = make_searchpath((char*)stringbuffer, place.c_str());
+    if((dp = opendir( pathToModules)) == NULL) {
+        printf("Could not Open Directory: %s: ", place.c_str());
+        perror("Reason: ");
+        return Loader::module_list();
+    }
+
+    DIR *tmpDir;
+    while((d = readdir(dp)) != NULL) {
+        //Check if file is folder
+        //TODO wont work on solar (maybe)
+        if (d->d_type == DT_DIR) {
+            //get path
+            char* path = d->d_name;
+            printf("path %s \n",path);
+
+        //read config file if it exists
+            //tmpDir = opendir( + )
+        }else{
+//            printf("no dir: %s \n",d->d_name);
+        }
+
+    }
 
 
-	DIR *dp;
-	dirent *d;
 //	printf("Reading %s...\n", make_searchpath(place).c_str());
-	if((dp = opendir( make_searchpath((char*)stringbuffer, place.c_str()) )) == NULL) {
-		printf("Could not Open Directory: %s: ", place.c_str());
-		perror("Reason: ");
-		return Loader::module_list(); 
-	}
 
 	while((d = readdir(dp)) != NULL) {
 		if (strcmp(d->d_name, ".") == 0 || strcmp(d->d_name, "..") == 0) continue;
@@ -154,12 +173,7 @@ char* Loader::make_filename(const char* module, const char* place) {
 	//		"/" + module + 
 	//		"/lib" + place + "_" + module + ".so";
 }
-/**
- * @brief Adds the place to the programm-directory
- * @param buffer
- * @param place
- * @return
- */
+
 char* Loader::make_searchpath(char* buffer, const char* place) {
     strcpy(buffer, programm_directory.c_str());
 	strcat(buffer, "/");

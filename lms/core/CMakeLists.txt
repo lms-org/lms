@@ -1,7 +1,7 @@
 #include shared headers
 include_directories(include)
 #include pugixml headers (hpp-files)
-include_directories(xml/pugixml/pugixml-1.5/src)
+include_directories(xml/pugixml-1.5/src)
 
 #Set public headers so the ide finds it
 set (PUBLIC_HEADERS
