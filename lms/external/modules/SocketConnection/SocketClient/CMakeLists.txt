@@ -4,4 +4,4 @@ set ( WIFI_CLIENT_SOURCES
 	"src/interface.cpp"
 )
 
-add_library ( wifi_client SHARED ${WIFI_CLIENT_SOURCES}})
+add_library ( wifi_client SHARED ${WIFI_CLIENT_SOURCES})
