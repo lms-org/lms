@@ -11,6 +11,7 @@ set (PUBLIC_HEADERS
         "include/core/datamanager.h"
         "include/core/argumentparser.h"
         "include/core/logger.h"
+        "include/core/executionmanager.h"
 )
 
 add_library(configfile STATIC

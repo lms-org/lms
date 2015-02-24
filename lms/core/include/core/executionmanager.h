@@ -6,7 +6,7 @@
 #include <deque>
 #include <map>
 #include <sys/time.h>
-#include <loader.h>
+#include <core/loader.h>
 
 class DataManager;
 class Loader;

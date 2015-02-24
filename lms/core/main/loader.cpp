@@ -1,4 +1,4 @@
-#include <loader.h>
+#include <core/loader.h>
 
 #include <stdio.h>
 #include <limits.h>
@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include <shared_base.h>
+#include <core/shared_base.h>
 
 template<typename _Target> 
 union converter {
