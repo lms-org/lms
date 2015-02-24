@@ -3,16 +3,27 @@
   */
 #ifndef argumenthandler_H
 #define argumenthandler_H
+
 #include <string>
+
 class ArgumentHandler{
 public:
-    ArgumentHandler();
-    void parse_arguments(int argc, char* const*argv);
-    ~ArgumentHandler();
+    /**
+     * @brief Parse the given command line arguments and store the values in the members.
+     * @param argc Number of arguments
+     * @param argv List of argument strings
+     */
+    void parseArguments(int argc, char* const*argv);
 
-    std::string load_configuration;
+    /**
+     * @brief Return the "load configuration" setting. This can
+     * be set by "-c arg".
+     */
+    std::string loadConfiguration() const;
 
+private:
+    std::string m_load_configuration;
 };
 
 
-#endif
+#endif /* argumenthandler_H */

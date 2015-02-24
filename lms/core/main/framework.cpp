@@ -8,9 +8,7 @@ Framework::Framework(int argc, char* const*argv) {
     initManagers();
 
     // TODO überarbeiten für dynamisches modulladen
-    argumentHandler = new ArgumentHandler();
-    argumentHandler->parse_arguments(argc,argv);
-
+    argumentHandler.parseArguments(argc,argv);
 
         SignalHandler::getInstance()
             .addListener(SIGINT, this)
@@ -20,9 +18,11 @@ Framework::Framework(int argc, char* const*argv) {
 
         //Execution
 
+        running = true;
+
         while(running) {
-    //		usleep(9000);
             executionManager->loop();
+            //usleep(9000*1000);
         }
 
 }
