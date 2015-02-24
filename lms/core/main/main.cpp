@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
 
     if(arguments.showHelp()) {
         std::cout
-            << "LMS - Light Module System\n"
+            << "LMS - Lightweight Module System\n"
             << "Usage: core/lms [-h] [-c config]\n"
             << "  -h         Show help\n"
             << "  -c config  Load configuration (defaults to 'default')\n"

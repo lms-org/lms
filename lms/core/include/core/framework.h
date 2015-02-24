@@ -6,13 +6,28 @@
 #include <core/argumentparser.h>
 #include <core/executionmanager.h>
 
+/**
+ * @brief Main entry point into the lightweight module system.
+ *
+ * Create an object of this class and you will start the framwork.
+ */
 class Framework : public SignalHandler::Listener {
 public:
+    /**
+     * @brief Instantiate the framework, initiate datamanager and
+     * execution manager and start the main loop.
+     *
+     * @param arguments parsed command line arguments
+     */
     Framework(const ArgumentHandler& arguments);
+
+    /**
+     * @brief Destroy datamanager and execution manager.
+     */
     ~Framework();
 protected:
     /**
-     * @brief initManagers override this method to set custom Managers!
+     * @brief Override this method to set custom Managers!
      */
     virtual void initManagers();
 private:
