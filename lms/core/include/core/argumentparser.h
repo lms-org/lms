@@ -21,8 +21,16 @@ public:
      */
     std::string loadConfiguration() const;
 
+    /**
+     * @brief Return the "show help" setting. This can
+     * be set by "-h". The framework will stop after showing
+     * help information.
+     */
+    bool showHelp() const;
+
 private:
-    std::string m_load_configuration;
+    std::string m_loadConfiguration;
+    bool m_showHelp;
 };
 
 

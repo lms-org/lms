@@ -3,28 +3,23 @@
 
 #include "backtrace_formatter.h"
 
-Framework::Framework(int argc, char* const*argv) {
+Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(arguments) {
 
     initManagers();
 
-    // TODO überarbeiten für dynamisches modulladen
-    argumentHandler.parseArguments(argc,argv);
+    SignalHandler::getInstance()
+        .addListener(SIGINT, this)
+        .addListener(SIGSEGV, this)
+        .addListener(SIGUSR1, this)
+        .addListener(SIGUSR2, this);
 
-        SignalHandler::getInstance()
-            .addListener(SIGINT, this)
-            .addListener(SIGSEGV, this)
-            .addListener(SIGUSR1, this)
-            .addListener(SIGUSR2, this);
+    //Execution
+    running = true;
 
-        //Execution
-
-        running = true;
-
-        while(running) {
-            executionManager->loop();
-            //usleep(9000*1000);
-        }
-
+    while(running) {
+        executionManager->loop();
+        //usleep(9000*1000);
+    }
 }
 
 void Framework::initManagers(){
