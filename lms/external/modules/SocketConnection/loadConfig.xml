@@ -1,0 +1,6 @@
+<modules>
+	<module>
+		<name "SocketServer"/>
+		<path "pathToInstace"/>
+	</module>
+</modules>

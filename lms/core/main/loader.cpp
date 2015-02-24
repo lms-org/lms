@@ -1,5 +1,4 @@
-#include <core/loader.h>
-
+#include <iostream>
 #include <stdio.h>
 #include <limits.h>
 #include <dirent.h>
@@ -8,6 +7,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include <core/loader.h>
 #include <core/shared_base.h>
 #include <pugixml.hpp>
 
@@ -33,37 +33,49 @@ Loader::Loader() {
 
 Loader::module_list Loader::getModules() {
     std::string place = "external/modules";
-    std::string directory = "external/modules";
     std::string loadConfigName= "loadConfig.xml";
+    std::string pathToModules = programm_directory + "/" +"external/modules/";
+    std::string configFilePath;
     module_list list;
 
     DIR *dp = NULL;
     dirent *d = NULL;
     //TODO get list of all module-folders
-    char* pathToModules = make_searchpath((char*)stringbuffer, place.c_str());
-    if((dp = opendir( pathToModules)) == NULL) {
+    if((dp = opendir( pathToModules.c_str())) == NULL) {
         printf("Could not Open Directory: %s: ", place.c_str());
         perror("Reason: ");
         return Loader::module_list();
     }
 
-    DIR *tmpDir;
     while((d = readdir(dp)) != NULL) {
         //Check if file is folder
-        //TODO wont work on solar (maybe)
+        //TODO wont work on solar (maybe), . and .. folder is found
         if (d->d_type == DT_DIR) {
             //get path
-            char* path = d->d_name;
-            printf("path %s \n",path);
+            configFilePath = pathToModules+d->d_name + "/"+loadConfigName;
+            std::cout <<"path: " + configFilePath + "\n"<<std::endl;
 
-        //read config file if it exists
-            //tmpDir = opendir( + )
+            //check if folder contains configgileFILE *file
+            FILE *file = fopen(configFilePath.c_str(), "r");
+            if(file){
+                //config-file exists
+                std::cout <<"config file exists: " + configFilePath <<std::endl;
+                //TODO parse it
+                //TODO check if module is valid
+                //TODO add it to list
+            }else{
+                //found some folder with no config-file
+                perror("nooooo");
+                //    std::cout <<"config file DOESNT exist: " + configFilePath <<std::endl;
+
+            }
+
         }else{
 //            printf("no dir: %s \n",d->d_name);
         }
 
     }
-
+/*
 
 //	printf("Reading %s...\n", make_searchpath(place).c_str());
 
@@ -126,6 +138,7 @@ Loader::module_list Loader::getModules() {
 		}
 	}
 	closedir (dp);
+    */
 	return list;
 }
 
