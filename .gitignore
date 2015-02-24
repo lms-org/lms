@@ -13,5 +13,5 @@ config/
 *.txt~
 .metadata
 CMakeLists.txt.user
-
+doku/html
 
