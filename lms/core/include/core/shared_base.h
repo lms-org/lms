@@ -6,7 +6,7 @@ class DataManager;
 #define GET_CHANNEL(handle,target) \
 	target=(__decltype(target))datamanager()->get_channel(handle);
 
-#include <shared_interface.h>
+#include <core/shared_interface.h>
 #include <string>
 #include <vector>
 

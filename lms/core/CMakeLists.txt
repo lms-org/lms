@@ -10,6 +10,7 @@ set (PUBLIC_HEADERS
         "include/core/extra/colors.h"
         "include/core/datamanager.h"
         "include/core/argumentparser.h"
+        "include/core/executionmanager.h"
 )
 
 add_library(configfile STATIC

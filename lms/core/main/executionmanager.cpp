@@ -1,7 +1,7 @@
 #include <core/executionmanager.h>
 #include <core/datamanager.h>
-#include <shared_base.h>
-#include <loader.h>
+#include <core/shared_base.h>
+#include <core/loader.h>
 #include <queue>
 #include <core/configurationmanager.h>
 #include <iostream>
