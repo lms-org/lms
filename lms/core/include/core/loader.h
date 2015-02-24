@@ -23,6 +23,12 @@ public:
 private:
 	char stringbuffer[1024];
 	char* make_filename(const char* module, const char* place);
+    /**
+     * @brief Adds the place to the programm-directory
+     * @param buffer
+     * @param place
+     * @return
+     */
 	char*  make_searchpath(char* buffer, const char* place);
 	bool check_library(std::string filename);
 };

@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 
 #include <core/shared_base.h>
+#include <pugixml.hpp>
 
 template<typename _Target> 
 union converter {
@@ -32,16 +33,39 @@ Loader::Loader() {
 
 Loader::module_list Loader::getModules() {
     std::string place = "external/modules";
+    std::string directory = "external/modules";
+    std::string loadConfigName= "loadConfig.xml";
     module_list list;
 
-	DIR *dp;
-	dirent *d;
+    DIR *dp = NULL;
+    dirent *d = NULL;
+    //TODO get list of all module-folders
+    char* pathToModules = make_searchpath((char*)stringbuffer, place.c_str());
+    if((dp = opendir( pathToModules)) == NULL) {
+        printf("Could not Open Directory: %s: ", place.c_str());
+        perror("Reason: ");
+        return Loader::module_list();
+    }
+
+    DIR *tmpDir;
+    while((d = readdir(dp)) != NULL) {
+        //Check if file is folder
+        //TODO wont work on solar (maybe)
+        if (d->d_type == DT_DIR) {
+            //get path
+            char* path = d->d_name;
+            printf("path %s \n",path);
+
+        //read config file if it exists
+            //tmpDir = opendir( + )
+        }else{
+//            printf("no dir: %s \n",d->d_name);
+        }
+
+    }
+
+
 //	printf("Reading %s...\n", make_searchpath(place).c_str());
-	if((dp = opendir( make_searchpath((char*)stringbuffer, place.c_str()) )) == NULL) {
-		printf("Could not Open Directory: %s: ", place.c_str());
-		perror("Reason: ");
-		return Loader::module_list(); 
-	}
 
 	while((d = readdir(dp)) != NULL) {
 		if (strcmp(d->d_name, ".") == 0 || strcmp(d->d_name, "..") == 0) continue;

@@ -1,6 +1,9 @@
-#include_directories(include)
-include_directories(main)
+#include shared headers
+include_directories(include)
+#include pugixml headers (hpp-files)
+include_directories(xml/pugixml-1.5/src)
 
+#Set public headers so the ide finds it
 set (PUBLIC_HEADERS
         "include/core/configfile.h"
         "include/core/configurationmanager.h"
@@ -13,16 +16,22 @@ set (PUBLIC_HEADERS
         "include/core/logger.h"
         "include/core/executionmanager.h"
 )
-
+#Compile config file, may be moved to add_executable or removed as we might dont need it anymore
 add_library(configfile STATIC
         ${PUBLIC_HEADERS}
         "configfile/configfile.cpp"
 )
+#Compile xml-parser pugixml
+add_library(pugixml STATIC         
+	"xml/pugixml-1.5/src/pugixml.cpp"
+	"xml/pugixml-1.5/src/pugixml.hpp"
+	"xml/pugixml-1.5/src/pugiconfig.hpp"
+)
 
-link_libraries("dl" configfile)
+#link libraries
+link_libraries("dl" configfile pugixml)
 
-add_executable (lms
-        ${PUBLIC_HEADERS}
+set (SOURCE
         "main/main.cpp"
         "main/loader.cpp"
         "main/shared_base.cpp"
@@ -35,5 +44,10 @@ add_executable (lms
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
         "main/logger.cpp"
+)
+
+add_executable (lms
+        ${PUBLIC_HEADERS}
+        ${SOURCE}
 )
 
