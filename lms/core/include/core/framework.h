@@ -8,7 +8,7 @@
 
 class Framework : public SignalHandler::Listener {
 public:
-    Framework(int argc, char* const*argv);
+    Framework(const ArgumentHandler& arguments);
     ~Framework();
 protected:
     /**
