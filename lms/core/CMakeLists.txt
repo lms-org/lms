@@ -1,4 +1,6 @@
+#include shared headers
 include_directories(include)
+#include pugixml headers (hpp-files)
 include_directories(xml/pugixml/pugixml-1.5/src)
 
 #Set public headers so the ide finds it
@@ -29,8 +31,7 @@ add_library(pugixml STATIC
 #link libraries
 link_libraries("dl" configfile pugixml)
 
-add_executable (lms
-        ${PUBLIC_HEADERS}
+set (SOURCE
         "main/main.cpp"
         "main/loader.cpp"
         "main/shared_base.cpp"
@@ -43,5 +44,10 @@ add_executable (lms
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
         "main/logger.cpp"
+)
+
+add_executable (lms
+        ${PUBLIC_HEADERS}
+        ${SOURCE}
 )
 
