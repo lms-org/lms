@@ -1,4 +1,6 @@
 ![logo](https://github.com/Phibedy/LMS/blob/master/lms_banner.jpg)
+
+
 LMS is a.... //TODO
 will be a cross-plattform system that allows easy module-handling and sharing.
 
