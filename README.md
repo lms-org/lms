@@ -15,7 +15,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 //TODO - List with a featured modules
 
 ###Downloads
-//TODO
+  * Get the source from github :P
+  * //TODO
 
 ###TODO
  * Add license
