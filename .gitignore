@@ -11,6 +11,8 @@ config/
 *.lms~
 *.h~
 *.txt~
+*.gitignore~
+*.md~
 .metadata
 CMakeLists.txt.user
 doku/html
