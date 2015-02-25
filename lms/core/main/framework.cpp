@@ -22,16 +22,24 @@ Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(argumen
     }
 }
 
-void Framework::initManagers(){
+void Framework::initManagers() {
+    sink = new ConsoleSink(std::cout);
+    logger = new RootLogger(sink);
+
     dataManager = new DataManager();
     executionManager = new ExecutionManager();
 }
 
 Framework::~Framework() {
-    printf("Killing EXECMGR\n");
+    logger->info() << "Killing EXECMGR" << std::endl << "bla";
+    //printf("Killing EXECMGR\n");
     delete executionManager;
-    printf("Killing DATAMGR\n");
+    logger->info() << "Killing DATAMGR";
+    //printf("Killing DATAMGR\n");
     delete dataManager;
+
+    delete logger;
+    delete sink;
 }
 
 void Framework::signal(int s) {

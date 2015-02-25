@@ -15,6 +15,7 @@ set (PUBLIC_HEADERS
         "include/core/argumentparser.h"
         "include/core/logger.h"
         "include/core/executionmanager.h"
+        "include/core/shared_base.h"
 )
 #Compile config file, may be moved to add_executable or removed as we might dont need it anymore
 add_library(configfile STATIC

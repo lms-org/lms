@@ -5,6 +5,7 @@
 #include <core/signalhandler.h>
 #include <core/argumentparser.h>
 #include <core/executionmanager.h>
+#include <core/logger.h>
 
 /**
  * @brief Main entry point into the lightweight module system.
@@ -38,6 +39,9 @@ private:
     DataManager *dataManager;
     ExecutionManager *executionManager;
     ArgumentHandler argumentHandler;
+
+    Sink *sink;
+    RootLogger *logger;
 };
 
 #endif /* FRAMEWORK_H */
