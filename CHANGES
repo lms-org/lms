@@ -1,3 +1,6 @@
+################################
+###How to write changes:
+################################
 [VERSION]
 - API-CHANGE:
 	-Changes
@@ -6,3 +9,4 @@
 - API-REMOVE:
 	-Changes
 - API-OTHERS: (TODO: better word for OTHERS)
+	-Changes
