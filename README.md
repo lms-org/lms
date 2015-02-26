@@ -25,7 +25,9 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   LMS is licensed under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ###TODO
- * Exclude modules for testing
+ * Add lms namespace
+ * Add license-header to files
  * More docs
+ * If first version is finished -> Exclude modules for testing
 
 
