@@ -26,7 +26,9 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###TODO
  * Add lms namespace
- * Add license-header to files
+ * License
+   * Add license-header to files
+   * Add contributer-agreement-file
  * More docs
  * If first version is finished -> Exclude modules for testing
 
