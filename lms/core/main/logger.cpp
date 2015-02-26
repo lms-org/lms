@@ -1,19 +1,69 @@
 #include <core/logger.h>
 
-std::unique_ptr<LogMessage> Logger::debug() {
-    return log(LogLevel::DEBUG, "");
+LogMessage::~LogMessage() {
+    m_sink->sink(*this);
 }
 
-std::unique_ptr<LogMessage> Logger::info() {
-    return log(LogLevel::INFO, "");
+std::unique_ptr<LogMessage> Logger::debug(const std::string& tag) {
+    return log(LogLevel::DEBUG, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::warn() {
-    return log(LogLevel::WARN, "");
+std::unique_ptr<LogMessage> Logger::info(const std::string& tag) {
+    return log(LogLevel::INFO, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::error() {
-    return log(LogLevel::ERROR, "");
+std::unique_ptr<LogMessage> Logger::warn(const std::string& tag) {
+    return log(LogLevel::WARN, tag);
+}
+
+std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
+    return log(LogLevel::ERROR, tag);
+}
+
+std::string Logger::levelName(LogLevel lvl) {
+    switch(lvl) {
+    case LogLevel::DEBUG : return "DEBUG";
+    case LogLevel::INFO : return "INFO";
+    case LogLevel::WARN : return "WARN";
+    case LogLevel::ERROR : return "ERROR";
+    default : return "_"; // this should never happen
+    }
+}
+
+std::string Logger::levelColor(LogLevel lvl) {
+    switch(lvl) {
+    case LogLevel::DEBUG : return COLOR_WHITE;
+    case LogLevel::INFO : return COLOR_BLUE;
+    case LogLevel::WARN : return COLOR_YELLOW;
+    case LogLevel::ERROR : return COLOR_RED;
+    default: return COLOR_WHITE; // this should never happen
+    }
+}
+
+RootLogger::RootLogger(Sink *sink) {
+    this->m_sink.reset(sink);
+}
+
+RootLogger::RootLogger() {
+    this->m_sink.reset(new ConsoleSink());
+}
+
+void RootLogger::sink(Sink *sink) {
+    this->m_sink.reset(sink);
+}
+
+std::unique_ptr<LogMessage> RootLogger::log(LogLevel lvl, const std::string& tag) {
+    return std::unique_ptr<LogMessage>(new LogMessage(m_sink.get(), lvl, tag));
+}
+
+std::unique_ptr<LogMessage> ChildLogger::log(LogLevel lvl, const std::string& tag) {
+    if(tag.empty()) {
+        return parent->log(lvl, name);
+    } else {
+        std::ostringstream newTag;
+        newTag << name << "." << tag;
+        return parent->log(lvl, newTag.str());
+    }
 }
 
 ConsoleSink& ConsoleSink::printTime(bool time) {
@@ -24,6 +74,22 @@ ConsoleSink& ConsoleSink::printTime(bool time) {
 ConsoleSink& ConsoleSink::printColored(bool colored) {
     this->colored = colored;
     return *this;
+}
+
+void ConsoleSink::sink(const LogMessage &message) {
+    if(time) {
+        time_t t = ::time(0);   // get time now
+        struct tm * now = localtime( & t );
+        out << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << " ";
+    }
+    if(colored) {
+        out << Logger::levelColor(message.level());
+    }
+    out << Logger::levelName(message.level()) << " " << message.tag();
+    if(colored) {
+        out << COLOR_WHITE;
+    }
+    out << ": " << message.messageText() << std::endl;
 }
 
 std::unique_ptr<LogMessage> operator <<(std::unique_ptr<LogMessage> message, std::ostream& (*pf) (std::ostream&))

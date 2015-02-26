@@ -31,7 +31,14 @@ void Framework::initManagers() {
 }
 
 Framework::~Framework() {
-    logger->info() << "Killing EXECMGR" << std::endl << "bla";
+    logger->info() << "Removing Signal listeners";
+    SignalHandler::getInstance()
+        .removeListener(SIGINT, this)
+        .removeListener(SIGSEGV, this)
+        .removeListener(SIGUSR1, this)
+        .removeListener(SIGUSR2, this);
+
+    logger->info() << "Killing EXECMGR";
     //printf("Killing EXECMGR\n");
     delete executionManager;
     logger->info() << "Killing DATAMGR";
@@ -46,15 +53,19 @@ void Framework::signal(int s) {
     switch (s) {
         case SIGINT:
             running = false;
-            printf("\n\033[35mTerminating after next Cycle.\033[0m\nPress CTRL+C again to terminate immediately\n");
+
+            logger->warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
+
             SignalHandler::getInstance().removeListener(SIGINT, this);
 
             break;
         case SIGSEGV:
-            //Segmentation Fault - try to identificate what went wrong;
-            printf( "\033[34m######################################################\n"
-                    "\033[34m#\033[31m   Segfault Found                                   \033[34m#\n"
-                    "\033[34m######################################################\033[0m\n");
+            //Segmentation Fault - try to identify what went wrong;
+            logger->error()
+                << "######################################################" << std::endl
+                << "                   Segfault Found                     " << std::endl
+                << "######################################################";
+
             //In Case of Segfault while recovering - shutdown.
             SignalHandler::getInstance().removeListener(SIGSEGV, this);
 
