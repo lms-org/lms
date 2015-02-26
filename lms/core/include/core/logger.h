@@ -60,7 +60,6 @@ enum class LogLevel : std::int8_t {
  * message << "Log message No. " << 1;
  *
  * TODO: the sink should not be a usual pointer
- * TODO: check if we can make a struct out of this class
  *
  * @author Hans Kirchner
  */
@@ -72,8 +71,8 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    LogMessage(Sink *sink, LogLevel lvl, const std::string& tag)
-        : m_sink(sink), m_lvl(lvl), m_tag(tag) {}
+    LogMessage(Sink *sink, LogLevel level, const std::string& tag)
+        : tag(tag), level(level), sink(sink) {}
 
     /**
      * @brief The destructor will flush the log message to the
@@ -85,34 +84,28 @@ public:
     ~LogMessage();
 
     /**
-     * @brief The tag of this log message.
+     * @brief The tag of this log message
      */
-    std::string tag() const {
-        return m_tag;
-    }
+    const std::string tag;
 
     /**
      * @brief The log level (severity) of this log message.
      */
-    LogLevel level() const {
-        return m_lvl;
-    }
+    const LogLevel level;
 
     /**
      * @brief A pointer to a sink instance.
      *
      * This log message will be flushed to
-     * that sink in the desctructor.
+     * that sink in the destructor.
      */
-    Sink *sink() const {
-        return m_sink;
-    }
+    Sink * const sink;
 
     /**
      * @brief The logging message.
      */
     std::string messageText() const {
-        return m_messageStream.str();
+        return messageStream.str();
     }
 
     /**
@@ -120,14 +113,7 @@ public:
      *
      * You can append to this stream via the << operator.
      */
-    std::ostream &messageStream() {
-        return m_messageStream;
-    }
-private:
-    Sink *m_sink;
-    LogLevel m_lvl;
-    std::string m_tag;
-    std::ostringstream m_messageStream;
+    std::ostringstream messageStream;
 };
 
 /**
@@ -143,7 +129,7 @@ std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T 
     if(message.get() == nullptr) {
         std::cerr << "LOG MESSAGE IS NULL" << std::endl;
     } else {
-        message->messageStream() << value;
+        message->messageStream << value;
     }
 
     return message;
@@ -340,7 +326,7 @@ public:
      *
      * @param message a log message instance
      */
-    void sink(const LogMessage &message);
+    void sink(const LogMessage &message) override;
 
     /**
      * @brief Set to true if the time should be logged.
