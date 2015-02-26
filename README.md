@@ -31,5 +31,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
    * Add contributer-agreement-file
  * More docs
  * If first version is finished -> Exclude modules for testing
-
+ * http://www.possibility.com/Cpp/CppCodingStandard.html
+ * Create One Exception for Each Library
+ * Create Unique Name Space Names 
 

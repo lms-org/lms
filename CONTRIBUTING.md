@@ -21,7 +21,7 @@ A few things we'd like to see:
   * Use & for * see //TODO insert link
   * TODO: Not sure if we should use CamelCase vs snake_case
   * TODO: How to name files? CamelCase vs snake_case vs lower case
-  
+
 If you create a new file:
   * make sure to add the Apache file header, as seen //TODO add link
   * if the name isn't self explained please add a README that states what the file is for

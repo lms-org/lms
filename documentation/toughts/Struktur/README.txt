@@ -26,7 +26,7 @@ Arten von Modulen:
 -RuntimeModul:
 --Hat eine cycle Methode, verbindet funktionalitäten
 
--UtilsModul:
+-Libraries (UtilsModul):
 --Stellt Funktionalitäten bereit
 --Hat keine lauffähige cycle-methode
 
