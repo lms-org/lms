@@ -4,7 +4,7 @@
 
 ### API Changes & Additions
 If you modify a public API, or add a new one, make sure to add these changes to the [CHANGES](https://github.com/Phibedy/LMS/CHANGES) file in the root of the repository.
-If you want to make sure, that your changes will be included start a conversation via github pullrequest or issues.
+If you want to make sure, that your changes will be included start a conversation via github issues or pullrequests.
 
 ### Contributor License Agreement
 
