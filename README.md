@@ -13,10 +13,25 @@ will be a cross-plattform system that allows easy module-handling and sharing.
     * Write own modules
   * Contribute
 
-###Featured Modules
+###Featured Libraries
+ * Sockets (Client & Server)
+ * Scheduler
+ * BlueTooth-Adapter (not implemented yet)
+ * OpenCV (not implemented yet)
+ * Audio
+   * Some basic audio library (not implemented yet)
+   * text to speech
+   * speech to text
+ 
+
 //TODO - List with a featured modules
 
-###Downloads
+###Featured Modules
+ * ConsoleWait (Should be renamed)
+ * CommandHandler (not implemented yet - may become a library)
+ * SocketChat (not implemented)
+
+###Downloads SA
   * Get the source from github :P
   * //TODO
 
