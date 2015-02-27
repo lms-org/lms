@@ -15,7 +15,7 @@ set (PUBLIC_HEADERS
         "include/core/argumentparser.h"
         "include/core/logger.h"
         "include/core/executionmanager.h"
-        "include/core/shared_base.h"
+        "include/core/module.h"
         "include/core/loader.h"
 )
 #Compile config file, may be moved to add_executable or removed as we might dont need it anymore
@@ -36,7 +36,7 @@ link_libraries("dl" configfile pugixml)
 set (SOURCE
         "main/main.cpp"
         "main/loader.cpp"
-        "main/shared_base.cpp"
+        "main/module.cpp"
         "main/datamanager.cpp"
         "main/configurationmanager.cpp"
         "main/executionmanager.cpp"

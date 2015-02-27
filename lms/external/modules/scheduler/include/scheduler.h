@@ -3,16 +3,17 @@
 
 #include <core/datamanager.h>
 
-#include <core/shared_base.h>
+#include <core/module.h>
 #include <core/datamanager.h>
 #include <core/datamanager.h>
 #include <time.h>
 #include <sys/time.h>
 
-class Scheduler : public lms::Shared_Base {
+class Scheduler : public lms::Module {
 
 public:
-	bool initialize();
+
+    bool initialize(lms::DataManager* d);
 	bool deinitialize();
 
 	bool cycle();

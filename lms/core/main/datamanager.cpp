@@ -1,5 +1,5 @@
 #include <core/datamanager.h>
-#include <core/shared_base.h>
+#include <core/module.h>
 
 #include <deque>
 #include <stdio.h>

@@ -25,7 +25,7 @@ Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(argumen
 
 void Framework::initManagers() {
     dataManager = new DataManager();
-    executionManager = new ExecutionManager();
+    executionManager = new ExecutionManager(dataManager);
 }
 
 Framework::~Framework() {

@@ -7,9 +7,10 @@
 #include <unistd.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <algorithm>
 
 #include <core/loader.h>
-#include <core/shared_base.h>
+#include <core/module.h>
 #include <pugixml.hpp>
 #include <core/logger.h>
 
@@ -27,27 +28,29 @@ Loader::Loader() {
 		perror("readlink failed");
 		exit(1);
 	}
+    //get programmdirectory
 	programm_directory = path;
 	programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
 	programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
-	printf("Programm Directory: %s\n", programm_directory.c_str());
+
+    //printf("Programm Directory: %s\n", programm_directory.c_str());
+
+    Loader::pathToModules = programm_directory + "/" +"external/modules/";
 
 }
 
-Loader::module_list Loader::getModules() {
-    std::string place = "external/modules";
-    std::string loadConfigName= "loadConfig.xml";
-    std::string pathToModules = programm_directory + "/" +"external/modules/";
+Loader::moduleList Loader::getModules() {
+    static std::string loadConfigName= "loadConfig.xml";
     std::string configFilePath;
-    module_list list;
+    moduleList list;
 
     DIR *dp = NULL;
     dirent *d = NULL;
     //TODO get list of all module-folders
     if((dp = opendir( pathToModules.c_str())) == NULL) {
-        printf("Could not Open Directory: %s: ", place.c_str());
+        printf("Could not Open Directory: %s: ", pathToModules.c_str());
         perror("Reason: ");
-        return Loader::module_list();
+        return Loader::moduleList();
     }
 
     while((d = readdir(dp)) != NULL) {
@@ -56,7 +59,7 @@ Loader::module_list Loader::getModules() {
         if (d->d_type == DT_DIR) {
             //get path
             configFilePath = pathToModules+d->d_name + "/"+loadConfigName;
-          //  std::cout <<"path: " + configFilePath + "\n"<<std::endl;
+          //  std::cout <<"path: " + configFilePath + modulePath"\n"<<std::endl;
 
             std::ifstream ifs;
 
@@ -64,109 +67,81 @@ Loader::module_list Loader::getModules() {
 
             if(ifs.is_open()){
                 //config-file exists
-                std::cout <<"config file exists: " + configFilePath <<std::endl;
-                //TODO parse it
                 pugi::xml_document doc;
                 pugi::xml_parse_result result = doc.load(ifs);
 
                 if (result){
 
-                    std::cout << "XML parsed without errors" << std::endl;
+                    //parse modules
                     pugi::xml_node modulesNode =doc.child("modules");
-                    //[code_traverse_iter
+
                     for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it){
-                        std::cout << "Module-Content:" ;
-
+                        //parse module content
                         std::string moduleName = it->child("name").child_value();
-                        std::string localPathToLib = it->child("path").child_value();
+                        //set mainFolder (folder after modules
+                        std::string localPathToModule = d->d_name;
+                        localPathToModule = localPathToModule +"/";
+                        std::string pathTmp = it->child("path").child_value();
+                        /*
+                        //remove spaces, caused by xml parsing
+                        moduleName.erase (std::remove (moduleName.begin(), moduleName.end(), ' '), moduleName.end());
+                        localPathToModule.erase (std::remove (localPathToModule.begin(), localPathToModule.end(), ' '), localPathToModule.end());
+                        */
+                        /**Add module-subdirectory.
+                         * Needed if the module contains more than one submodule that can run
+                        */
+                        localPathToModule = localPathToModule+pathTmp;
 
+                        std::string modulePath = getModulePath(localPathToModule,moduleName);
+                        std::cout << "modulePath: " + modulePath << std::endl;
+                        //check if module is valid
+                        if(checkModule(modulePath.c_str())){
+                            std::cout << "Module valid " + moduleName << "add it to list" << std::endl;
+                        }else{
+                            std::cout << "Module invalid! " + moduleName <<std::endl;
+                            continue;
+                        }
+                        //add module to list
+                        struct module_entry entry;
+                        entry.localPathToModule = localPathToModule;
+                        entry.name = moduleName;
+                        //TODO
+                        entry.localPathToConfigs = "";
 
-                        //TODO check if module is valid
-                        //TODO add it to list
+                        list.push_back(entry);
                     }
              }else{
-                  //TODO
+                  //TODO can't parse plugin-xml
                 }
+                //close loadConfig-file
+                ifs.close();
             }else{
                 //found some folder with no config-file
-               // perror("nooooo");
-                //    std::cout <<"config file DOESNT exist: " + configFilePath <<std::endl;
-
             }
 
-        }else{
-//            printf("no dir: %s \n",d->d_name);
         }
-
     }
-/*
-
-//	printf("Reading %s...\n", make_searchpath(place).c_str());
-
-	while((d = readdir(dp)) != NULL) {
-		if (strcmp(d->d_name, ".") == 0 || strcmp(d->d_name, "..") == 0) continue;
-		if (strcmp(d->d_name, "CMakeFiles") == 0) continue;
-        if( d->d_type == DT_UNKNOWN )
-        {
-            // File-type unknown, check via stat()
-            struct stat buf;
-            make_searchpath( (char*) stringbuffer, ( place + std::string("/") + std::string(d->d_name) ).c_str() );
-            if( -1 == stat((char*)stringbuffer, &buf) || !( S_ISDIR( buf.st_mode ) ) )
-            {
-                continue;
-            }
-        }
-        else if( d->d_type != DT_DIR )
-        {
-            // Filetype could be determined, but is no directory -> skip
-            continue;
-        }
-
-//		printf("Testing %s: %s\n", place.c_str(), d->d_name);
-
-		
-		char* libname = make_filename(d->d_name, place.c_str());
-//		printf("\tOpening %s... ", libname.c_str());	
-		void* lib = dlopen (libname, RTLD_LAZY);
-		if (lib != NULL) {
-//			printf("OK\n\tTesting for Necessary functions... ");
-            //Testing for Necessary functions
-			if (dlsym(lib, "getName") != NULL && dlsym(lib, "getInstance") != NULL) {
-//				printf("OK\n");
-                ///Union-Hack! To Avoid a warning message
-                converter<const char*(*)()> conv; 
-                conv.src = dlsym(lib,"getName");
-				const char *name = conv.target();
-				printf("\033[032mFound new %10s: %s\033[0m\n", place.c_str(), name);
-				module_entry entry;
-				entry.name = name;
-				entry.module = d->d_name;
-				entry.place = place;
-				list.push_back(entry);
-			} else {
-				printf("\033[031mFailed. Could not find getName or getInstance in %s\033[0m",libname );
-			}
-			dlclose(lib);
-
-			//Library successfull opened 
-		} else { 
-			printf("\033[031mFailed to Open %s %s\033[0m\n ", place.c_str(), libname);
-			printf("\t Reason: ");
-			auto f = fopen(libname, "rb");
-			if (!f) 
-				printf("\t\033[033mFile not found\033[0m\n");
-			else {
-				fclose(f);
-				printf("\t\033[033mReason : %s\033[0m\n", dlerror());
-			}
-		}
-	}
-	closedir (dp);
-    */
 	return list;
 }
 
-Shared_Base* Loader::load( const module_entry& entry) {
+bool Loader::checkModule(const char* path){
+    void* lib = dlopen (path, RTLD_LAZY);
+    bool valid = false;
+    if (lib != NULL) {
+//			printf("OK\n\tTesting for Necessary functions... ");
+        //Testing for Necessary functions
+        valid =  (dlsym(lib, "getName") != NULL && dlsym(lib, "getInstance") != NULL);
+
+        dlclose(lib);
+    }else{
+        std::cout << "Module doesn't exist! path:" <<path << std::endl;
+    }
+    //TODO: not sure if dlclose needed if lib == null
+    return valid;
+}
+
+
+Module* Loader::load( const module_entry& entry) {
 //	printf("Loading %s\n", make_filename(entry.module,entry.place).c_str());
     void *lib;// = dlopen(make_filename(entry.module.c_str(), entry.place.c_str()),RTLD_NOW);
 	if(lib == NULL) {
@@ -186,37 +161,17 @@ Shared_Base* Loader::load( const module_entry& entry) {
     converter <void*(*)()> conv; 
     conv.src = func;
     
-	return (Shared_Base*)conv.target();
+    return (Module*)conv.target();
 }
 
-void Loader::unload(Shared_Base* a) {
+void Loader::unload(Module* a) {
 	delete a;
 }
 
 
-char* Loader::getLibName(const char* module, const char* place) {
-    //std::string libName = "modules/"+module+"/place" //TODO: hier weiter machen
-	memset(stringbuffer, 0, sizeof(stringbuffer));
-	make_searchpath(stringbuffer, place);
-	strcat(stringbuffer, "/");
-	strcat(stringbuffer, module);
-	strcat(stringbuffer, "/lib");
-	strcat(stringbuffer, place);
-	strcat(stringbuffer, "_");
-	strcat(stringbuffer, module);
-	strcat(stringbuffer, ".so");
-	
-	return stringbuffer;
-	//return make_searchpath(place) + 
-	//		"/" + module + 
-	//		"/lib" + place + "_" + module + ".so";
+std::string Loader::getModulePath(std::string modulePath, std::string moduleName) {
+    return pathToModules+modulePath+"lib"+moduleName+".so";
 }
 
-char* Loader::make_searchpath(char* buffer, const char* place) {
-    strcpy(buffer, programm_directory.c_str());
-	strcat(buffer, "/");
-	strcat(buffer, place);
-	return buffer;
-}
 }
 

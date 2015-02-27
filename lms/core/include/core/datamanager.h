@@ -14,7 +14,7 @@
 
 namespace lms{
 class Framework;
-class Shared_Base;
+class Module;
 //Für was die classe?
 class Logger;
 //das wohl eher ins framework und daten an den data-manager übergeben
@@ -103,7 +103,7 @@ public:
             return load_configuration;
         else return "default";
     }
-    void setActiveModule(Shared_Base* sb) {
+    void setActiveModule(Module* sb) {
         activeModule = sb;
     }
 
@@ -182,7 +182,7 @@ private:
         std::string name;
     };
     std::vector<memory_layout> memory;
-    Shared_Base *activeModule;
+    Module *activeModule;
 
     void initialize_data();
     //Das umbennen oder löschen

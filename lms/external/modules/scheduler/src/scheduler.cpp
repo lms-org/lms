@@ -4,7 +4,8 @@
 
 // TODO umbenennen, name irreführend
 
-bool Scheduler::initialize() {
+bool Scheduler::initialize(lms::DataManager* d) {
+    Module::initialize(d);
 	printf("Init: scheduler\n");
 
     lms::ConfigFile *config = datamanager()->config("scheduler");
