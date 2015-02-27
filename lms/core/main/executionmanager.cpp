@@ -12,6 +12,7 @@ namespace lms{
 ExecutionManager::ExecutionManager(DataManager * dataManager){
     ExecutionManager::dataManager = dataManager;
     loader = new Loader();
+    valid = false;
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -23,7 +24,13 @@ ExecutionManager::~ExecutionManager () {
 void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
-    //TODO execute modules
+    //TODO execute modules like a boss
+
+    //HACK just for testing atm
+    for(auto* it: enabledModules){
+        it->cycle();
+    }
+
 }
 
 void ExecutionManager::loadAvailabelModules(){
@@ -42,7 +49,10 @@ void ExecutionManager::enableModule(std::string name){
     for(auto& it:available){
         if(it.name == name){
             Module* module = loader->load(it);
-
+            module->initializeBase(dataManager,it);
+            module->initialize();
+            enabledModules.push_back(module);
+            invalidate();
         }
     }
 }
@@ -51,9 +61,19 @@ void ExecutionManager::enableModule(std::string name){
 void ExecutionManager::disableModule(std::string name){
 
 }
+/**
+ * @brief ExecutionManager::invalidate calling that method will cause the executionmanager to run validate() in the next loop
+ */
+void ExecutionManager::invalidate(){
+    valid = false;
+}
 
 void ExecutionManager::validate(){
-    //TODO sort modules
+    if(!valid){
+        valid = true;
+        //TODO sort modules
+        //TODO validate the DataManager
+    }
 }
 
 }

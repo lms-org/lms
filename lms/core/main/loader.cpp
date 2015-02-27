@@ -143,7 +143,7 @@ bool Loader::checkModule(const char* path){
 
 Module* Loader::load( const module_entry& entry) {
 //	printf("Loading %s\n", make_filename(entry.module,entry.place).c_str());
-    void *lib;// = dlopen(make_filename(entry.module.c_str(), entry.place.c_str()),RTLD_NOW);
+    void *lib = dlopen(getModulePath(entry.localPathToModule,entry.name).c_str(),RTLD_NOW);
 	if(lib == NULL) {
     //	printf("\033[031mCould not open shared object \033[033m%s\033[0m\nReason: %s\n",
 //				make_filename(entry.module.c_str(), entry.place.c_str()), dlerror());

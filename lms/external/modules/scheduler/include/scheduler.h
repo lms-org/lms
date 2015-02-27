@@ -13,7 +13,7 @@ class Scheduler : public lms::Module {
 
 public:
 
-    bool initialize(lms::DataManager* d);
+    bool initialize();
 	bool deinitialize();
 
 	bool cycle();

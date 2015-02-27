@@ -3,7 +3,6 @@
 /**
  *TODO rename it to module.h
  */
-class DataManager;
 
 //#include <core/shared_interface.h>
 #include <string>
@@ -12,22 +11,25 @@ class DataManager;
 
 namespace lms{
 
+class DataManager;
 class Module {
 public:
     Module() { }
     virtual ~Module() { }
 	
     std::string getName();
-    /**called by the framework itself at module-creation */
-    bool initializeBase(DataManager* d,Loader::module_entry loaderEntry);
+    /**
+     * called by the framework itself at module-creation
+    */
+    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry);
 
     /**
-     * Dont forget to call Module::initialize() in child-class
+     * TODO
      * @brief initialize
      * @param d
      * @return
      */
-    virtual bool initialize(DataManager* d);
+    virtual bool initialize() = 0;
 	virtual bool deinitialize() = 0;
 	virtual bool cycle() = 0;
     //TODO: reset method
