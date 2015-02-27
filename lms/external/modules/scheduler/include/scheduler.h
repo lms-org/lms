@@ -10,7 +10,7 @@
 #include <sys/time.h>
 
 class Scheduler : public lms::Shared_Base {
-    IMPLEMENT_BASE
+
 public:
 	bool initialize();
 	bool deinitialize();

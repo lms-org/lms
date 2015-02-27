@@ -3,26 +3,18 @@
 
 class DataManager;
 
-//für was das?
-#define GET_CHANNEL(handle,target) \
-	target=(__decltype(target))datamanager()->get_channel(handle);
-
 #include <core/shared_interface.h>
 #include <string>
 #include <vector>
 
 namespace lms{
-//was soll das?
-#define IMPLEMENT_BASE \
-	public: \
-	std::string getName() { return ::getName(); }
 
 class Shared_Base {
 public:
     Shared_Base() { }
     virtual ~Shared_Base() { }
 	
-	virtual std::string getName() = 0;
+    std::string getName(){ return name;}
 
 	void base_initialize(DataManager*);
 	virtual bool initialize() = 0;	
@@ -32,6 +24,8 @@ public:
 
 protected:
     DataManager* datamanager() { return dm; }
+    /**Will be set on loading the module */
+    std::string name;
 private:
 	DataManager* dm;
 };
