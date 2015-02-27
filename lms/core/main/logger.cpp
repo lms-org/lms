@@ -2,7 +2,7 @@
 
 namespace lms{
 LogMessage::~LogMessage() {
-    m_sink->sink(*this);
+    sink->sink(*this);
 }
 
 std::unique_ptr<LogMessage> Logger::debug(const std::string& tag) {
@@ -84,9 +84,9 @@ void ConsoleSink::sink(const LogMessage &message) {
         out << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << " ";
     }
     if(colored) {
-        out << Logger::levelColor(message.level());
+        out << Logger::levelColor(message.level);
     }
-    out << Logger::levelName(message.level()) << " " << message.tag();
+    out << Logger::levelName(message.level) << " " << message.tag;
     if(colored) {
         out << COLOR_WHITE;
     }
@@ -109,11 +109,11 @@ std::unique_ptr<LogMessage> operator <<(std::unique_ptr<LogMessage> message, std
             // - create a new log message with the same parameters as the current message
             // - put it into the unique pointer
             // - return the new wrapped log message
-            message.reset(new LogMessage(message->sink(), message->level(), message->tag()));
+            message.reset(new LogMessage(message->sink, message->level, message->tag));
         } else {
             // in case of any other stream modifier (e.g. std::hex)
             // -> just write it into the stringstream
-            message->messageStream() << pf;
+            message->messageStream << pf;
         }
     }
     return message;

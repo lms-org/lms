@@ -24,30 +24,24 @@ Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(argumen
 }
 
 void Framework::initManagers() {
-    sink = new ConsoleSink(std::cout);
-    logger = new RootLogger(sink);
-
     dataManager = new DataManager();
     executionManager = new ExecutionManager();
 }
 
 Framework::~Framework() {
-    logger->info() << "Removing Signal listeners";
+    logger.info() << "Removing Signal listeners";
     SignalHandler::getInstance()
         .removeListener(SIGINT, this)
         .removeListener(SIGSEGV, this)
         .removeListener(SIGUSR1, this)
         .removeListener(SIGUSR2, this);
 
-    logger->info() << "Killing EXECMGR";
+    logger.info() << "Killing EXECMGR";
     //printf("Killing EXECMGR\n");
     delete executionManager;
-    logger->info() << "Killing DATAMGR";
+    logger.info() << "Killing DATAMGR";
     //printf("Killing DATAMGR\n");
     delete dataManager;
-
-    delete logger;
-    delete sink;
 }
 
 void Framework::signal(int s) {
@@ -55,14 +49,14 @@ void Framework::signal(int s) {
         case SIGINT:
             running = false;
 
-            logger->warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
+            logger.warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
 
             SignalHandler::getInstance().removeListener(SIGINT, this);
 
             break;
         case SIGSEGV:
             //Segmentation Fault - try to identify what went wrong;
-            logger->error()
+            logger.error()
                 << "######################################################" << std::endl
                 << "                   Segfault Found                     " << std::endl
                 << "######################################################";

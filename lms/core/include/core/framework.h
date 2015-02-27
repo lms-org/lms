@@ -41,8 +41,7 @@ private:
     ExecutionManager *executionManager;
     ArgumentHandler argumentHandler;
 
-    Sink *sink;
-    RootLogger *logger;
+    RootLogger logger;
 };
 }
 
