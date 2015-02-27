@@ -5,11 +5,13 @@
 #include <string.h>
 #include <dlfcn.h>
 #include <unistd.h>
+#include <fstream>
 #include <sys/stat.h>
 
 #include <core/loader.h>
 #include <core/shared_base.h>
 #include <pugixml.hpp>
+#include <core/logger.h>
 
 namespace lms{
 template<typename _Target>
@@ -54,19 +56,50 @@ Loader::module_list Loader::getModules() {
         if (d->d_type == DT_DIR) {
             //get path
             configFilePath = pathToModules+d->d_name + "/"+loadConfigName;
-            std::cout <<"path: " + configFilePath + "\n"<<std::endl;
+          //  std::cout <<"path: " + configFilePath + "\n"<<std::endl;
 
-            //check if folder contains configgileFILE *file
-            FILE *file = fopen(configFilePath.c_str(), "r");
-            if(file){
+            std::ifstream ifs;
+
+            ifs.open (configFilePath, std::ifstream::in);
+
+            if(ifs.is_open()){
                 //config-file exists
                 std::cout <<"config file exists: " + configFilePath <<std::endl;
                 //TODO parse it
+                pugi::xml_document doc;
+                pugi::xml_parse_result result = doc.load(ifs);
+
+                if (result){
+
+                    std::cout << "XML parsed without errors" << std::endl;
+                    pugi::xml_node modulesNode =doc;
+
+                    std::cout << "Modules:" << doc.value() << doc.child_value()<<std::endl;
+                    //[code_traverse_iter
+                  /*  for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it)
+                    {
+                        std::cout << "Modules:" ;
+
+                        for (pugi::xml_attribute_iterator ait = it->attributes_begin(); ait != it->attributes_end(); ++ait)
+                        {
+                            std::cout << " " << ait->name() << "=" << ait->value();
+                        }
+
+                        std::cout << std::endl;
+                        std::cout << "hier..." << std::endl;
+                    } */
+
+                }else{
+                    std::cout << "XML parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
+                    std::cout << "Error description: " << result.description() << "\n";
+                    std::cout << "Error offset: " << result.offset << " (error at [..." << (configFilePath.c_str() + result.offset) << "]\n\n";
+
+                }
                 //TODO check if module is valid
                 //TODO add it to list
             }else{
                 //found some folder with no config-file
-                perror("nooooo");
+               // perror("nooooo");
                 //    std::cout <<"config file DOESNT exist: " + configFilePath <<std::endl;
 
             }
