@@ -3,6 +3,7 @@
 
 class DataManager;
 
+//für was das?
 #define GET_CHANNEL(handle,target) \
 	target=(__decltype(target))datamanager()->get_channel(handle);
 
@@ -11,6 +12,7 @@ class DataManager;
 #include <vector>
 
 namespace lms{
+//was soll das?
 #define IMPLEMENT_BASE \
 	public: \
 	std::string getName() { return ::getName(); }
@@ -28,12 +30,6 @@ public:
 	virtual bool cycle() = 0;
     //TODO: reset method
 
-	struct channelInformation {
-		channelInformation(int h, bool w) : handle(h), write(w) { }
-		int handle; 
-		bool write;
-	};
-	std::vector<channelInformation> acquired_channels;
 protected:
     DataManager* datamanager() { return dm; }
 private:
