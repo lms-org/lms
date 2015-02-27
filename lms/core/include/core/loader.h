@@ -23,7 +23,7 @@ public:
 	void unload(Shared_Base*);
 private:
 	char stringbuffer[1024];
-	char* make_filename(const char* module, const char* place);
+    char* getLibName(const char* module, const char* place);
     /**
      * @brief Adds the place to the programm-directory
      * @param buffer

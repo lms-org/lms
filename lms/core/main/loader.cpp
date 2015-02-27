@@ -72,31 +72,21 @@ Loader::module_list Loader::getModules() {
                 if (result){
 
                     std::cout << "XML parsed without errors" << std::endl;
-                    pugi::xml_node modulesNode =doc;
-
-                    std::cout << "Modules:" << doc.value() << doc.child_value()<<std::endl;
+                    pugi::xml_node modulesNode =doc.child("modules");
                     //[code_traverse_iter
-                  /*  for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it)
-                    {
-                        std::cout << "Modules:" ;
+                    for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it){
+                        std::cout << "Module-Content:" ;
 
-                        for (pugi::xml_attribute_iterator ait = it->attributes_begin(); ait != it->attributes_end(); ++ait)
-                        {
-                            std::cout << " " << ait->name() << "=" << ait->value();
-                        }
+                        std::string moduleName = it->child("name").child_value();
+                        std::string localPathToLib = it->child("path").child_value();
 
-                        std::cout << std::endl;
-                        std::cout << "hier..." << std::endl;
-                    } */
 
-                }else{
-                    std::cout << "XML parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
-                    std::cout << "Error description: " << result.description() << "\n";
-                    std::cout << "Error offset: " << result.offset << " (error at [..." << (configFilePath.c_str() + result.offset) << "]\n\n";
-
+                        //TODO check if module is valid
+                        //TODO add it to list
+                    }
+             }else{
+                  //TODO
                 }
-                //TODO check if module is valid
-                //TODO add it to list
             }else{
                 //found some folder with no config-file
                // perror("nooooo");
@@ -178,18 +168,18 @@ Loader::module_list Loader::getModules() {
 
 Shared_Base* Loader::load( const module_entry& entry) {
 //	printf("Loading %s\n", make_filename(entry.module,entry.place).c_str());
-	void *lib = dlopen(make_filename(entry.module.c_str(), entry.place.c_str()),RTLD_NOW);
+    void *lib;// = dlopen(make_filename(entry.module.c_str(), entry.place.c_str()),RTLD_NOW);
 	if(lib == NULL) {
-		printf("\033[031mCould not open shared object \033[033m%s\033[0m\nReason: %s\n", 
-				make_filename(entry.module.c_str(), entry.place.c_str()), dlerror());
+    //	printf("\033[031mCould not open shared object \033[033m%s\033[0m\nReason: %s\n",
+//				make_filename(entry.module.c_str(), entry.place.c_str()), dlerror());
 		exit(1);
 	}
 	void* func = dlsym(lib, "getInstance");
 	if (func == NULL) {
 		perror("dlsym");
 
-		printf("Could not find getInstance in %s\n", 
-				make_filename(entry.module.c_str(), entry.place.c_str()));
+//		printf("Could not find getInstance in %s\n",
+//				make_filename(entry.module.c_str(), entry.place.c_str()));
 		exit(1);
 	}
     ///Union-Hack to avoid a warning message
@@ -204,7 +194,8 @@ void Loader::unload(Shared_Base* a) {
 }
 
 
-char* Loader::make_filename(const char* module, const char* place) {
+char* Loader::getLibName(const char* module, const char* place) {
+    //std::string libName = "modules/"+module+"/place" //TODO: hier weiter machen
 	memset(stringbuffer, 0, sizeof(stringbuffer));
 	make_searchpath(stringbuffer, place);
 	strcat(stringbuffer, "/");
