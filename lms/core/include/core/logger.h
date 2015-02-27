@@ -51,11 +51,8 @@ enum class LogLevel : std::int8_t {
 };
 
 /**
- * @brief A log message not more than a struct consisting
+ * @brief A log message is not more than a struct consisting
  * of a log level, tag and an appendable log message.
- *
- * All attributes are private and must be accessed via
- * access methods.
  *
  * A log message is appendable in the following way:
  * message << "Log message No. " << 1;
@@ -214,7 +211,7 @@ protected:
 };
 
 /**
- * @brief Instantiate one root per application.
+ * @brief Instantiate one root logger per application.
  *
  * The root logger forwards all logging messages to its sink.
  *
@@ -318,7 +315,7 @@ public:
      * @brief Create a new console sink that will write into the given ostream.
      * @param out an ostream instance, e.g. std::cout or std::cerr
      */
-    explicit ConsoleSink(std::ostream& out = std::cout) : out(out), colored(true), time(true) {}
+    explicit ConsoleSink(std::ostream& out = std::cout) : m_out(out), m_colored(true), m_time(true) {}
 
     /**
      * @brief Log the given message to the ostream.
@@ -341,9 +338,9 @@ public:
      */
     ConsoleSink& printColored(bool colored);
 private:
-    std::ostream &out;
-    bool colored;
-    bool time;
+    std::ostream &m_out;
+    bool m_colored;
+    bool m_time;
 };
 }
 #endif /* LMS_CORE_LOGGER_H */
