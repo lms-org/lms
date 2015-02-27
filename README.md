@@ -43,9 +43,9 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * License
    * Add license-header to files
    * Add contributer-agreement-file
- * More docs
- * If first version is finished -> Exclude modules for testing
- * http://www.possibility.com/Cpp/CppCodingStandard.html
- * Create One Exception for Each Library
- * Create Unique Name Space Names 
- * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
+  * More docs
+  * If first version is finished -> Exclude modules for testing
+  * http://www.possibility.com/Cpp/CppCodingStandard.html
+  * Create One Exception for Each Library
+  * Create Unique Name Space Names 
+  * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
