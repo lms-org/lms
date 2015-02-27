@@ -7,6 +7,7 @@
 #include <iostream>
 
 
+namespace lms{
 ExecutionManager::ExecutionManager() : data(NULL) {
 	loader = new Loader();
     loadAvailabelModules();
@@ -77,5 +78,5 @@ void ExecutionManager::getTiming(std::map<std::string, double> &t) {
 		t[it->name] = it->last_exec_time;
 	}
 }
-
+}
 

@@ -12,6 +12,7 @@
 // TODO alternative? wann nicht definiert?
 #define DATA_PACKET
 
+namespace lms{
 int DataManager::MemoryDelimiter = 0xefbeadde; //0xdeadbeef;
 
 // TODO nein, ich will hier keine Kommandozeilen-Argumente
@@ -191,6 +192,7 @@ void DataManager::print_mapping() {
 		}
 
 	}
+}
 }
 /*
 void DataManager::print_state() {

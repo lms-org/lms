@@ -1,6 +1,8 @@
 
 ###Um die Struktur im Framework zu gewährleisten:
 ----------------------------------------------
+Code:
+ * your module should be inside one namespace
 
 Code-Dokumentation:
 In jedes Modul:

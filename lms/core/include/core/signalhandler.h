@@ -5,6 +5,7 @@
 #include <map>
 #include <signal.h>
 
+namespace lms{
 /**
  * @brief Object-oriented wrapper for signal.h
  *
@@ -59,5 +60,5 @@ private:
      */
     SignalHandler(const SignalHandler&);
 };
-
+}
 #endif /* SIGNALHANDLER_H */

@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+namespace lms{
 class BacktraceFormatter {
 public:
     static void print() {
@@ -98,5 +99,5 @@ public:
         free (messages);
     }
 };
-
+}
 #endif /* EXTRA_BACKTRACE_FORMATTER */

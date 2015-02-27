@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <limits.h>
 
+namespace lms{
 ConfigurationManager::ConfigurationManager() {
 	char path[PATH_MAX] = {0};
 	if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
@@ -70,4 +71,5 @@ void ConfigurationManager::update() {
 		delete it->second;
 		getConfig(it->first.c_str());
 	}
+}
 }

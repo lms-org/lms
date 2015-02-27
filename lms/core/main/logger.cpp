@@ -1,5 +1,6 @@
 #include <core/logger.h>
 
+namespace lms{
 LogMessage::~LogMessage() {
     m_sink->sink(*this);
 }
@@ -116,4 +117,5 @@ std::unique_ptr<LogMessage> operator <<(std::unique_ptr<LogMessage> message, std
         }
     }
     return message;
+}
 }

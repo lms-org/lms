@@ -7,6 +7,7 @@
 #include <core/executionmanager.h>
 #include <core/logger.h>
 
+namespace lms{
 /**
  * @brief Main entry point into the lightweight module system.
  *
@@ -43,5 +44,7 @@ private:
     Sink *sink;
     RootLogger *logger;
 };
+}
+
 
 #endif /* FRAMEWORK_H */

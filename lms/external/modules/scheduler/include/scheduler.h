@@ -9,7 +9,7 @@
 #include <time.h>
 #include <sys/time.h>
 
-class Scheduler : public Shared_Base {
+class Scheduler : public lms::Shared_Base {
     IMPLEMENT_BASE
 public:
 	bool initialize();

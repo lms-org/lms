@@ -6,7 +6,7 @@
 
 #include <termios.h>
 
-class Console_wait : public Shared_Base {
+class Console_wait : public lms::Shared_Base {
     IMPLEMENT_BASE
 public:
 	bool initialize();

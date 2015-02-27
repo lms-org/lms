@@ -7,6 +7,7 @@
 #include <vector>
 #include <unistd.h>
 
+namespace lms{
 class ConfigurationManager {
 public:
 	ConfigurationManager();
@@ -25,4 +26,5 @@ private:
 	std::string configuration_path;
 	std::vector<std::string> subpath;
 };
+}
 #endif

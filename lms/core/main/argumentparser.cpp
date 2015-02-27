@@ -2,6 +2,7 @@
 
 #include "getopt.h"
 
+namespace lms{
 void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     m_loadConfiguration = "default";
     m_showHelp = false;
@@ -26,4 +27,5 @@ std::string ArgumentHandler::loadConfiguration() const {
 
 bool ArgumentHandler::showHelp() const {
     return m_showHelp;
+}
 }

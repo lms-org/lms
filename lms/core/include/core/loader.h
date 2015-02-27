@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 
+namespace lms{
 class Shared_Base;
 
 class Loader {
@@ -32,5 +33,5 @@ private:
 	char*  make_searchpath(char* buffer, const char* place);
 	bool check_library(std::string filename);
 };
-
+}
 #endif

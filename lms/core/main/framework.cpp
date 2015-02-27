@@ -3,6 +3,7 @@
 
 #include "backtrace_formatter.h"
 
+namespace lms{
 Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(arguments) {
 
     initManagers();
@@ -72,4 +73,5 @@ void Framework::signal(int s) {
             BacktraceFormatter::print();
             break;
     }
+}
 }

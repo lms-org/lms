@@ -10,6 +10,7 @@ class DataManager;
 #include <string>
 #include <vector>
 
+namespace lms{
 #define IMPLEMENT_BASE \
 	public: \
 	std::string getName() { return ::getName(); }
@@ -25,6 +26,7 @@ public:
 	virtual bool initialize() = 0;	
 	virtual bool deinitialize() = 0;
 	virtual bool cycle() = 0;
+    //TODO: reset method
 
 	struct channelInformation {
 		channelInformation(int h, bool w) : handle(h), write(w) { }
@@ -37,6 +39,6 @@ protected:
 private:
 	DataManager* dm;
 };
-
+}
 
 #endif

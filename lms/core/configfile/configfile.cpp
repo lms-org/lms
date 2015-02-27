@@ -2,6 +2,8 @@
 #include <limits>
 #include <sstream>
 #include <fstream>
+
+namespace lms{
 /**
  * Remove surrounding whitespace from a std::string.
  * @param s The string to be modified.
@@ -284,4 +286,5 @@ std::string ConfigFile::row_from_entry(const ConfigFile::file_entry &entry) {
 	
 		return stream.str();
 	}
+}
 }

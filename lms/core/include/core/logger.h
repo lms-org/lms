@@ -9,6 +9,7 @@
 
 #include <core/extra/colors.h>
 
+namespace lms{
 class LogMessage;
 
 /**
@@ -358,5 +359,5 @@ private:
     bool colored;
     bool time;
 };
-
+}
 #endif /* LMS_CORE_LOGGER_H */

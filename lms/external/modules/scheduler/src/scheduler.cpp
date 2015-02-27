@@ -7,7 +7,7 @@
 bool Scheduler::initialize() {
 	printf("Init: scheduler\n");
 
-	ConfigFile *config = datamanager()->config("scheduler");
+    lms::ConfigFile *config = datamanager()->config("scheduler");
 
 	looptime = config->get_or_default("looptime", (double)10.);
 	warn_tolerance = config->get_or_default("warn_tolerance", (double)3.);

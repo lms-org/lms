@@ -8,9 +8,11 @@
 #include <sys/time.h>
 #include <core/loader.h>
 
+namespace lms{
 class DataManager;
 class Loader;
 #define MEASURE_TIME 1
+
 
 class ExecutionManager {
     //Für was das?
@@ -35,6 +37,7 @@ public:
     /**Disable module with the given name, remove it from the cycle-queue */
     void disableModule(std::string name);
 
+
     void invalidate();
     /**
      * @brief validate if invalidate was called before, it will check if all selected modules are initialised
@@ -51,8 +54,8 @@ private:
 	struct entry {
 		Shared_Base* module;
 		std::string name;
-		Loader::module_entry entry;
-		double last_exec_time;
+        Loader::module_entry entry;
+        double last_exec_time;
 		struct timeval last_exec_start;
     };
     //cycle list
@@ -71,5 +74,5 @@ private:
 //    std::string compare_mode;
 
 };
-
+}
 #endif

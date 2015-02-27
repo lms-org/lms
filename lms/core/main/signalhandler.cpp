@@ -1,5 +1,6 @@
 #include <core/signalhandler.h>
 
+namespace lms{
 SignalHandler SignalHandler::instance;
 
 SignalHandler& SignalHandler::getInstance() {
@@ -46,4 +47,5 @@ void SignalHandler::handlerForAllSignals(int signal) {
     for(auto& listener : SignalHandler::getInstance().listeners[signal]) {
         listener->signal(signal);
     }
+}
 }

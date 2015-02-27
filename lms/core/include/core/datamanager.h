@@ -12,6 +12,7 @@
 
 #define MEMORY_CHECK
 
+namespace lms{
 class Framework;
 class Shared_Base;
 //Für was die classe?
@@ -197,5 +198,5 @@ private:
     info_storage& acquire_channel_subscription(const char* name, Access::Operation op);
 
 };
-
+}
 #endif

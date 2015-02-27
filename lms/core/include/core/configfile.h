@@ -22,6 +22,8 @@
  * Items with a * after the Key may occure more often (the * is not part 
  * of the key. 
  */
+
+namespace lms{
 class ConfigFile {
 public:
 	/// Open and parse config file. 
@@ -174,4 +176,5 @@ private:
 	/// \return Row without \n
 	std::string row_from_entry(const file_entry &entry);
 };
+}
 #endif

@@ -11,7 +11,8 @@
 #include <core/shared_base.h>
 #include <pugixml.hpp>
 
-template<typename _Target> 
+namespace lms{
+template<typename _Target>
 union converter {
     void* src; 
     _Target target;
@@ -193,5 +194,5 @@ char* Loader::make_searchpath(char* buffer, const char* place) {
 	strcat(buffer, place);
 	return buffer;
 }
-
+}
 

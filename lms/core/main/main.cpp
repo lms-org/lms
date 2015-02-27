@@ -1,12 +1,13 @@
 #include <core/framework.h>
 #include <iostream>
+
 /**
  * @brief framework
  * @return
  * you can have a custom framework if you extend it and set it here
  */
 int main (int argc, char *argv[]) {
-    ArgumentHandler arguments;
+    lms::ArgumentHandler arguments;
     arguments.parseArguments(argc, argv);
 
     if(arguments.showHelp()) {
@@ -17,8 +18,9 @@ int main (int argc, char *argv[]) {
             << "  -c config  Load configuration (defaults to 'default')\n"
             << std::endl;
     } else {
-        Framework framework(arguments);
+        lms::Framework framework(arguments);
     }
 
     return EXIT_SUCCESS;
 }
+
