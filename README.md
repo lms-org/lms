@@ -40,8 +40,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   LMS is licensed under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ###TODO
- * Add lms namespace
- * License
+  * License
    * Add license-header to files
    * Add contributer-agreement-file
  * More docs
@@ -49,4 +48,4 @@ will be a cross-plattform system that allows easy module-handling and sharing.
  * http://www.possibility.com/Cpp/CppCodingStandard.html
  * Create One Exception for Each Library
  * Create Unique Name Space Names 
-
+ * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
