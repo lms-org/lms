@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <limits.h>
 #include <dirent.h>
-#include <string.h>
+#include <cstring>
 #include <dlfcn.h>
 #include <unistd.h>
 #include <fstream>
 #include <sys/stat.h>
 #include <algorithm>
+#include <string>
 
 #include <core/loader.h>
 #include <core/module.h>
@@ -17,21 +18,21 @@
 namespace lms{
 template<typename _Target>
 union converter {
-    void* src; 
+    void* src;
     _Target target;
 };
 
 Loader::Loader() {
-	char path[PATH_MAX];
-	memset (path, 0, PATH_MAX);
-	if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
-		perror("readlink failed");
-		exit(1);
-	}
+    char path[PATH_MAX];
+    memset (path, 0, PATH_MAX);
+    if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
+        perror("readlink failed");
+        exit(1);
+    }
     //get programmdirectory
-	programm_directory = path;
-	programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
-	programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
+    programm_directory = path;
+    programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
+    programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
 
     //printf("Programm Directory: %s\n", programm_directory.c_str());
 
@@ -59,7 +60,7 @@ Loader::moduleList Loader::getModules() {
         if (d->d_type == DT_DIR) {
             //get path
             configFilePath = pathToModules+d->d_name + "/"+loadConfigName;
-          //  std::cout <<"path: " + configFilePath + modulePath"\n"<<std::endl;
+            //  std::cout <<"path: " + configFilePath + modulePath"\n"<<std::endl;
 
             std::ifstream ifs;
 
@@ -83,13 +84,13 @@ Loader::moduleList Loader::getModules() {
                         localPathToModule = localPathToModule +"/";
                         std::string pathTmp = it->child("path").child_value();
                         /*
-                        //remove spaces, caused by xml parsing
-                        moduleName.erase (std::remove (moduleName.begin(), moduleName.end(), ' '), moduleName.end());
-                        localPathToModule.erase (std::remove (localPathToModule.begin(), localPathToModule.end(), ' '), localPathToModule.end());
-                        */
+                            //remove spaces, caused by xml parsing
+                            moduleName.erase (std::remove (moduleName.begin(), moduleName.end(), ' '), moduleName.end());
+                            localPathToModule.erase (std::remove (localPathToModule.begin(), localPathToModule.end(), ' '), localPathToModule.end());
+                            */
                         /**Add module-subdirectory.
-                         * Needed if the module contains more than one submodule that can run
-                        */
+                             * Needed if the module contains more than one submodule that can run
+                            */
                         localPathToModule = localPathToModule+pathTmp;
 
                         std::string modulePath = getModulePath(localPathToModule,moduleName);
@@ -110,8 +111,8 @@ Loader::moduleList Loader::getModules() {
 
                         list.push_back(entry);
                     }
-             }else{
-                  //TODO can't parse plugin-xml
+                }else{
+                    //TODO can't parse plugin-xml
                 }
                 //close loadConfig-file
                 ifs.close();
@@ -121,14 +122,14 @@ Loader::moduleList Loader::getModules() {
 
         }
     }
-	return list;
+    return list;
 }
 
 bool Loader::checkModule(const char* path){
     void* lib = dlopen (path, RTLD_LAZY);
     bool valid = false;
     if (lib != NULL) {
-//			printf("OK\n\tTesting for Necessary functions... ");
+        //			printf("OK\n\tTesting for Necessary functions... ");
         //Testing for Necessary functions
         valid =  (dlsym(lib, "getName") != NULL && dlsym(lib, "getInstance") != NULL);
 
@@ -142,30 +143,24 @@ bool Loader::checkModule(const char* path){
 
 
 Module* Loader::load( const module_entry& entry) {
-//	printf("Loading %s\n", make_filename(entry.module,entry.place).c_str());
     void *lib = dlopen(getModulePath(entry.localPathToModule,entry.name).c_str(),RTLD_NOW);
-	if(lib == NULL) {
-    //	printf("\033[031mCould not open shared object \033[033m%s\033[0m\nReason: %s\n",
-//				make_filename(entry.module.c_str(), entry.place.c_str()), dlerror());
-		exit(1);
-	}
-	void* func = dlsym(lib, "getInstance");
-	if (func == NULL) {
-		perror("dlsym");
-
-//		printf("Could not find getInstance in %s\n",
-//				make_filename(entry.module.c_str(), entry.place.c_str()));
-		exit(1);
-	}
+    if(lib == NULL) {
+        //TODO write error msg
+    }
+    void* func = dlsym(lib, "getInstance");
+    if (func == NULL) {
+        perror("dlsym");
+        //TODO write error msg
+    }
     ///Union-Hack to avoid a warning message
-    converter <void*(*)()> conv; 
+    converter <void*(*)()> conv;
     conv.src = func;
-    
+
     return (Module*)conv.target();
 }
 
 void Loader::unload(Module* a) {
-	delete a;
+    delete a;
 }
 
 
