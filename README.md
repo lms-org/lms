@@ -47,10 +47,13 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * If first version is finished -> Exclude modules for testing
   * http://www.possibility.com/Cpp/CppCodingStandard.html
   * Create One Exception for Each Library
-  * Create Unique Name Space Names 
-  * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
-  * After setting it up for windows we could add arduino-support :)
+
 
 ###Known bugs
   * Signalhandler doesn't work properly
   * Doesn't work on windows (Hasn't been implemented yet)
+
+###Thoughts:
+  * We could use [Boost] http://www.boost.org/doc/libs/1_57_0/index.html
+  * After setting it up for windows we could add arduino-support :)  
+  * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)

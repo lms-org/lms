@@ -26,8 +26,9 @@ void Framework::setProgrammDirectory(){
         exit(1);
     }*/
     //get programmdirectory
-    programm_directory = path;
-    programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
-    programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
-    Framework::programmDirectory = programm_directory;
+    programmDirectory = path;
+    programmDirectory = programmDirectory.substr(0, programmDirectory.rfind("/"));
+    programmDirectory = programmDirectory.substr(0, programmDirectory.rfind("/"));
+
+}
 }
