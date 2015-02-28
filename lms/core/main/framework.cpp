@@ -15,7 +15,7 @@ Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(argumen
         .addListener(SIGUSR2, this);
     //load all Availabel Modules
     executionManager->loadAvailabelModules();
-    executionManager->enableModule("scheduler");
+
     //Execution
     running = true;
 
