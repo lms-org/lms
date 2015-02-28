@@ -46,8 +46,24 @@ set (SOURCE
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
         "main/logger.cpp"
-	"main/backtrace_formatter.h"
+        "main/backtrace_formatter.h"
 )
+
+#System specific source
+#http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
+if(UNIX)
+    message("OS is UNIX!")
+    set (SOURCE ${SOURCE}
+        "main/loader_unix.cpp"
+    )
+elseif(WIN32)
+    message("OS is WIN32!")
+    set (SOURCE ${SOURCE}
+        "main/loader_win.cpp"
+    )
+else()
+    message("NO OS found!")
+endif()
 
 add_executable (lms
         ${PUBLIC_HEADERS}

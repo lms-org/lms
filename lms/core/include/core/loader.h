@@ -50,6 +50,8 @@ private:
      * @return true if module is fine
      */
     bool checkModule(const char* path);
+
+    void setProgrammDirectory();
     /**
      * @brief pathToModules path from programm_directory to the modules folder
      */

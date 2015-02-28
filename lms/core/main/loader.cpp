@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <dirent.h>
 #include <cstring>
-#include <dlfcn.h>
+//#include <dlfcn.h>
 #include <unistd.h>
 #include <fstream>
 #include <sys/stat.h>
@@ -23,6 +23,10 @@ union converter {
 };
 
 Loader::Loader() {
+    setProgrammDirectory();
+}
+/*
+Loader::setProgrammDirectory(){
     char path[PATH_MAX];
     memset (path, 0, PATH_MAX);
     if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
@@ -37,8 +41,8 @@ Loader::Loader() {
     //printf("Programm Directory: %s\n", programm_directory.c_str());
 
     Loader::pathToModules = programm_directory + "/" +"external/modules/";
-
 }
+*/
 
 Loader::moduleList Loader::getModules() {
     static std::string loadConfigName= "loadConfig.xml";
@@ -124,7 +128,7 @@ Loader::moduleList Loader::getModules() {
     }
     return list;
 }
-
+/*
 bool Loader::checkModule(const char* path){
     void* lib = dlopen (path, RTLD_LAZY);
     bool valid = false;
@@ -140,8 +144,8 @@ bool Loader::checkModule(const char* path){
     //TODO: not sure if dlclose needed if lib == null
     return valid;
 }
-
-
+*/
+/*
 Module* Loader::load( const module_entry& entry) {
     void *lib = dlopen(getModulePath(entry.localPathToModule,entry.name).c_str(),RTLD_NOW);
     if(lib == NULL) {
@@ -158,7 +162,7 @@ Module* Loader::load( const module_entry& entry) {
 
     return (Module*)conv.target();
 }
-
+*/
 void Loader::unload(Module* a) {
     delete a;
 }

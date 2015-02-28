@@ -1,5 +1,6 @@
 #include <core/framework.h>
 #include <iostream>
+#include <stdlib.h>
 
 /**
  * @brief framework
