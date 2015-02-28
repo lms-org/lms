@@ -18,20 +18,6 @@ set (PUBLIC_HEADERS
         "include/core/module.h"
         "include/core/loader.h"
 )
-#Compile config file, may be moved to add_executable or removed as we might dont need it anymore
-add_library(configfile STATIC
-        ${PUBLIC_HEADERS}
-        "configfile/configfile.cpp"
-)
-#Compile xml-parser pugixml
-add_library(pugixml STATIC         
-	"xml/pugixml-1.5/src/pugixml.cpp"
-	"xml/pugixml-1.5/src/pugixml.hpp"
-	"xml/pugixml-1.5/src/pugiconfig.hpp"
-)
-
-#link libraries
-link_libraries("dl" configfile pugixml)
 
 set (SOURCE
         "main/main.cpp"
@@ -49,9 +35,7 @@ set (SOURCE
         "main/backtrace_formatter.h"
         "main/backtrace_formatter.cpp"
 )
-
-#System specific source
-#http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
+#Add system-specific source
 if(UNIX)
     message("OS is UNIX!")
     set (SOURCE ${SOURCE}
@@ -74,6 +58,32 @@ add_executable (lms
         ${PUBLIC_HEADERS}
         ${SOURCE}
 )
+
+#Compile config file, may be moved to add_executable or removed as we might dont need it anymore
+add_library(configfile STATIC
+        "configfile/configfile.cpp"
+)
+#Compile xml-parser pugixml
+add_library(pugixml STATIC         
+	"xml/pugixml-1.5/src/pugixml.cpp"
+	"xml/pugixml-1.5/src/pugixml.hpp"
+	"xml/pugixml-1.5/src/pugiconfig.hpp"
+)
+
+#link libraries
+#link_libraries(configfile pugixml)
+target_link_libraries(lms PRIVATE configfile pugixml)
+
+#System specific source
+#http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
+if(UNIX)
+    target_link_libraries(lms PRIVATE "dl")
+    )
+#elseif(WIN32)
+else()
+    message("NO OS found!")
+endif()
+
 
 #Gather all config files
 file(GLOB_RECURSE ConfigFiles RELATIVE ${CMAKE_SOURCE_DIR}  ../external/loadConfig.xml)
