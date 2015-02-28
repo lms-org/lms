@@ -13,11 +13,13 @@
 #include <core/module.h>
 #include <pugixml.hpp>
 #include <core/logger.h>
+#include <core/framework.h>
 
 namespace lms{
 
 Loader::Loader() {
     setProgrammDirectory();
+    Loader::pathToModules = Framework::programmDirectory + "external/modules/";
 }
 
 Loader::moduleList Loader::getModules() {
@@ -27,7 +29,6 @@ Loader::moduleList Loader::getModules() {
 
     DIR *dp = NULL;
     dirent *d = NULL;
-    //TODO get list of all module-folders
     if((dp = opendir( pathToModules.c_str())) == NULL) {
         printf("Could not Open Directory: %s: ", pathToModules.c_str());
         perror("Reason: ");
@@ -35,74 +36,63 @@ Loader::moduleList Loader::getModules() {
     }
 
     while((d = readdir(dp)) != NULL) {
-        //Check if file is folder
-        //TODO wont work on solar (maybe), . and .. folder is found
-        if (d->d_type == DT_DIR) {
-            //get path
-            configFilePath = pathToModules+d->d_name + "/"+loadConfigName;
-            //  std::cout <<"path: " + configFilePath + modulePath"\n"<<std::endl;
-
-            std::ifstream ifs;
-
-            ifs.open (configFilePath, std::ifstream::in);
-
-            if(ifs.is_open()){
-                //config-file exists
-                pugi::xml_document doc;
-                pugi::xml_parse_result result = doc.load(ifs);
-
-                if (result){
-
-                    //parse modules
-                    pugi::xml_node modulesNode =doc.child("modules");
-
-                    for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it){
-                        //parse module content
-                        std::string moduleName = it->child("name").child_value();
-                        //set mainFolder (folder after modules
-                        std::string localPathToModule = d->d_name;
-                        localPathToModule = localPathToModule +"/";
-                        std::string pathTmp = it->child("path").child_value();
-                        /*
-                            //remove spaces, caused by xml parsing
-                            moduleName.erase (std::remove (moduleName.begin(), moduleName.end(), ' '), moduleName.end());
-                            localPathToModule.erase (std::remove (localPathToModule.begin(), localPathToModule.end(), ' '), localPathToModule.end());
-                            */
-                        /**Add module-subdirectory.
-                             * Needed if the module contains more than one submodule that can run
-                            */
-                        localPathToModule = localPathToModule+pathTmp;
-
-                        std::string modulePath = getModulePath(localPathToModule,moduleName);
-                        std::cout << "modulePath: " + modulePath << std::endl;
-                        //check if module is valid
-                        if(checkModule(modulePath.c_str())){
-                            std::cout << "Module valid " + moduleName << "add it to list" << std::endl;
-                        }else{
-                            std::cout << "Module invalid! " + moduleName <<std::endl;
-                            continue;
-                        }
-                        //add module to list
-                        struct module_entry entry;
-                        entry.localPathToModule = localPathToModule;
-                        entry.name = moduleName;
-                        //TODO
-                        entry.localPathToConfigs = "";
-
-                        list.push_back(entry);
-                    }
-                }else{
-                    //TODO can't parse plugin-xml
-                }
-                //close loadConfig-file
-                ifs.close();
-            }else{
-                //found some folder with no config-file
-            }
-
-        }
+        /*
+         * Hack only works because handleLoadConfig cares about it :D
+         * plattformspecific checks or boost::filesystem or some other lib would be usefull but as we don't wanna add so much code for just one need it's fine
+         */
+        configFilePath = pathToModules+d->d_name + "/"+loadConfigName;
+        //add modules to list (if they exist)
+        handleLoadConfig(configFilePath,d->d_name,list);
+        // }
     }
     return list;
+}
+
+void Loader::handleLoadConfig(std::string configFilePath, std::string moduleFolderName,moduleList& list){
+    std::ifstream ifs;
+    ifs.open (configFilePath, std::ifstream::in);
+    if(ifs.is_open()){
+        pugi::xml_document doc;
+        pugi::xml_parse_result result = doc.load(ifs);
+
+        if (result){
+
+            //parse modules
+            pugi::xml_node modulesNode =doc.child("modules");
+
+            for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it){
+                //parse module content
+                std::string moduleName = it->child("name").child_value();
+                //set mainFolder (folder after modules
+                std::string localPathToModule = moduleFolderName;
+                localPathToModule = localPathToModule +"/";
+                std::string pathTmp = it->child("path").child_value();
+                localPathToModule = localPathToModule+pathTmp;
+
+                std::string modulePath = getModulePath(localPathToModule,moduleName);
+                std::cout << "modulePath: " + modulePath << std::endl;
+                //check if module is valid
+                if(checkModule(modulePath.c_str())){
+                    std::cout << "Module valid " + moduleName << "add it to list" << std::endl;
+                }else{
+                    std::cout << "Module invalid! " + moduleName <<std::endl;
+                    continue;
+                }
+                //add module to list
+                struct module_entry entry;
+                entry.localPathToModule = localPathToModule;
+                entry.name = moduleName;
+                //TODO
+                entry.localPathToConfigs = "";
+                list.push_back(entry);
+            }
+        }else{
+            //TODO can't parse plugin-xml
+        }
+        ifs.close();
+    }else{
+        //found some folder with no config-file
+    }
 }
 
 void Loader::unload(Module* a) {

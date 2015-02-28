@@ -16,6 +16,10 @@ namespace lms{
 class Framework : public SignalHandler::Listener {
 public:
     /**
+     * @brief executionPath absolute path to running framework (folder that contains core and external)
+     */
+    static std::string programmDirectory;
+    /**
      * @brief Instantiate the framework, initiate datamanager and
      * execution manager and start the main loop.
      *
@@ -33,15 +37,18 @@ protected:
      */
     virtual void initManagers();
 private:
-    bool running;
-
-    void signal(int s);
 
     DataManager *dataManager;
     ExecutionManager *executionManager;
     ArgumentHandler argumentHandler;
 
     RootLogger logger;
+    bool running;
+
+    void signal(int s);
+
+    void setProgrammDirectory();
+
 };
 }
 

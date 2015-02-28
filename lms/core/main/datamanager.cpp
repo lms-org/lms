@@ -27,9 +27,6 @@ DataManager::~DataManager () {
         data = NULL;
     }
 }
-ConfigFile *DataManager::config(const char* configName) {
-    return conf_mgr.getConfig(configName);
-}
 
 void DataManager::register_new_channel(GenericHandle *handle, std::string name, size_t length) {
     info_storage &info = retrieval[name].iterator->second;

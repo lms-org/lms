@@ -55,11 +55,13 @@ if(UNIX)
     message("OS is UNIX!")
     set (SOURCE ${SOURCE}
         "main/loader_unix.cpp"
+        "main/framework_unix.cpp"
     )
 elseif(WIN32)
     message("OS is WIN32!")
     set (SOURCE ${SOURCE}
         "main/loader_win.cpp"
+        "main/framework_win.cpp"
     )
 else()
     message("NO OS found!")

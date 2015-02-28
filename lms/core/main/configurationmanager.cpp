@@ -1,19 +1,12 @@
 #include <core/configurationmanager.h>
 #include <unistd.h>
 #include <limits.h>
+#include <stdio.h>
+#include <core/framework.h>
 
 namespace lms{
 ConfigurationManager::ConfigurationManager() {
-	char path[PATH_MAX] = {0};
-	if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
-		perror("readlink failed");
-		exit(1);
-	}
-
-	configuration_path=path;
-	configuration_path=configuration_path.substr(0, configuration_path.rfind("/"));
-	configuration_path=configuration_path.substr(0, configuration_path.rfind("/"));
-	configuration_path=configuration_path.substr(0, configuration_path.rfind("/"));
+    configuration_path = Framework::programmDirectory;
 	configuration_path += "/config/";
 	printf("Configuration Directory: %s\n", configuration_path.c_str());
 }

@@ -50,16 +50,18 @@ private:
      * @return true if module is fine
      */
     bool checkModule(const char* path);
-
+    /**
+     * @brief parseLoadConfig Adds modules defined in the config to the list if they exist
+     * @param moduleDirectoryName That folderName: external/modules/[moduleDirectoryName]
+     * @param configPath doesn't have to exist
+     * @param list list to add the module_entry
+     */
+    void handleLoadConfig(std::string configPath,std::string moduleFolderName,moduleList& list);
     void setProgrammDirectory();
     /**
      * @brief pathToModules path from programm_directory to the modules folder
      */
     std::string pathToModules;
-    /**
-     * @brief programm_directory ABSOLUTE path to the programm (lms-file)
-     */
-    std::string programm_directory;
 };
 }
 #endif

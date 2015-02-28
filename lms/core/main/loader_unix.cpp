@@ -16,23 +16,6 @@ union converter {
     void* src;
     _Target target;
 };
-void Loader::setProgrammDirectory(){
-    char path[PATH_MAX];
-    memset (path, 0, PATH_MAX);
-    if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
-        perror("readlink failed");
-        exit(1);
-    }
-    //get programmdirectory
-    programm_directory = path;
-    programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
-    programm_directory = programm_directory.substr(0, programm_directory.rfind("/"));
-
-    //printf("Programm Directory: %s\n", programm_directory.c_str());
-
-    Loader::pathToModules = programm_directory + "/" +"external/modules/";
-}
-
 
 bool Loader::checkModule(const char* path){
     void* lib = dlopen (path, RTLD_LAZY);

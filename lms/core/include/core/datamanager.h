@@ -92,17 +92,7 @@ public:
         return (Handle<_T>*)channel_name_to_handle(name);
     }
 
-    // lädt config datei aus ordner
-    ConfigFile *config(const char* configName);
-    ConfigurationManager *cfgMgr() { return &conf_mgr; }
 
-    //TODO: auch blöd so, was anderes überlegen
-    std::string getConfigSuffix(std::string wished) {
-        if (wished != "") return wished;
-        else if (load_configuration != "")
-            return load_configuration;
-        else return "default";
-    }
     void setActiveModule(Module* sb) {
         activeModule = sb;
     }

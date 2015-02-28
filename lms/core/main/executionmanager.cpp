@@ -6,6 +6,7 @@
 #include <core/configurationmanager.h>
 #include <iostream>
 #include <core/datamanager.h>
+#include <stdio.h>
 
 namespace lms{
 
