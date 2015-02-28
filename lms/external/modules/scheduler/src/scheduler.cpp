@@ -7,10 +7,10 @@
 bool Scheduler::initialize() {
 	printf("Init: scheduler\n");
 
-    lms::ConfigFile *config = datamanager()->config("scheduler");
+    //lms::ConfigFile *config = datamanager()->config("scheduler");
 
-	looptime = config->get_or_default("looptime", (double)10.);
-	warn_tolerance = config->get_or_default("warn_tolerance", (double)3.);
+    looptime = 10.; //config->get_or_default("looptime", (double)10.);
+    warn_tolerance = 3;//config->get_or_default("warn_tolerance", (double)3.);
     gettimeofday(&last, NULL);
 	return true;
 }

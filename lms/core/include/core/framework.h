@@ -27,7 +27,7 @@ public:
      */
     Framework(const ArgumentHandler& arguments);
 
-    /**
+    /**programmDirectory
      * @brief Destroy datamanager and execution manager.
      */
     ~Framework();

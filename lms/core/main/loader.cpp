@@ -18,7 +18,6 @@
 namespace lms{
 
 Loader::Loader() {
-    setProgrammDirectory();
     Loader::pathToModules = Framework::programmDirectory + "external/modules/";
 }
 

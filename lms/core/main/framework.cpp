@@ -4,6 +4,7 @@
 #include "backtrace_formatter.h"
 
 namespace lms{
+std::string Framework::programmDirectory;
 Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(arguments) {
 
     initManagers();
