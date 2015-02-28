@@ -49,6 +49,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * Create One Exception for Each Library
   * Create Unique Name Space Names 
   * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
+  * After setting it up for windows we could add arduino-support :)
 
 ###Known bugs
   * Signalhandler doesn't work properly
+  * Doesn't work on windows (Hasn't been implemented yet)
