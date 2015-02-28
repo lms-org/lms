@@ -1,4 +1,4 @@
 set ( UTIL_MODULES
-	"sockets"
+#	"sockets"
 #	INSERT_FLAG_IMPORTER
 )

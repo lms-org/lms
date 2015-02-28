@@ -9,5 +9,5 @@ set (HEADERS
 )
 
 include_directories("include")
-
-add_library ( console_wait SHARED ${SOURCES} ${HEADERS})
+#TODO
+#add_library ( console_wait SHARED ${SOURCES} ${HEADERS})

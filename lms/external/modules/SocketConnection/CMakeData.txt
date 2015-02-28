@@ -1,4 +1,4 @@
 set (SOCKET_MODULES
-	"SocketClient"
-        "SocketServer"
+#	"SocketClient"
+#        "SocketServer"
 )
