@@ -47,6 +47,7 @@ set (SOURCE
         "main/argumentparser.cpp"
         "main/logger.cpp"
         "main/backtrace_formatter.h"
+        "main/backtrace_formatter.cpp"
 )
 
 #System specific source
@@ -56,12 +57,14 @@ if(UNIX)
     set (SOURCE ${SOURCE}
         "main/loader_unix.cpp"
         "main/framework_unix.cpp"
+        "main/backtrace_formatter_unix.cpp"
     )
 elseif(WIN32)
     message("OS is WIN32!")
     set (SOURCE ${SOURCE}
         "main/loader_win.cpp"
         "main/framework_win.cpp"
+        "main/backtrace_formatter_win.cpp"
     )
 else()
     message("NO OS found!")
