@@ -11,9 +11,10 @@ Framework::Framework(const ArgumentHandler &arguments) : argumentHandler(argumen
 
     SignalHandler::getInstance()
         .addListener(SIGINT, this)
-        .addListener(SIGSEGV, this)
-        .addListener(SIGUSR1, this)
-        .addListener(SIGUSR2, this);
+        .addListener(SIGSEGV, this);
+        //TODO Doesnt work on windows
+       // .addListener(SIGUSR1, this)
+       // .addListener(SIGUSR2, this);
     //load all Availabel Modules
     executionManager->loadAvailabelModules();
 
@@ -35,9 +36,11 @@ Framework::~Framework() {
     logger.info() << "Removing Signal listeners";
     SignalHandler::getInstance()
         .removeListener(SIGINT, this)
-        .removeListener(SIGSEGV, this)
-        .removeListener(SIGUSR1, this)
-        .removeListener(SIGUSR2, this);
+        .removeListener(SIGSEGV, this);
+
+        //TODO Doesnt work on windows
+       // .removeListener(SIGUSR1, this)
+       // .removeListener(SIGUSR2, this);
 
     logger.info() << "Killing EXECMGR";
     //printf("Killing EXECMGR\n");

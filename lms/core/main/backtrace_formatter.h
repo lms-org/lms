@@ -1,14 +1,10 @@
 #ifndef EXTRA_BACKTRACE_FORMATTER
 #define EXTRA_BACKTRACE_FORMATTER
 
-#include <signal.h>
-#include <execinfo.h>
-#include <iostream>
-#include <cxxabi.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
 namespace lms{
+/**
+ * @brief The BacktraceFormatter class for printing out errors given by the
+ */
 class BacktraceFormatter {
 public:
     static void print();

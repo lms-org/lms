@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <map>
-#include <signal.h>
+#include <csignal>
 
 namespace lms{
 /**
