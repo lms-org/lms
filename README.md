@@ -40,18 +40,17 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   LMS is licensed under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ###TODO
+  * If first version is finished -> Exclude modules for testing
+  * More docs
   * License
    * Add license-header to files
    * Add contributer-agreement-file
-  * More docs
-  * If first version is finished -> Exclude modules for testing
-  * http://www.possibility.com/Cpp/CppCodingStandard.html
-  * Create One Exception for Each Library
+  * arduino-support :)
 
 
 ###Known bugs
   * Signalhandler doesn't work properly
-  * Doesn't work on windows (Hasn't been implemented yet)
+  * Doesn't work on fully windows (it compiles)
 
 ###Thoughts:
   * We could use [Boost] http://www.boost.org/doc/libs/1_57_0/index.html
