@@ -32,8 +32,13 @@ public:
     virtual bool initialize() = 0;
 	virtual bool deinitialize() = 0;
 	virtual bool cycle() = 0;
+
     //TODO: reset method
-    //virtual void reset() = 0;
+    // The following implementation is fully backwards compatible:
+    // Modules can override reset if they can implement it
+    virtual void reset() {}
+    // If a module overrides reset() then isResettable() should be overriden to return true
+    virtual bool isResettable() { return false; }
 
 protected:
     DataManager* datamanager() { return dm; }
