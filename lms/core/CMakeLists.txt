@@ -17,6 +17,7 @@ set (PUBLIC_HEADERS
         "include/core/executionmanager.h"
         "include/core/module.h"
         "include/core/loader.h"
+        "include/core/type/static_image.h"
 )
 
 set (SOURCE
@@ -34,6 +35,7 @@ set (SOURCE
         "main/logger.cpp"
         "main/backtrace_formatter.h"
         "main/backtrace_formatter.cpp"
+        "main/type/static_image.cpp"
 )
 #Add system-specific source
 if(UNIX)
