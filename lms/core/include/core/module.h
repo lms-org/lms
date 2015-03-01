@@ -17,7 +17,7 @@ public:
     Module() { }
     virtual ~Module() { }
 	
-    std::string getName();
+    std::string getName() const;
     /**
      * called by the framework itself at module-creation
     */

@@ -7,7 +7,7 @@ namespace lms{
         return true;
     }
 
-    std::string Module::getName(){
+    std::string Module::getName() const{
         return loaderEntry.name;
     }
 }

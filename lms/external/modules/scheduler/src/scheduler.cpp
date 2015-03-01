@@ -1,11 +1,14 @@
 #include <scheduler.h>
 #include <core/executionmanager.h>
 #include <stdio.h>
+#include <unistd.h>
 
 // TODO umbenennen, name irreführend
 
 bool Scheduler::initialize() {
 	printf("Init: scheduler\n");
+
+    datamanager()->writeChannel<std::string>(this, "STRING");
 
     //lms::ConfigFile *config = datamanager()->config("scheduler");
 
