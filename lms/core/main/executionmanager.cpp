@@ -82,19 +82,51 @@ void ExecutionManager::sort(){
     }
     sortByDataChannel();
     sortByPriority();
+
+    //TODO
+    //validate();
+    //validateDataChannels();
 }
 
 void ExecutionManager::sortByDataChannel(){
-    for(std::vector<Module*> list: cycleList){
-        for(Module* master : list){
-
+    for(std::pair<std::string, DataManager::DataChannel> pair : dataManager.getChannels()){
+        for(Module* reader : pair.second.readers){
+            for(std::vector<Module*> list: cycleList){
+                for(Module* toAdd : list){
+                    //add all writers to the needed modules
+                    for(Module* writer : pair.second.writers){
+                        if(toAdd->getName() == reader->getName()){
+                            list.push_back(writer);
+                        }
+                    }
+                }
+            }
         }
     }
-    //TODO
 }
 
 void ExecutionManager::sortByPriority(){
-    //TODO
+    for(std::pair<std::string, DataManager::DataChannel> pair : dataManager.getChannels()){
+        for(Module* writer1 : pair.second.writers){
+            for(Module* writer2 : pair.second.writers){
+                if(writer1->getName() != writer2->getName()){
+                    for(std::vector<Module*> list: cycleList){
+                        for(Module* insert : list){
+                            if(writer1->getPriority() >= writer2->getPriority()){
+                                if(insert->getName() == writer2->getName()){
+                                    list.push_back(writer1);
+                                }
+                            }else{
+                                if(insert->getName() == writer1->getName()){
+                                    list.push_back(writer2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 }

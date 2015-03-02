@@ -43,7 +43,7 @@ private:
         void* get() { return &data; }
         T data;
     };
-
+public:
     struct DataChannel {
         DataChannel() : dataWrapper(nullptr), dataSize(0), exclusiveWrite(false) {}
 
@@ -53,7 +53,7 @@ private:
         std::vector<std::string> readers;
         std::vector<std::string> writers;
     };
-
+private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
 public:
     ~DataManager();
