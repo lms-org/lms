@@ -7,7 +7,10 @@
 
 bool Scheduler::initialize() {
 	printf("Init: scheduler\n");
-
+    /*
+     * That error has to be fixed using cmake as it will also happen to all modules
+     *
+     */
     datamanager()->writeChannel<std::string>(this, "STRING");
 
     //lms::ConfigFile *config = datamanager()->config("scheduler");

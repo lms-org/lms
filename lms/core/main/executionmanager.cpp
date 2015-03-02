@@ -55,7 +55,8 @@ void ExecutionManager::enableModule(std::string name){
 
 /**Disable module with the given name, remove it from the cycle-queue */
 void ExecutionManager::disableModule(std::string name){
-
+    invalidate();
+    //TODO
 }
 /**
  * @brief ExecutionManager::invalidate calling that method will cause the executionmanager to run validate() in the next loop
@@ -67,9 +68,33 @@ void ExecutionManager::invalidate(){
 void ExecutionManager::validate(){
     if(!valid){
         valid = true;
-        //TODO sort modules
-        //TODO validate the DataManager
+        sort();
     }
+}
+
+void ExecutionManager::sort(){
+    cycleList.clear();
+    //add modules to the list
+    for(Module* it : enabledModules){
+        std::vector<Module*> tmp;
+        tmp.push_back(it);
+        cycleList.push_back(tmp);
+    }
+    sortByDataChannel();
+    sortByPriority();
+}
+
+void ExecutionManager::sortByDataChannel(){
+    for(std::vector<Module*> list: cycleList){
+        for(Module* master : list){
+
+        }
+    }
+    //TODO
+}
+
+void ExecutionManager::sortByPriority(){
+    //TODO
 }
 
 }

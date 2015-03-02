@@ -1,10 +1,6 @@
-#ifndef SHARED_SHARED_BASE_H
-#define SHARED_SHARED_BASE_H
-/**
- *TODO rename it to module.h
- */
+#ifndef LMS_MODULE_H
+#define LMS_MODULE_H
 
-//#include <core/shared_interface.h>
 #include <string>
 #include <vector>
 #include <core/loader.h>
@@ -48,4 +44,4 @@ private:
 };
 }
 
-#endif
+#endif /*LMS_MODULE_H*/

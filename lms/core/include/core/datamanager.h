@@ -56,72 +56,13 @@ public:
     ~DataManager();
 
     template<typename T>
-    const T* readChannel(const Module *module, const std::string &name) {
-        DataChannel &channel = channels[name];
-
-        if(channel.dataWrapper == nullptr) {
-            std::cerr << "Channel " << name << " has not yet any writers!" << std::endl;
-
-            channel.dataWrapper = new PointerWrapperImpl<T>();
-            channel.dataSize = sizeof(T);
-        } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
-            // TODO do some error handling here
-        }
-
-        channel.readers.push_back(module->getName());
-
-        return (const T*)channel.dataWrapper->get();
-    }
+    const T* readChannel(const Module *module, const std::string &name);
 
     template<typename T>
-    T* writeChannel(const Module *module, const std::string &name) {
-        DataChannel &channel = channels[name];
-
-        if(channel.exclusiveWrite) {
-            std::cerr << "Channel " << name << " is exclusive write!" << std::endl;
-            // TODO do some error handling
-        }
-
-        // if dataPointer is null, then the channel did not exist yet
-        if(channel.dataWrapper == nullptr) {
-            channel.dataWrapper = new PointerWrapperImpl<T>();
-            channel.dataSize = sizeof(T);
-        } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
-            // TODO do some error handling here
-        }
-
-        channel.writers.push_back(module->getName());
-
-        return (T*)channel.dataWrapper->get();
-    }
+    T* writeChannel(const Module *module, const std::string &name);
 
     template<typename T>
-    T* exclusiveWriteChannel(const Module *module, const std::string &name) {
-        DataChannel &channel = channels[name];
-
-        if(channel.exclusiveWrite) {
-            std::cerr << "Channel " << name << " is exclusive write!" << std::endl;
-            // TODO do some error handling
-        }
-
-        if(channel.dataWrapper == nullptr) {
-            channel.dataWrapper = new PointerWrapperImpl<T>();
-            channel.dataSize = sizeof(T);
-            channel.exclusiveWrite = true;
-        } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
-            // TODO do some error handling here
-        } else if(! channel.writers.empty()) {
-            std::cerr << "Channel " << name << " has already writers!" << std::endl;
-            // TODO do some error handling here
-        }
-
-        channel.writers.push_back(module->getName());
-
-        return (T*)channel.dataWrapper->get();
-    }
+    T* exclusiveWriteChannel(const Module *module, const std::string &name);
 };
 
 

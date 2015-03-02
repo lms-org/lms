@@ -1,16 +1,11 @@
-#include <core/datamanager.h>
+#include <map>
+#include <vector>
+#include <string>
+#include <iostream>
+
+#include <core/handle.h>
 #include <core/module.h>
-
-#include <deque>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <core/extra/colors.h>
-#include <core/configurationmanager.h>
-
-// TODO alternative? wann nicht definiert?
-#define DATA_PACKET
+#include <core/datamanager.h>
 
 namespace lms{
 
@@ -26,6 +21,77 @@ DataManager::~DataManager() {
     for(auto it = channels.begin(); it != channels.end(); it++) {
         delete it->second.dataWrapper;
     }
+}
+
+template<typename T>
+const T* DataManager::readChannel(const Module *module, const std::string &name) {
+    DataChannel &channel = channels[name];
+
+    if(channel.dataWrapper == nullptr) {
+        std::cerr << "Channel " << name << " has not yet any writers!" << std::endl;
+
+        channel.dataWrapper = new PointerWrapperImpl<T>();
+        channel.dataSize = sizeof(T);
+    } else if(channel.dataSize != sizeof(T)) {
+        std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+        // TODO do some error handling here
+    }
+
+    channel.readers.push_back(module->getName());
+
+    return (const T*)channel.dataWrapper->get();
+}
+
+template<typename T>
+T* DataManager::writeChannel(const Module *module, const std::string &name) {
+    DataChannel &channel = channels[name];
+
+    if(channel.exclusiveWrite) {
+        std::cerr << "Channel " << name << " is exclusive write!" << std::endl;
+        // TODO do some error handling
+    }
+
+    // if dataPointer is null, then the channel did not exist yet
+    if(channel.dataWrapper == nullptr) {
+        channel.dataWrapper = new PointerWrapperImpl<T>();
+        channel.dataSize = sizeof(T);
+    } else if(channel.dataSize != sizeof(T)) {
+        std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+        // TODO do some error handling here
+    }
+    /*
+     * Fails: F:/UserData/Documents/programmieren/c++/LMS/lms/core/include/core/datamanager.h:95: undefined reference to `lms::Module::getName() const'
+     *
+     */
+    channel.writers.push_back(module->getName());
+
+    return (T*)channel.dataWrapper->get();
+}
+
+template<typename T>
+T* DataManager::exclusiveWriteChannel(const Module *module, const std::string &name) {
+    DataChannel &channel = channels[name];
+
+    if(channel.exclusiveWrite) {
+        std::cerr << "Channel " << name << " is exclusive write!" << std::endl;
+        // TODO do some error handling
+    }
+
+    if(channel.dataWrapper == nullptr) {
+        channel.dataWrapper = new PointerWrapperImpl<T>();
+        channel.dataSize = sizeof(T);
+        channel.exclusiveWrite = true;
+    } else if(channel.dataSize != sizeof(T)) {
+        std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+        // TODO do some error handling here
+    } else if(! channel.writers.empty()) {
+        std::cerr << "Channel " << name << " has already writers!" << std::endl;
+        // TODO do some error handling here
+    }
+
+    channel.writers.push_back(module->getName());
+
+    return (T*)channel.dataWrapper->get();
 }
 
 /*void DataManager::print_mapping() {

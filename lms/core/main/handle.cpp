@@ -2,6 +2,8 @@
 #include <core/datamanager.h>
 
 namespace lms{
+//TODO remove those methods if they aren't needed anymore
+/*
 int GenericHandle::getSize() {
     return datamanager()->get_channel_info(this).length;
 }
@@ -9,4 +11,5 @@ int GenericHandle::getSize() {
 void GenericHandle::get(int handle, void** data) {
 	datamanager()->get_channel(handle, data);
 }
+*/
 }

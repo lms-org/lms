@@ -5,6 +5,8 @@
 #include <string>
 #include <deque>
 #include <map>
+#include <vector>
+
 #include <sys/time.h>
 #include <core/loader.h>
 #include <core/datamanager.h>
@@ -47,11 +49,32 @@ namespace lms{
         Loader loader;
         DataManager dataManager;
 
-        //cycle list
+        /**
+         * @brief enabledModules contains all loaded Modules
+         */
         std::vector<Module*> enabledModules;
 
-        //list of all available modules
+        typedef std::vector<std::vector<Module*>> cycleListT;
+        cycleListT cycleList;
+        /**
+         * @brief available contains all Modules which can be loaded
+         */
         Loader::moduleList available;
+        /**
+         * @brief sort call this method for sorting the cycleList
+         * As this method isn't called often I won't care about performance but readability. If you have to call this method often you might have to improve it.
+         */
+        void sort();
+        /**
+         * @brief sortByDataChannel Sorts enableModules into cycleList. Call this method before sortByPriority().
+         * As this method isn't called often I won't care about performance but readability. If you have to call this method often you might have to improve it.
+         */
+        void sortByDataChannel();
+        /**
+         * @brief sortByDataChannel Sorts loadedModules into cycleList
+         * As this method isn't called often I won't care about performance but readability. If you have to call this method often you might have to improve it.
+         */
+        void sortByPriority();
 
     };
 }
