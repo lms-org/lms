@@ -50,9 +50,12 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Known bugs
   * Signalhandler doesn't work properly
-  * Doesn't work on fully windows (it compiles)
+  * Doesn't fully work on windows (it compiles)
 
 ###Thoughts:
   * We could use [Boost] http://www.boost.org/doc/libs/1_57_0/index.html
   * After setting it up for windows we could add arduino-support :)  
   * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
+
+###Special thanks go to
+  *  ngladitz from #cmake, who helped me a lot getting into cmake :)

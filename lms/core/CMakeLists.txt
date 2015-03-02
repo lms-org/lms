@@ -18,6 +18,7 @@ set (PUBLIC_HEADERS
         "include/core/module.h"
         "include/core/loader.h"
         "include/core/type/static_image.h"
+        "include/core/lms_exports.h"
 )
 
 set (SOURCE
@@ -60,6 +61,8 @@ add_executable (lms
         ${PUBLIC_HEADERS}
         ${SOURCE}
 )
+
+set_target_properties(lms PROPERTIES ENABLE_EXPORTS 1)
 
 #Compile config file, may be moved to add_executable or removed as we might dont need it anymore
 add_library(configfile STATIC
