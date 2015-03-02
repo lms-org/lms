@@ -7,6 +7,7 @@
 #include <map>
 #include <sys/time.h>
 #include <core/loader.h>
+#include <core/datamanager.h>
 
 namespace lms{
     class DataManager;
@@ -19,8 +20,8 @@ namespace lms{
         ExecutionManager& operator = (const ExecutionManager &) = delete;
     public:
 
-        ExecutionManager(DataManager* dataManager);
-        virtual ~ExecutionManager();
+        ExecutionManager();
+        ~ExecutionManager();
 
         /**cycle modues */
         void loop();
@@ -43,8 +44,8 @@ namespace lms{
 
         bool valid;
 
-        Loader *loader;
-        DataManager* dataManager;
+        Loader loader;
+        DataManager dataManager;
 
         //cycle list
         std::vector<Module*> enabledModules;

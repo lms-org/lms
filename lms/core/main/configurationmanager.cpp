@@ -6,7 +6,7 @@
 
 namespace lms{
 ConfigurationManager::ConfigurationManager() {
-    configuration_path = Framework::programmDirectory;
+    configuration_path = Framework::programDirectory();
 	configuration_path += "/config/";
 	printf("Configuration Directory: %s\n", configuration_path.c_str());
 }

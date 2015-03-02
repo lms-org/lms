@@ -18,7 +18,8 @@ public:
     /**
      * @brief executionPath absolute path to running framework (folder that contains core and external)
      */
-    static std::string programmDirectory;
+    static std::string programDirectory();
+
     /**
      * @brief Instantiate the framework, initiate datamanager and
      * execution manager and start the main loop.
@@ -27,27 +28,20 @@ public:
      */
     Framework(const ArgumentHandler& arguments);
 
-    /**programmDirectory
+    /**
      * @brief Destroy datamanager and execution manager.
      */
     ~Framework();
-protected:
-    /**
-     * @brief Override this method to set custom Managers!
-     */
-    virtual void initManagers();
 private:
 
-    DataManager *dataManager;
-    ExecutionManager *executionManager;
-    ArgumentHandler argumentHandler;
-
     RootLogger logger;
+
+    ArgumentHandler argumentHandler;
+    ExecutionManager executionManager;
+
     bool running;
 
     void signal(int s);
-
-    void setProgrammDirectory();
 
 };
 }

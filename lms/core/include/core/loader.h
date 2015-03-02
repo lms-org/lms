@@ -57,7 +57,6 @@ private:
      * @param list list to add the module_entry
      */
     void handleLoadConfig(std::string configPath,std::string moduleFolderName,moduleList& list);
-    void setProgrammDirectory();
     /**
      * @brief pathToModules path from programm_directory to the modules folder
      */

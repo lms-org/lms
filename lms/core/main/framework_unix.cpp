@@ -12,16 +12,26 @@
 #include <core/framework.h>
 namespace lms{
 
-void Framework::setProgrammDirectory(){
-    char path[PATH_MAX];
-    memset (path, 0, PATH_MAX);
-    if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
-        perror("readlink failed");
-        exit(1);
-    }
-    //get programmdirectory
-    programmDirectory = path;
-    programmDirectory = programmDirectory.substr(0, programmDirectory.rfind("/"));
-    programmDirectory = programmDirectory.substr(0, programmDirectory.rfind("/"));
+std::string Framework::programDirectory(){
+    static std::string directory;
+
+    if(directory.empty()) {
+        char path[PATH_MAX];
+        memset (path, 0, PATH_MAX);
+        if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
+            perror("readlink failed");
+            exit(1);
+        }
+        //get programmdirectory
+        // TODO optimize this a bit
+        directory = path;
+        directory = directory.substr(0, directory.rfind("/"));
+        directory = directory.substr(0, directory.rfind("/"));
+     }
+
+    std::cout << "ProgramDirectory: " << directory << std::endl;
+
+     //return directory; // TODO did not work with this line
+    return "";
 }
 }

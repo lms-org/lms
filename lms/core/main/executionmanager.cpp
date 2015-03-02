@@ -10,16 +10,11 @@
 
 namespace lms{
 
-ExecutionManager::ExecutionManager(DataManager * dataManager){
-    ExecutionManager::dataManager = dataManager;
-    loader = new Loader();
-    valid = false;
+ExecutionManager::ExecutionManager() : valid(false) {
 }
 
 ExecutionManager::~ExecutionManager () {
     //TODO
-    //delete available;
-    delete loader;
 }
 
 void ExecutionManager::loop() {
@@ -36,7 +31,7 @@ void ExecutionManager::loop() {
 
 void ExecutionManager::loadAvailabelModules(){
     printf("load AvailabelModules");
-    available  = loader->getModules();
+    available  = loader.getModules();
 }
 
 void ExecutionManager::enableModule(std::string name){
@@ -49,8 +44,8 @@ void ExecutionManager::enableModule(std::string name){
     }
     for(auto& it:available){
         if(it.name == name){
-            Module* module = loader->load(it);
-            module->initializeBase(dataManager,it);
+            Module* module = loader.load(it);
+            module->initializeBase(&dataManager,it);
             module->initialize();
             enabledModules.push_back(module);
             invalidate();
