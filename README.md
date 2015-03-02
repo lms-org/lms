@@ -50,7 +50,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Known bugs
   * Signalhandler doesn't work properly
-  * Doesn't work on fully windows (it compiles)
+  * Doesn't fully work on windows (it compiles)
 
 ###Thoughts:
   * We could use [Boost] http://www.boost.org/doc/libs/1_57_0/index.html
