@@ -1,5 +1,7 @@
 #include <core/module.h>
 #include <string>
+#include <core/lms_exports.h>
+
 namespace lms{
     bool Module::initializeBase(DataManager* d,Loader::module_entry &loaderEntry) {
         dm = d;
@@ -7,7 +9,7 @@ namespace lms{
         return true;
     }
 
-    std::string Module::getName() const{
+    lms_EXPORT std::string Module::getName() const{
         return loaderEntry.name;
     }
 }

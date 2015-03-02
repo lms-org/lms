@@ -10,4 +10,5 @@ set (HEADERS
 
 include_directories("include")
 
-add_library ( scheduler SHARED ${SOURCES} ${HEADERS})
+add_library ( scheduler MODULE ${SOURCES} ${HEADERS})
+target_link_libraries(scheduler PRIVATE lms)
