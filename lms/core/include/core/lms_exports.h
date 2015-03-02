@@ -4,6 +4,6 @@
     #else
      #define lms_EXPORT __declspec(dllimport)
     #endif
-#else(WIN32)
+#else
     #define lms_EXPORT
 #endif
