@@ -23,6 +23,9 @@ DataManager::~DataManager() {
     }
 }
 
+const std::map<std::string,DataManager::DataChannel>& DataManager::getChannels() const {
+    return channels;
+}
 
 /*void DataManager::print_mapping() {
 	for (auto it = management.begin(); it != management.end(); ++it) {

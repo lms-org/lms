@@ -44,8 +44,6 @@ private:
         T data;
     };
 
-    //class
-
     struct DataChannel {
         DataChannel() : dataWrapper(nullptr), dataSize(0), exclusiveWrite(false) {}
 
@@ -130,6 +128,8 @@ public:
 
         return (T*)channel.dataWrapper->get();
     }
+
+    const std::map<std::string,DataChannel>& getChannels() const;
 
     /**
      * @brief Release all channels
