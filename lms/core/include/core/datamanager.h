@@ -24,6 +24,11 @@ enum class Operation {
     EXCLUSIVE_WRITE
 };
 
+/**
+ * @brief The DataManager class
+ *
+ * Suggested channel types: std::array, lms::StaticImage, simple structs
+ */
 class DataManager {
 private:
     class PointerWrapper {
@@ -63,6 +68,15 @@ public:
 
     template<typename T>
     T* exclusiveWriteChannel(const Module *module, const std::string &name);
+
+    /**
+     * @brief Release all channels
+     *
+     * This should be called in lms::Module::deinitialize.
+     *
+     * @param module
+     */
+    void releaseChannelsBy(const Module *module);
 };
 
 

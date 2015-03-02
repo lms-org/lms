@@ -1,5 +1,6 @@
 #include <scheduler.h>
 #include <core/executionmanager.h>
+#include <core/type/static_image.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -12,6 +13,12 @@ bool Scheduler::initialize() {
      *
      */
     datamanager()->writeChannel<std::string>(this, "STRING");
+
+    lms::type::StaticImage<320,240,char> *image =
+            datamanager()->writeChannel<lms::type::StaticImage<320,240,char>>(this, "IMAGE_BLA");
+
+    char b = (*image)(100,20);
+    image->fill(12);
 
     //lms::ConfigFile *config = datamanager()->config("scheduler");
 
