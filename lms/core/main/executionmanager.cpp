@@ -89,9 +89,12 @@ void ExecutionManager::sort(){
 }
 
 void ExecutionManager::sortByDataChannel(){
-    for(std::pair<std::string, DataManager::DataChannel> pair : dataManager.getChannels()){
+    // getChannels() returns const& -> you must use a const& here as well
+    for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
+        // Module* here is ok, you will make a copy of the pointer
         for(Module* reader : pair.second.readers){
-            for(std::vector<Module*> list: cycleList){
+            // usual & here
+            for(std::vector<Module*> &list: cycleList){
                 for(Module* toAdd : list){
                     //add all writers to the needed modules
                     for(Module* writer : pair.second.writers){
@@ -106,11 +109,13 @@ void ExecutionManager::sortByDataChannel(){
 }
 
 void ExecutionManager::sortByPriority(){
-    for(std::pair<std::string, DataManager::DataChannel> pair : dataManager.getChannels()){
+    // const& here again
+    for(const std::pair<std::string, DataManager::DataChannel>& pair : dataManager.getChannels()){
         for(Module* writer1 : pair.second.writers){
             for(Module* writer2 : pair.second.writers){
                 if(writer1->getName() != writer2->getName()){
-                    for(std::vector<Module*> list: cycleList){
+                    // usual & here
+                    for(std::vector<Module*> &list: cycleList){
                         for(Module* insert : list){
                             if(writer1->getPriority() >= writer2->getPriority()){
                                 if(insert->getName() == writer2->getName()){
