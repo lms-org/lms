@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 
-#include <core/handle.h>
 #include <core/module.h>
 #include <core/datamanager.h>
 
