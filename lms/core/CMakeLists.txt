@@ -6,7 +6,7 @@ include_directories(xml/pugixml-1.5/src)
 #Set public headers so the ide finds it
 set (PUBLIC_HEADERS
         "include/core/configfile.h"
-        "include/core/configurationmanager.h"
+        "include/core/configurationloader.h"
         "include/core/framework.h"
         "include/core/handle.h"
         "include/core/signalhandler.h"
@@ -26,7 +26,7 @@ set (SOURCE
         "main/loader.cpp"
         "main/module.cpp"
         "main/datamanager.cpp"
-        "main/configurationmanager.cpp"
+        "main/configurationloader.cpp"
         "main/executionmanager.cpp"
         "main/visualizer.cpp"
         "main/handle.cpp"

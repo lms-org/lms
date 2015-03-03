@@ -3,7 +3,6 @@
 #include <core/module.h>
 #include <core/loader.h>
 #include <queue>
-#include <core/configurationmanager.h>
 #include <iostream>
 #include <core/datamanager.h>
 #include <stdio.h>
@@ -55,8 +54,14 @@ void ExecutionManager::enableModule(std::string name){
 
 /**Disable module with the given name, remove it from the cycle-queue */
 void ExecutionManager::disableModule(std::string name){
-    invalidate();
-    //TODO
+    for(int i = 0; i< enabledModules.size(); ++i){
+        if(enabledModules[i]->getName() == name){
+            enabledModules.erase(enabledModules.begin() + 1);
+            invalidate();
+            return;
+        }
+    }
+    //TODO print error that modules didn't run
 }
 /**
  * @brief ExecutionManager::invalidate calling that method will cause the executionmanager to run validate() in the next loop
