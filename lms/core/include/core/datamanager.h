@@ -50,8 +50,8 @@ public:
         PointerWrapper *dataWrapper; // TODO hier auch unique_ptr möglich
         size_t dataSize; // currently only for idiot checks
         bool exclusiveWrite;
-        std::vector<std::string> readers;
-        std::vector<std::string> writers;
+        std::vector<Module*> readers;
+        std::vector<Module*> writers;
     };
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
@@ -59,7 +59,7 @@ public:
     ~DataManager();
 
     template<typename T>
-    const T*  readChannel(const Module *module, const std::string &name) {
+    const T*  readChannel(Module *module, const std::string &name) {
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
@@ -72,13 +72,13 @@ public:
             // TODO do some error handling here
         }
 
-        channel.readers.push_back(module->getName());
+        channel.readers.push_back(module);
 
         return (const T*)channel.dataWrapper->get();
     }
 
     template<typename T>
-    T* writeChannel(const Module *module, const std::string &name) {
+    T* writeChannel(Module *module, const std::string &name) {
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
@@ -98,13 +98,13 @@ public:
          * Fails: F:/UserData/Documents/programmieren/c++/LMS/lms/core/include/core/datamanager.h:95: undefined reference to `lms::Module::getName() const'
          *
          */
-        channel.writers.push_back(module->getName());
+        channel.writers.push_back(module);
 
         return (T*)channel.dataWrapper->get();
     }
 
     template<typename T>
-    T* exclusiveWriteChannel(const Module *module, const std::string &name) {
+    T* exclusiveWriteChannel(Module *module, const std::string &name) {
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
@@ -124,7 +124,7 @@ public:
             // TODO do some error handling here
         }
 
-        channel.writers.push_back(module->getName());
+        channel.writers.push_back(module);
 
         return (T*)channel.dataWrapper->get();
     }
