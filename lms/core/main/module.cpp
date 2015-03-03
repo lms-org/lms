@@ -12,4 +12,8 @@ namespace lms{
     lms_EXPORT std::string Module::getName() const{
         return loaderEntry.name;
     }
+
+    lms_EXPORT int Module::getPriority() const{
+        return priority;
+    }
 }

@@ -10,7 +10,7 @@ namespace lms{
 class DataManager;
 class Module {
 public:
-    Module() { }
+    Module():priority(0) { }
     virtual ~Module() { }
 	
     std::string getName() const;
@@ -18,6 +18,8 @@ public:
      * called by the framework itself at module-creation
     */
     bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry);
+
+    int getPriority() const;
 
     /**
      * TODO
@@ -41,6 +43,7 @@ protected:
 private:
     Loader::module_entry loaderEntry;
 	DataManager* dm;
+    int priority;
 };
 }
 
