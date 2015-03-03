@@ -1,6 +1,7 @@
 #include <core/type/module_config.h>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 
 namespace lms { namespace type {
 
