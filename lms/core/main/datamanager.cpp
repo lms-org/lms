@@ -26,6 +26,10 @@ const std::map<std::string,DataManager::DataChannel>& DataManager::getChannels()
     return channels;
 }
 
+bool DataManager::hasChannel(const std::string &name) {
+    return channels.count(name) == 1;
+}
+
 void DataManager::releaseChannelsOf(const Module *module) {
     for(auto &ch : channels) {
         for(auto it = ch.second.readers.begin(); it != ch.second.readers.end(); ++it) {

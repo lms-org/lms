@@ -128,6 +128,8 @@ public:
         channel.dataSize = sizeof(T);
     }
 
+    bool hasChannel(const std::string &name);
+
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
      * INTENDED TO BE USED IN MODULES.
