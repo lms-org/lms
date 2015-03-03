@@ -115,6 +115,19 @@ public:
         return (T*)channel.dataWrapper->get();
     }
 
+    template<typename T>
+    void setChannel(const std::string &name, const T &data) {
+        DataChannel &channel = channels[name];
+
+        if(channel.dataWrapper != nullptr) {
+            delete channel.dataWrapper;
+        }
+
+        channel.dataWrapper = new PointerWrapperImpl<T>();
+        *channel.dataWrapper->get() = data;
+        channel.dataSize = sizeof(T);
+    }
+
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
      * INTENDED TO BE USED IN MODULES.
