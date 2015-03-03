@@ -26,6 +26,8 @@ private:
     template<typename T>
     class PointerWrapperImpl : public PointerWrapper {
     public:
+        PointerWrapperImpl() {}
+        PointerWrapperImpl(const T &data) : data(data) {}
         void* get() { return &data; }
         T data;
     };
@@ -119,13 +121,18 @@ public:
     void setChannel(const std::string &name, const T &data) {
         DataChannel &channel = channels[name];
 
+        // Delete old channel if there was one
         if(channel.dataWrapper != nullptr) {
             delete channel.dataWrapper;
         }
 
-        channel.dataWrapper = new PointerWrapperImpl<T>();
-        *channel.dataWrapper->get() = data;
+        channel.dataWrapper = new PointerWrapperImpl<T>(data);
         channel.dataSize = sizeof(T);
+
+        // Reset channel
+        channel.exclusiveWrite = false;
+        channel.readers.clear();
+        channel.writers.clear();
     }
 
     bool hasChannel(const std::string &name);
