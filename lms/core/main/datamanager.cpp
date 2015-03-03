@@ -27,26 +27,56 @@ const std::map<std::string,DataManager::DataChannel>& DataManager::getChannels()
     return channels;
 }
 
-/*void DataManager::print_mapping() {
-	for (auto it = management.begin(); it != management.end(); ++it) {
-		printf("\n");
-		if (it->second.registered)
-			printf(COLOR_YELLOW);
-		else
-			printf(COLOR_RED);
+void DataManager::releaseChannelsOf(const Module *module) {
+    for(auto &ch : channels) {
+        for(auto it = ch.second.readers.begin(); it != ch.second.readers.end(); ++it) {
+            if(*it == module) {
+                ch.second.readers.erase(it);
+                break;
+            }
+        }
 
-        // TODO lösche COLOR_WHITE
-		printf ("%12s" COLOR_WHITE ": " GREEN("%15s") " [%6i] --> ",
-			it->first.c_str(),
-			it->second.registerer.c_str(),
-            it->second.length
-			);
-		for (auto iit = it->second.acquired.begin();
-				iit != it->second.acquired.end(); ++iit) {
-			if (*iit != it->second.registerer)
-				printf("%-15s ", iit->c_str());
-		}
+        for(auto it = ch.second.writers.begin(); it != ch.second.writers.end(); ++it) {
+            if(*it == module) {
+                ch.second.writers.erase(it);
+                break;
+            }
+        }
 
-	}
-}*/
+        if(ch.second.writers.empty()) {
+            ch.second.exclusiveWrite = false;
+
+            if(ch.second.readers.empty()) {
+                // TODO delete the channel
+            }
+        }
+    }
+}
+
+void DataManager::printMapping() const {
+    for(auto const &ch : channels) {
+        std::cout << ch.first;
+        if(ch.second.exclusiveWrite) {
+            std::cout << " (EXCLUSIVE)";
+        }
+        std::cout << " (" <<ch.second.dataSize << " Bytes) :" << std::endl;
+
+        if(! ch.second.readers.empty()) {
+            std::cout << "\treading: ";
+            for(Module *reader : ch.second.readers) {
+                std::cout << reader->getName() << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        if(! ch.second.writers.empty()) {
+            std::cout << "\twriting: ";
+            for(Module *writer : ch.second.writers) {
+                std::cout << writer->getName() << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+}
+
 }

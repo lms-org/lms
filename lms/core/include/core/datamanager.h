@@ -12,19 +12,6 @@
 namespace lms{
 
 /**
- * @brief The Operation enum used to detect, which module wants to read, write or modify.
- * There can only be one WRITE-Module per channel
- */
-enum class Operation {
-    READ,
-    WRITE,
-
-    // usually there can be multiple readers and writers
-    // but if there is on exclusive writer then there cannot be another writer
-    EXCLUSIVE_WRITE
-};
-
-/**
  * @brief The DataManager class
  *
  * Suggested channel types: std::array, lms::StaticImage, simple structs
@@ -129,6 +116,12 @@ public:
         return (T*)channel.dataWrapper->get();
     }
 
+    /**
+     * @brief Return the internal data channel mapping. THIS IS NOT
+     * INTENDED TO BE USED IN MODULES.
+     *
+     * @return datachannel map
+     */
     const std::map<std::string,DataChannel>& getChannels() const;
 
     /**
@@ -136,9 +129,15 @@ public:
      *
      * This should be called in lms::Module::deinitialize.
      *
-     * @param module
+     * @param module the module to look for
      */
-    void releaseChannelsBy(const Module *module);
+    void releaseChannelsOf(const Module *module);
+
+    /**
+     * @brief Print all channels with their corresponding readers
+     * and writers to stdout.
+     */
+    void printMapping() const;
 };
 
 
