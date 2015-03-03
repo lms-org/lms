@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include <core/framework.h>
 #include <fstream>
+#include <core/type/module_config.h>
+#include <core/datamanager.h>
 
 namespace lms{
-ConfigurationLoader::ConfigurationLoader() {
+ConfigurationLoader::ConfigurationLoader(DataManager dataManager) {
+    ConfigurationLoader::dataManager = dataManager;
     //Add default values
     addSuffix("");
     addPath("lms/configs/");
@@ -34,6 +37,8 @@ void ConfigurationLoader::getConfig(std::string name){
 
     //load config
     std::string configFilePath = getConfigFilePath(name);
+    type::ModuleConfig* conf = new type::ModuleConfig();
+    conf->loadFromFile(configFilePath);
     //TODO generate Configfile
 }
 
