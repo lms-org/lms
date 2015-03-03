@@ -3,7 +3,7 @@ include_directories(include)
 #include pugixml headers (hpp-files)
 include_directories(xml/pugixml-1.5/src)
 
-#Set public headers so the ide finds it
+#TODO Rename, not public
 set (PUBLIC_HEADERS
         "include/core/configurationloader.h"
         "include/core/framework.h"
@@ -18,6 +18,8 @@ set (PUBLIC_HEADERS
         "include/core/type/static_image.h"
         "include/core/lms_exports.h"
         "include/core/type/module_config.h"
+#private
+        "main/backtrace_formatter.h"
 )
 
 set (SOURCE
@@ -32,7 +34,6 @@ set (SOURCE
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
         "main/logger.cpp"
-        "main/backtrace_formatter.h"
         "main/backtrace_formatter.cpp"
         "main/type/static_image.cpp"
         "main/type/module_config.cpp"

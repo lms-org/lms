@@ -15,6 +15,7 @@ config/
 *.gitignore~
 *.md~
 .metadata
+*.autosave
 CMakeLists.txt.user
 doku/html
 
