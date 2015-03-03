@@ -1,7 +1,6 @@
 #ifndef CONFIGURATION_MANAGER_H
 #define CONFIGURATION_MANAGER_H
 
-#include <core/configfile.h>
 #include <map>
 #include <string>
 #include <vector>

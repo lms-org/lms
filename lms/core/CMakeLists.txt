@@ -5,7 +5,6 @@ include_directories(xml/pugixml-1.5/src)
 
 #Set public headers so the ide finds it
 set (PUBLIC_HEADERS
-        "include/core/configfile.h"
         "include/core/configurationloader.h"
         "include/core/framework.h"
         "include/core/signalhandler.h"
@@ -64,10 +63,6 @@ add_executable (lms
 
 set_target_properties(lms PROPERTIES ENABLE_EXPORTS 1)
 
-#Compile config file, may be moved to add_executable or removed as we might dont need it anymore
-add_library(configfile STATIC
-        "configfile/configfile.cpp"
-)
 #Compile xml-parser pugixml
 add_library(pugixml STATIC         
 	"xml/pugixml-1.5/src/pugixml.cpp"
@@ -76,8 +71,8 @@ add_library(pugixml STATIC
 )
 
 #link libraries
-#link_libraries(configfile pugixml)
-target_link_libraries(lms PRIVATE configfile pugixml)
+#link_libraries(pugixml)
+target_link_libraries(lms PRIVATE pugixml)
 
 #System specific source
 #http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
