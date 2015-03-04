@@ -8,7 +8,7 @@
 #include <core/datamanager.h>
 
 namespace lms{
-ConfigurationLoader::ConfigurationLoader(DataManager dataManager) {
+ConfigurationLoader::ConfigurationLoader(DataManager* dataManager) {
     ConfigurationLoader::dataManager = dataManager;
     //Add default values
     addSuffix("");
@@ -32,14 +32,25 @@ void ConfigurationLoader::validate(){
 }
 
 
-void ConfigurationLoader::getConfig(std::string name){
-    //TODO check if Config already exists
-
+void ConfigurationLoader::loadConfig(const std::string name){
+    type::ModuleConfig* conf;
+    /*
+    for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager->getChannels()){
+        if(pair.first == name){
+            conf = (type::ModuleConfig)pair.second.;
+            break;
+        }
+    }
+    */
     //load config
     std::string configFilePath = getConfigFilePath(name);
-    type::ModuleConfig* conf = new type::ModuleConfig();
+    if(configFilePath.length() == 0){
+        //TODO print error
+        return;
+    }
+    conf = new type::ModuleConfig();
     conf->loadFromFile(configFilePath);
-    //TODO generate Configfile
+    dataManager->setChannel(name,conf);
 }
 
 std::string ConfigurationLoader::getConfigFilePath(std::string name){
@@ -61,7 +72,7 @@ std::string ConfigurationLoader::getConfigFilePath(std::string name){
             }
         }
     }
-    return NULL;
+    return """";
 
 }
 

@@ -12,14 +12,16 @@
 namespace lms{
 class ConfigurationLoader {
 public:
-    ConfigurationLoader(DataManager dataManager);
+    ConfigurationLoader(DataManager *dataManager);
     virtual ~ConfigurationLoader();
     /**
-     * @brief getConfig
+     * @brief loadConfig
      * @param name
+     * Adds the config-data-channel to the DataManager
+     * Will reload the config if it was already loaded
      * //TODO Man könnte auch alle configs nacheinander laden wodruch die werte überschrieben würden
      */
-    void getConfig(std::string name);
+    void loadConfig(const std::string name);
     /**
      * @brief addPath
      * @param path will be added to the searchDirectories list
@@ -43,7 +45,7 @@ private:
 
     std::string getConfigFilePath(std::string name);
 
-    DataManager dataManager;
+    DataManager *dataManager;
 };
 }
 #endif
