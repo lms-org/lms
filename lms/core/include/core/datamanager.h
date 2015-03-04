@@ -10,12 +10,15 @@
 
 namespace lms{
 
+class ConfigurationLoader;
+
 /**
  * @brief The DataManager class
  *
  * Suggested channel types: std::array, lms::StaticImage, simple structs
  */
 class DataManager {
+friend ConfigurationLoader;
 private:
     class PointerWrapper {
     public:
@@ -159,6 +162,20 @@ public:
      * and writers to stdout.
      */
     void printMapping() const;
+private:
+    template<typename T>
+    T* getChannel(const std::string &name) {
+        DataChannel &channel = channels[name];
+
+        if(channel.dataWrapper == nullptr) {
+            return nullptr;
+        } else if(channel.dataSize != sizeof(T)) {
+            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+            // TODO do some error handling here
+        }
+
+        return (T*)channel.dataWrapper->get();
+    }
 };
 
 
