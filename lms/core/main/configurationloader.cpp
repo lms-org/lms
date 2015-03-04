@@ -8,8 +8,8 @@
 #include <core/datamanager.h>
 
 namespace lms{
-ConfigurationLoader::ConfigurationLoader(DataManager* dataManager) {
-    ConfigurationLoader::dataManager = dataManager;
+ConfigurationLoader::ConfigurationLoader(DataManager* dataManager)
+    : dataManager(dataManager) {
     //Add default values
     addSuffix("");
     addPath("lms/configs/");
@@ -18,11 +18,11 @@ ConfigurationLoader::ConfigurationLoader(DataManager* dataManager) {
 ConfigurationLoader::~ConfigurationLoader() {
  //TODO
 }
-void ConfigurationLoader::addPath(std::string path){
+void ConfigurationLoader::addPath(const std::string &path){
     searchDirectories.push_back(path);
 }
 
-void ConfigurationLoader::addSuffix(std::string path){
+void ConfigurationLoader::addSuffix(const std::string &path){
     suffixes.push_back(path);
 
 }
@@ -32,22 +32,22 @@ void ConfigurationLoader::validate(){
 }
 
 
-void ConfigurationLoader::loadConfig(const std::string name){
+void ConfigurationLoader::loadConfig(const std::string &name){
     //load config
-    std::string configFilePath = getConfigFilePath(name);
-    if(configFilePath.length() == 0){
+    std::string configFilePath(getConfigFilePath(name));
+    if(configFilePath.length() == 0) {
         //TODO print error
         return;
     }
     type::ModuleConfig* conf =  dataManager->getChannel<type::ModuleConfig>(name);
-    if(conf == NULL){
+    if(conf == NULL) {
         conf = new type::ModuleConfig();
     }
     conf->loadFromFile(configFilePath);
     dataManager->setChannel(name,conf);
 }
 
-std::string ConfigurationLoader::getConfigFilePath(std::string name){
+std::string ConfigurationLoader::getConfigFilePath(const std::string &name) {
     std::ifstream ifs;
     for(std::string& dir : searchDirectories){
         for(std::vector<std::string>::reverse_iterator suffix = suffixes.rbegin(); suffix != suffixes.rend(); ++suffix) {

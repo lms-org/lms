@@ -21,18 +21,18 @@ public:
      * Will reload the config if it was already loaded
      * //TODO Man könnte auch alle configs nacheinander laden wodruch die werte überschrieben würden
      */
-    void loadConfig(const std::string name);
+    void loadConfig(const std::string &name);
     /**
      * @brief addPath
      * @param path will be added to the searchDirectories list
      */
-    void addPath(std::string path);
+    void addPath(const std::string &path);
     /**
      * last added suffix will be used first for searching configfiles
      * @brief addSuffix
      * @param path
      */
-    void addSuffix(std::string path);
+    void addSuffix(const std::string &path);
     void validate();
 
 private:
@@ -43,7 +43,7 @@ private:
 
     std::vector<std::string> suffixes;
 
-    std::string getConfigFilePath(std::string name);
+    std::string getConfigFilePath(const std::string &name);
 
     DataManager *dataManager;
 };

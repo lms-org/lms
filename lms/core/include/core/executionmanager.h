@@ -31,9 +31,9 @@ namespace lms{
         /**Searches the programm for all availabe modules and adds them to the availabe list */
         void loadAvailabelModules();
         /**Enable module with the given name, add it to the cycle-queue */
-        void enableModule(std::string name);
+        void enableModule(const std::string &name);
         /**Disable module with the given name, remove it from the cycle-queue */
-        void disableModule(std::string name);
+        void disableModule(const std::string &name);
 
 
         void invalidate();

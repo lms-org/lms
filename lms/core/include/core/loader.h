@@ -43,7 +43,7 @@ private:
      * @param moduleName the name of the module (How it's written in CMakeLists.txt
      * @return the ABSOLUTE path of the shared library file (.so)
      */
-    std::string getModulePath(std::string localPathToModule, std::string moduleName);
+    std::string getModulePath(const std::string &localPathToModule, const std::string &moduleName);
     /**
      * @brief checkModule checks if the module could be loaded
      * @param path
@@ -56,7 +56,8 @@ private:
      * @param configPath doesn't have to exist
      * @param list list to add the module_entry
      */
-    void handleLoadConfig(std::string configPath,std::string moduleFolderName,moduleList& list);
+    void handleLoadConfig(const std::string &configPath, const std::string &moduleFolderName,
+        moduleList& list);
     /**
      * @brief pathToModules path from programm_directory to the modules folder
      */

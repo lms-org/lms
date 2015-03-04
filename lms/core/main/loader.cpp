@@ -18,7 +18,7 @@
 namespace lms{
 
 Loader::Loader() {
-    Loader::pathToModules = Framework::programDirectory() + "external/modules/";
+    pathToModules = Framework::programDirectory() + "external/modules/";
 }
 
 Loader::moduleList Loader::getModules() {
@@ -47,7 +47,8 @@ Loader::moduleList Loader::getModules() {
     return list;
 }
 
-void Loader::handleLoadConfig(std::string configFilePath, std::string moduleFolderName,moduleList& list){
+void Loader::handleLoadConfig(const std::string &configFilePath,
+                              const std::string &moduleFolderName, moduleList& list){
     std::ifstream ifs;
     ifs.open (configFilePath, std::ifstream::in);
     if(ifs.is_open()){
@@ -99,7 +100,7 @@ void Loader::unload(Module* a) {
 }
 
 
-std::string Loader::getModulePath(std::string modulePath, std::string moduleName) {
+std::string Loader::getModulePath(const std::string &modulePath, const std::string &moduleName) {
     return pathToModules+modulePath+"lib"+moduleName+".so";
 }
 

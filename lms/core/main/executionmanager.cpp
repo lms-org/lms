@@ -9,7 +9,7 @@
 
 namespace lms{
 
-ExecutionManager::ExecutionManager() : valid(false), maxThreads(1) {
+ExecutionManager::ExecutionManager() : maxThreads(1), valid(false) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -34,7 +34,7 @@ void ExecutionManager::loadAvailabelModules(){
     available  = loader.getModules();
 }
 
-void ExecutionManager::enableModule(std::string name){
+void ExecutionManager::enableModule(const std::string &name){
     //Check if module is already enabled
     for(auto* it:enabledModules){
         if(it->getName() == name){
@@ -54,8 +54,8 @@ void ExecutionManager::enableModule(std::string name){
 }
 
 /**Disable module with the given name, remove it from the cycle-queue */
-void ExecutionManager::disableModule(std::string name){
-    for(int i = 0; i< enabledModules.size(); ++i){
+void ExecutionManager::disableModule(const std::string &name){
+    for(size_t i = 0; i< enabledModules.size(); ++i){
         if(enabledModules[i]->getName() == name){
             enabledModules.erase(enabledModules.begin() + 1);
             invalidate();
