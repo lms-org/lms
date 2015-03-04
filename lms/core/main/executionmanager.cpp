@@ -9,7 +9,7 @@
 
 namespace lms{
 
-ExecutionManager::ExecutionManager() : valid(false) {
+ExecutionManager::ExecutionManager() : valid(false), maxThreads(1) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -20,6 +20,7 @@ void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
     //TODO execute modules like a boss
+
 
     //HACK just for testing atm
     for(auto* it: enabledModules){

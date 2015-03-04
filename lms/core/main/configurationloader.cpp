@@ -33,22 +33,16 @@ void ConfigurationLoader::validate(){
 
 
 void ConfigurationLoader::loadConfig(const std::string name){
-    type::ModuleConfig* conf;
-    /*
-    for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager->getChannels()){
-        if(pair.first == name){
-            conf = (type::ModuleConfig)pair.second.;
-            break;
-        }
-    }
-    */
     //load config
     std::string configFilePath = getConfigFilePath(name);
     if(configFilePath.length() == 0){
         //TODO print error
         return;
     }
-    conf = new type::ModuleConfig();
+    type::ModuleConfig* conf =  dataManager->getChannel<type::ModuleConfig>(name);
+    if(conf == NULL){
+        conf = new type::ModuleConfig();
+    }
     conf->loadFromFile(configFilePath);
     dataManager->setChannel(name,conf);
 }
@@ -72,7 +66,7 @@ std::string ConfigurationLoader::getConfigFilePath(std::string name){
             }
         }
     }
-    return """";
+    return "";
 
 }
 

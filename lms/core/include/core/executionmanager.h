@@ -43,7 +43,7 @@ namespace lms{
         */
         void validate();
     private:
-
+        int maxThreads;
         bool valid;
 
         Loader loader;
