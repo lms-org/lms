@@ -25,12 +25,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
         //usleep(9000*1000);
     }
 }
-
+/*
+ * TODO suffix for config
+ */
 void Framework::parseConfig(){
-    std::cout<<"PATH :" + Framework::programDirectory() << std::endl;
-    std::cout <<"PARSE FRAMEWORK CONFIG: "+Framework::programDirectory()+"configs/framwork_conf.xml"<<std::endl;
+    std::string configPath = Framework::programDirectory()+"configs/framework_conf.xml";
     std::ifstream ifs;
-    ifs.open (Framework::programDirectory()+"configs/framework_config.xml", std::ifstream::in);
+    ifs.open (configPath, std::ifstream::in);
     if(ifs.is_open()){
         pugi::xml_document doc;
         pugi::xml_parse_result result = doc.load(ifs);
@@ -39,22 +40,22 @@ void Framework::parseConfig(){
             pugi::xml_node tmpNode;
             //parse executionManager-stuff
             tmpNode = rootNode.child("executionManager");
+            //TODO set values for executionManager
 
+            //Start modules
             tmpNode = rootNode.child("modulesToLoad");
-
             std::cout <<"START ENABLING MODULES: "<<std::endl;
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
-                std::string moduleName = it->value();
-                std::cout <<"MODULEEEEEEEEEEE: "+ moduleName<<std::endl;
+                std::string moduleName = it->child_value();
                 executionManager.enableModule(moduleName);
             }
         }else{
-            //TODO errorhandling
             std::cout <<"FAILED TO READ CONFIG: "<<std::endl;
         }
     }else{
         std::cout <<"FAILED TO OPEN FRAMEWORK_FILE_CONFIG: "<<std::endl;
+
 
     }
 }

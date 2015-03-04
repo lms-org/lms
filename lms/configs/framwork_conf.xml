@@ -1,8 +1,0 @@
-<framework>
-	<executionManager>
-		<maxThreadCount>1</maxThreadCount>
-	</executionManager>
-	<modulesToLoad>
-		<module>scheduler</module>
-	</modulesToLoad>
-</framework>
