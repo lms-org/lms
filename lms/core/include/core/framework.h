@@ -44,6 +44,7 @@ private:
     bool running;
 
     void signal(int s);
+    void parseConfig();
 
 };
 }

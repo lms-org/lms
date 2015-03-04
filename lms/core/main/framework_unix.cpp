@@ -27,11 +27,10 @@ std::string Framework::programDirectory(){
         directory = path;
         directory = directory.substr(0, directory.rfind("/"));
         directory = directory.substr(0, directory.rfind("/"));
+        directory = directory + "/";
      }
 
-    std::cout << "ProgramDirectory: " << directory << std::endl;
-
-     //return directory; // TODO did not work with this line
-    return "";
+    //std::cout << "ProgramDirectory: " << directory << std::endl;
+    return directory;
 }
 }
