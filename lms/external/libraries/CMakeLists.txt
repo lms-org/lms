@@ -1,6 +1,6 @@
 #Build libraries given by CmakeData
 #Create CMakeData that looks like set ( LIBRARIES lib1 lib2 ...)
-if(EXISTS "CMakeData.txt")
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/CMakeData.txt")
 include("CMakeData.txt")
 endif()
 
