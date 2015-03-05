@@ -31,6 +31,16 @@ std::string Logger::levelName(LogLevel lvl) {
     }
 }
 
+LogLevel Logger::levelFromName(const std::string &name) {
+    if(name == "DEBUG") return LogLevel::DEBUG;
+    if(name == "INFO") return LogLevel::INFO;
+    if(name == "WARN") return LogLevel::WARN;
+    if(name == "ERROR") return LogLevel::ERROR;
+    // TODO better error handling here
+    std::cerr << "Unknown logging level: " << name << std::endl;
+    return LogLevel::DEBUG;
+}
+
 std::string Logger::levelColor(LogLevel lvl) {
     switch(lvl) {
     case LogLevel::DEBUG : return COLOR_GREEN;
@@ -41,22 +51,29 @@ std::string Logger::levelColor(LogLevel lvl) {
     }
 }
 
-RootLogger::RootLogger(std::unique_ptr<Sink> sink) {
+RootLogger::RootLogger(std::unique_ptr<Sink> sink, std::unique_ptr<LoggingFilter> filter) :
+    m_sink(std::move(sink)), m_filter(std::move(filter)) {
     std::cout << "New root logger with sink" << std::endl;
-    m_sink = std::move(sink);
 }
 
-RootLogger::RootLogger() {
+RootLogger::RootLogger() : m_sink(new ConsoleSink()), m_filter(nullptr) {
     std::cout << "New root logger" << std::endl;
-    m_sink.reset(new ConsoleSink());
 }
 
 void RootLogger::sink(std::unique_ptr<Sink> sink) {
     m_sink = std::move(sink);
 }
 
+void RootLogger::filter(std::unique_ptr<LoggingFilter> filter) {
+    m_filter = std::move(filter);
+}
+
 std::unique_ptr<LogMessage> RootLogger::log(LogLevel lvl, const std::string& tag) {
-    return std::unique_ptr<LogMessage>(new LogMessage(*m_sink, lvl, tag));
+    if(!m_filter || m_filter->filter(lvl, tag)) {
+        return std::unique_ptr<LogMessage>(new LogMessage(*m_sink, lvl, tag));
+    } else {
+        return nullptr;
+    }
 }
 
 std::unique_ptr<LogMessage> ChildLogger::log(LogLevel lvl, const std::string& tag) {
@@ -113,10 +130,30 @@ void ConsoleSink::sink(const LogMessage &message) {
     m_out << " " << message.messageText() << std::endl;
 }
 
+bool PrefixAndLevelFilter::filter(LogLevel level, const std::string &tag) {
+    if(level < m_minLevel) {
+        return false;
+    }
+
+    // if no prefixes are given, then all tags are valid
+    if(m_prefixes.empty()) {
+        return true;
+    }
+
+    for(const std::string &prefix : m_prefixes) {
+        if(tag.compare(0, prefix.size(), prefix) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 std::unique_ptr<LogMessage> operator <<(std::unique_ptr<LogMessage> message, std::ostream& (*pf) (std::ostream&))
 {
     if(message.get() == nullptr) {
-        std::cerr << "LOG MESSAGE IS NULL" << std::endl;
+        // TODO if filter returned false, message will point to NULL
+        //std::cerr << "LOG MESSAGE IS NULL" << std::endl;
     } else {
         // check if someone tried to write std::endl
         // -> that will end the log message and we can write it to a sink

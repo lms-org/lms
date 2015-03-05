@@ -9,6 +9,9 @@ namespace lms{
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger) {
 
+    rootLogger.filter(std::unique_ptr<LoggingFilter>(new PrefixAndLevelFilter(
+        arguments.loggingMinLevel(), arguments.loggingPrefixes())));
+
     SignalHandler::getInstance()
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);

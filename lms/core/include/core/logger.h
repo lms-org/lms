@@ -6,6 +6,7 @@
 #include <sstream>
 #include <ctime>
 #include <memory>
+#include <vector>
 
 #include <core/extra/colors.h>
 
@@ -49,6 +50,29 @@ public:
  */
 enum class LogLevel : std::int8_t {
     DEBUG = 1, INFO = 2, WARN = 3, ERROR = 4
+};
+
+/**
+ * @brief A logging filter can prevent a log message
+ * from becoming sinked.
+ *
+ * NOTE: This class is abstract. You must override filter()
+ * in your implementation.
+ *
+ * @author Hans Kirchner
+ */
+class LoggingFilter {
+public:
+    virtual ~LoggingFilter() {}
+
+    /**
+     * @brief This method will be called for every log message before being sent to a sink.
+     * @param level logging level
+     * @param tag logging tag
+     * @return true if the log message should be sinked, false if the log message
+     * should be ignored.
+     */
+    virtual bool filter(LogLevel level, const std::string &tag) = 0;
 };
 
 /**
@@ -127,8 +151,9 @@ std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, st
  */
 template <typename T>
 std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T const& value) {
-    if(message.get() == nullptr) {
-        std::cerr << "LOG MESSAGE IS NULL" << std::endl;
+    if(! message) {
+        // TODO if filter returned false this message will point to NULL
+        // std::cerr << "LOG MESSAGE IS NULL" << std::endl;
     } else {
         message->messageStream << value;
     }
@@ -163,6 +188,8 @@ public:
      * @return string representation of the given log level
      */
     static std::string levelName(LogLevel lvl);
+
+    static LogLevel levelFromName(const std::string &name);
 
     /**
      * @brief Returns a linux terminal compatible color code
@@ -233,7 +260,7 @@ public:
      *
      * @param sink a logging sink
      */
-    explicit RootLogger(std::unique_ptr<Sink> sink);
+    explicit RootLogger(std::unique_ptr<Sink> sink, std::unique_ptr<LoggingFilter> filter);
 
     /**
      * @brief Create a new root logger with a default console sink.
@@ -260,6 +287,15 @@ public:
     void sink(std::unique_ptr<Sink> sink);
 
     /**
+     * @brief Set the new filter for this root logger.
+     *
+     * The old filter will be deleted.
+     *
+     * @param filter a filter instance
+     */
+    void filter(std::unique_ptr<LoggingFilter> filter);
+
+    /**
      * @brief Log a message with the given level and tag.
      * @param lvl logging level
      * @param tag logging tag
@@ -268,6 +304,7 @@ public:
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
 private:
      std::unique_ptr<Sink> m_sink;
+     std::unique_ptr<LoggingFilter> m_filter;
 };
 
 /**
@@ -361,5 +398,27 @@ private:
     bool m_colored;
     bool m_time;
 };
+
+class PrefixAndLevelFilter : public LoggingFilter {
+public:
+    explicit PrefixAndLevelFilter(LogLevel minLevel = LogLevel::DEBUG) : m_minLevel(minLevel) {}
+    PrefixAndLevelFilter(LogLevel minLevel, const std::vector<std::string> &prefixes) :
+        m_minLevel(minLevel), m_prefixes(prefixes) {}
+
+    void addPrefix(const std::string &prefix) {
+        m_prefixes.push_back(prefix);
+    }
+
+    void minLevel(LogLevel minLevel) {
+        m_minLevel = minLevel;
+    }
+
+    bool filter(LogLevel level, const std::string &tag) override;
+
+private:
+    LogLevel m_minLevel;
+    std::vector<std::string> m_prefixes;
+};
+
 }
 #endif /* LMS_CORE_LOGGER_H */

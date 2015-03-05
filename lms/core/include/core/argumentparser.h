@@ -5,10 +5,14 @@
 #define argumenthandler_H
 
 #include <string>
+#include <vector>
+#include <core/logger.h>
 
 namespace lms{
     class ArgumentHandler{
     public:
+        ArgumentHandler();
+
         /**
          * @brief Parse the given command line arguments and store the values in the members.
          * @param argc Number of arguments
@@ -29,9 +33,15 @@ namespace lms{
          */
         bool showHelp() const;
 
+        std::vector<std::string> loggingPrefixes() const;
+
+        LogLevel loggingMinLevel() const;
+
     private:
         std::string m_loadConfiguration;
         bool m_showHelp;
+        std::vector<std::string> m_loggingPrefixes;
+        LogLevel m_loggingMinLevel;
     };
 }
 #endif /* argumenthandler_H */
