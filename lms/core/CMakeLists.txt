@@ -85,12 +85,7 @@ else()
 endif()
 
 
-#Gather all config files
-#file(GLOB_RECURSE ConfigFiles RELATIVE ${CMAKE_SOURCE_DIR}  ../external/loadConfig.xml)
-#message("ConfigFiles: " ${ConfigFiles})
-
-#Adds copy commands to the core (core compiled is called lms)
-#WUHU that took me 3 hours :D
+#Adds copy commands for configs to the core (core compiled is called lms)
 foreach(ConfigFile ${ConfigFiles})
     add_custom_command(TARGET lms PRE_BUILD
                         COMMAND ${CMAKE_COMMAND} -E
