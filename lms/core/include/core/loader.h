@@ -7,12 +7,14 @@
 #include <list>
 #include <string>
 
+#include <core/logger.h>
+
 namespace lms{
 class Module;
 
 class Loader {
 public:
-	explicit Loader();
+    explicit Loader(Logger *rootLogger);
     /**
      * @brief The module_entry struct
      * used to store available modules
@@ -36,7 +38,9 @@ public:
     //Doesnt needed at all
     void unload(Module*);
 private:
-	char stringbuffer[1024];
+
+    ChildLogger logger;
+
     /**
      * @brief getModulePath
      * @param localPathToModule the path from the modules folder to the module folder that contains the so file

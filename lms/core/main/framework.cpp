@@ -7,21 +7,19 @@
 namespace lms{
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    argumentHandler(arguments) {
-
-    rootLogger = std::shared_ptr<Logger>(new RootLogger());
-    coreLogger = std::shared_ptr<Logger>(new ChildLogger("CORE", rootLogger));
+    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(&rootLogger) {
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
+
     //load all Availabel Modules
     executionManager.loadAvailabelModules();
 
     //parse framework config
     parseConfig();
     //Execution
-    running = true;
+    running = false; // TODO !!! CHANGE THIS BACK TO TRUE !!!
 
     while(running) {
         executionManager.loop();
@@ -47,24 +45,24 @@ void Framework::parseConfig(){
 
             //Start modules
             tmpNode = rootNode.child("modulesToLoad");
-            logger().info() <<"START ENABLING MODULES: ";
+            logger.info() << "Start enabling modules";
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
                 std::string moduleName = it->child_value();
                 executionManager.enableModule(moduleName);
             }
         }else{
-            logger().error() << "FAILED TO READ CONFIG: ";
+            logger.error() << "Failed to parse framework_config.xml as XML";
         }
     }else{
-        logger().error() << "Failed to open framework_config.xml";
+        logger.error() << "Failed to open framework_config.xml";
 
 
     }
 }
 
 Framework::~Framework() {
-    logger().info() << "Removing Signal listeners";
+    logger.info() << "Removing Signal listeners";
     SignalHandler::getInstance()
             .removeListener(SIGINT, this)
             .removeListener(SIGSEGV, this);
@@ -75,14 +73,14 @@ void Framework::signal(int s) {
     case SIGINT:
         running = false;
 
-        logger().warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
+        logger.warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
 
         SignalHandler::getInstance().removeListener(SIGINT, this);
 
         break;
     case SIGSEGV:
         //Segmentation Fault - try to identify what went wrong;
-        logger().error()
+        logger.error()
                 << "######################################################" << std::endl
                 << "                   Segfault Found                     " << std::endl
                 << "######################################################";

@@ -24,8 +24,8 @@ std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
 std::string Logger::levelName(LogLevel lvl) {
     switch(lvl) {
     case LogLevel::DEBUG : return "DEBUG";
-    case LogLevel::INFO : return "INFO";
-    case LogLevel::WARN : return "WARN";
+    case LogLevel::INFO :  return "INFO ";
+    case LogLevel::WARN :  return "WARN ";
     case LogLevel::ERROR : return "ERROR";
     default : return "_"; // this should never happen
     }
@@ -106,7 +106,7 @@ void ConsoleSink::sink(const LogMessage &message) {
     if(m_colored) {
         m_out << COLOR_WHITE;
     }
-    m_out << ": " << message.messageText() << std::endl;
+    m_out << " " << message.messageText() << std::endl;
 }
 
 std::unique_ptr<LogMessage> operator <<(std::unique_ptr<LogMessage> message, std::ostream& (*pf) (std::ostream&))

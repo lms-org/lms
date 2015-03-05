@@ -6,10 +6,13 @@
 #include <deque>
 #include <map>
 #include <vector>
+#include <memory>
 
 #include <sys/time.h>
 #include <core/loader.h>
 #include <core/datamanager.h>
+#include <core/executionmanager.h>
+#include <core/logger.h>
 
 namespace lms{
     class DataManager;
@@ -22,7 +25,7 @@ namespace lms{
         ExecutionManager& operator = (const ExecutionManager &) = delete;
     public:
 
-        ExecutionManager();
+        ExecutionManager(Logger *rootLogger);
         ~ExecutionManager();
 
         /**cycle modues */
@@ -43,6 +46,9 @@ namespace lms{
         */
         void validate();
     private:
+        Logger *rootLogger;
+        ChildLogger logger;
+
         int maxThreads;
         bool valid;
 

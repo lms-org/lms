@@ -290,15 +290,19 @@ public:
      * @param name logger's name, will be prepended to the tag
      * @param parent all logging messages will be delegated to this parent
      */
-    ChildLogger(const std::string &name, std::shared_ptr<Logger> parent)
-        : parent(parent), name(name) {}
+    ChildLogger(const std::string &name, Logger *parent)
+        : parent(parent), name(name) {
+        std::cout << "New child logger "<< name << std::endl;
+    }
+
+    ~ChildLogger() { std::cout << "Delete child logger " << name << std::endl; }
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
 private:
     /**
      * @brief Delegate all logging outputs to this parent logger.
      */
-    std::shared_ptr<Logger> parent;
+    Logger *parent;
 
     /**
      * @brief Name of the child logger

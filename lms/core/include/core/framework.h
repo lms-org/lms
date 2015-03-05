@@ -36,10 +36,8 @@ public:
     ~Framework();
 private:
 
-    std::shared_ptr<Logger> rootLogger;
-    std::shared_ptr<Logger> coreLogger;
-
-    Logger& logger() { return *coreLogger; }
+    RootLogger rootLogger;
+    ChildLogger logger;
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;

@@ -27,7 +27,7 @@ bool Loader::checkModule(const char* path){
 
         dlclose(lib);
     }else{
-        std::cout << "Module doesn't exist! path:" <<path << std::endl;
+        logger.error("checkModule") << "Module doesn't exist! path:" << path;
     }
     //TODO: not sure if dlclose needed if lib == null
     return valid;
