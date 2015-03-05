@@ -15,7 +15,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Featured Libraries
  * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection)
- * [Scheduler](https://github.com/Phibedy/Scheduler)
+ * Ogre-Support (Work in progress)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
@@ -27,6 +27,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 //TODO - List with a featured modules
 
 ###Featured Modules
+ * [Scheduler](https://github.com/Phibedy/Scheduler)
  * ConsoleWait (Should be renamed)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
