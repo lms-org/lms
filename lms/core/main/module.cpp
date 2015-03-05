@@ -6,7 +6,8 @@ namespace lms{
     bool Module::initializeBase(DataManager* d, Loader::module_entry &loaderEntry, Logger *rootLogger) {
         dm = d;
         Module::loaderEntry = loaderEntry;
-        logger.reset(new ChildLogger(loaderEntry.name, rootLogger));
+        logger.name = loaderEntry.name;
+        logger.parent = rootLogger;
         return true;
     }
 

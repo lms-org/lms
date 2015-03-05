@@ -25,7 +25,7 @@ namespace lms{
         ExecutionManager& operator = (const ExecutionManager &) = delete;
     public:
 
-        ExecutionManager(Logger *rootLogger);
+        ExecutionManager(Logger &rootLogger);
         ~ExecutionManager();
 
         /**cycle modues */
@@ -46,7 +46,7 @@ namespace lms{
         */
         void validate();
     private:
-        Logger *rootLogger;
+        Logger &rootLogger;
         ChildLogger logger;
 
         int maxThreads;

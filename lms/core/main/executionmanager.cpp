@@ -10,8 +10,8 @@
 
 namespace lms{
 
-ExecutionManager::ExecutionManager(Logger *rootLogger)
-    : rootLogger(rootLogger), logger("EXECMGR", rootLogger), maxThreads(1), valid(false),
+ExecutionManager::ExecutionManager(Logger &rootLogger)
+    : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1), valid(false),
     loader(rootLogger), dataManager(rootLogger) {
 }
 
@@ -48,7 +48,7 @@ void ExecutionManager::enableModule(const std::string &name){
     for(auto& it:available){
         if(it.name == name){
             Module* module = loader.load(it);
-            module->initializeBase(&dataManager,it, rootLogger);
+            module->initializeBase(&dataManager,it, &rootLogger);
             module->initialize();
             enabledModules.push_back(module);
             invalidate();

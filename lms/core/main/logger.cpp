@@ -2,7 +2,7 @@
 
 namespace lms{
 LogMessage::~LogMessage() {
-    sink->sink(*this);
+    sink.sink(*this);
 }
 
 std::unique_ptr<LogMessage> Logger::debug(const std::string& tag) {
@@ -56,10 +56,14 @@ void RootLogger::sink(std::unique_ptr<Sink> sink) {
 }
 
 std::unique_ptr<LogMessage> RootLogger::log(LogLevel lvl, const std::string& tag) {
-    return std::unique_ptr<LogMessage>(new LogMessage(m_sink.get(), lvl, tag));
+    return std::unique_ptr<LogMessage>(new LogMessage(*m_sink, lvl, tag));
 }
 
 std::unique_ptr<LogMessage> ChildLogger::log(LogLevel lvl, const std::string& tag) {
+    if(parent == nullptr) {
+        std::cerr << "CHILD LOGGER " << name << " IS NOT INITIALIZED." << std::endl;
+    }
+
     if(tag.empty()) {
         return parent->log(lvl, name);
     } else {

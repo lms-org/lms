@@ -7,7 +7,7 @@
 namespace lms{
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(&rootLogger) {
+    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger) {
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)

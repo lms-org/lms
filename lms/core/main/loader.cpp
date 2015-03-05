@@ -17,7 +17,7 @@
 
 namespace lms{
 
-Loader::Loader(Logger *rootLogger) : logger("LOADER", rootLogger) {
+Loader::Loader(Logger &rootLogger) : logger("LOADER", &rootLogger) {
     pathToModules = Framework::programDirectory() + "external/modules/";
 }
 
