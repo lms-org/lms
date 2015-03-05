@@ -54,7 +54,6 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Thoughts:
   * We could use [Boost] http://www.boost.org/doc/libs/1_57_0/index.html
-  * After setting it up for windows we could add arduino-support :)  
   * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
 
 ###Special thanks go to
