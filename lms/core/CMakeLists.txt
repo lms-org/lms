@@ -94,6 +94,6 @@ endif()
 foreach(ConfigFile ${ConfigFiles})
     add_custom_command(TARGET lms PRE_BUILD
                         COMMAND ${CMAKE_COMMAND} -E
-                            copy "${CMAKE_SOURCE_DIR}/${ConfigFile}" "$<TARGET_FILE_DIR:lms>/${ConfigFile}"
+                            copy "${CMAKE_SOURCE_DIR}/${ConfigFile}" "$<TARGET_FILE_DIR:lms>/../${ConfigFile}"
     )
 endforeach()
