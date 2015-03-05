@@ -189,6 +189,8 @@ public:
      */
     static std::string levelName(LogLevel lvl);
 
+    static LogLevel levelFromName(const std::string &name);
+
     /**
      * @brief Returns a linux terminal compatible color code
      * suitable for the log level.
@@ -399,8 +401,9 @@ private:
 
 class PrefixAndLevelFilter : public LoggingFilter {
 public:
-    PrefixAndLevelFilter() : m_minLevel(LogLevel::DEBUG) {}
-    PrefixAndLevelFilter(LogLevel minLevel) : m_minLevel(minLevel) {}
+    explicit PrefixAndLevelFilter(LogLevel minLevel = LogLevel::DEBUG) : m_minLevel(minLevel) {}
+    PrefixAndLevelFilter(LogLevel minLevel, const std::vector<std::string> &prefixes) :
+        m_minLevel(minLevel), m_prefixes(prefixes) {}
 
     void addPrefix(const std::string &prefix) {
         m_prefixes.push_back(prefix);
@@ -413,8 +416,8 @@ public:
     bool filter(LogLevel level, const std::string &tag) override;
 
 private:
-    std::vector<std::string> m_prefixes;
     LogLevel m_minLevel;
+    std::vector<std::string> m_prefixes;
 };
 
 }

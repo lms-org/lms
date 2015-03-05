@@ -13,10 +13,12 @@ int main (int argc, char *argv[]) {
 
     if(arguments.showHelp()) {
         std::cout
-            << "LMS - Lightweight Module System\n"
+            << "LMS - Lightweight Modular System\n"
             << "Usage: core/lms [-h] [-c config]\n"
-            << "  -h         Show help\n"
-            << "  -c config  Load configuration (defaults to 'default')\n"
+            << "  -h, --help          Show help\n"
+            << "  -c config           Load configuration (defaults to 'default')\n"
+            << "  --logging-min-level Filter minimum logging level, e.g. ERROR\n"
+            << "  --logging-prefix    Prefix of logging tags to filter\n"
             << std::endl;
     } else {
         lms::Framework framework(arguments);

@@ -31,6 +31,16 @@ std::string Logger::levelName(LogLevel lvl) {
     }
 }
 
+LogLevel Logger::levelFromName(const std::string &name) {
+    if(name == "DEBUG") return LogLevel::DEBUG;
+    if(name == "INFO") return LogLevel::INFO;
+    if(name == "WARN") return LogLevel::WARN;
+    if(name == "ERROR") return LogLevel::ERROR;
+    // TODO better error handling here
+    std::cerr << "Unknown logging level: " << name << std::endl;
+    return LogLevel::DEBUG;
+}
+
 std::string Logger::levelColor(LogLevel lvl) {
     switch(lvl) {
     case LogLevel::DEBUG : return COLOR_GREEN;
