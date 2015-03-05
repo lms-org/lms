@@ -1,6 +1,8 @@
 #Build modules given by CmakeData
 #write that file like: set ( MODULES mod1 mod2 ...)
+if(EXISTS "CMakeData.txt")
 include("CMakeData.txt")
+endif()
 
 if (MODULES)
 	foreach (dec ${MODULES})
