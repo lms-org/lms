@@ -14,8 +14,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * Contribute
 
 ###Featured Libraries
- * Sockets (Client & Server)
- * Scheduler
+ * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection)
+ * [Scheduler](https://github.com/Phibedy/Scheduler)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
