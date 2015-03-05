@@ -19,7 +19,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
     //parse framework config
     parseConfig();
     //Execution
-    running = false; // TODO !!! CHANGE THIS BACK TO TRUE !!!
+    running = true;
 
     while(running) {
         executionManager.loop();

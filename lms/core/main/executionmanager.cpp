@@ -17,7 +17,6 @@ ExecutionManager::ExecutionManager(Logger *rootLogger)
 
 ExecutionManager::~ExecutionManager () {
     //TODO
-    logger.warn() << "delete";
 }
 
 void ExecutionManager::loop() {
@@ -49,7 +48,7 @@ void ExecutionManager::enableModule(const std::string &name){
     for(auto& it:available){
         if(it.name == name){
             Module* module = loader.load(it);
-            module->initializeBase(&dataManager,it);
+            module->initializeBase(&dataManager,it, rootLogger);
             module->initialize();
             enabledModules.push_back(module);
             invalidate();

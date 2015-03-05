@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+
 #include <core/loader.h>
 
 namespace lms{
@@ -17,7 +19,7 @@ public:
     /**
      * called by the framework itself at module-creation
     */
-    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry);
+    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry, Logger *rootLogger);
 
     int getPriority() const;
 
@@ -40,6 +42,7 @@ public:
 
 protected:
     DataManager* datamanager() { return dm; }
+    std::unique_ptr<Logger> logger;
 private:
     Loader::module_entry loaderEntry;
 	DataManager* dm;

@@ -33,7 +33,7 @@ std::string Logger::levelName(LogLevel lvl) {
 
 std::string Logger::levelColor(LogLevel lvl) {
     switch(lvl) {
-    case LogLevel::DEBUG : return COLOR_WHITE;
+    case LogLevel::DEBUG : return COLOR_GREEN;
     case LogLevel::INFO : return COLOR_BLUE;
     case LogLevel::WARN : return COLOR_YELLOW;
     case LogLevel::ERROR : return COLOR_RED;
