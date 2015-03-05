@@ -23,7 +23,7 @@ bool Loader::checkModule(const char* path){
     if (lib != NULL) {
         //			printf("OK\n\tTesting for Necessary functions... ");
         //Testing for Necessary functions
-        valid =  (dlsym(lib, "getName") != NULL && dlsym(lib, "getInstance") != NULL);
+        valid =  (dlsym(lib, "getInstance") != NULL);
 
         dlclose(lib);
     }else{
