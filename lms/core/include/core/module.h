@@ -42,7 +42,7 @@ public:
 
 protected:
     DataManager* datamanager() { return dm; }
-    std::unique_ptr<Logger> logger;
+    ChildLogger logger;
 private:
     Loader::module_entry loaderEntry;
 	DataManager* dm;

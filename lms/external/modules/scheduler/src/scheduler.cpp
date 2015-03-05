@@ -7,7 +7,7 @@
 // TODO umbenennen, name irreführend
 
 bool Scheduler::initialize() {
-    logger->debug() << "Init: scheduler";
+    logger.debug() << "Init: scheduler";
     /*
      * That error has to be fixed using cmake as it will also happen to all modules
      *
@@ -42,20 +42,20 @@ bool Scheduler::cycle () {
 
     double sleep = looptime - delta;
     if (sleep > 0) {
-        logger->info() << "Scheduler sleeps for " << sleep << " Cycle rate of "<< (1/(delta + sleep) * 1e3) << "Hz";
+        logger.info() << "Scheduler sleeps for " << sleep << " Cycle rate of "<< (1/(delta + sleep) * 1e3) << "Hz";
         usleep(sleep * 1e3);
     }
     /// Zeitmessung Zykluszeit
     gettimeofday(&cycleTimeEnd, NULL);
     cycletime = (cycleTimeEnd.tv_sec - cycleTimeStart.tv_sec + 1e-6 * (cycleTimeEnd.tv_usec - cycleTimeStart.tv_usec)) * 1e3;
     gettimeofday(&cycleTimeStart, NULL);
-    logger->info() << "Cycletime: " << cycletime;
+    logger.info() << "Cycletime: " << cycletime;
 
     /// Zeitmessung Scheduler
     gettimeofday(&last, NULL);
 
     if (delta > looptime + warn_tolerance) {
-        logger->warn() << "CYCLING TOO SLOW: " << delta << " per Loop";
+        logger.warn() << "CYCLING TOO SLOW: " << delta << " per Loop";
         /*std::map<std::string, double> timing;
         ExecutionManager::getTiming(timing);
 		for (auto it = timing.begin(); it != timing.end(); ++it) {

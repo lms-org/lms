@@ -14,7 +14,7 @@ class Module;
 
 class Loader {
 public:
-    explicit Loader(Logger *rootLogger);
+    explicit Loader(Logger &rootLogger);
     /**
      * @brief The module_entry struct
      * used to store available modules

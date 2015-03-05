@@ -11,6 +11,7 @@
 
 namespace lms{
 class LogMessage;
+class Module;
 
 /**
  * @brief A logging sink is the abstract concept
@@ -69,7 +70,7 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    LogMessage(Sink *sink, LogLevel level, const std::string& tag)
+    LogMessage(Sink &sink, LogLevel level, const std::string& tag)
         : tag(tag), level(level), sink(sink) {}
 
     /**
@@ -92,14 +93,14 @@ public:
     const LogLevel level;
 
     /**
-     * @brief A pointer to a sink instance.
+     * @brief A reference to a sink instance.
      *
      * This log message will be flushed to
      * that sink in the destructor.
      *
      * TODO is in conflict with RootLogger's Sink unique_ptr
      */
-    Sink * const sink;
+    Sink &sink;
 
     /**
      * @brief The logging message.
@@ -167,7 +168,7 @@ public:
      * @brief Returns a linux terminal compatible color code
      * suitable for the log level.
      *
-     * Example: LogLevel::WARN returns COLOR_RED
+     * Example: LogLevel::ERROR returns COLOR_RED
      *
      * @param lvl a log level
      * @return an ANSI escape color code
@@ -279,6 +280,7 @@ private:
  * @author Hans Kirchner
  */
 class ChildLogger : public Logger {
+friend Module;
 public:
     /**
      * @brief Create a new child logger with the given name and parent.
@@ -299,6 +301,13 @@ public:
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
 private:
+    /**
+     * @brief Create a new ChildLogger with NULL parent and an empty name.
+     *
+     * NOTE: This is only used in lms::Module.
+     */
+    ChildLogger() : parent(nullptr) {}
+
     /**
      * @brief Delegate all logging outputs to this parent logger.
      */

@@ -22,7 +22,6 @@ class ConfigurationLoader;
 class DataManager {
 friend ConfigurationLoader;
 private:
-    Logger *rootLogger;
     ChildLogger logger;
 
     class PointerWrapper {
@@ -52,7 +51,7 @@ public:
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
 public:
-    DataManager(Logger *rootLogger) : rootLogger(rootLogger), logger("DATAMGR", rootLogger) {
+    DataManager(Logger &rootLogger) : logger("DATAMGR", &rootLogger) {
     }
     ~DataManager();
 
