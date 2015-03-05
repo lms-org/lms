@@ -17,7 +17,7 @@
 
 namespace lms{
 
-Loader::Loader() {
+Loader::Loader(Logger *rootLogger) : logger("LOADER", rootLogger) {
     pathToModules = Framework::programDirectory() + "external/modules/";
 }
 
@@ -29,7 +29,7 @@ Loader::moduleList Loader::getModules() {
     DIR *dp = NULL;
     dirent *d = NULL;
     if((dp = opendir( pathToModules.c_str())) == NULL) {
-        printf("Could not Open Directory: %s: ", pathToModules.c_str());
+        logger.error() << "Could not Open Directory: " << pathToModules;
         perror("Reason: ");
         return Loader::moduleList();
     }
@@ -70,12 +70,12 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
                 localPathToModule = localPathToModule+pathTmp;
 
                 std::string modulePath = getModulePath(localPathToModule,moduleName);
-                std::cout << "modulePath: " + modulePath << std::endl;
+                logger.info() << "modulePath: " + modulePath;
                 //check if module is valid
                 if(checkModule(modulePath.c_str())){
-                    std::cout << "Module valid " + moduleName << "add it to list" << std::endl;
+                    logger.info() << "Module valid " << moduleName << " -> add it to list";
                 }else{
-                    std::cout << "Module invalid! " + moduleName <<std::endl;
+                    logger.warn() << "Module invalid! " << moduleName;
                     continue;
                 }
                 //add module to list

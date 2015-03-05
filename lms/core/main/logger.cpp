@@ -24,8 +24,8 @@ std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
 std::string Logger::levelName(LogLevel lvl) {
     switch(lvl) {
     case LogLevel::DEBUG : return "DEBUG";
-    case LogLevel::INFO : return "INFO";
-    case LogLevel::WARN : return "WARN";
+    case LogLevel::INFO :  return "INFO ";
+    case LogLevel::WARN :  return "WARN ";
     case LogLevel::ERROR : return "ERROR";
     default : return "_"; // this should never happen
     }
@@ -33,7 +33,7 @@ std::string Logger::levelName(LogLevel lvl) {
 
 std::string Logger::levelColor(LogLevel lvl) {
     switch(lvl) {
-    case LogLevel::DEBUG : return COLOR_WHITE;
+    case LogLevel::DEBUG : return COLOR_GREEN;
     case LogLevel::INFO : return COLOR_BLUE;
     case LogLevel::WARN : return COLOR_YELLOW;
     case LogLevel::ERROR : return COLOR_RED;
@@ -41,16 +41,18 @@ std::string Logger::levelColor(LogLevel lvl) {
     }
 }
 
-RootLogger::RootLogger(Sink *sink) {
-    m_sink.reset(sink);
+RootLogger::RootLogger(std::unique_ptr<Sink> sink) {
+    std::cout << "New root logger with sink" << std::endl;
+    m_sink = std::move(sink);
 }
 
 RootLogger::RootLogger() {
+    std::cout << "New root logger" << std::endl;
     m_sink.reset(new ConsoleSink());
 }
 
-void RootLogger::sink(Sink *sink) {
-    m_sink.reset(sink);
+void RootLogger::sink(std::unique_ptr<Sink> sink) {
+    m_sink = std::move(sink);
 }
 
 std::unique_ptr<LogMessage> RootLogger::log(LogLevel lvl, const std::string& tag) {
@@ -79,9 +81,23 @@ ConsoleSink& ConsoleSink::printColored(bool colored) {
 
 void ConsoleSink::sink(const LogMessage &message) {
     if(m_time) {
-        time_t t = ::time(0);   // get time now
+        // get time now
+        time_t t = ::time(0);
         struct tm * now = localtime( & t );
-        m_out << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << " ";
+
+        // format time
+        if(now->tm_hour < 10) {
+            m_out << "0";
+        }
+        m_out << now->tm_hour << ":";
+        if(now->tm_min < 10) {
+            m_out << "0";
+        }
+        m_out << now->tm_min << ":";
+        if(now->tm_sec < 10) {
+            m_out << "0";
+        }
+        m_out << now->tm_sec << " ";
     }
     if(m_colored) {
         m_out << Logger::levelColor(message.level);
@@ -90,7 +106,7 @@ void ConsoleSink::sink(const LogMessage &message) {
     if(m_colored) {
         m_out << COLOR_WHITE;
     }
-    m_out << ": " << message.messageText() << std::endl;
+    m_out << " " << message.messageText() << std::endl;
 }
 
 std::unique_ptr<LogMessage> operator <<(std::unique_ptr<LogMessage> message, std::ostream& (*pf) (std::ostream&))

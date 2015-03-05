@@ -7,11 +7,12 @@
 namespace lms{
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    argumentHandler(arguments) {
+    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(&rootLogger) {
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
+
     //load all Availabel Modules
     executionManager.loadAvailabelModules();
 
@@ -44,17 +45,17 @@ void Framework::parseConfig(){
 
             //Start modules
             tmpNode = rootNode.child("modulesToLoad");
-            std::cout <<"START ENABLING MODULES: "<<std::endl;
+            logger.info() << "Start enabling modules";
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
                 std::string moduleName = it->child_value();
                 executionManager.enableModule(moduleName);
             }
         }else{
-            std::cout <<"FAILED TO READ CONFIG: "<<std::endl;
+            logger.error() << "Failed to parse framework_config.xml as XML";
         }
     }else{
-        std::cout <<"FAILED TO OPEN FRAMEWORK_FILE_CONFIG: "<<std::endl;
+        logger.error() << "Failed to open framework_config.xml";
 
 
     }

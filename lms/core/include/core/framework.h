@@ -31,12 +31,13 @@ public:
     Framework(const ArgumentHandler& arguments);
 
     /**
-     * @brief Destroy datamanager and execution manager.
+     * @brief Destroy execution manager.
      */
     ~Framework();
 private:
 
-    RootLogger logger;
+    RootLogger rootLogger;
+    ChildLogger logger;
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;

@@ -6,10 +6,13 @@
 #include <iostream>
 #include <core/datamanager.h>
 #include <stdio.h>
+#include <memory>
 
 namespace lms{
 
-ExecutionManager::ExecutionManager() : maxThreads(1), valid(false) {
+ExecutionManager::ExecutionManager(Logger *rootLogger)
+    : rootLogger(rootLogger), logger("EXECMGR", rootLogger), maxThreads(1), valid(false),
+    loader(rootLogger), dataManager(rootLogger) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -30,7 +33,7 @@ void ExecutionManager::loop() {
 }
 
 void ExecutionManager::loadAvailabelModules(){
-    printf("load AvailabelModules");
+    logger.info() << "load available Modules";
     available  = loader.getModules();
 }
 
@@ -45,7 +48,7 @@ void ExecutionManager::enableModule(const std::string &name){
     for(auto& it:available){
         if(it.name == name){
             Module* module = loader.load(it);
-            module->initializeBase(&dataManager,it);
+            module->initializeBase(&dataManager,it, rootLogger);
             module->initialize();
             enabledModules.push_back(module);
             invalidate();

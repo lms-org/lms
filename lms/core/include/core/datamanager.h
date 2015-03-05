@@ -5,8 +5,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include <core/module.h>
+#include <core/logger.h>
 
 namespace lms{
 
@@ -20,6 +22,9 @@ class ConfigurationLoader;
 class DataManager {
 friend ConfigurationLoader;
 private:
+    Logger *rootLogger;
+    ChildLogger logger;
+
     class PointerWrapper {
     public:
         virtual ~PointerWrapper() {}
@@ -47,6 +52,8 @@ public:
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
 public:
+    DataManager(Logger *rootLogger) : rootLogger(rootLogger), logger("DATAMGR", rootLogger) {
+    }
     ~DataManager();
 
     template<typename T>
@@ -54,12 +61,12 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
-            std::cerr << "Channel " << name << " has not yet any writers!" << std::endl;
+            logger.warn() << "Channel " << name << " has not yet any writers!";
 
             channel.dataWrapper = new PointerWrapperImpl<T>();
             channel.dataSize = sizeof(T);
         } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+            logger.error() << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
             // TODO do some error handling here
         }
 
@@ -73,7 +80,7 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
-            std::cerr << "Channel " << name << " is exclusive write!" << std::endl;
+            logger.error() << "Channel " << name << " is exclusive write!";
             // TODO do some error handling
         }
 
@@ -82,13 +89,10 @@ public:
             channel.dataWrapper = new PointerWrapperImpl<T>();
             channel.dataSize = sizeof(T);
         } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+            logger.error() << "Channel " << name << " cannot be accessed with wrong type!";
             // TODO do some error handling here
         }
-        /*
-         * Fails: F:/UserData/Documents/programmieren/c++/LMS/lms/core/include/core/datamanager.h:95: undefined reference to `lms::Module::getName() const'
-         *
-         */
+
         channel.writers.push_back(module);
 
         return (T*)channel.dataWrapper->get();
@@ -99,7 +103,7 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
-            std::cerr << "Channel " << name << " is exclusive write!" << std::endl;
+            logger.error() << "Channel " << name << " is exclusive write!";
             // TODO do some error handling
         }
 
@@ -108,10 +112,10 @@ public:
             channel.dataSize = sizeof(T);
             channel.exclusiveWrite = true;
         } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+            logger.error() << "Channel " << name << " cannot be accessed with wrong type!";
             // TODO do some error handling here
         } else if(! channel.writers.empty()) {
-            std::cerr << "Channel " << name << " has already writers!" << std::endl;
+            logger.error() << "Channel " << name << " has already writers!";
             // TODO do some error handling here
         }
 
@@ -170,7 +174,7 @@ private:
         if(channel.dataWrapper == nullptr) {
             return nullptr;
         } else if(channel.dataSize != sizeof(T)) {
-            std::cerr << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
+            logger.error() << "Channel " << name << " cannot be accessed with wrong type!";
             // TODO do some error handling here
         }
 
