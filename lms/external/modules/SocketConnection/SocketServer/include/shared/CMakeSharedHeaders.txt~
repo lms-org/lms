@@ -1,4 +1,0 @@
-set (PUBLIC_HEADERS
-        "shared/configfile.h"
-	${PUBLIC_HEADERS}
-)

@@ -1,8 +1,11 @@
-#Build runtimeModules given by CmakeData
+#Build libraries given by CmakeData
+#Create CMakeData that looks like set ( LIBRARIES lib1 lib2 ...)
+if(EXISTS "CMakeData.txt")
 include("CMakeData.txt")
+endif()
 
-if (UTIL_MODULES)
-        foreach (dec ${UTIL_MODULES})
+if (LIBRARIES)
+        foreach (dec ${LIBRARIES})
                 message ("Adding util_module ${dec}" )
                 add_subdirectory ( ${dec} )
 	endforeach()

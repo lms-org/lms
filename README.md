@@ -14,8 +14,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * Contribute
 
 ###Featured Libraries
- * Sockets (Client & Server)
- * Scheduler
+ * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection)
+ * Ogre-Support (Work in progress)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
@@ -27,6 +27,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 //TODO - List with a featured modules
 
 ###Featured Modules
+ * [Scheduler](https://github.com/Phibedy/Scheduler)
  * ConsoleWait (Should be renamed)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
@@ -54,7 +55,6 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Thoughts:
   * We could use [Boost] http://www.boost.org/doc/libs/1_57_0/index.html
-  * After setting it up for windows we could add arduino-support :)  
   * Maybe it's we should generate the loadConfig from the CMakeLists of modules (Don't think it would be worth the effort atm)
 
 ###Special thanks go to

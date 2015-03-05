@@ -1,4 +1,0 @@
-set (PUBLIC_HEADERS
-        "wifi_server.h"
-	${PUBLIC_HEADERS}
-)

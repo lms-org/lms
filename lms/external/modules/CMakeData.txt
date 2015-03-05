@@ -1,6 +1,0 @@
-set ( RUNTIME_MODULES
-	"testModule"
-	"SocketConnection"
-	"scheduler"
-	"console_wait"
-)
