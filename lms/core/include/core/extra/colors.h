@@ -1,4 +1,4 @@
-#ifndef SHARED_COLORS_H
+#ifndef LMS_EXTRA_COLORS_H
 
 #define COLOR_RED 	 "\033[031m"
 #define COLOR_YELLOW "\033[033m"

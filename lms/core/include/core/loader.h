@@ -1,5 +1,5 @@
-#ifndef LOADER_H
-#define LOADER_H
+#ifndef LMS_LOADER_H
+#define LMS_LOADER_H
 /**
   *TODO: use C++ for io
   *
@@ -11,7 +11,9 @@
 
 namespace lms{
 class Module;
-
+/**
+ * @brief The Loader class used to load Modules
+ */
 class Loader {
 public:
     explicit Loader(Logger &rootLogger);

@@ -1,14 +1,17 @@
 /**
   *Soll später ein handler werden, welcher die geparsten argumente speichert
   */
-#ifndef argumenthandler_H
-#define argumenthandler_H
+#ifndef LMS_ARGUMENTHANDLER_H
+#define LMS_ARGUMENTHANDLER_H
 
 #include <string>
 #include <vector>
 #include <core/logger.h>
 
 namespace lms{
+    /**
+     * @brief The ArgumentHandler class used to parse the command line arguments and stores them
+     */
     class ArgumentHandler{
     public:
         ArgumentHandler();

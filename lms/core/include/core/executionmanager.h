@@ -1,5 +1,5 @@
-#ifndef SHARED_EXECUTIONMANAGER_H
-#define SHARED_EXECUTIONMANAGER_H
+#ifndef LMS_SHARED_EXECUTIONMANAGER_H
+#define LMS_SHARED_EXECUTIONMANAGER_H
 
 #include "module.h"
 #include <string>
@@ -21,8 +21,6 @@ namespace lms{
 
 
     class ExecutionManager {
-        //Für was das?
-        ExecutionManager& operator = (const ExecutionManager &) = delete;
     public:
 
         ExecutionManager(Logger &rootLogger);
@@ -31,11 +29,17 @@ namespace lms{
         /**cycle modues */
         void loop();
 
-        /**Searches the programm for all availabe modules and adds them to the availabe list */
+        /**
+         * Searches the programm for all availabe modules and adds them to the availabe list
+         */
         void loadAvailabelModules();
-        /**Enable module with the given name, add it to the cycle-queue */
+        /**
+         * Enable module with the given name, add it to the cycle-queue
+         */
         void enableModule(const std::string &name);
-        /**Disable module with the given name, remove it from the cycle-queue */
+        /**
+         * Disable module with the given name, remove it from the cycle-queue
+         */
         void disableModule(const std::string &name);
 
 
@@ -43,7 +47,7 @@ namespace lms{
         /**
          * @brief validate if invalidate was called before, it will check if all selected modules are initialised
          * Sorts the modules in the cycle-list
-        */
+         */
         void validate();
     private:
         Logger &rootLogger;
@@ -59,9 +63,11 @@ namespace lms{
          * @brief enabledModules contains all loaded Modules
          */
         std::vector<Module*> enabledModules;
-
-        typedef std::vector<std::vector<Module*>> cycleListT;
-        cycleListT cycleList;
+        /**
+         * @brief cycleListT the cycleListType
+         */
+        typedef std::vector<std::vector<Module*>> cycleListType;
+        cycleListType cycleList;
         /**
          * @brief available contains all Modules which can be loaded
          */

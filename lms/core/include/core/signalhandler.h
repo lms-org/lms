@@ -1,5 +1,5 @@
-#ifndef SIGNALHANDLER_H
-#define SIGNALHANDLER_H
+#ifndef LMS_SIGNALHANDLER_H
+#define LMS_SIGNALHANDLER_H
 
 #include <vector>
 #include <map>

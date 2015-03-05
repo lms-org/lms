@@ -1,5 +1,5 @@
-#ifndef FRAMEWORK_H
-#define FRAMEWORK_H
+#ifndef LMS_FRAMEWORK_H
+#define LMS_FRAMEWORK_H
 
 #include <core/datamanager.h>
 #include <core/signalhandler.h>
@@ -41,10 +41,18 @@ private:
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;
-
+    /**
+     * @brief running just for main-while-loop if it's set to false, the programm will terminate
+     */
     bool running;
-
+    /**
+     * @brief signal called by the system (Segfaults etc)
+     * @param s
+     */
     void signal(int s);
+    /**
+     * @brief parseConfig parses the framework-config
+     */
     void parseConfig();
 
 };

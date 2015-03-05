@@ -10,6 +10,9 @@
 namespace lms{
 
 class DataManager;
+/**
+ * @brief The Module class Module
+ */
 class Module {
 public:
     Module():priority(0) { }
@@ -33,11 +36,19 @@ public:
 	virtual bool deinitialize() = 0;
 	virtual bool cycle() = 0;
 
-    //TODO: reset method
-    // The following implementation is fully backwards compatible:
-    // Modules can override reset if they can implement it
+    /**
+     * @brief reset called by the framework
+     * The following implementation is fully backwards compatible:
+     * Modules can override reset if they can implement it
+     * Don't forget to override isResettable() if you have a reset method!
+     */
     virtual void reset() {}
-    // If a module overrides reset() then isResettable() should be overriden to return true
+
+    /**
+     * @brief isResettable
+     * If a module overrides reset() then isResettable() should be overriden to return true
+     * @return
+     */
     virtual bool isResettable() { return false; }
 
 protected:

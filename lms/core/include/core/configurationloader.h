@@ -10,6 +10,9 @@
  *TODO rename file
  */
 namespace lms{
+/**
+ * @brief The ConfigurationLoader class used to load config-files for Modules
+ */
 class ConfigurationLoader {
 public:
     ConfigurationLoader(DataManager *dataManager);
@@ -33,6 +36,9 @@ public:
      * @param path
      */
     void addSuffix(const std::string &path);
+    /**
+     * @brief validate checks if config-files changed and updates the datachannels if needed
+     */
     void validate();
 
 private:
@@ -42,7 +48,11 @@ private:
     std::vector<std::string> searchDirectories;
 
     std::vector<std::string> suffixes;
-
+    /**
+     * @brief getConfigFilePath
+     * @param name
+     * @return the configfilePath given by the suffixes and directories
+     */
     std::string getConfigFilePath(const std::string &name);
 
     DataManager *dataManager;
