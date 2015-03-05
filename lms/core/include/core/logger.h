@@ -96,6 +96,8 @@ public:
      *
      * This log message will be flushed to
      * that sink in the destructor.
+     *
+     * TODO is in conflict with RootLogger's Sink unique_ptr
      */
     Sink * const sink;
 
@@ -215,8 +217,7 @@ protected:
  *
  * The root logger forwards all logging messages to its sink.
  *
- * TODO: implement sinks and filters
- * TODO: this class could be a singleton
+ * TODO: implement filters
  *
  * @author Hans Kirchner
  */
@@ -231,7 +232,7 @@ public:
      *
      * @param sink a logging sink
      */
-    explicit RootLogger(Sink *sink);
+    explicit RootLogger(std::unique_ptr<Sink> sink);
 
     /**
      * @brief Create a new root logger with a default console sink.
@@ -241,6 +242,13 @@ public:
      */
     RootLogger();
 
+    ~RootLogger() { std::cout << "Delete RootLogger" << std::endl; }
+
+    /**
+     * @brief Do not allow the root logger to be copied.
+     */
+    RootLogger(const RootLogger &logger) = delete;
+
     /**
      * @brief Set the new sink for this root logger.
      *
@@ -248,7 +256,7 @@ public:
      *
      * @param sink a sink instance
      */
-    void sink(Sink *sink);
+    void sink(std::unique_ptr<Sink> sink);
 
     /**
      * @brief Log a message with the given level and tag.
@@ -268,8 +276,6 @@ private:
  * The parent logger can be the root logger or another
  * child logger.
  *
- * TODO: the parent logger should not be a usual pointer
- *
  * @author Hans Kirchner
  */
 class ChildLogger : public Logger {
@@ -284,7 +290,7 @@ public:
      * @param name logger's name, will be prepended to the tag
      * @param parent all logging messages will be delegated to this parent
      */
-    ChildLogger(const std::string &name, Logger *parent)
+    ChildLogger(const std::string &name, std::shared_ptr<Logger> parent)
         : parent(parent), name(name) {}
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
@@ -292,7 +298,7 @@ private:
     /**
      * @brief Delegate all logging outputs to this parent logger.
      */
-    Logger *parent;
+    std::shared_ptr<Logger> parent;
 
     /**
      * @brief Name of the child logger

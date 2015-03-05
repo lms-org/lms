@@ -9,6 +9,9 @@ namespace lms{
 Framework::Framework(const ArgumentHandler &arguments) :
     argumentHandler(arguments) {
 
+    rootLogger = std::shared_ptr<Logger>(new RootLogger());
+    coreLogger = std::shared_ptr<Logger>(new ChildLogger("CORE", rootLogger));
+
     SignalHandler::getInstance()
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
@@ -44,24 +47,24 @@ void Framework::parseConfig(){
 
             //Start modules
             tmpNode = rootNode.child("modulesToLoad");
-            std::cout <<"START ENABLING MODULES: "<<std::endl;
+            logger().info() <<"START ENABLING MODULES: ";
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
                 std::string moduleName = it->child_value();
                 executionManager.enableModule(moduleName);
             }
         }else{
-            std::cout <<"FAILED TO READ CONFIG: "<<std::endl;
+            logger().error() << "FAILED TO READ CONFIG: ";
         }
     }else{
-        std::cout <<"FAILED TO OPEN FRAMEWORK_FILE_CONFIG: "<<std::endl;
+        logger().error() << "Failed to open framework_config.xml";
 
 
     }
 }
 
 Framework::~Framework() {
-    logger.info() << "Removing Signal listeners";
+    logger().info() << "Removing Signal listeners";
     SignalHandler::getInstance()
             .removeListener(SIGINT, this)
             .removeListener(SIGSEGV, this);
@@ -72,14 +75,14 @@ void Framework::signal(int s) {
     case SIGINT:
         running = false;
 
-        logger.warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
+        logger().warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
 
         SignalHandler::getInstance().removeListener(SIGINT, this);
 
         break;
     case SIGSEGV:
         //Segmentation Fault - try to identify what went wrong;
-        logger.error()
+        logger().error()
                 << "######################################################" << std::endl
                 << "                   Segfault Found                     " << std::endl
                 << "######################################################";
