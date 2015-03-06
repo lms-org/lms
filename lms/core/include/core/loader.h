@@ -16,7 +16,7 @@ class Module;
  */
 class Loader {
 public:
-    explicit Loader(Logger &rootLogger);
+    explicit Loader(logging::Logger &rootLogger);
     /**
      * @brief The module_entry struct
      * used to store available modules
@@ -41,7 +41,7 @@ public:
     void unload(Module*);
 private:
 
-    ChildLogger logger;
+    logging::ChildLogger logger;
 
     /**
      * @brief getModulePath

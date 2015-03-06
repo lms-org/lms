@@ -18,6 +18,16 @@ set (PUBLIC_HEADERS
         "include/core/type/static_image.h"
         "include/core/lms_exports.h"
         "include/core/type/module_config.h"
+
+        "include/core/logging/log_level.h"
+        "include/core/logging/logger.h"
+        "include/core/logging/log_message.h"
+        "include/core/logging/sink.h"
+        "include/core/logging/logging_filter.h"
+        "include/core/logging/root_logger.h"
+        "include/core/logging/child_logger.h"
+        "include/core/logging/console_sink.h"
+        "include/core/logging/prefix_and_level_filter.h"
 #private
         "main/backtrace_formatter.h"
 )
@@ -33,10 +43,16 @@ set (SOURCE
         "main/framework.cpp"
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
-        "main/logger.cpp"
         "main/backtrace_formatter.cpp"
         "main/type/static_image.cpp"
         "main/type/module_config.cpp"
+
+        "main/logging/logger.cpp"
+        "main/logging/root_logger.cpp"
+        "main/logging/child_logger.cpp"
+        "main/logging/log_message.cpp"
+        "main/logging/console_sink.cpp"
+        "main/logging/prefix_and_level_filter.cpp"
 )
 #Add system-specific source
 if(UNIX)

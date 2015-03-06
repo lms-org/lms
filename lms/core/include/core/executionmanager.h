@@ -23,7 +23,7 @@ namespace lms{
     class ExecutionManager {
     public:
 
-        ExecutionManager(Logger &rootLogger);
+        ExecutionManager(logging::Logger &rootLogger);
         ~ExecutionManager();
 
         /**cycle modues */
@@ -50,8 +50,8 @@ namespace lms{
          */
         void validate();
     private:
-        Logger &rootLogger;
-        ChildLogger logger;
+        logging::Logger &rootLogger;
+        logging::ChildLogger logger;
 
         int maxThreads;
         bool valid;

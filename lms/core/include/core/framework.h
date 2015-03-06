@@ -36,8 +36,8 @@ public:
     ~Framework();
 private:
 
-    RootLogger rootLogger;
-    ChildLogger logger;
+    logging::RootLogger rootLogger;
+    logging::ChildLogger logger;
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;

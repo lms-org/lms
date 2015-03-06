@@ -4,7 +4,7 @@
 
 namespace lms{
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration("default"), m_showHelp(false),
-    m_loggingMinLevel(LogLevel::DEBUG) {
+    m_loggingMinLevel(logging::SMALLEST_LEVEL) {
 }
 
 void ArgumentHandler::parseArguments(int argc, char* const*argv) {
@@ -26,7 +26,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 m_showHelp = true;
                 break; // Don't forget to break!
             case 1: // --logging-min-level
-                m_loggingMinLevel = Logger::levelFromName(optarg);
+                m_loggingMinLevel = logging::Logger::levelFromName(optarg);
                 break;
             case 2: // --logging-prefix
                 m_loggingPrefixes.push_back(optarg);
@@ -47,7 +47,7 @@ std::vector<std::string> ArgumentHandler::loggingPrefixes() const {
     return m_loggingPrefixes;
 }
 
-LogLevel ArgumentHandler::loggingMinLevel() const {
+logging::LogLevel ArgumentHandler::loggingMinLevel() const {
     return m_loggingMinLevel;
 }
 

@@ -38,13 +38,13 @@ namespace lms{
 
         std::vector<std::string> loggingPrefixes() const;
 
-        LogLevel loggingMinLevel() const;
+        logging::LogLevel loggingMinLevel() const;
 
     private:
         std::string m_loadConfiguration;
         bool m_showHelp;
         std::vector<std::string> m_loggingPrefixes;
-        LogLevel m_loggingMinLevel;
+        logging::LogLevel m_loggingMinLevel;
     };
 }
 #endif /* argumenthandler_H */

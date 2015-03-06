@@ -22,7 +22,7 @@ public:
     /**
      * called by the framework itself at module-creation
     */
-    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry, Logger *rootLogger);
+    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry, logging::Logger *rootLogger);
 
     int getPriority() const;
 
@@ -53,7 +53,7 @@ public:
 
 protected:
     DataManager* datamanager() { return dm; }
-    ChildLogger logger;
+    logging::ChildLogger logger;
 private:
     Loader::module_entry loaderEntry;
 	DataManager* dm;

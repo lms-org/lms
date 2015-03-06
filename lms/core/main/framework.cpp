@@ -11,7 +11,7 @@ namespace lms{
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger) {
 
-    rootLogger.filter(std::unique_ptr<LoggingFilter>(new PrefixAndLevelFilter(
+    rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.loggingMinLevel(), arguments.loggingPrefixes())));
 
     SignalHandler::getInstance()
