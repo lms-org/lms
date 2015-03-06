@@ -28,6 +28,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Featured Modules
  * [Scheduler](https://github.com/Phibedy/Scheduler)
+ * [Camera importer](https://github.com/Phibedy/camera)
  * ConsoleWait (Should be renamed)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
