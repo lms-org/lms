@@ -46,8 +46,8 @@ public:
         if(it == properties.end()) {
             return result;
         } else {
-            //TODO Doesn't work
-            std::istringstream stream(*it);
+            //TODO Don#t know it that's the expected behavoir but it compiles (*it -> it->first)
+            std::istringstream stream(it->second);
             stream >> result;
             return result;
         }
