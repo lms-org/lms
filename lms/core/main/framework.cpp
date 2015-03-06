@@ -28,7 +28,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     while(running) {
         executionManager.loop();
-        //usleep(9000*1000);
+//        if(usleep(4000*1000) == -1) {
+//            logger.error("sleep") << errno;
+//            usleep(4000*1000);
+//        }
     }
 }
 /*
@@ -94,6 +97,9 @@ void Framework::signal(int s) {
         SignalHandler::getInstance().removeListener(SIGSEGV, this);
 
         BacktraceFormatter::print();
+
+        exit(1);
+
         break;
     }
 }
