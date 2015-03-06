@@ -46,6 +46,7 @@ public:
         if(it == properties.end()) {
             return result;
         } else {
+            //TODO Doesn't work
             std::istringstream stream(*it);
             stream >> result;
             return result;
