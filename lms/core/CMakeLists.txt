@@ -45,6 +45,7 @@ if(UNIX)
         "main/loader_unix.cpp"
         "main/framework_unix.cpp"
         "main/backtrace_formatter_unix.cpp"
+        "main/signalhandler_unix.cpp"
     )
 elseif(WIN32)
     message("OS is WIN32!")
@@ -52,6 +53,7 @@ elseif(WIN32)
         "main/loader_win.cpp"
         "main/framework_win.cpp"
         "main/backtrace_formatter_win.cpp"
+        "main/signalhandler_win.cpp"
     )
 else()
     message("NO OS found!")

@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <map>
-#include <csignal>
 
 namespace lms{
 /**
@@ -59,6 +58,18 @@ private:
      * We will not allow any copies of our singleton.
      */
     SignalHandler(const SignalHandler&);
+
+    /**
+     * @brief Platform-dependant signal registration function
+     * @param signal signal code, e.g. SIGINT
+     */
+    void platform_registerSignal(int signalCode);
+
+    /**
+     * @brief Platform-dependant signal unregistration function
+     * @param signal signal code, e.g. SIGINT
+     */
+    void platform_unregisterSignal(int signalCode);
 };
 }
 #endif /* SIGNALHANDLER_H */

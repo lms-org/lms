@@ -2,7 +2,9 @@
 #include <core/executionmanager.h>
 #include <pugixml.hpp>
 #include <fstream>
+#include <csignal>
 #include "backtrace_formatter.h"
+#include "unistd.h"
 
 namespace lms{
 
