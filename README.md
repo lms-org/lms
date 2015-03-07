@@ -15,7 +15,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Featured Libraries
  * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection)
- * Ogre-Support (Work in progress)
+ * [Ogre-Binding](https://github.com/Phibedy/ogrea_binding) (Work in progress)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
@@ -28,7 +28,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Featured Modules
  * [Scheduler](https://github.com/Phibedy/Scheduler)
- * [Camera importer](https://github.com/Phibedy/camera)
+ * [Camera importer](https://github.com/Phibedy/camera) (work in progress)
+ * [Ogre window handler](https://github.com/Phibedy/ogre_window_manager) (work in progess)
  * ConsoleWait (Should be renamed)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
@@ -47,7 +48,6 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * License
    * Add license-header to files
    * Add contributer-agreement-file
-  * arduino-support :)
 
 
 ###Known bugs

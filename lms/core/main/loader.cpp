@@ -44,6 +44,9 @@ Loader::moduleList Loader::getModules() {
         handleLoadConfig(configFilePath,d->d_name,list);
         // }
     }
+
+    closedir(dp);
+
     return list;
 }
 
@@ -88,10 +91,12 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
             }
         }else{
             //TODO can't parse plugin-xml
+            logger.error("handleLoadConfig") << "Can't parse plugin-xml";
         }
         ifs.close();
     }else{
         //found some folder with no config-file
+        logger.warn("handleLoadConfig") << "There was no plugin-xml in folder";
     }
 }
 

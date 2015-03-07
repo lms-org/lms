@@ -6,8 +6,12 @@ namespace lms{
     bool Module::initializeBase(DataManager* d, Loader::module_entry &loaderEntry, logging::Logger *rootLogger) {
         dm = d;
         Module::loaderEntry = loaderEntry;
-        logger.name = loaderEntry.name;
-        logger.parent = rootLogger;
+
+        // delete uninitialized child logger
+        logger.~ChildLogger();
+        // C++11 placement new
+        new (&logger) logging::ChildLogger(loaderEntry.name, rootLogger);
+
         return true;
     }
 

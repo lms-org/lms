@@ -19,6 +19,7 @@ DataManager::~DataManager() {
 
     for(auto it = channels.begin(); it != channels.end(); it++) {
         delete it->second.dataWrapper;
+        it->second.dataWrapper = nullptr;
     }
 }
 
@@ -66,7 +67,7 @@ void DataManager::printMapping() const {
 
         if(! ch.second.readers.empty()) {
             std::cout << "\treading: ";
-            for(Module *reader : ch.second.readers) {
+            for(const Module *reader : ch.second.readers) {
                 std::cout << reader->getName() << " ";
             }
             std::cout << std::endl;
@@ -74,7 +75,7 @@ void DataManager::printMapping() const {
 
         if(! ch.second.writers.empty()) {
             std::cout << "\twriting: ";
-            for(Module *writer : ch.second.writers) {
+            for(const Module *writer : ch.second.writers) {
                 std::cout << writer->getName() << " ";
             }
             std::cout << std::endl;

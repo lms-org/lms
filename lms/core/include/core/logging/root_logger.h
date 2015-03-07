@@ -41,7 +41,7 @@ public:
      */
     RootLogger();
 
-    ~RootLogger() { std::cout << "Delete RootLogger" << std::endl; }
+    ~RootLogger() { debug() << "Delete RootLogger"; }
 
     /**
      * @brief Do not allow the root logger to be copied.
