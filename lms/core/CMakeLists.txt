@@ -39,7 +39,6 @@ set (SOURCE
         "main/datamanager.cpp"
         "main/configurationloader.cpp"
         "main/executionmanager.cpp"
-        "main/visualizer.cpp"
         "main/framework.cpp"
         "main/signalhandler.cpp"
         "main/argumentparser.cpp"
