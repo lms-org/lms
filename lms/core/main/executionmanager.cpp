@@ -23,11 +23,12 @@ void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
     /*
+    //Imagerecognition_mt
     //TODO copy cycleList so it can be modified
     while(cycleList.size() > 0){
         for(std::vector<Module*>& moduleV:cycleList){
             if(moduleV.size() == 1){
-                moduleV->cycle();
+                moduleV[0]->cycle();
                 //TODO remove module from others
                 //TODO remove moduleV from cycleList
             }
