@@ -15,7 +15,7 @@ class DataManager;
  */
 class Module {
 public:
-    Module():priority(0) { }
+    Module(): logger("", nullptr), dm(nullptr), priority(0) { }
     virtual ~Module() { }
 	
     std::string getName() const;

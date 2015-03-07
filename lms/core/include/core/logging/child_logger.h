@@ -9,8 +9,6 @@
 
 namespace lms {
 
-class Module;
-
 namespace logging {
 
 /**
@@ -23,7 +21,6 @@ namespace logging {
  * @author Hans Kirchner
  */
 class ChildLogger : public Logger {
-friend lms::Module;
 public:
     /**
      * @brief Create a new child logger with the given name and parent.
@@ -44,13 +41,6 @@ public:
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
 private:
-    /**
-     * @brief Create a new ChildLogger with NULL parent and an empty name.
-     *
-     * NOTE: This is only used in lms::Module.
-     */
-    ChildLogger() : parent(nullptr) { std::cout << "New anonymous child logger" << std::endl; }
-
     /**
      * @brief Delegate all logging outputs to this parent logger.
      */
