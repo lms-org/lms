@@ -44,6 +44,9 @@ Loader::moduleList Loader::getModules() {
         handleLoadConfig(configFilePath,d->d_name,list);
         // }
     }
+
+    closedir(dp);
+
     return list;
 }
 
