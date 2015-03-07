@@ -7,6 +7,8 @@ namespace lms{
         dm = d;
         Module::loaderEntry = loaderEntry;
 
+        // delete uninitialized child logger
+        logger.~ChildLogger();
         // C++11 placement new
         new (&logger) logging::ChildLogger(loaderEntry.name, rootLogger);
 
