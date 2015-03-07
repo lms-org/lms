@@ -22,8 +22,18 @@ ExecutionManager::~ExecutionManager () {
 void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
-    //TODO execute modules like a boss
-
+    /*
+    //TODO copy cycleList so it can be modified
+    while(cycleList.size() > 0){
+        for(std::vector<Module*>& moduleV:cycleList){
+            if(moduleV.size() == 1){
+                moduleV->cycle();
+                //TODO remove module from others
+                //TODO remove moduleV from cycleList
+            }
+        }
+    }
+    */
 
     //HACK just for testing atm
     for(auto* it: enabledModules){

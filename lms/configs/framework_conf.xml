@@ -3,6 +3,6 @@
 		<maxThreadCount> 1 </maxThreadCount>
 	</executionManager>
 	<modulesToLoad>
-		<module>scheduler</module>
+		<module>camera</module>
 	</modulesToLoad>
 </framework>
