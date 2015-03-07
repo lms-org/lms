@@ -42,9 +42,9 @@ void ConfigurationLoader::loadConfig(const std::string &name){
     type::ModuleConfig* conf =  dataManager->getChannel<type::ModuleConfig>(name);
     if(conf == NULL) {
         conf = new type::ModuleConfig();
+        conf->loadFromFile(configFilePath);
+        dataManager->setChannel(name,conf);
     }
-    conf->loadFromFile(configFilePath);
-    dataManager->setChannel(name,conf);
 }
 
 std::string ConfigurationLoader::getConfigFilePath(const std::string &name) {

@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <typeinfo>
 
 #include <core/module.h>
 #include <core/logger.h>
@@ -13,6 +14,7 @@
 namespace lms{
 
 class ConfigurationLoader;
+class ExecutionManager;
 
 /**
  * @brief The DataManager class
@@ -20,7 +22,8 @@ class ConfigurationLoader;
  * Suggested channel types: std::array, lms::StaticImage, simple structs
  */
 class DataManager {
-friend ConfigurationLoader;
+friend class ConfigurationLoader;
+friend class ExecutionManager;
 private:
     logging::ChildLogger logger;
 
@@ -38,12 +41,14 @@ private:
         void* get() { return &data; }
         T data;
     };
-public:
+
     struct DataChannel {
         DataChannel() : dataWrapper(nullptr), dataSize(0), exclusiveWrite(false) {}
 
         PointerWrapper *dataWrapper; // TODO hier auch unique_ptr möglich
         size_t dataSize; // currently only for idiot checks
+        std::string dataTypeName;
+        size_t dataHashCode;
         bool exclusiveWrite;
         std::vector<Module*> readers;
         std::vector<Module*> writers;
@@ -60,13 +65,15 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
-            logger.warn() << "Channel " << name << " has not yet any writers!";
+            logger.warn() << "Module " << module->getName() << " requested read access for "
+                << name << std::endl
+                << " but the channel was not yet initialized -> Initializing, just for you <3";
 
-            channel.dataWrapper = new PointerWrapperImpl<T>();
-            channel.dataSize = sizeof(T);
-        } else if(channel.dataSize != sizeof(T)) {
-            logger.error() << "Channel " << name << " cannot be accessed with wrong type!" << std::endl;
-            // TODO do some error handling here
+            initChannel<T>(channel);
+        } else {
+            if(! checkType<T>(channel, name)) {
+                return nullptr;
+            }
         }
 
         channel.readers.push_back(module);
@@ -79,17 +86,18 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
-            logger.error() << "Channel " << name << " is exclusive write!";
-            // TODO do some error handling
+            logger.error() << "Module " << module->getName() << " requested channel " << name << std::endl
+                << " with write access, but the channel is already exclusive.";
+            return nullptr;
         }
 
         // if dataPointer is null, then the channel did not exist yet
         if(channel.dataWrapper == nullptr) {
-            channel.dataWrapper = new PointerWrapperImpl<T>();
-            channel.dataSize = sizeof(T);
-        } else if(channel.dataSize != sizeof(T)) {
-            logger.error() << "Channel " << name << " cannot be accessed with wrong type!";
-            // TODO do some error handling here
+            initChannel<T>(channel);
+        } else {
+            if(! checkType<T>(channel, name)) {
+                return nullptr;
+            }
         }
 
         channel.writers.push_back(module);
@@ -102,20 +110,25 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
-            logger.error() << "Channel " << name << " is exclusive write!";
-            // TODO do some error handling
+            logger.error() << "Module " << module->getName() << "requested channel " << name << std::endl
+                << " with exclusive write access, but the channel is already exclusive.";
+            return nullptr;
         }
 
         if(channel.dataWrapper == nullptr) {
-            channel.dataWrapper = new PointerWrapperImpl<T>();
-            channel.dataSize = sizeof(T);
+            // create channel if not yet there
+            initChannel<T>(channel);
             channel.exclusiveWrite = true;
-        } else if(channel.dataSize != sizeof(T)) {
-            logger.error() << "Channel " << name << " cannot be accessed with wrong type!";
-            // TODO do some error handling here
-        } else if(! channel.writers.empty()) {
-            logger.error() << "Channel " << name << " has already writers!";
-            // TODO do some error handling here
+        } else {
+            // check if requested type is the same as in the datachannel
+            if(! checkType<T>(channel, name)) {
+                return nullptr;
+            }
+
+            if(! channel.writers.empty()) {
+                logger.error() << "Channel " << name << " has already writers!";
+                return nullptr;
+            }
         }
 
         channel.writers.push_back(module);
@@ -123,26 +136,9 @@ public:
         return (T*)channel.dataWrapper->get();
     }
 
-    template<typename T>
-    void setChannel(const std::string &name, const T &data) {
-        DataChannel &channel = channels[name];
+    bool hasChannel(const std::string &name) const;
 
-        // Delete old channel if there was one
-        if(channel.dataWrapper != nullptr) {
-            delete channel.dataWrapper;
-        }
-
-        channel.dataWrapper = new PointerWrapperImpl<T>(data);
-        channel.dataSize = sizeof(T);
-
-        // Reset channel
-        channel.exclusiveWrite = false;
-        channel.readers.clear();
-        channel.writers.clear();
-    }
-
-    bool hasChannel(const std::string &name);
-
+private:
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
      * INTENDED TO BE USED IN MODULES.
@@ -165,7 +161,64 @@ public:
      * and writers to stdout.
      */
     void printMapping() const;
-private:
+
+    template<typename T>
+    void setChannel(const std::string &name, const T &data) {
+        DataChannel &channel = channels[name];
+
+        // Delete old channel if there was one
+        if(channel.dataWrapper != nullptr) {
+            delete channel.dataWrapper;
+        }
+
+        channel.dataWrapper = new PointerWrapperImpl<T>(data);
+        channel.dataSize = sizeof(T);
+        channel.dataTypeName = typeid(T).name();
+
+        // Reset channel
+        channel.exclusiveWrite = false;
+        channel.readers.clear();
+        channel.writers.clear();
+    }
+
+    /**
+     * @brief Check if requested channel data type T is the same as the data type
+     * that is saved in the channel.
+     *
+     * @param channel the current state of the datachannel
+     * @param name data channel name
+     * @return true if types are the same, false otherwise
+     */
+    template<typename T>
+    bool checkType(const DataChannel &channel, const std::string &name) {
+        // check for hash code of data types
+        if(channel.dataHashCode != typeid(T).hash_code()) {
+            logger.error() << "Requested wrong data type for channel " << name << std::endl
+                << "Channel type is " << channel.dataTypeName << ", requested was " << typeid(T).name();
+            return false;
+        }
+
+        // check for size of data types
+        // TODO this is not longer necessary
+        if(channel.dataSize != sizeof(T)) {
+            logger.error() << "Wrong data size for channel " << name << "!" << std::endl
+                << "Requested " << sizeof(T) << " but is " << channel.dataSize;
+            return false;
+        }
+
+        return true;
+    }
+
+    template<typename T>
+    void initChannel(DataChannel &channel) {
+        // allocate memory for type T and call its constructor
+        channel.dataWrapper = new PointerWrapperImpl<T>();
+
+        // used for checkType and better error messages
+        channel.dataSize = sizeof(T);
+        channel.dataTypeName = typeid(T).name();
+    }
+
     template<typename T>
     T* getChannel(const std::string &name) {
         DataChannel &channel = channels[name];

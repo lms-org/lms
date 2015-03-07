@@ -27,7 +27,7 @@ const std::map<std::string,DataManager::DataChannel>& DataManager::getChannels()
     return channels;
 }
 
-bool DataManager::hasChannel(const std::string &name) {
+bool DataManager::hasChannel(const std::string &name) const {
     return channels.count(name) == 1;
 }
 
