@@ -37,10 +37,10 @@ public:
      */
     ChildLogger(const std::string &name, Logger *parent)
         : parent(parent), name(name) {
-        std::cout << "New child logger "<< name << std::endl;
+        debug() << "New child logger "<< name;
     }
 
-    ~ChildLogger() { std::cout << "Delete child logger " << name << std::endl; }
+    ~ChildLogger() { debug() << "Delete child logger " << name;}
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
 private:
