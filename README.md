@@ -47,7 +47,6 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * License
    * Add license-header to files
    * Add contributer-agreement-file
-  * arduino-support :)
 
 
 ###Known bugs
