@@ -12,8 +12,7 @@
 /**
  * TODO rename file
  *
- * getConfig implementieren -> ruft loadConfig auf, wenn nötig
- * shared und private Configs unterscheiden
+ * TODO shared und private Configs unterscheiden
  */
 namespace lms{
 /**

@@ -17,9 +17,14 @@ namespace lms{
 class ExecutionManager;
 
 /**
- * @brief The DataManager class
+ * @brief The DataManager manages the creation, access and deletion of
+ * data channels.
+ *
+ * Modules can access an instance of this class via this->datamanager().
  *
  * Suggested channel types: std::array, lms::StaticImage, simple structs
+ *
+ * @author Hans Kirchner
  */
 class DataManager {
 friend class ConfigurationLoader;
@@ -62,6 +67,14 @@ public:
     }
     ~DataManager();
 
+    /**
+     * @brief Return the data channel with the given name with read permissions
+     * or create one if needed.
+     *
+     * @param module the requesting module
+     * @param name data channel name
+     * @return const data channel (only reading)
+     */
     template<typename T>
     const T*  readChannel(Module *module, const std::string &name) {
         DataChannel &channel = channels[name];
@@ -83,6 +96,14 @@ public:
         return (const T*)channel.dataWrapper->get();
     }
 
+    /**
+     * @brief Return the data channel with the given name with write permissions
+     * or create one if needed.
+     *
+     * @param module the requesting module
+     * @param name data channel name
+     * @return data channel (reading and writing)
+     */
     template<typename T>
     T* writeChannel(Module *module, const std::string &name) {
         DataChannel &channel = channels[name];
@@ -107,6 +128,17 @@ public:
         return (T*)channel.dataWrapper->get();
     }
 
+    /**
+     * @brief Return the data channel with the given name with write permissions
+     * or create one if needed.
+     *
+     * NOTE: Only module can have the exclusive write permission. If there
+     * is atleast one usual writer the there cannot be an exclusive writer.
+     *
+     * @param module requesting module
+     * @param name data channel name
+     * @return data channel (reading + writing)
+     */
     template<typename T>
     T* exclusiveWriteChannel(Module *module, const std::string &name) {
         DataChannel &channel = channels[name];
@@ -138,8 +170,25 @@ public:
         return (T*)channel.dataWrapper->get();
     }
 
+    /**
+     * @brief Check if a data channel with the given name is
+     * currently initialized.
+     *
+     * @param name data channel name
+     * @return true if channel is existing
+     */
     bool hasChannel(const std::string &name) const;
 
+    /**
+     * @brief Return a configuration object or load it from a
+     * config file first.
+     *
+     * NOTE: The returned object cannot be changed.
+     *
+     * @param module requesting module
+     * @param name name of the config file
+     * @return module configuration object
+     */
     const type::ModuleConfig* getConfig(Module *module, const std::string &name);
 
 private:
@@ -213,6 +262,12 @@ private:
         return true;
     }
 
+    /**
+     * @brief Initialize a data channel for usage.
+     * The type is implicitly given by the type parameter T.
+     *
+     * @param channel the data channel to initialize
+     */
     template<typename T>
     void initChannel(DataChannel &channel) {
         // allocate memory for type T and call its constructor
@@ -223,6 +278,13 @@ private:
         channel.dataTypeName = typeid(T).name();
     }
 
+    /**
+     * @brief Return a data channel without creating it
+     *
+     * @param name data channel name
+     * @return NULL, if the datachannel was not yet initialized
+     * otherwise the data channel object
+     */
     template<typename T>
     T* getChannel(const std::string &name) {
         DataChannel &channel = channels[name];
