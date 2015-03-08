@@ -1,8 +1,10 @@
 ![logo](https://github.com/Phibedy/LMS/blob/master/lms_banner.jpg)
 
-
 LMS is a.... //TODO
 will be a cross-plattform system that allows easy module-handling and sharing.
+
+#####Notice:
+(Work in progress) = there is no stable version and it doesn't work at all :)
 
 ###Getting Started
 //TODO links and more
@@ -30,6 +32,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
  * [Scheduler](https://github.com/Phibedy/Scheduler)
  * [Camera importer](https://github.com/Phibedy/camera) (work in progress)
  * [Ogre window handler](https://github.com/Phibedy/ogre_window_manager) (work in progess)
+ * [camera renderer](https://github.com/Phibedy/camera_renderer) (work in progess)
  * ConsoleWait (Should be renamed)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
