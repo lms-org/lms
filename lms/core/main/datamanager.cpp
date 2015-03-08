@@ -83,4 +83,12 @@ void DataManager::printMapping() const {
     }
 }
 
+const type::ModuleConfig* DataManager::getConfig(Module *module, const std::string &name) {
+    if(! hasChannel(name)) {
+        setChannel<type::ModuleConfig>(name, configLoader.loadConfig(name));
+    }
+
+    return readChannel<type::ModuleConfig>(module, name);
+}
+
 }

@@ -5,7 +5,10 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
-#include <core/datamanager.h>
+
+#include <core/type/module_config.h>
+#include <core/logger.h>
+
 /**
  * TODO rename file
  *
@@ -18,7 +21,7 @@ namespace lms{
  */
 class ConfigurationLoader {
 public:
-    ConfigurationLoader(DataManager *dataManager);
+    ConfigurationLoader(logging::Logger &rootLogger);
     virtual ~ConfigurationLoader();
     /**
      * @brief loadConfig
@@ -27,7 +30,7 @@ public:
      * Will reload the config if it was already loaded
      * //TODO Man könnte auch alle configs nacheinander laden wodruch die werte überschrieben würden
      */
-    void loadConfig(const std::string &name);
+    type::ModuleConfig loadConfig(const std::string &name);
     /**
      * @brief addPath
      * @param path will be added to the searchDirectories list
@@ -45,6 +48,7 @@ public:
     void validate();
 
 private:
+    logging::ChildLogger logger;
     /**
      * @brief searchDirectories relative path: LMS/<searchDirectories>
      */
@@ -57,8 +61,6 @@ private:
      * @return the configfilePath given by the suffixes and directories
      */
     std::string getConfigFilePath(const std::string &name);
-
-    DataManager *dataManager;
 };
 }
 #endif

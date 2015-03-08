@@ -10,10 +10,10 @@
 
 #include <core/module.h>
 #include <core/logger.h>
+#include <core/configurationloader.h>
 
 namespace lms{
 
-class ConfigurationLoader;
 class ExecutionManager;
 
 /**
@@ -55,8 +55,10 @@ private:
     };
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
+
+    ConfigurationLoader configLoader;
 public:
-    DataManager(logging::Logger &rootLogger) : logger("DATAMGR", &rootLogger) {
+    DataManager(logging::Logger &rootLogger) : logger("DATAMGR", &rootLogger), configLoader(rootLogger) {
     }
     ~DataManager();
 
@@ -137,6 +139,8 @@ public:
     }
 
     bool hasChannel(const std::string &name) const;
+
+    const type::ModuleConfig* getConfig(Module *module, const std::string &name);
 
 private:
     /**
@@ -225,9 +229,10 @@ private:
 
         if(channel.dataWrapper == nullptr) {
             return nullptr;
-        } else if(channel.dataSize != sizeof(T)) {
-            logger.error() << "Channel " << name << " cannot be accessed with wrong type!";
-            // TODO do some error handling here
+        } else {
+            if(! checkType<T>(channel, name)) {
+                return nullptr;
+            }
         }
 
         return (T*)channel.dataWrapper->get();

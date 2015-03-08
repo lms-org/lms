@@ -5,11 +5,12 @@
 #include <core/framework.h>
 #include <fstream>
 #include <core/type/module_config.h>
-#include <core/datamanager.h>
 
 namespace lms{
-ConfigurationLoader::ConfigurationLoader(DataManager* dataManager)
-    : dataManager(dataManager) {
+class DataManager;
+
+ConfigurationLoader::ConfigurationLoader(logging::Logger &rootLogger)
+    : logger("CONFIGLOADER", &rootLogger) {
     //Add default values
     addSuffix("");
     addPath("lms/configs/");
@@ -32,19 +33,18 @@ void ConfigurationLoader::validate(){
 }
 
 
-void ConfigurationLoader::loadConfig(const std::string &name){
+type::ModuleConfig ConfigurationLoader::loadConfig(const std::string &name){
     //load config
     std::string configFilePath(getConfigFilePath(name));
-    if(configFilePath.length() == 0) {
-        //TODO print error
-        return;
+    if(configFilePath.empty()) {
+        logger.warn("loadConfig") << "config file path is empty";
     }
-    type::ModuleConfig* conf =  dataManager->getChannel<type::ModuleConfig>(name);
-    if(conf == NULL) {
-        conf = new type::ModuleConfig();
-        conf->loadFromFile(configFilePath);
-        dataManager->setChannel(name,conf);
+
+    type::ModuleConfig conf;
+    if(! conf.loadFromFile(configFilePath)) {
+        logger.error("loadCoonfig") << "could not load config file " << configFilePath;
     }
+    return conf;
 }
 
 std::string ConfigurationLoader::getConfigFilePath(const std::string &name) {
