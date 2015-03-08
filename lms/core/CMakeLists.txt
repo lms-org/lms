@@ -16,6 +16,7 @@ set (PUBLIC_HEADERS
         "include/core/module.h"
         "include/core/loader.h"
         "include/core/type/static_image.h"
+        "include/core/type/dynamic_image.h"
         "include/core/lms_exports.h"
         "include/core/type/module_config.h"
 
@@ -44,6 +45,7 @@ set (SOURCE
         "main/argumentparser.cpp"
         "main/backtrace_formatter.cpp"
         "main/type/static_image.cpp"
+        "main/type/dynamic_image.cpp"
         "main/type/module_config.cpp"
 
         "main/logging/logger.cpp"
