@@ -8,6 +8,18 @@
 namespace lms {
 namespace type {
 
+/**
+ * @brief DynamicImage serves as a data channel type, as an replacement
+ * for char* with size parameter.
+ *
+ * A dynamic image is a two dimensional array where the type is already
+ * given during compile time. The width and height can be changed during runtime.
+ *
+ * The data is stored row-by-row in a simple one-dimensional array.
+ * If you want to be cache-optimized you should read the array row by row.
+ *
+ * @author Hans Kirchner
+ */
 template<typename T>
 class DynamicImage {
 public:
@@ -100,6 +112,18 @@ public:
      */
     const T& operator[] (int index) const {
         return m_data[index];
+    }
+
+    /**
+     * @brief Resize the image to the new width and height.
+     *
+     * NOTE: This will discard all data that was in the image before.
+     *
+     * @param width new width of the image
+     * @param height new height of the image
+     */
+    void resize(int width, int height) {
+        *this = DynamicImage<T>(width, height);
     }
 
     /**
