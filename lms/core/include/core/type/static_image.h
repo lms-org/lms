@@ -20,6 +20,13 @@ namespace lms { namespace type {
 template<int W, int H, typename T>
 class StaticImage {
 public:
+    /* Default contructors and assignment operators */
+    StaticImage() = default;
+    StaticImage(const StaticImage<W,H,T> &) = default;
+    StaticImage(StaticImage<W,H,T> &&) = default;
+    StaticImage<W,H,T>& operator= (const StaticImage<W,H,T> &) = default;
+    StaticImage<W,H,T>& operator= (StaticImage<W,H,T> &&) = default;
+
     /**
      * @brief Width of the image
      */

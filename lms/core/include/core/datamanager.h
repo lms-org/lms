@@ -68,6 +68,16 @@ public:
     ~DataManager();
 
     /**
+     * @brief Do not allow copies of a data manager instance.
+     */
+    DataManager(const DataManager&) = delete;
+
+    /**
+     * @brief Do not allow assignment copy of a data manager instance.
+     */
+    DataManager& operator= (const DataManager&) = delete;
+
+    /**
      * @brief Return the data channel with the given name with read permissions
      * or create one if needed.
      *
