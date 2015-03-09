@@ -7,6 +7,7 @@
 #include <core/datamanager.h>
 #include <cstdio>
 #include <memory>
+#include <algorithm>
 
 namespace lms{
 
@@ -22,24 +23,38 @@ ExecutionManager::~ExecutionManager () {
 void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
-    /*
-    //Imagerecognition_mt
-    //TODO copy cycleList so it can be modified
-    while(cycleList.size() > 0){
-        for(std::vector<Module*>& moduleV:cycleList){
-            if(moduleV.size() == 1){
-                moduleV[0]->cycle();
-                //TODO remove module from others
-                //TODO remove moduleV from cycleList
+    //copy cycleList so it can be modified
+    cycleListType cycleListTmp = cycleList;
+
+    if(maxThreads == 1){
+        //simple single list
+        while(cycleList.size() > 0){
+            //TODO Not sure if : can handle erase!
+            for(std::vector<Module*>& moduleV:cycleListTmp){
+                if(moduleV.size() == 1){
+                    moduleV[0]->cycle();
+                    //remove module from others
+
+                    for(std::vector<Module*>& moduleV2:cycleListTmp){
+                        moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),moduleV[0]),moduleV2.end());
+                    }
+                    //remove moduleV from cycleList
+                    cycleListTmp.erase(std::remove(cycleListTmp.begin(),cycleListTmp.end(),moduleV),cycleListTmp.end());
+
+                }
             }
         }
+    }else{
+        //TODO Woker threads
     }
-    */
+
 
     //HACK just for testing atm
+    /*
     for(auto* it: enabledModules){
         it->cycle();
     }
+    */
 
 }
 
