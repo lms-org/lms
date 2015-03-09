@@ -22,12 +22,6 @@
 #endif
 
 namespace lms{
-    
-template<typename _Target>
-union converter {
-    void* src;
-    _Target target;
-};
 
 Loader::Loader(logging::Logger &rootLogger) : logger("LOADER", &rootLogger) {
     pathToModules = Framework::programDirectory() + "external/modules/";
@@ -180,16 +174,10 @@ Module* Loader::load( const module_entry& entry) {
 //        logger.error("load") << "Could not close dynamic lib: " << entry.name
 //            << std::endl << "Message: " << dlerror();
 //    }
-
-    // Union-Hack to avoid a warning message
-    // We use it here to convert a void* to a function pointer.
-    // The function has this signature: void* getInstance();
-    converter <void*(*)()> conv;
-    conv.src = func;
-
-    // call the getInstance function and cast it to a Module pointer
-    // -> getInstance should return a newly created object.
-    return (Module*)conv.target();
+    
+    // Cast symbol to function pointer returning a pointer to a Module instance and 
+    // call the function to get the a module instance
+    return reinterpret_cast<Module*(*)()>( func )();
 #endif
 }
 
