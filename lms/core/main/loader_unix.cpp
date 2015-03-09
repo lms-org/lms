@@ -77,5 +77,15 @@ Module* Loader::load( const module_entry& entry) {
     // call the getInstance function and cast it to a Module pointer
     // -> getInstance should return a newly created object.
     return (Module*)conv.target();
+
+
+    // Cast symbol to function pointer returning a pointer to a Module instance and
+    // call the function to get the a module instance
+   /* TODO
+     warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object [enabled by default]
+     return reinterpret_cast<Module*(*)()>( func )();
+
+    */
+    //return reinterpret_cast<Module*(*)()>( func )();
 }
 }
