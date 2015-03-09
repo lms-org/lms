@@ -5,7 +5,7 @@
 #include <queue>
 #include <iostream>
 #include <core/datamanager.h>
-#include <stdio.h>
+#include <cstdio>
 #include <memory>
 
 namespace lms{
