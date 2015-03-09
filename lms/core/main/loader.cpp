@@ -15,6 +15,12 @@
 #include <core/logger.h>
 #include <core/framework.h>
 
+#ifdef _WIN32
+    // TODO
+#else
+    #include <dlfcn.h>
+#endif
+
 namespace lms{
 
 Loader::Loader(logging::Logger &rootLogger) : logger("LOADER", &rootLogger) {
@@ -107,6 +113,72 @@ void Loader::unload(Module* a) {
 
 std::string Loader::getModulePath(const std::string &modulePath, const std::string &moduleName) {
     return pathToModules+modulePath+"lib"+moduleName+".so";
+}
+
+bool Loader::checkModule(const char* path){
+#ifdef _WIN32
+    // TODO
+    return false;
+#else
+    void* lib = dlopen (path, RTLD_LAZY);
+    bool valid = false;
+    if (lib != NULL) {
+        //			printf("OK\n\tTesting for Necessary functions... ");
+        //Testing for Necessary functions
+        valid =  (dlsym(lib, "getInstance") != NULL);
+
+        dlclose(lib);
+    }else{
+        logger.error("checkModule") << "Module doesn't exist! path:" << path;
+    }
+    //TODO: not sure if dlclose needed if lib == null
+    return valid;
+#endif
+}
+
+Module* Loader::load( const module_entry& entry) {
+#ifdef _WIN32
+    // TODO
+    return nullptr;
+#else
+    // for information on dlopen, dlsym, dlerror and dlclose
+    // see here: http://linux.die.net/man/3/dlclose
+
+    // open dynamic library (*.so file)
+    void *lib = dlopen(getModulePath(entry.localPathToModule,entry.name).c_str(),RTLD_NOW);
+
+    // check for errors while opening
+    if(lib == NULL) {
+        logger.error("load") << "Could not open dynamic lib: " << entry.name
+            << std::endl << "Message: " << dlerror();
+        return nullptr;
+    }
+
+    // clear error code
+    dlerror();
+
+    // get the pointer to a C-function with name 'getInstance'
+    // that was declared inside the dynamic library
+    void* func = dlsym(lib, "getInstance");
+
+    // check for errors while calling dlsym
+    char *err;
+    if ((err = dlerror()) != NULL) {
+        logger.error("load") << "Could not get symbol 'getInstance' of module " << entry.name
+            << std::endl << "Message: " << err;
+        return nullptr;
+    }
+
+    // TODO check if close is needed here
+//    if(dlclose(lib) != 0) {
+//        logger.error("load") << "Could not close dynamic lib: " << entry.name
+//            << std::endl << "Message: " << dlerror();
+//    }
+    
+    // Cast symbol to function pointer returning a pointer to a Module instance and 
+    // call the function to get the a module instance
+    return reinterpret_cast<Module*(*)()>( func )();
+#endif
 }
 
 }

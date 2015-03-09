@@ -48,4 +48,32 @@ void SignalHandler::handlerForAllSignals(int signal) {
         listener->signal(signal);
     }
 }
+
+void SignalHandler::platform_registerSignal(int signalCode) {
+#ifdef _WIN32
+    std::cout << "Signalhandler is not yet implemented on Windows." << std::endl;
+#else
+    std::cout << "Register listener for " << signalCode << std::endl;
+    signal(signalCode, handlerForAllSignals);
+
+    // initialize signal action struct
+    //  struct sigaction action;
+    //  action.sa_handler = handlerForAllSignals;
+    //  sigemptyset(&action.sa_mask);
+    //  action.sa_flags = SA_RESTART;
+    //  sigaction(signalCode, &action, NULL);
+#endif
+}
+
+void SignalHandler::platform_unregisterSignal(int signalCode) {
+#ifdef _WIN32
+    std::cout << "Signalhandler is not yet implemented on Windows." << std::endl;
+#else
+    //TODO Not sure if we really should set it to the DFL-one. Comment needed!
+    std::cout << "Unregister listener for " << signalCode << std::endl;
+    signal(signalCode, SIG_DFL);
+#endif
+}
+
+
 }
