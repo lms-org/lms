@@ -94,6 +94,7 @@ void ExecutionManager::validate(){
 
 void ExecutionManager::sort(){
     cycleList.clear();
+    //TODO sort enabledModules
     //add modules to the list
     for(Module* it : enabledModules){
         std::vector<Module*> tmp;
