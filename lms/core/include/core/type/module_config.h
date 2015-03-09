@@ -14,6 +14,13 @@ namespace lms { namespace type {
  */
 class ModuleConfig {
 public:
+    /* Default contructors and assignment operators */
+    ModuleConfig() = default;
+    ModuleConfig(const ModuleConfig &) = default;
+    ModuleConfig(ModuleConfig &&) = default;
+    ModuleConfig& operator= (const ModuleConfig &) = default;
+    ModuleConfig& operator= (ModuleConfig &&) = default;
+
     /**
      * @brief Load a config file from the given path.
      *
@@ -46,7 +53,6 @@ public:
         if(it == properties.end()) {
             return result;
         } else {
-            //TODO Don#t know it that's the expected behavoir but it compiles (*it -> it->first)
             std::istringstream stream(it->second);
             stream >> result;
             return result;

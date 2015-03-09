@@ -1,5 +1,5 @@
 //TODO remove unused imports
-#include <limits.h>
+#include <climits>
 #include <cstring>
 #include <core/framework.h>
 #include <unistd.h>

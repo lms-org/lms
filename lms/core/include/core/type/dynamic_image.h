@@ -54,9 +54,7 @@ public:
      * @brief Move constructor
      * @param object to move
      */
-    constexpr DynamicImage(DynamicImage<T> &&obj) : m_width(obj.m_width), m_height(obj.m_height),
-        m_size(obj.m_size), m_data(std::move(obj.m_data)) {
-    }
+    constexpr DynamicImage(DynamicImage<T> &&obj) = default;
 
     /**
      * @brief Copy assignment operator
@@ -77,13 +75,7 @@ public:
      * @param rhs right side of the assignment
      * @return this
      */
-    DynamicImage& operator=(DynamicImage<T> &&rhs) {
-        this->m_width = rhs.m_width;
-        this->m_height = rhs.m_height;
-        this->m_size = rhs.m_size;
-        this->m_data = std::move(rhs.m_data);
-        return *this;
-    }
+    DynamicImage& operator=(DynamicImage<T> &&rhs) = default;
 
     /**
      * @brief Return a reference to the value at the given index.

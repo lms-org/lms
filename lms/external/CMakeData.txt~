@@ -1,4 +1,0 @@
-set (RUNTIME_MODULES
-	"testModule"
-#	INSERT_FLAG_MODULES
-)

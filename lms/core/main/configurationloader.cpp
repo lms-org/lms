@@ -1,7 +1,7 @@
 #include <core/configurationloader.h>
 #include <unistd.h>
-#include <limits.h>
-#include <stdio.h>
+#include <climits>
+#include <cstdio>
 #include <core/framework.h>
 #include <fstream>
 #include <core/type/module_config.h>
