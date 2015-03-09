@@ -29,6 +29,8 @@ set (PUBLIC_HEADERS
         "include/core/logging/child_logger.h"
         "include/core/logging/console_sink.h"
         "include/core/logging/prefix_and_level_filter.h"
+
+        "include/core/extra/type.h"
 #private
         "main/backtrace_formatter.h"
 )
@@ -54,6 +56,8 @@ set (SOURCE
         "main/logging/log_message.cpp"
         "main/logging/console_sink.cpp"
         "main/logging/prefix_and_level_filter.cpp"
+
+        "main/extra/type.cpp"
 )
 #Add system-specific source
 if(UNIX)
