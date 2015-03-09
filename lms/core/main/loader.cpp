@@ -1,6 +1,6 @@
 #include <iostream>
-#include <stdio.h>
-#include <limits.h>
+#include <cstdio>
+#include <climits>
 #include <dirent.h>
 #include <cstring>
 #include <unistd.h>
