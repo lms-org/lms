@@ -34,7 +34,6 @@ void ExecutionManager::loop() {
                 if(moduleV.size() == 1){
                     moduleV[0]->cycle();
                     //remove module from others
-
                     for(std::vector<Module*>& moduleV2:cycleListTmp){
                         moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),moduleV[0]),moduleV2.end());
                     }
