@@ -24,6 +24,7 @@ void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
     //copy cycleList so it can be modified
+    /*
     cycleListType cycleListTmp = cycleList;
 
     if(maxThreads == 1){
@@ -46,14 +47,12 @@ void ExecutionManager::loop() {
     }else{
         //TODO Woker threads
     }
-
+    */
 
     //HACK just for testing atm
-    /*
     for(auto* it: enabledModules){
         it->cycle();
     }
-    */
 
 }
 
