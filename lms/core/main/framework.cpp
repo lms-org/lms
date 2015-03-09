@@ -2,9 +2,18 @@
 #include <core/executionmanager.h>
 #include <pugixml.hpp>
 #include <fstream>
+#include <string>
 #include <csignal>
+#include <climits>
+#include <cstring>
 #include "backtrace_formatter.h"
 #include "unistd.h"
+
+#include <sys/stat.h>
+
+#ifdef _WIN32
+    #include <Windows.h>
+#endif
 
 namespace lms{
 
@@ -103,4 +112,42 @@ void Framework::signal(int s) {
         break;
     }
 }
+
+std::string Framework::programDirectory(){
+    static std::string directory;
+    if(directory.empty()) {
+#ifdef _WIN32
+        HMODULE hModule = GetModuleHandleW(NULL);
+        WCHAR path[MAX_PATH];
+        GetModuleFileNameW(hModule, path, MAX_PATH);
+        //wide char array
+
+        //convert from wide char to narrow char array
+        char ch[260];
+        char DefChar = ' ';
+        WideCharToMultiByte(CP_ACP,0,path,-1, ch,260,&DefChar, NULL);
+
+        //A std:string  using the char* constructor.
+        std::string ss(ch);
+        directory = ss;
+#else
+        char path[PATH_MAX];
+        memset (path, 0, PATH_MAX);
+        if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
+            perror("readlink failed");
+            exit(1);
+        }
+        //get programmdirectory
+        // TODO optimize this a bit
+        directory = path;
+        directory = directory.substr(0, directory.rfind("/"));
+        directory = directory.substr(0, directory.rfind("/"));
+        directory = directory + "/";
+#endif
+    }
+    
+    //std::cout << "ProgramDirectory: " << directory << std::endl;
+    return directory;
+}
+
 }

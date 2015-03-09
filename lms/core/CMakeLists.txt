@@ -55,26 +55,6 @@ set (SOURCE
         "main/logging/console_sink.cpp"
         "main/logging/prefix_and_level_filter.cpp"
 )
-#Add system-specific source
-if(UNIX)
-    message("OS is UNIX!")
-    set (SOURCE ${SOURCE}
-        "main/loader_unix.cpp"
-        "main/framework_unix.cpp"
-        "main/backtrace_formatter_unix.cpp"
-        "main/signalhandler_unix.cpp"
-    )
-elseif(WIN32)
-    message("OS is WIN32!")
-    set (SOURCE ${SOURCE}
-        "main/loader_win.cpp"
-        "main/framework_win.cpp"
-        "main/backtrace_formatter_win.cpp"
-        "main/signalhandler_win.cpp"
-    )
-else()
-    message("NO OS found!")
-endif()
 
 add_executable (lms
         ${PUBLIC_HEADERS}
