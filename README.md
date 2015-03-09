@@ -4,7 +4,7 @@ LMS is a.... //TODO
 will be a cross-plattform system that allows easy module-handling and sharing.
 
 #####Notice:
-(Work in progress) = there is no stable version and it doesn't work at all :)
+(Work in progress) = there is no stable version and it might doesn't work at all :)
 
 ###Getting Started
 //TODO links and more
