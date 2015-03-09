@@ -52,7 +52,7 @@ void ExecutionManager::enableModule(const std::string &name){
     //Check if module is already enabled
     for(auto* it:enabledModules){
         if(it->getName() == name){
-            //TODO throw error
+            logger.error("enableModule") << "Module " << name << " is already enabled.";
             return;
         }
     }
@@ -71,12 +71,13 @@ void ExecutionManager::enableModule(const std::string &name){
 void ExecutionManager::disableModule(const std::string &name){
     for(size_t i = 0; i< enabledModules.size(); ++i){
         if(enabledModules[i]->getName() == name){
-            enabledModules.erase(enabledModules.begin() + 1);
+            enabledModules.erase(enabledModules.begin() + i);
             invalidate();
             return;
         }
     }
-    //TODO print error that modules didn't run
+
+    logger.error("disableModule") << "Module " << name << " was not enabled.";
 }
 /**
  * @brief ExecutionManager::invalidate calling that method will cause the executionmanager to run validate() in the next loop
