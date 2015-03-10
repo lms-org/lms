@@ -27,6 +27,7 @@ bool Loader::checkModule(const char* path){
 
         dlclose(lib);
     }else{
+        fprintf(stderr, "dlopen failed: %s\n", dlerror());
         logger.error("checkModule") << "Module doesn't exist! path:" << path;
     }
     //TODO: not sure if dlclose needed if lib == null
