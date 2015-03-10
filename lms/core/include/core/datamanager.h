@@ -11,6 +11,7 @@
 #include <core/module.h>
 #include <core/logger.h>
 #include <core/configurationloader.h>
+#include <core/extra/type.h>
 
 namespace lms{
 
@@ -236,7 +237,8 @@ private:
 
         channel.dataWrapper = new PointerWrapperImpl<T>(data);
         channel.dataSize = sizeof(T);
-        channel.dataTypeName = typeid(T).name();
+        channel.dataTypeName = extra::typeName<T>();
+        channel.dataHashCode = typeid(T).hash_code();
 
         // Reset channel
         channel.exclusiveWrite = false;
@@ -257,7 +259,7 @@ private:
         // check for hash code of data types
         if(channel.dataHashCode != typeid(T).hash_code()) {
             logger.error() << "Requested wrong data type for channel " << name << std::endl
-                << "Channel type is " << channel.dataTypeName << ", requested was " << typeid(T).name();
+                << "Channel type is " << channel.dataTypeName << ", requested was " << extra::typeName<T>();
             return false;
         }
 
@@ -285,7 +287,10 @@ private:
 
         // used for checkType and better error messages
         channel.dataSize = sizeof(T);
-        channel.dataTypeName = typeid(T).name();
+        channel.dataTypeName = extra::typeName<T>();
+        channel.dataHashCode = typeid(T).hash_code();
+
+        channel.exclusiveWrite = false;
     }
 
     /**
