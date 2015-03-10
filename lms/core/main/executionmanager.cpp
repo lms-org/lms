@@ -24,14 +24,14 @@ void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
     //copy cycleList so it can be modified
-    /*
     cycleListType cycleListTmp = cycleList;
 
     if(maxThreads == 1){
         //simple single list
-        while(cycleList.size() > 0){
-            //TODO Not sure if : can handle erase!
-            for(std::vector<Module*>& moduleV:cycleListTmp){
+        while(cycleListTmp.size() > 0){
+            //Iter over all module-vectors and check if they can be executed
+            for(int i = 0; i < cycleListTmp.size();i++){
+                std::vector<Module*>& moduleV = cycleListTmp[i];
                 if(moduleV.size() == 1){
                     moduleV[0]->cycle();
                     //remove module from others
@@ -40,6 +40,7 @@ void ExecutionManager::loop() {
                     }
                     //remove moduleV from cycleList
                     cycleListTmp.erase(std::remove(cycleListTmp.begin(),cycleListTmp.end(),moduleV),cycleListTmp.end());
+                    i--;
 
                 }
             }
@@ -47,12 +48,14 @@ void ExecutionManager::loop() {
     }else{
         //TODO Woker threads
     }
-    */
 
+
+    /*
     //HACK just for testing atm
     for(auto* it: enabledModules){
         it->cycle();
     }
+    */
 
 }
 
@@ -108,12 +111,14 @@ void ExecutionManager::validate(){
 
 void ExecutionManager::sort(){
     cycleList.clear();
-    //TODO sort enabledModules
+    logger.debug("sort modules") << "sort it size: " << enabledModules.size();
+    //TODO sort enabledModules by priority
     //add modules to the list
     for(Module* it : enabledModules){
         std::vector<Module*> tmp;
         tmp.push_back(it);
         cycleList.push_back(tmp);
+        std::cout<< "added module!!!!" <<std::endl;
     }
     sortByDataChannel();
     sortByPriority();
