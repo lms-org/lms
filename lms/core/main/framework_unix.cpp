@@ -10,6 +10,11 @@
 #include <core/module.h>
 #include <core/logger.h>
 #include <core/framework.h>
+
+#ifdef __APPLE__
+    #include <mach-o/dyld.h>
+#endif
+
 namespace lms{
 
 std::string Framework::programDirectory(){
@@ -18,13 +23,27 @@ std::string Framework::programDirectory(){
     if(directory.empty()) {
         char path[PATH_MAX];
         memset (path, 0, PATH_MAX);
+#ifdef __APPLE__
+        uint32_t size = PATH_MAX;
+        if( _NSGetExecutablePath(path, &size) == 0 ) {
+            char* fullpath = realpath(path, NULL);
+            if( !fullpath ) {
+                perror("realpath failed");
+                exit(1);
+            }
+            directory = fullpath;
+        } else {
+            perror("_NSGetExecutablePath failed");
+            exit(1);
+        }
+#else
         if (readlink("/proc/self/exe", path, PATH_MAX) == -1) {
             perror("readlink failed");
             exit(1);
         }
-        //get programmdirectory
-        // TODO optimize this a bit
         directory = path;
+#endif
+        // TODO optimize this a bit
         directory = directory.substr(0, directory.rfind("/"));
         directory = directory.substr(0, directory.rfind("/"));
         directory = directory + "/";
