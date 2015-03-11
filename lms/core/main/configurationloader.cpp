@@ -5,6 +5,7 @@
 #include <core/framework.h>
 #include <fstream>
 #include <core/type/module_config.h>
+#include <cstdlib>
 
 namespace lms{
 class DataManager;
@@ -13,7 +14,15 @@ ConfigurationLoader::ConfigurationLoader(logging::Logger &rootLogger)
     : logger("CONFIGLOADER", &rootLogger) {
     //Add default values
     addSuffix("");
-    addPath("lms/configs/");
+
+    // get a configuration directory from environment variables
+    char *envLmsConfigPath = getenv("LMS_CONFIG_PATH");
+    if(envLmsConfigPath != NULL) {
+        addPath(envLmsConfigPath);
+    }
+
+    // from the build directory
+    addPath("configs/");
 }
 
 ConfigurationLoader::~ConfigurationLoader() {
@@ -40,9 +49,11 @@ type::ModuleConfig ConfigurationLoader::loadConfig(const std::string &name){
         logger.warn("loadConfig") << "config file path is empty";
     }
 
+    logger.info("loadConfig") << configFilePath;
+
     type::ModuleConfig conf;
     if(! conf.loadFromFile(configFilePath)) {
-        logger.error("loadCoonfig") << "could not load config file " << configFilePath;
+        logger.error("loadConfig") << "could not load config file " << configFilePath;
     }
     return conf;
 }
@@ -51,17 +62,21 @@ std::string ConfigurationLoader::getConfigFilePath(const std::string &name) {
     std::ifstream ifs;
     for(std::string& dir : searchDirectories){
         for(std::vector<std::string>::reverse_iterator suffix = suffixes.rbegin(); suffix != suffixes.rend(); ++suffix) {
+
+            logger.info("getConfigFilePath") << Framework::programDirectory() << " " << dir << " "
+                << *suffix << " " << name;
+
             if((*suffix).size() == 0){
                 ifs.open (Framework::programDirectory()+dir+name +".lconf", std::ifstream::in);
                 if(ifs.is_open()){
                     ifs.close();
-                    return dir+name+"_"+".lconf";
+                    return Framework::programDirectory()+dir+name+".lconf";
                 }
             }else{
                 ifs.open (Framework::programDirectory()+dir+name+"_"+(*suffix)+".lconf", std::ifstream::in);
                 if(ifs.is_open()){
                     ifs.close();
-                    return dir+name+"_"+(*suffix)+".lconf";
+                    return Framework::programDirectory()+dir+name+"_"+(*suffix)+".lconf";
                 }
             }
         }
