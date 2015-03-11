@@ -18,22 +18,15 @@ ConsoleSink& ConsoleSink::printColored(bool colored) {
 void ConsoleSink::sink(const LogMessage &message) {
     if(m_time) {
         // get time now
-        time_t t = ::time(0);
-        struct tm * now = localtime( & t );
+        time_t rawtime;
+        std::time(&rawtime);
+        struct tm *now = std::localtime(&rawtime);
 
-        // format time
-        if(now->tm_hour < 10) {
-            m_out << "0";
-        }
-        m_out << now->tm_hour << ":";
-        if(now->tm_min < 10) {
-            m_out << "0";
-        }
-        m_out << now->tm_min << ":";
-        if(now->tm_sec < 10) {
-            m_out << "0";
-        }
-        m_out << now->tm_sec << " ";
+        // format time to "HH:MM:SS"
+        char buffer[10];
+        std::strftime(buffer, 10, "%T", now);
+
+        m_out << buffer << " ";
     }
     if(m_colored) {
         m_out << Logger::levelColor(message.level);
