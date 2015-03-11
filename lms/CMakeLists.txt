@@ -9,7 +9,7 @@ set (CMAKE_CXX_FLAGS_CORE "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pe
 
 #Gather all config files
 file(GLOB_RECURSE ConfigFiles1 RELATIVE ${CMAKE_SOURCE_DIR}  external/loadConfig.xml)
-file(GLOB_RECURSE ConfigFiles2 RELATIVE ${CMAKE_SOURCE_DIR}  configs/*.xml)
+file(GLOB_RECURSE ConfigFiles2 RELATIVE ${CMAKE_SOURCE_DIR}  configs/*.lconf)
 #TODO add arrays
 set(ConfigFiles
         ${ConfigFiles1}
