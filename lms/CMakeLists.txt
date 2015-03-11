@@ -7,17 +7,14 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake; ${CMAKE_MODULE_PATH}")
 set (CMAKE_CXX_FLAGS_MODULES "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pedantic -O0")
 set (CMAKE_CXX_FLAGS_CORE "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pedantic -O0 ")
 
-#Gather all config files
+#Gather all loadConfigs (used to load modules)
 file(GLOB_RECURSE ConfigFiles1 RELATIVE ${CMAKE_SOURCE_DIR}  external/loadConfig.xml)
+#copy all module-configs (used to set values in modules)
 file(GLOB_RECURSE ConfigFiles2 RELATIVE ${CMAKE_SOURCE_DIR}  configs/*.lconf)
-#TODO add arrays
+#create one list
 set(ConfigFiles
         ${ConfigFiles1}
         ${ConfigFiles2})
-#message("Path:" ${CMAKE_SOURCE_DIR} " ConfigFiles FIRST: " ${Configfiles})
-
-
-
 #compile core
 message("Compile core")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_CORE}")
