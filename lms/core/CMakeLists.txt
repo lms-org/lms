@@ -31,6 +31,7 @@ set (PUBLIC_HEADERS
         "include/core/logging/prefix_and_level_filter.h"
 
         "include/core/extra/type.h"
+        "include/core/extra/string.h"
 #private
         "main/backtrace_formatter.h"
 )
@@ -58,6 +59,7 @@ set (SOURCE
         "main/logging/prefix_and_level_filter.cpp"
 
         "main/extra/type.cpp"
+        "main/extra/string.cpp"
 )
 #Add system-specific source
 if(UNIX)

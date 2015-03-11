@@ -1,7 +1,9 @@
-#include <core/type/module_config.h>
 #include <fstream>
 #include <string>
 #include <cstdlib>
+
+#include <core/type/module_config.h>
+#include <core/extra/string.h>
 
 namespace lms { namespace type {
 
@@ -67,7 +69,7 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
             size_t index = line.find_first_of('=');
 
             if(index != std::string::npos) {
-                properties[trim(line.substr(0, index))] = trim(line.substr(index+1));
+                properties[extra::trim(line.substr(0, index))] = extra::trim(line.substr(index+1));
             }
         }
     }
@@ -75,13 +77,6 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
     in.close();
 
     return true;
-}
-
-std::string ModuleConfig::trim(const std::string& str, const std::string& delims) {
-    std::string result(str);
-    result.erase(0, result.find_first_not_of(delims));
-    result.erase(result.find_last_not_of(delims) + 1);
-    return result;
 }
 
 } // namespace type

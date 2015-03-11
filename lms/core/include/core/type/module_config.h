@@ -70,15 +70,6 @@ public:
 
 private:
     std::unordered_map<std::string, std::string> properties;
-
-    /**
-     * Remove surrounding whitespace from a std::string.
-     * @param s The string to be modified.
-     * @param t The set of characters to delete from each end
-     * of the string.
-     * @return trimmed string
-     */
-    static std::string trim(const std::string& str, const std::string &delims = " \t\n\r\f\v");
 };
 
 } // namespace type
