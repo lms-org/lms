@@ -12,7 +12,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
-        arguments.loggingMinLevel(), arguments.loggingPrefixes())));
+        arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)

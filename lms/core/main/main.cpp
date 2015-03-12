@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
     lms::ArgumentHandler arguments;
     arguments.parseArguments(argc, argv);
 
-    if(arguments.showHelp()) {
+    if(arguments.argHelp()) {
         std::cout
             << "LMS - Lightweight Modular System\n"
             << "Usage: core/lms [-h] [-c config]\n"

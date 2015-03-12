@@ -27,18 +27,24 @@ namespace lms{
          * @brief Return the "load configuration" setting. This can
          * be set by "-c arg".
          */
-        std::string loadConfiguration() const;
+        std::string argLoadConfiguration() const;
 
         /**
          * @brief Return the "show help" setting. This can
-         * be set by "-h". The framework will stop after showing
-         * help information.
+         * be set by "-h" or "--help". The framework will
+         * stop after showing help information.
          */
-        bool showHelp() const;
+        bool argHelp() const;
 
-        std::vector<std::string> loggingPrefixes() const;
+        /**
+         * @brief All values of "--logging-prefix" as a vector of strings.
+         */
+        std::vector<std::string> argLoggingPrefixes() const;
 
-        logging::LogLevel loggingMinLevel() const;
+        /**
+         * @brief The value of the command line argument "--logging-min-level".
+         */
+        logging::LogLevel argLoggingMinLevel() const;
 
     private:
         std::string m_loadConfiguration;

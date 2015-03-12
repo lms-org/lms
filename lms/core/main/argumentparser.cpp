@@ -1,8 +1,9 @@
-#include <core/argumentparser.h>
-
 #include <getopt.h>
 
-namespace lms{
+#include <core/argumentparser.h>
+
+namespace lms {
+
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration("default"), m_showHelp(false),
     m_loggingMinLevel(logging::SMALLEST_LEVEL) {
 }
@@ -35,20 +36,20 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     }
 }
 
-std::string ArgumentHandler::loadConfiguration() const {
+std::string ArgumentHandler::argLoadConfiguration() const {
     return m_loadConfiguration;
 }
 
-bool ArgumentHandler::showHelp() const {
+bool ArgumentHandler::argHelp() const {
     return m_showHelp;
 }
 
-std::vector<std::string> ArgumentHandler::loggingPrefixes() const {
+std::vector<std::string> ArgumentHandler::argLoggingPrefixes() const {
     return m_loggingPrefixes;
 }
 
-logging::LogLevel ArgumentHandler::loggingMinLevel() const {
+logging::LogLevel ArgumentHandler::argLoggingMinLevel() const {
     return m_loggingMinLevel;
 }
 
-}
+} // namespace lms
