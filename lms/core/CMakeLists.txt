@@ -1,5 +1,3 @@
-#include shared headers
-include_directories(include)
 #include pugixml headers (hpp-files)
 include_directories(xml/pugixml-1.5/src)
 
