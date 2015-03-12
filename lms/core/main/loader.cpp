@@ -72,6 +72,12 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
                 std::string pathTmp = it->child("path").child_value();
                 localPathToModule = localPathToModule+pathTmp;
 
+                std::string libname;
+                if(it->child("libname")){
+                    libname = it->child("libname").child_value();
+                }else{
+                    libname = moduleName;
+                }
                 std::string modulePath = getModulePath(localPathToModule,moduleName);
                 logger.info() << "modulePath: " + modulePath;
                 //check if module is valid

@@ -30,7 +30,7 @@ void ExecutionManager::loop() {
         //simple single list
         while(cycleListTmp.size() > 0){
             //Iter over all module-vectors and check if they can be executed
-            for(int i = 0; i < cycleListTmp.size();i++){
+            for(size_t i = 0; i < cycleListTmp.size();i++){
                 std::vector<Module*>& moduleV = cycleListTmp[i];
                 if(moduleV.size() == 1){
                     moduleV[0]->cycle();
@@ -48,14 +48,6 @@ void ExecutionManager::loop() {
     }else{
         //TODO Woker threads
     }
-
-
-    /*
-    //HACK just for testing atm
-    for(auto* it: enabledModules){
-        it->cycle();
-    }
-    */
 
 }
 

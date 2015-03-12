@@ -3,6 +3,9 @@
 		<maxThreadCount> 1 </maxThreadCount>
 	</executionManager>
 	<modulesToLoad>
+		<module>scheduler</module>
 		<module>camera</module>
+		<module>camera_renderer</module>
+		<module>ogre_window_manager</module>
 	</modulesToLoad>
 </framework>

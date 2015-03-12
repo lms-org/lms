@@ -22,8 +22,21 @@ public:
      * used to store available modules
      */
 	struct module_entry {
+        /**
+         *name of the module
+         */
 		std::string name;
+        /**
+         * @brief libname name of the binary (without suffix or lib) if it's empty, the name will be used to open the library
+         */
+        std::string libname;
+        /**
+         * @brief localPathToModule path from external/ to the directory containing the .so or .dll file
+         */
         std::string localPathToModule;
+        /**
+         * @brief localPathToConfigs TODO not used yet?!
+         */
         std::string localPathToConfigs;
     };
     typedef std::list<Loader::module_entry> moduleList;
@@ -46,10 +59,10 @@ private:
     /**
      * @brief getModulePath
      * @param localPathToModule the path from the modules folder to the module folder that contains the so file
-     * @param moduleName the name of the module (How it's written in CMakeLists.txt
+     * @param libname the name of the binary (How it's written in CMakeLists.txt
      * @return the ABSOLUTE path of the shared library file (.so)
      */
-    std::string getModulePath(const std::string &localPathToModule, const std::string &moduleName);
+    std::string getModulePath(const std::string &localPathToModule, const std::string &libname);
     /**
      * @brief checkModule checks if the module could be loaded
      * @param path
