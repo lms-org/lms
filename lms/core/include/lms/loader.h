@@ -6,6 +6,7 @@
   */
 #include <list>
 #include <string>
+#include <map>
 
 #include <lms/logger.h>
 
@@ -38,6 +39,10 @@ public:
          * @brief localPathToConfigs TODO not used yet?!
          */
         std::string localPathToConfigs;
+        /**
+         * @brief stringMapping used to store string mapping. For examples it's used to get different dataChannel in modules that share one binary
+         */
+        std::map<std::string, std::string> stringMapping;
     };
     typedef std::list<Loader::module_entry> moduleList;
     /**

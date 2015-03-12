@@ -5,7 +5,7 @@
 namespace lms{
     bool Module::initializeBase(DataManager* d, Loader::module_entry &loaderEntry, logging::Logger *rootLogger) {
         dm = d;
-        Module::loaderEntry = loaderEntry;
+        this->loaderEntry = loaderEntry;
 
         // delete uninitialized child logger
         logger.~ChildLogger();
@@ -21,5 +21,12 @@ namespace lms{
 
     lms_EXPORT int Module::getPriority() const{
         return priority;
+    }
+
+    lms_EXPORT std::string Module::getStringMapping(std::string mapFrom){
+        if(loaderEntry.stringMapping.count(mapFrom) == 1){
+            return loaderEntry.stringMapping[mapFrom];
+        }
+        return mapFrom;
     }
 }

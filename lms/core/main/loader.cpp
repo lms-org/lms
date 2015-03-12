@@ -64,6 +64,8 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
             pugi::xml_node modulesNode =doc.child("modules");
 
             for (pugi::xml_node_iterator it = modulesNode.begin(); it != modulesNode.end(); ++it){
+                //module entry, used for loading
+                struct module_entry entry;
                 //parse module content
                 std::string moduleName = it->child("name").child_value();
                 //set mainFolder (folder after modules
@@ -87,11 +89,14 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
                     logger.warn() << "Module invalid! " << moduleName;
                     continue;
                 }
+                //get string mapping
+                for(pugi::xml_node_iterator mappingIt : it->child("mapping")){
+                    entry.stringMapping[mappingIt->child_value("from")] = mappingIt->child_value("to");
+                }
                 //add module to list
-                struct module_entry entry;
                 entry.localPathToModule = localPathToModule;
                 entry.name = moduleName;
-                //TODO
+                entry.libname = libname;
                 entry.localPathToConfigs = "";
                 list.push_back(entry);
             }

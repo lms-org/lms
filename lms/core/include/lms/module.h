@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-
+#include <map>
 #include <lms/loader.h>
 
 namespace lms{
@@ -50,6 +50,13 @@ public:
      * @return
      */
     virtual bool isResettable() { return false; }
+
+    /**
+     * @brief getDataChannelMapping
+     * @param mapFrom
+     * @return the mapping for the given key or the key itself if it has no mapping for it
+     */
+    std::string getStringMapping(std::string mapFrom);
 
 protected:
     DataManager* datamanager() { return dm; }

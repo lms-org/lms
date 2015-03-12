@@ -39,7 +39,7 @@ Module* Loader::load( const module_entry& entry) {
     // see here: http://linux.die.net/man/3/dlclose
 
     // open dynamic library (*.so file)
-    void *lib = dlopen(getModulePath(entry.localPathToModule,entry.name).c_str(),RTLD_NOW);
+    void *lib = dlopen(getModulePath(entry.localPathToModule,entry.libname).c_str(),RTLD_NOW);
 
     // check for errors while opening
     if(lib == NULL) {
