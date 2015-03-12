@@ -9,10 +9,10 @@
 #include <memory>
 
 #include <sys/time.h>
-#include <core/loader.h>
-#include <core/datamanager.h>
-#include <core/executionmanager.h>
-#include <core/logger.h>
+#include <lms/loader.h>
+#include <lms/datamanager.h>
+#include <lms/executionmanager.h>
+#include <lms/logger.h>
 
 namespace lms{
     class DataManager;

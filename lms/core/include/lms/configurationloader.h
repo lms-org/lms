@@ -6,8 +6,8 @@
 #include <vector>
 #include <unistd.h>
 
-#include <core/type/module_config.h>
-#include <core/logger.h>
+#include <lms/type/module_config.h>
+#include <lms/logger.h>
 
 /**
  * TODO rename file

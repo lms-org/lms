@@ -1,6 +1,6 @@
-#include <core/module.h>
+#include <lms/module.h>
 #include <string>
-#include <core/lms_exports.h>
+#include <lms/lms_exports.h>
 
 namespace lms{
     bool Module::initializeBase(DataManager* d, Loader::module_entry &loaderEntry, logging::Logger *rootLogger) {

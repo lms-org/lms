@@ -1,11 +1,11 @@
 #ifndef LMS_FRAMEWORK_H
 #define LMS_FRAMEWORK_H
 
-#include <core/datamanager.h>
-#include <core/signalhandler.h>
-#include <core/argumentparser.h>
-#include <core/executionmanager.h>
-#include <core/logger.h>
+#include <lms/datamanager.h>
+#include <lms/signalhandler.h>
+#include <lms/argumentparser.h>
+#include <lms/executionmanager.h>
+#include <lms/logger.h>
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
  */

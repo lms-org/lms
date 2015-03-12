@@ -1,4 +1,4 @@
-#include <core/type/dynamic_image.h>
+#include <lms/type/dynamic_image.h>
 
 namespace lms {
 namespace type {

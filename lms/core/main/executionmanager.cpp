@@ -1,10 +1,10 @@
-#include <core/executionmanager.h>
-#include <core/datamanager.h>
-#include <core/module.h>
-#include <core/loader.h>
+#include <lms/executionmanager.h>
+#include <lms/datamanager.h>
+#include <lms/module.h>
+#include <lms/loader.h>
 #include <queue>
 #include <iostream>
-#include <core/datamanager.h>
+#include <lms/datamanager.h>
 #include <cstdio>
 #include <memory>
 #include <algorithm>

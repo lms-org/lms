@@ -1,4 +1,4 @@
-#include <core/extra/type.h>
+#include <lms/extra/type.h>
 
 #ifdef __GNUG__
 #include <cstdlib>

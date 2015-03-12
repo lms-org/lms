@@ -7,7 +7,7 @@
 #include <list>
 #include <string>
 
-#include <core/logger.h>
+#include <lms/logger.h>
 
 namespace lms{
 class Module;

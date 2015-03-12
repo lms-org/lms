@@ -1,5 +1,5 @@
-#include <core/framework.h>
-#include <core/executionmanager.h>
+#include <lms/framework.h>
+#include <lms/executionmanager.h>
 #include <pugixml.hpp>
 #include <fstream>
 #include <csignal>

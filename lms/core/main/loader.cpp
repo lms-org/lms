@@ -9,11 +9,11 @@
 #include <algorithm>
 #include <string>
 
-#include <core/loader.h>
-#include <core/module.h>
+#include <lms/loader.h>
+#include <lms/module.h>
 #include <pugixml.hpp>
-#include <core/logger.h>
-#include <core/framework.h>
+#include <lms/logger.h>
+#include <lms/framework.h>
 
 namespace lms{
 
@@ -78,7 +78,7 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
                 }else{
                     libname = moduleName;
                 }
-                std::string modulePath = getModulePath(localPathToModule,moduleName);
+                std::string modulePath = getModulePath(localPathToModule,libname);
                 logger.info() << "modulePath: " + modulePath;
                 //check if module is valid
                 if(checkModule(modulePath.c_str())){
@@ -111,8 +111,8 @@ void Loader::unload(Module* a) {
 }
 
 
-std::string Loader::getModulePath(const std::string &modulePath, const std::string &moduleName) {
-    return pathToModules+modulePath+"lib"+moduleName+".so";
+std::string Loader::getModulePath(const std::string &modulePath, const std::string &libname) {
+    return pathToModules+modulePath+"lib"+libname+".so";
 }
 
 }

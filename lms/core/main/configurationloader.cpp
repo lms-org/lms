@@ -1,10 +1,10 @@
-#include <core/configurationloader.h>
+#include <lms/configurationloader.h>
 #include <unistd.h>
 #include <climits>
 #include <cstdio>
-#include <core/framework.h>
+#include <lms/framework.h>
 #include <fstream>
-#include <core/type/module_config.h>
+#include <lms/type/module_config.h>
 #include <cstdlib>
 
 namespace lms{

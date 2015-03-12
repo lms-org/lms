@@ -8,10 +8,10 @@
 #include <memory>
 #include <typeinfo>
 
-#include <core/module.h>
-#include <core/logger.h>
-#include <core/configurationloader.h>
-#include <core/extra/type.h>
+#include <lms/module.h>
+#include <lms/logger.h>
+#include <lms/configurationloader.h>
+#include <lms/extra/type.h>
 
 namespace lms{
 

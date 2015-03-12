@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "core/argumentparser.h"
+#include "lms/argumentparser.h"
 
 namespace lms {
 
@@ -40,7 +40,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
 
 void ArgumentHandler::printHelp(std::ostream *out) const {
     *out << "LMS - Lightweight Modular System\n"
-        << "Usage: core/lms [-h] [-c config]\n"
+        << "Usage: lms/lms [-h] [-c config]\n"
         << "  -h, --help          Show help\n"
         << "  -c config           Load configuration (defaults to 'default')\n"
         << "  --logging-min-level Filter minimum logging level, e.g. ERROR\n"

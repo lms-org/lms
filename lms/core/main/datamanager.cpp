@@ -3,8 +3,8 @@
 #include <string>
 #include <iostream>
 
-#include <core/module.h>
-#include <core/datamanager.h>
+#include <lms/module.h>
+#include <lms/datamanager.h>
 
 namespace lms{
 

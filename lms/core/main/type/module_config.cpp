@@ -2,8 +2,8 @@
 #include <string>
 #include <cstdlib>
 
-#include <core/type/module_config.h>
-#include <core/extra/string.h>
+#include <lms/type/module_config.h>
+#include <lms/extra/string.h>
 
 namespace lms { namespace type {
 

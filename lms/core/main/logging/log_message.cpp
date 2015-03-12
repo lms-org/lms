@@ -1,6 +1,6 @@
 #include <memory>
 
-#include <core/logger.h>
+#include <lms/logger.h>
 
 namespace lms {
 namespace logging {

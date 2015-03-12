@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <string>
 
-#include <core/loader.h>
-#include <core/module.h>
-#include <core/logger.h>
+#include <lms/loader.h>
+#include <lms/module.h>
+#include <lms/logger.h>
 namespace lms{
 template<typename _Target>
 union converter {

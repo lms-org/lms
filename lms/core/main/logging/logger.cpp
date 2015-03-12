@@ -1,7 +1,7 @@
 #include <memory>
 
-#include <core/logger.h>
-#include <core/extra/colors.h>
+#include <lms/logger.h>
+#include <lms/extra/colors.h>
 
 namespace lms {
 namespace logging {

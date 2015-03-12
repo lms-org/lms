@@ -6,10 +6,10 @@
 #include <algorithm>
 #include <string>
 
-#include <core/loader.h>
-#include <core/module.h>
-#include <core/logger.h>
-#include <core/framework.h>
+#include <lms/loader.h>
+#include <lms/module.h>
+#include <lms/logger.h>
+#include <lms/framework.h>
 
 #ifdef __APPLE__
     #include <mach-o/dyld.h>

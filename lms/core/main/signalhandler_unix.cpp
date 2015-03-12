@@ -1,7 +1,7 @@
 #include <iostream>
 #include <csignal>
 
-#include <core/signalhandler.h>
+#include <lms/signalhandler.h>
 
 namespace lms {
 
