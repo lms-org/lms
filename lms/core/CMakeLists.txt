@@ -16,7 +16,11 @@ set (PUBLIC_HEADERS
         "include/lms/type/static_image.h"
         "include/lms/type/dynamic_image.h"
         "include/lms/lms_exports.h"
+
         "include/lms/type/module_config.h"
+        "include/lms/type/dynamic_image.h"
+        "include/lms/type/static_image.h"
+        "include/lms/type/serializable.h"
 
         "include/lms/logging/log_level.h"
         "include/lms/logging/logger.h"
@@ -30,6 +34,7 @@ set (PUBLIC_HEADERS
 
         "include/lms/extra/type.h"
         "include/lms/extra/string.h"
+        "include/lms/extra/time.h"
 #private
         "main/backtrace_formatter.h"
 )
@@ -58,6 +63,7 @@ set (SOURCE
 
         "main/extra/type.cpp"
         "main/extra/string.cpp"
+        "main/extra/time.cpp"
 )
 #Add system-specific source
 if(UNIX)
