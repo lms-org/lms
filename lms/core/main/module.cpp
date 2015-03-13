@@ -1,6 +1,7 @@
 #include <lms/module.h>
 #include <string>
 #include <lms/lms_exports.h>
+#include <lms/datamanager.h>
 
 namespace lms{
     bool Module::initializeBase(DataManager* d, Loader::module_entry &loaderEntry, logging::Logger *rootLogger) {
@@ -28,5 +29,9 @@ namespace lms{
             return loaderEntry.stringMapping[mapFrom];
         }
         return mapFrom;
+    }
+
+    lms_EXPORT const type::ModuleConfig* Module::getConfig(){
+        return datamanager()->getConfig(this, getName(), loaderEntry.configPaths);
     }
 }

@@ -200,7 +200,7 @@ public:
      * @param name name of the config file
      * @return module configuration object
      */
-    const type::ModuleConfig* getConfig(Module *module, const std::string &name);
+    const type::ModuleConfig* getConfig(Module *module, const std::string &name,const std::vector<std::string> privateDirectories = {});
 
 private:
     /**

@@ -93,6 +93,11 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
                 for(pugi::xml_node_iterator mappingIt : it->child("mapping")){
                     entry.stringMapping[mappingIt->child_value("from")] = mappingIt->child_value("to");
                 }
+                //get config file paths
+                for(pugi::xml_node_iterator localPath : it->child("configPaths")){
+                    //create absolute path
+                    entry.configPaths.push_back(pathToModules+moduleFolderName+"/"+localPath->child_value());
+                }
                 //add module to list
                 entry.localPathToModule = localPathToModule;
                 entry.name = moduleName;

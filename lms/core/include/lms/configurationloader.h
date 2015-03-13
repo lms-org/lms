@@ -12,6 +12,7 @@
 
 namespace lms{
 /**
+ * TODO add xml support
  * @brief The ConfigurationLoader class used to load config-files for Modules
  */
 class ConfigurationLoader {

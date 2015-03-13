@@ -6,6 +6,7 @@
 #include <memory>
 #include <map>
 #include <lms/loader.h>
+#include <lms/type/module_config.h>
 
 namespace lms{
 
@@ -61,6 +62,7 @@ public:
 protected:
     DataManager* datamanager() { return dm; }
     logging::ChildLogger logger;
+    const type::ModuleConfig* getConfig();
 private:
     Loader::module_entry loaderEntry;
 	DataManager* dm;

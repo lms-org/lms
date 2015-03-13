@@ -43,6 +43,8 @@ public:
          * @brief stringMapping used to store string mapping. For examples it's used to get different dataChannel in modules that share one binary
          */
         std::map<std::string, std::string> stringMapping;
+
+        std::vector<std::string> configPaths;
     };
     typedef std::list<Loader::module_entry> moduleList;
     /**

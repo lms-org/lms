@@ -13,7 +13,10 @@ class DataManager;
 ConfigurationLoader::ConfigurationLoader(logging::Logger &rootLogger)
     : logger("CONFIGLOADER", &rootLogger) {
 
-    // get a configuration directory from environment variables
+    /**
+     * get a configuration directory from environment variables
+     * the envLmsConfigPath will be searched after the private directories but before the public ones!
+     */
     char *envLmsConfigPath = getenv("LMS_CONFIG_PATH");
     if(envLmsConfigPath != NULL) {
         addPath(envLmsConfigPath);
@@ -94,20 +97,19 @@ std::string ConfigurationLoader::getSuffixConfig(const std::string &name,const s
 std::string ConfigurationLoader::getPath(const std::string &name,const std::string& suffix, const std::vector<std::string>& directories){
     std::ifstream ifs;
     for(const std::string& dir : directories){
-        logger.info("getConfigFilePath") << dir << " "
-                                         << suffix << " " << name;
-        if(suffix.empty() == 0){
-            ifs.open (dir+name +".lconf", std::ifstream::in);
-            if(ifs.is_open()){
-                ifs.close();
-                return dir+name+".lconf";
-            }
+        std::string path;
+        if(suffix.empty()){
+            path = dir+name +".lconf";
         }else{
-            ifs.open (dir+name+"_"+suffix+".lconf", std::ifstream::in);
-            if(ifs.is_open()){
-                ifs.close();
-                return dir+name+"_"+suffix+".lconf";
-            }
+            path = dir+name+"_"+suffix+".lconf";
+        }
+        ifs.open (path, std::ifstream::in);
+        if(ifs.is_open()){
+            ifs.close();
+            logger.debug("Configu.getPath")<<"found: "<<path;
+            return path;
+        }else{
+            logger.debug("Configu.getPath")<<"DIDN'T found: "<<path;
         }
     }
     return "";
