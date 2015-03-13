@@ -69,10 +69,12 @@ void ExecutionManager::enableModule(const std::string &name){
             Module* module = loader.load(it);
             module->initializeBase(&dataManager,it, &rootLogger);
             module->initialize();
-            enabledModules.push_back(module);
+            enabledModules.push_backdisableModule(module);
             invalidate();
+            return;
         }
     }
+    logger.error("enable Module") <<"Module " << name << "doesn't exist!";
 }
 
 /**Disable module with the given name, remove it from the cycle-queue */
