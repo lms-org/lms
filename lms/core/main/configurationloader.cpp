@@ -22,7 +22,7 @@ ConfigurationLoader::ConfigurationLoader(logging::Logger &rootLogger)
     }
 
     // from the build directory
-    addPath("configs/");
+    addPath(Framework::programDirectory()+"configs/");
 }
 
 ConfigurationLoader::~ConfigurationLoader() {
@@ -67,16 +67,16 @@ std::string ConfigurationLoader::getConfigFilePath(const std::string &name) {
                 << *suffix << " " << name;
 
             if((*suffix).size() == 0){
-                ifs.open (Framework::programDirectory()+dir+name +".lconf", std::ifstream::in);
+                ifs.open (dir+name +".lconf", std::ifstream::in);
                 if(ifs.is_open()){
                     ifs.close();
-                    return Framework::programDirectory()+dir+name+".lconf";
+                    return dir+name+".lconf";
                 }
             }else{
-                ifs.open (Framework::programDirectory()+dir+name+"_"+(*suffix)+".lconf", std::ifstream::in);
+                ifs.open (dir+name+"_"+(*suffix)+".lconf", std::ifstream::in);
                 if(ifs.is_open()){
                     ifs.close();
-                    return Framework::programDirectory()+dir+name+"_"+(*suffix)+".lconf";
+                    return dir+name+"_"+(*suffix)+".lconf";
                 }
             }
         }

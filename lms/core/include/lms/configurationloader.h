@@ -32,7 +32,7 @@ public:
     type::ModuleConfig loadConfig(const std::string &name);
     /**
      * @brief addPath
-     * @param path will be added to the searchDirectories list
+     * @param path, absolute path will be added to the searchDirectories list
      */
     void addPath(const std::string &path);
     /**
@@ -49,7 +49,7 @@ public:
 private:
     logging::ChildLogger logger;
     /**
-     * @brief searchDirectories relative path: LMS/<searchDirectories>
+     * @brief searchDirectories absolute paths
      */
     std::vector<std::string> searchDirectories;
 
