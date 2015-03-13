@@ -2,6 +2,7 @@
 #define LMS_EXTRA_TIME_H
 
 #include <cstdint>
+#include <iostream>
 
 namespace lms {
 namespace extra {
@@ -72,6 +73,13 @@ class PrecisionTime {
      */
     explicit PrecisionTime(std::int64_t micros);
 };
+
+/**
+ * @brief Operator overloading for printing a precision time
+ * into a stream. The format is "x us", where x is the time
+ * in micro seconds.
+ */
+std::ostream& operator <<(std::ostream &stream, const PrecisionTime &t);
 
 }  // namespace extra
 }  // namespace lms

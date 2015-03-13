@@ -97,5 +97,10 @@ bool PrecisionTime::operator !=(const PrecisionTime &t) {
     return micros() != t.micros();
 }
 
+std::ostream& operator <<(std::ostream &stream, const PrecisionTime &t) {
+    stream << t.micros() << " us";
+    return stream;
+}
+
 }  // namespace extra
 }  // namespace lms
