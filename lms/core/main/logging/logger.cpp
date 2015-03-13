@@ -22,6 +22,36 @@ std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
     return log(LogLevel::ERROR, tag);
 }
 
+void Logger::time(const std::string &timerName) {
+    // trigger a debug message to inform the programmer
+    debug(timerName) << "started";
+
+    // at LAST: save the current time in our cache
+    timestampCache[timerName] = extra::PrecisionTime::now();
+}
+
+void Logger::timeEnd(const std::string &timerName) {
+    // at FIRST: save the current time
+    extra::PrecisionTime endTime = extra::PrecisionTime::now();
+
+    // check if time() was called with the same timer name.
+    auto it = timestampCache.find(timerName);
+
+    if(it == timestampCache.end()) {
+        // if not found: trigger bad debug message
+        debug(timerName) << "timeEnd() was called without time()";
+    } else {
+        // compute time difference
+        extra::PrecisionTime deltaTime = endTime - it->second;
+
+        // print delta time as debug message
+        debug(timerName) << deltaTime;
+
+        // remove timestamp from our cache
+        timestampCache.erase(it);
+    }
+}
+
 std::string Logger::levelName(LogLevel lvl) {
     switch(lvl) {
     case LogLevel::DEBUG : return "DEBUG";
