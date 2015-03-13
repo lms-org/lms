@@ -8,11 +8,11 @@ set (CMAKE_CXX_FLAGS_MODULES "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra 
 set (CMAKE_CXX_FLAGS_CORE "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pedantic -O0 ")
 
 #Gather all loadConfigs (used to load modules)
-file(GLOB_RECURSE loadConfigs RELATIVE ${CMAKE_SOURCE_DIR}  external/loadConfig.xml)
+file(GLOB_RECURSE loadConfigs RELATIVE ${CMAKE_CURRENT_LIST_DIR}  external/loadConfig.xml)
 #copy all module-configs (used to set values in modules)
-file(GLOB_RECURSE moduleConfigs RELATIVE ${CMAKE_SOURCE_DIR}  configs/*.lconf)
+file(GLOB_RECURSE moduleConfigs RELATIVE ${CMAKE_CURRENT_LIST_DIR}  *.lconf)
 #copy the framework-configs
-file( GLOB_RECURSE frameworkConfigs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} configs/*.xml)
+file( GLOB_RECURSE frameworkConfigs RELATIVE ${CMAKE_CURRENT_LIST_DIR} configs/*.xml)
 
 #create one list
 set(ConfigFiles

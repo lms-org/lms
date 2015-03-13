@@ -69,7 +69,7 @@ void ExecutionManager::enableModule(const std::string &name){
             Module* module = loader.load(it);
             module->initializeBase(&dataManager,it, &rootLogger);
             module->initialize();
-            enabledModules.push_backdisableModule(module);
+            enabledModules.push_back(module);
             invalidate();
             return;
         }

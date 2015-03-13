@@ -49,16 +49,17 @@ type::ModuleConfig ConfigurationLoader::loadConfig(const std::string &name, cons
     }
 
     type::ModuleConfig conf;
+
     //load default config
     if(!defaultConfig.empty()){
-        logger.debug("load config: ") << defaultConfig;
+        logger.debug("load default config: ") << defaultConfig.size();
         if(!conf.loadFromFile(defaultConfig)) {
             logger.error("loadConfig") << "could not load config file " << defaultConfig;
         }
     }
     //overload config if possible
     if(!customConfig.empty()){
-        logger.debug("load config: ") << customConfig;
+        logger.debug("load suffix config: ") << defaultConfig << defaultConfig.size();
         if(!conf.loadFromFile(customConfig)) {
             logger.error("loadConfig") << "could not load config file " << customConfig;
         }
@@ -67,12 +68,12 @@ type::ModuleConfig ConfigurationLoader::loadConfig(const std::string &name, cons
 }
 
 std::string ConfigurationLoader::getDefaultConfigPath(const std::string &name, const std::vector<std::string> & privateDirectories ){
-        std::string path = getPath(name,"",privateDirectories);
-        if(path.size() > 0)
-            return path;
-        path = getPath(name,"",searchDirectories);
-        if(path.size() > 0)
-            return path;
+    std::string path = getPath(name,"",privateDirectories);
+    if(path.size() > 0)
+        return path;
+    path = getPath(name,"",searchDirectories);
+    if(path.size() > 0)
+        return path;
     return "";
 }
 
@@ -93,22 +94,23 @@ std::string ConfigurationLoader::getSuffixConfig(const std::string &name,const s
 std::string ConfigurationLoader::getPath(const std::string &name,const std::string& suffix, const std::vector<std::string>& directories){
     std::ifstream ifs;
     for(const std::string& dir : directories){
-            logger.info("getConfigFilePath") << Framework::programDirectory() << " " << dir << " "
-                                             << suffix << " " << name;
-            if(suffix.size() == 0){
-                ifs.open (dir+name +".lconf", std::ifstream::in);
-                if(ifs.is_open()){
-                    ifs.close();
-                    return dir+name+".lconf";
-                }
-            }else{
-                ifs.open (dir+name+"_"+suffix+".lconf", std::ifstream::in);
-                if(ifs.is_open()){
-                    ifs.close();
-                    return dir+name+"_"+suffix+".lconf";
-                }
+        logger.info("getConfigFilePath") << dir << " "
+                                         << suffix << " " << name;
+        if(suffix.empty() == 0){
+            ifs.open (dir+name +".lconf", std::ifstream::in);
+            if(ifs.is_open()){
+                ifs.close();
+                return dir+name+".lconf";
+            }
+        }else{
+            ifs.open (dir+name+"_"+suffix+".lconf", std::ifstream::in);
+            if(ifs.is_open()){
+                ifs.close();
+                return dir+name+"_"+suffix+".lconf";
             }
         }
+    }
+    return "";
 }
 
 }
