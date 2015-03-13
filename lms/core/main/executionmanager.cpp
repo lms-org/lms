@@ -66,6 +66,7 @@ void ExecutionManager::enableModule(const std::string &name){
     }
     for(auto& it:available){
         if(it.name == name){
+            logger.debug("enable Module") <<"enabling Module: " <<name;
             Module* module = loader.load(it);
             module->initializeBase(&dataManager,it, &rootLogger);
             module->initialize();
