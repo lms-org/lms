@@ -20,7 +20,7 @@ set (PUBLIC_HEADERS
         "include/lms/type/module_config.h"
         "include/lms/type/dynamic_image.h"
         "include/lms/type/static_image.h"
-        "include/lms/type/serializable.h"
+#        "include/lms/type/serializable.h"
 
         "include/lms/logging/log_level.h"
         "include/lms/logging/logger.h"
