@@ -69,8 +69,12 @@ void ExecutionManager::enableModule(const std::string &name){
             logger.debug("enable Module") <<"enabling Module: " <<name;
             Module* module = loader.load(it);
             module->initializeBase(&dataManager,it, &rootLogger);
-            module->initialize();
-            enabledModules.push_back(module);
+
+            if(module->initialize()){
+                enabledModules.push_back(module);
+            }else{
+                logger.error("enable Module") <<"Enabling Module "<< name << " failed";
+            }
             invalidate();
             return;
         }
