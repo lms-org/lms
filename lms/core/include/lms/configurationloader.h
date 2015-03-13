@@ -9,11 +9,7 @@
 #include <lms/type/module_config.h>
 #include <lms/logger.h>
 
-/**
- * TODO rename file
- *
- * TODO shared und private Configs unterscheiden
- */
+
 namespace lms{
 /**
  * @brief The ConfigurationLoader class used to load config-files for Modules
@@ -29,10 +25,10 @@ public:
      * Will reload the config if it was already loaded
      * //TODO Man könnte auch alle configs nacheinander laden wodruch die werte überschrieben würden
      */
-    type::ModuleConfig loadConfig(const std::string &name);
+    type::ModuleConfig loadConfig(const std::string &name, const std::vector<std::string> & privateDirectories = {});
     /**
      * @brief addPath
-     * @param path, absolute path will be added to the searchDirectories list
+     * @param path, absolute path that will be added to the searchDirectories list
      */
     void addPath(const std::string &path);
     /**
@@ -49,17 +45,31 @@ public:
 private:
     logging::ChildLogger logger;
     /**
-     * @brief searchDirectories absolute paths
+     * @brief searchDirectories absolute public paths
      */
     std::vector<std::string> searchDirectories;
 
     std::vector<std::string> suffixes;
     /**
-     * @brief getConfigFilePath
+     * @brief getSuffixConfig prefers private directories over public directories
      * @param name
-     * @return the configfilePath given by the suffixes and directories
+     * @return the path given by the suffixes and directories or "" if no valid file was found
      */
-    std::string getConfigFilePath(const std::string &name);
+    std::string getSuffixConfig(const std::string &name,const std::vector<std::string> & privateDirectories);
+    /**
+     * @brief getDefaultConfigPath prefers private directories over public directories
+     * @param name
+     * @return the path given by the directories (private and public) or "" if no valid file was found
+     */
+    std::string getDefaultConfigPath(const std::string &name,const std::vector<std::string> & privateDirectories);
+    /**
+     * @brief getPath just searches for a file
+     * @param name
+     * @param suffix
+     * @param directories
+     * @return the path or "" if no valid file was found
+     */
+    std::string getPath(const std::string &name,const std::string& suffix, const std::vector<std::string>& directories);
 };
 }
 #endif

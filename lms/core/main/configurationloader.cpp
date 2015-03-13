@@ -12,8 +12,6 @@ class DataManager;
 
 ConfigurationLoader::ConfigurationLoader(logging::Logger &rootLogger)
     : logger("CONFIGLOADER", &rootLogger) {
-    //Add default values
-    addSuffix("");
 
     // get a configuration directory from environment variables
     char *envLmsConfigPath = getenv("LMS_CONFIG_PATH");
@@ -26,7 +24,7 @@ ConfigurationLoader::ConfigurationLoader(logging::Logger &rootLogger)
 }
 
 ConfigurationLoader::~ConfigurationLoader() {
- //TODO
+    //TODO
 }
 void ConfigurationLoader::addPath(const std::string &path){
     searchDirectories.push_back(path);
@@ -42,47 +40,75 @@ void ConfigurationLoader::validate(){
 }
 
 
-type::ModuleConfig ConfigurationLoader::loadConfig(const std::string &name){
+type::ModuleConfig ConfigurationLoader::loadConfig(const std::string &name, const std::vector<std::string> & privateDirectories){
     //load config
-    std::string configFilePath(getConfigFilePath(name));
-    if(configFilePath.empty()) {
-        logger.warn("loadConfig") << "config file path is empty";
+    std::string defaultConfig = getDefaultConfigPath(name,privateDirectories);
+    std::string customConfig = getSuffixConfig(name,privateDirectories);
+    if(defaultConfig.empty()) {
+        logger.warn("loadConfig") << "No default config with name" <<name;
     }
 
-    logger.info("loadConfig") << configFilePath;
-
     type::ModuleConfig conf;
-    if(! conf.loadFromFile(configFilePath)) {
-        logger.error("loadConfig") << "could not load config file " << configFilePath;
+    //load default config
+    if(!defaultConfig.empty()){
+        logger.debug("load config: ") << defaultConfig;
+        if(!conf.loadFromFile(defaultConfig)) {
+            logger.error("loadConfig") << "could not load config file " << defaultConfig;
+        }
+    }
+    //overload config if possible
+    if(!customConfig.empty()){
+        logger.debug("load config: ") << customConfig;
+        if(!conf.loadFromFile(customConfig)) {
+            logger.error("loadConfig") << "could not load config file " << customConfig;
+        }
     }
     return conf;
 }
 
-std::string ConfigurationLoader::getConfigFilePath(const std::string &name) {
+std::string ConfigurationLoader::getDefaultConfigPath(const std::string &name, const std::vector<std::string> & privateDirectories ){
+        std::string path = getPath(name,"",privateDirectories);
+        if(path.size() > 0)
+            return path;
+        path = getPath(name,"",searchDirectories);
+        if(path.size() > 0)
+            return path;
+    return "";
+}
+
+std::string ConfigurationLoader::getSuffixConfig(const std::string &name,const std::vector<std::string> & privateDirectories) {
+    for(std::vector<std::string>::reverse_iterator suffix = suffixes.rbegin(); suffix != suffixes.rend(); ++suffix) {
+        std::string path = getPath(name,*suffix,privateDirectories);
+        if(path.size() > 0)
+            return path;
+    }
+    for(std::vector<std::string>::reverse_iterator suffix = suffixes.rbegin(); suffix != suffixes.rend(); ++suffix) {
+        std::string path = getPath(name,*suffix,searchDirectories);
+        if(path.size() > 0)
+            return path;
+    }
+    return "";
+}
+
+std::string ConfigurationLoader::getPath(const std::string &name,const std::string& suffix, const std::vector<std::string>& directories){
     std::ifstream ifs;
-    for(std::string& dir : searchDirectories){
-        for(std::vector<std::string>::reverse_iterator suffix = suffixes.rbegin(); suffix != suffixes.rend(); ++suffix) {
-
+    for(const std::string& dir : directories){
             logger.info("getConfigFilePath") << Framework::programDirectory() << " " << dir << " "
-                << *suffix << " " << name;
-
-            if((*suffix).size() == 0){
+                                             << suffix << " " << name;
+            if(suffix.size() == 0){
                 ifs.open (dir+name +".lconf", std::ifstream::in);
                 if(ifs.is_open()){
                     ifs.close();
                     return dir+name+".lconf";
                 }
             }else{
-                ifs.open (dir+name+"_"+(*suffix)+".lconf", std::ifstream::in);
+                ifs.open (dir+name+"_"+suffix+".lconf", std::ifstream::in);
                 if(ifs.is_open()){
                     ifs.close();
-                    return dir+name+"_"+(*suffix)+".lconf";
+                    return dir+name+"_"+suffix+".lconf";
                 }
             }
         }
-    }
-    return "";
-
 }
 
 }
