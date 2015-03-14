@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <utility>
+#include <cstdint>
 
 namespace lms {
 namespace type {
@@ -20,13 +21,12 @@ namespace type {
  *
  * @author Hans Kirchner
  */
-template<typename T>
 class DynamicImage {
 public:
     /**
      * @brief Create an image of size zero.
      */
-    constexpr DynamicImage() : m_width(0), m_height(0), m_size(0) {
+    constexpr DynamicImage() : m_width(0), m_height(0), m_bpp(0), m_size(0) {
     }
 
     /**
@@ -37,16 +37,16 @@ public:
      * @param width width of the image (x-direction)
      * @param height height of the image (y-direction)
      */
-    DynamicImage(int width, int height) : m_width(width), m_height(height),
-        m_size(width * height), m_data(new T[m_size]) {
+    DynamicImage(int width, int height, int bpp) : m_width(width), m_height(height),
+        m_bpp(bpp), m_size(width * height * bpp), m_data(new std::uint8_t[m_size]) {
     }
 
     /**
      * @brief Copy constructor
      * @param DynamicImage object to copy
      */
-    DynamicImage(const DynamicImage<T> &obj) : m_width(obj.m_width), m_height(obj.m_height),
-        m_size(obj.m_size), m_data(new T[m_size]) {
+    DynamicImage(const DynamicImage &obj) : m_width(obj.m_width), m_height(obj.m_height),
+        m_bpp(obj.m_bpp), m_size(obj.m_size), m_data(new std::uint8_t[m_size]) {
         std::copy(obj.m_data.get(), obj.m_data.get() + m_size, m_data.get());
     }
 
@@ -54,18 +54,19 @@ public:
      * @brief Move constructor
      * @param object to move
      */
-    constexpr DynamicImage(DynamicImage<T> &&obj) = default;
+    DynamicImage(DynamicImage &&obj) = default;
 
     /**
      * @brief Copy assignment operator
      * @param rhs right side of the assignment
      * @return this
      */
-    DynamicImage& operator=(const DynamicImage<T> &rhs) {
+    DynamicImage& operator=(const DynamicImage &rhs) {
         this->m_width = rhs.m_width;
         this->m_height = rhs.m_height;
+        this->m_bpp = rhs.m_bpp;
         this->m_size = rhs.m_size;
-        m_data.reset(new T[m_size]);
+        m_data.reset(new std::uint8_t[m_size]);
         std::copy(rhs.m_data.get(), rhs.m_data.get() + m_size, m_data.get());
         return *this;
     }
@@ -75,7 +76,7 @@ public:
      * @param rhs right side of the assignment
      * @return this
      */
-    DynamicImage& operator=(DynamicImage<T> &&rhs) = default;
+    DynamicImage& operator=(DynamicImage &&rhs) = default;
 
     /**
      * @brief Return a reference to the value at the given index.
@@ -87,7 +88,7 @@ public:
      * @param index index to look up
      * @return reference to value at the given index
      */
-    T& operator[] (int index) {
+    std::uint8_t& operator[] (int index) {
         return m_data[index];
     }
 
@@ -102,7 +103,7 @@ public:
      * @param index index to look up
      * @return const reference to value at the given index
      */
-    const T& operator[] (int index) const {
+    const std::uint8_t& operator[] (int index) const {
         return m_data[index];
     }
 
@@ -114,16 +115,16 @@ public:
      * @param width new width of the image
      * @param height new height of the image
      */
-    void resize(int width, int height) {
-        *this = DynamicImage<T>(width, height);
+    void resize(int width, int height, int bpp) {
+        *this = DynamicImage(width, height, bpp);
     }
 
     /**
      * @brief Fill the dynamic image with the given value.
      * @param value
      */
-    void fill(const T& value) {
-        std::fill_n(m_data, m_size, value);
+    void fill(std::uint8_t value) {
+        std::fill_n(m_data.get(), m_size, value);
     }
 
     /**
@@ -143,6 +144,14 @@ public:
     }
 
     /**
+     * @brief Return the bits per pixel setting.
+     * @return bits per pixel
+     */
+    int bpp() const {
+        return m_bpp;
+    }
+
+    /**
      * @brief Return the size of the image, that is width * height.
      * @return size of the image
      */
@@ -158,7 +167,7 @@ public:
      *
      * @return data pointer
      */
-    T* data() {
+    std::uint8_t* data() {
         return m_data.get();
     }
 
@@ -170,15 +179,16 @@ public:
      *
      * @return data pointer
      */
-    T* data() const {
+    std::uint8_t* data() const {
         return m_data.get();
     }
 
 private:
     int m_width;
     int m_height;
+    int m_bpp;
     int m_size;
-    std::unique_ptr<T[]> m_data;
+    std::unique_ptr<std::uint8_t[]> m_data;
 };
 
 } // namespace type
