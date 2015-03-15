@@ -26,8 +26,6 @@ will be a cross-plattform system that allows easy module-handling and sharing.
    * speech to text
  
 
-//TODO - List with a featured modules
-
 ###Featured Modules
  * [Scheduler](https://github.com/Phibedy/Scheduler)
  * [Camera importer](https://github.com/Phibedy/camera) (work in progress)
@@ -39,7 +37,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Downloads SA
   * Get the source from github :P
-  * //TODO
+  * //TODO install binaries
 
 
 ###License
