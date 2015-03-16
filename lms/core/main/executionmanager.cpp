@@ -112,20 +112,14 @@ void ExecutionManager::validate(){
 void ExecutionManager::sort(){
     cycleList.clear();
     logger.debug("sort modules") << "sort it size: " << enabledModules.size();
-    //TODO sort enabledModules by priority
     //add modules to the list
     for(Module* it : enabledModules){
         std::vector<Module*> tmp;
         tmp.push_back(it);
         cycleList.push_back(tmp);
-        std::cout<< "added module!!!!" <<std::endl;
     }
     sortByDataChannel();
     sortByPriority();
-
-    //TODO
-    //validate();
-    //validateDataChannels();
 }
 
 void ExecutionManager::sortByDataChannel(){

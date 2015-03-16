@@ -197,8 +197,8 @@ public:
      * NOTE: The returned object cannot be changed.
      *
      * @param module requesting module
-     * @param name name of the config file
-     * @return module configuration object
+     * @param name name of the config file without the suffix
+     * @return module configuration object, returns an empty config if the config wasn't found
      */
     const type::ModuleConfig* getConfig(Module *module, const std::string &name,const std::vector<std::string> privateDirectories = {});
 

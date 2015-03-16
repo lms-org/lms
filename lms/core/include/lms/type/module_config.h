@@ -47,12 +47,28 @@ public:
      */
     template<typename T>
     T get(const std::string &key) const {
-        T result;
+        return get(key, T());
+    }
+    /**
+     * @brief Return the value by the given config key.
+     *
+     * If the key is not found the default constructor
+     * of T is invoked the that object is returned.
+     *
+     * If you want to check if a key is in the config file
+     * use hasKey()
+     *
+     * @param key the key to look for
+     * @param defaultValue if the key doesn't exists the defaultValue will be returned
+     * @return value of type T
+     */
+    template<typename T>
+    T get(const std::string &key,const T& defaultValue) const {
         const auto it = properties.find(key);
-
         if(it == properties.end()) {
-            return result;
+            return defaultValue;
         } else {
+            T result;
             std::istringstream stream(it->second);
             stream >> result;
             return result;
@@ -66,6 +82,10 @@ public:
      */
     bool hasKey(const std::string &key) const {
         return properties.count(key) == 1;
+    }
+
+    bool empty(){
+        return properties.empty();
     }
 
 private:

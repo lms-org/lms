@@ -24,7 +24,6 @@ public:
      * @param name
      * Adds the config-data-channel to the DataManager
      * Will reload the config if it was already loaded
-     * //TODO Man könnte auch alle configs nacheinander laden wodruch die werte überschrieben würden
      */
     type::ModuleConfig loadConfig(const std::string &name, const std::vector<std::string> & privateDirectories = {});
     /**
