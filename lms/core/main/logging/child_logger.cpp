@@ -8,6 +8,7 @@ namespace logging {
 std::unique_ptr<LogMessage> ChildLogger::log(LogLevel lvl, const std::string& tag) {
     if(parent == nullptr) {
         std::cerr << "CHILD LOGGER " << name << " IS NOT INITIALIZED." << std::endl;
+        return nullptr;
     }
 
     if(tag.empty()) {
