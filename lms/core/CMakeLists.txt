@@ -13,13 +13,9 @@ set (PUBLIC_HEADERS
         "include/lms/executionmanager.h"
         "include/lms/module.h"
         "include/lms/loader.h"
-        "include/lms/type/static_image.h"
-        "include/lms/type/dynamic_image.h"
         "include/lms/lms_exports.h"
 
         "include/lms/type/module_config.h"
-        "include/lms/type/dynamic_image.h"
-        "include/lms/type/static_image.h"
 #        "include/lms/type/serializable.h"
 
         "include/lms/logging/log_level.h"
@@ -50,8 +46,6 @@ set (SOURCE
         "main/signalhandler.cpp"
         "main/argumenthandler.cpp"
         "main/backtrace_formatter.cpp"
-        "main/type/static_image.cpp"
-        "main/type/dynamic_image.cpp"
         "main/type/module_config.cpp"
 
         "main/logging/logger.cpp"
