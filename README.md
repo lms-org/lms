@@ -16,8 +16,9 @@ will be a cross-plattform system that allows easy module-handling and sharing.
   * Contribute
 
 ###Featured Libraries
- * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection)
+ * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection) (Work in progress)
  * [Ogre-Binding](https://github.com/Phibedy/ogrea_binding) (Work in progress)
+ * [Imaging](https://github.com/syxolk/imaging) (Work in progress)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
