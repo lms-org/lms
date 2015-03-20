@@ -17,8 +17,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Featured Libraries
  * [Sockets (Client & Server)](https://github.com/Phibedy/SocketConnection) (Work in progress)
- * [Ogre-Binding](https://github.com/Phibedy/ogrea_binding) (Work in progress)
- * [Imaging](https://github.com/syxolk/imaging) (Work in progress)
+ * [Ogre-Binding](https://github.com/Phibedy/ogrea_binding)
+ * [Imaging](https://github.com/syxolk/imaging)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
@@ -29,9 +29,9 @@ will be a cross-plattform system that allows easy module-handling and sharing.
 
 ###Featured Modules
  * [Scheduler](https://github.com/Phibedy/Scheduler)
- * [Camera importer](https://github.com/Phibedy/camera) (work in progress)
- * [Ogre window handler](https://github.com/Phibedy/ogre_window_manager) (work in progess)
- * [camera renderer](https://github.com/Phibedy/camera_renderer) (work in progess)
+ * [Camera importer](https://github.com/Phibedy/camera)
+ * [Ogre window handler](https://github.com/Phibedy/ogre_window_manager)
+ * [camera renderer](https://github.com/Phibedy/camera_renderer)
  * ConsoleWait (Should be renamed)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
