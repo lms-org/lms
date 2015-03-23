@@ -7,6 +7,7 @@
 #include <map>
 #include <lms/loader.h>
 #include <lms/type/module_config.h>
+#include <lms/messaging.h>
 
 namespace lms{
 
@@ -23,7 +24,8 @@ public:
     /**
      * called by the framework itself at module-creation
     */
-    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry, logging::Logger *rootLogger);
+    bool initializeBase(DataManager* d, Messaging *msg, Loader::module_entry& loaderEntry,
+                        logging::Logger *rootLogger);
 
     int getPriority() const;
 
@@ -61,11 +63,13 @@ public:
 
 protected:
     DataManager* datamanager() { return dm; }
+    Messaging* message() { return messaging; }
     logging::ChildLogger logger;
     const type::ModuleConfig* getConfig();
 private:
     Loader::module_entry loaderEntry;
 	DataManager* dm;
+    Messaging* messaging;
     int priority;
 };
 }

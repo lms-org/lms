@@ -49,6 +49,13 @@ void ExecutionManager::loop() {
         //TODO Woker threads
     }
 
+    // TODO load or unload modules or do anything else
+    for(std::string message : messaging.receive("mod-unload")) {
+        // TODO do something
+    }
+
+    // Remove all messages from the message queue
+    messaging.resetQueue();
 }
 
 void ExecutionManager::loadAvailabelModules(){
@@ -68,7 +75,7 @@ void ExecutionManager::enableModule(const std::string &name){
         if(it.name == name){
             logger.debug("enable Module") <<"enabling Module: " <<name;
             Module* module = loader.load(it);
-            module->initializeBase(&dataManager,it, &rootLogger);
+            module->initializeBase(&dataManager, &messaging, it, &rootLogger);
 
             if(module->initialize()){
                 enabledModules.push_back(module);

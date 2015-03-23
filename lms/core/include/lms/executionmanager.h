@@ -58,6 +58,7 @@ namespace lms{
 
         Loader loader;
         DataManager dataManager;
+        Messaging messaging;
 
         /**
          * @brief enabledModules contains all loaded Modules

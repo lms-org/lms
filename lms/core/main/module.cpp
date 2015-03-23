@@ -4,8 +4,10 @@
 #include <lms/datamanager.h>
 
 namespace lms{
-    bool Module::initializeBase(DataManager* d, Loader::module_entry &loaderEntry, logging::Logger *rootLogger) {
+    bool Module::initializeBase(DataManager* d, Messaging *msg,
+                                Loader::module_entry &loaderEntry, logging::Logger *rootLogger) {
         dm = d;
+        messaging = msg;
         this->loaderEntry = loaderEntry;
 
         // delete uninitialized child logger
