@@ -1,8 +1,8 @@
 /**
   *Soll später ein handler werden, welcher die geparsten argumente speichert
   */
-#ifndef LMS_ARGUMENTHANDLER_H
-#define LMS_ARGUMENTHANDLER_H
+#ifndef LMS_ARGUMENT_HANDLER_H
+#define LMS_ARGUMENT_HANDLER_H
 
 #include <string>
 #include <vector>
@@ -72,4 +72,4 @@ class ArgumentHandler {
 
 }  // namespace lms
 
-#endif /* LMS_ARGUMENTHANDLER_H */
+#endif /* LMS_ARGUMENT_HANDLER_H */

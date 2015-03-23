@@ -9,7 +9,7 @@
 #include <lms/type/module_config.h>
 #include <lms/messaging.h>
 
-namespace lms{
+namespace lms {
 
 class DataManager;
 /**
@@ -73,6 +73,7 @@ private:
     Messaging* m_messaging;
     int priority;
 };
-}
 
-#endif /*LMS_MODULE_H*/
+}  // namespace lms
+
+#endif /* LMS_MODULE_H */

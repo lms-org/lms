@@ -10,7 +10,8 @@
 
 #include <lms/logger.h>
 
-namespace lms{
+namespace lms {
+
 class Module;
 /**
  * @brief The Loader class used to load Modules
@@ -89,5 +90,7 @@ private:
      */
     std::string pathToModules;
 };
-}
-#endif
+
+}  // namespace lms
+
+#endif /* LMS_LOADER_H */

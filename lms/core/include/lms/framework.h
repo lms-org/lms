@@ -9,7 +9,7 @@
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
  */
-namespace lms{
+namespace lms {
 /**
  * @brief Main entry point into the lightweight module system.
  *
@@ -56,7 +56,7 @@ private:
     void parseConfig();
 
 };
-}
 
+}  // namespace lms
 
-#endif /* FRAMEWORK_H */
+#endif /* LMS_FRAMEWORK_H */

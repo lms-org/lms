@@ -1,5 +1,5 @@
-#ifndef LMS_SHARED_EXECUTIONMANAGER_H
-#define LMS_SHARED_EXECUTIONMANAGER_H
+#ifndef LMS_EXECUTION_MANAGER_H
+#define LMS_EXECUTION_MANAGER_H
 
 #include "module.h"
 #include <string>
@@ -14,7 +14,8 @@
 #include <lms/executionmanager.h>
 #include <lms/logger.h>
 
-namespace lms{
+namespace lms {
+
     class DataManager;
     class Loader;
     #define MEASURE_TIME 1
@@ -90,5 +91,7 @@ namespace lms{
         void sortByPriority();
 
     };
-}
-#endif
+
+}  // namespace lms
+
+#endif /* LMS_EXECUTION_MANAGER_H */
