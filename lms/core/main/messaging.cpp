@@ -3,13 +3,15 @@
 namespace lms {
 
 void Messaging::send(const std::string &command, const std::string &content) {
-    messageQueue[command].push_back(content);
+    // do not allow concurrent access to the send queue
+    std::lock_guard<std::mutex> lock(mtx);
+    sendQueue[command].push_back(content);
 }
 
 const std::list<std::string>& Messaging::receive(const std::string &command) const {
-    MessageQueue::const_iterator it = messageQueue.find(command);
+    MessageQueue::const_iterator it = receiveQueue.find(command);
 
-    if(it != messageQueue.end()) {
+    if(it != receiveQueue.end()) {
         return it->second;
     } else {
         // we cannot create an empty list here because
@@ -19,7 +21,8 @@ const std::list<std::string>& Messaging::receive(const std::string &command) con
 }
 
 void Messaging::resetQueue() {
-    messageQueue.clear();
+    receiveQueue = std::move(sendQueue);
+    sendQueue.clear();
 }
 
 }  // namespace lms

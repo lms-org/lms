@@ -3,12 +3,20 @@
 
 #include <map>
 #include <list>
+#include <mutex>
 
 namespace lms {
 
 /**
  * @brief Send and receive string messages inside the core
  * framework and modules.
+ *
+ * Messages will be queued for one cycle and can be received in
+ * the next cycle.
+ *
+ * The class is thread-safe if used correctly: Do not call
+ * resetQueue() outside of ExecutionManager. The send/receive
+ * methods can be called in the cycle methods of modules.
  */
 class Messaging {
 public:
@@ -30,7 +38,7 @@ public:
      * This will not delete any of the queued messages.
      *
      * @param command message identifier
-     * @return queued messages
+     * @return queued messages (list of message contents)
      */
     const std::list<std::string>& receive(const std::string &command) const;
 
@@ -42,9 +50,17 @@ public:
     void resetQueue();
 private:
     typedef std::map<std::string, std::list<std::string>> MessageQueue;
-    MessageQueue messageQueue;
+
+    /* messages that were sent in the previous cycle that can now be received */
+    MessageQueue receiveQueue;
+
+    /* messages that were sent in the current cycle */
+    MessageQueue sendQueue;
 
     const std::list<std::string> emptyStringList;
+
+    /* mutex for sendQueue */
+    std::mutex mtx;
 };
 
 }  // namespace lms
