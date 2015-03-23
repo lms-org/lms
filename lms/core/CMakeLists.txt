@@ -35,6 +35,7 @@ set (PUBLIC_HEADERS
         "include/lms/extra/type.h"
         "include/lms/extra/string.h"
         "include/lms/extra/time.h"
+        "include/lms/extra/file_monitor.h"
 #private
         "main/backtrace_formatter.h"
 )
@@ -64,6 +65,7 @@ set (SOURCE
         "main/extra/type.cpp"
         "main/extra/string.cpp"
         "main/extra/time.cpp"
+        "main/extra/file_monitor.cpp"
 )
 #Add system-specific source
 if(UNIX)
@@ -73,6 +75,7 @@ if(UNIX)
         "main/framework_unix.cpp"
         "main/backtrace_formatter_unix.cpp"
         "main/signalhandler_unix.cpp"
+        "main/extra/file_monitor_unix.cpp"
     )
 elseif(WIN32)
     message("OS is WIN32!")
@@ -81,6 +84,7 @@ elseif(WIN32)
         "main/framework_win.cpp"
         "main/backtrace_formatter_win.cpp"
         "main/signalhandler_win.cpp"
+        "main/extra/file_monitor_win.cpp"
     )
 else()
     message("NO OS found!")
