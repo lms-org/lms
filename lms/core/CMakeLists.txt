@@ -14,6 +14,7 @@ set (PUBLIC_HEADERS
         "include/lms/module.h"
         "include/lms/loader.h"
         "include/lms/lms_exports.h"
+        "include/lms/messaging.h"
 
         "include/lms/type/module_config.h"
 #        "include/lms/type/serializable.h"
@@ -47,6 +48,7 @@ set (SOURCE
         "main/argumenthandler.cpp"
         "main/backtrace_formatter.cpp"
         "main/type/module_config.cpp"
+        "main/messaging.cpp"
 
         "main/logging/logger.cpp"
         "main/logging/root_logger.cpp"
