@@ -1,4 +1,5 @@
 #include <memory>
+#include <cstring>
 
 #include <lms/logger.h>
 #include <lms/extra/colors.h>
@@ -20,6 +21,29 @@ std::unique_ptr<LogMessage> Logger::warn(const std::string& tag) {
 
 std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
     return log(LogLevel::ERROR, tag);
+}
+
+std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
+    // http://stackoverflow.com/a/901316
+    // http://linux.die.net/man/3/strerror
+    char msg[64];
+    char *msgPtr = msg;
+
+    #if defined(_WIN32)
+    if (strerror_s(msg, sizeof msg, errno) != 0) {
+        strncpy(msg, "Unknown error", sizeof msg);
+        msg[sizeof msg - 1] = '\0';
+    }
+    #elif (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600) && ! _GNU_SOURCE
+    if (strerror_r(err_code, msg, sizeof msg) != 0) {
+        strncpy(msg, "Unknown error", sizeof msg);
+        sys_msg[sizeof msg - 1] = '\0';
+    }
+    #else
+    msgPtr = strerror_r(errno, msg, sizeof msg);
+    #endif
+
+    return log(LogLevel::ERROR, tag) << msgPtr << " - ";
 }
 
 void Logger::time(const std::string &timerName) {
