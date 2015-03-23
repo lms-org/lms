@@ -7,8 +7,9 @@
 #include <map>
 #include <lms/loader.h>
 #include <lms/type/module_config.h>
+#include <lms/messaging.h>
 
-namespace lms{
+namespace lms {
 
 class DataManager;
 /**
@@ -16,14 +17,16 @@ class DataManager;
  */
 class Module {
 public:
-    Module(): logger("", nullptr), dm(nullptr), priority(0) { }
+    Module(): logger("", nullptr), m_datamanager(nullptr),
+        m_messaging(nullptr), priority(0) { }
     virtual ~Module() { }
 	
     std::string getName() const;
     /**
      * called by the framework itself at module-creation
     */
-    bool initializeBase(DataManager* d,Loader::module_entry& loaderEntry, logging::Logger *rootLogger);
+    bool initializeBase(DataManager* datamanager, Messaging *messaging,
+                        Loader::module_entry& loaderEntry, logging::Logger *rootLogger);
 
     int getPriority() const;
 
@@ -60,14 +63,17 @@ public:
     std::string getStringMapping(std::string mapFrom);
 
 protected:
-    DataManager* datamanager() { return dm; }
+    DataManager* datamanager() const { return m_datamanager; }
+    Messaging* messaging() const { return m_messaging; }
     logging::ChildLogger logger;
     const type::ModuleConfig* getConfig();
 private:
     Loader::module_entry loaderEntry;
-	DataManager* dm;
+    DataManager* m_datamanager;
+    Messaging* m_messaging;
     int priority;
 };
-}
 
-#endif /*LMS_MODULE_H*/
+}  // namespace lms
+
+#endif /* LMS_MODULE_H */

@@ -1,5 +1,5 @@
-#ifndef CONFIGURATION_MANAGER_H
-#define CONFIGURATION_MANAGER_H
+#ifndef LMS_CONFIGURATION_LOADER_H
+#define LMS_CONFIGURATION_LOADER_H
 
 #include <map>
 #include <string>
@@ -9,8 +9,8 @@
 #include <lms/type/module_config.h>
 #include <lms/logger.h>
 
+namespace lms {
 
-namespace lms{
 /**
  * TODO add xml support
  * @brief The ConfigurationLoader class used to load config-files for Modules
@@ -71,5 +71,7 @@ private:
      */
     std::string getPath(const std::string &name,const std::string& suffix, const std::vector<std::string>& directories);
 };
-}
-#endif
+
+}  // namespace lms
+
+#endif /* LMS_CONFIGURATION_LOADER_H */

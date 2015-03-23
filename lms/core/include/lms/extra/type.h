@@ -1,5 +1,5 @@
-#ifndef LMS_EXTRA_DEMANGLE
-#define LMS_EXTRA_DEMANGLE
+#ifndef LMS_EXTRA_TYPE_H
+#define LMS_EXTRA_TYPE_H
 
 #include <string>
 #include <typeinfo>
@@ -39,4 +39,4 @@ std::string typeName() {
 } // namespace extra
 } // namespace lms
 
-#endif /* LMS_EXTRA_DEMANGLE */
+#endif /* LMS_EXTRA_TYPE_H */

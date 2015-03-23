@@ -1,5 +1,5 @@
-#ifndef LMS_CORE_LOGGER_H
-#define LMS_CORE_LOGGER_H
+#ifndef LMS_LOGGER_H
+#define LMS_LOGGER_H
 
 // include all logging headers here
 #include <lms/logging/log_level.h>
@@ -12,4 +12,4 @@
 #include <lms/logging/console_sink.h>
 #include <lms/logging/prefix_and_level_filter.h>
 
-#endif /* LMS_CORE_LOGGER_H */
+#endif /* LMS_LOGGER_H */

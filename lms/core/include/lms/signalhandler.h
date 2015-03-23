@@ -1,10 +1,11 @@
-#ifndef LMS_SIGNALHANDLER_H
-#define LMS_SIGNALHANDLER_H
+#ifndef LMS_SIGNAL_HANDLER_H
+#define LMS_SIGNAL_HANDLER_H
 
 #include <vector>
 #include <map>
 
-namespace lms{
+namespace lms {
+
 /**
  * @brief Object-oriented wrapper for signal.h
  *
@@ -71,5 +72,7 @@ private:
      */
     void platform_unregisterSignal(int signalCode);
 };
-}
-#endif /* SIGNALHANDLER_H */
+
+}  // namespace lms
+
+#endif /* LMS_SIGNAL_HANDLER_H */

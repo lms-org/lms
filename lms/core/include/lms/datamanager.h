@@ -1,5 +1,5 @@
-#ifndef LMS_CORE_DATAMANAGER_H
-#define LMS_CORE_DATAMANAGER_H
+#ifndef LMS_DATAMANAGER_H
+#define LMS_DATAMANAGER_H
 
 #include <map>
 #include <vector>
@@ -13,7 +13,7 @@
 #include <lms/configurationloader.h>
 #include <lms/extra/type.h>
 
-namespace lms{
+namespace lms {
 
 class ExecutionManager;
 
@@ -316,6 +316,6 @@ private:
     }
 };
 
+}  // namespace lms
 
-}
 #endif /* LMS_CORE_DATAMANAGER_H */

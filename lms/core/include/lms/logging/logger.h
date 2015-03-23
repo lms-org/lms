@@ -108,6 +108,13 @@ public:
     void timeEnd(const std::string &timerName);
 
     /**
+     * @brief Log an error message prepended by strerror(errno).
+     *
+     * Useful for linux api calls and calls to standard c functions.
+     */
+    std::unique_ptr<LogMessage> perror(const std::string &tag = "");
+
+    /**
      * @brief Log a message with the given level and tag.
      *
      * Usually you should use debug(), info(), warn() or error().
