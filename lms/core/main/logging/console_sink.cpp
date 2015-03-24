@@ -5,14 +5,12 @@
 namespace lms {
 namespace logging {
 
-ConsoleSink& ConsoleSink::printTime(bool time) {
+void ConsoleSink::printTime(bool time) {
     m_time = time;
-    return *this;
 }
 
-ConsoleSink& ConsoleSink::printColored(bool colored) {
+void ConsoleSink::printColored(bool colored) {
     m_colored = colored;
-    return *this;
 }
 
 void ConsoleSink::sink(const LogMessage &message) {

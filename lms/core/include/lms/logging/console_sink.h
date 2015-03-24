@@ -36,15 +36,13 @@ public:
 
     /**
      * @brief Set to true if the time should be logged.
-     * @return this
      */
-    ConsoleSink& printTime(bool time);
+    void printTime(bool time);
 
     /**
      * @brief Set to true if the output should be colored.
-     * @return this
      */
-    ConsoleSink& printColored(bool colored);
+    void printColored(bool colored);
 private:
     std::ostream &m_out;
     bool m_colored;
