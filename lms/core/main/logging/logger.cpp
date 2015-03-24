@@ -1,5 +1,6 @@
 #include <memory>
 #include <cstring>
+#include <cerrno>
 
 #include <lms/logger.h>
 
@@ -28,7 +29,9 @@ std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
     char msg[64];
     char *msgPtr = msg;
 
-    #if defined(_WIN32)
+    #if defined(__GNUC__) && defined(__CYGWIN__)
+    msgPtr = strerror(errno);  // simple, not thread-safe implementation
+    #elif defined(_WIN32)
     if (strerror_s(msg, sizeof msg, errno) != 0) {
         strncpy(msg, "Unknown error", sizeof msg);
         msg[sizeof msg - 1] = '\0';

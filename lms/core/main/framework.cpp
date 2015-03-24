@@ -3,6 +3,7 @@
 #include <pugixml.hpp>
 #include <fstream>
 #include <csignal>
+#include <cstdlib>
 #include "backtrace_formatter.h"
 #include "unistd.h"
 
@@ -98,7 +99,7 @@ void Framework::signal(int s) {
 
         BacktraceFormatter::print();
 
-        exit(1);
+        exit(EXIT_FAILURE);
 
         break;
     }
