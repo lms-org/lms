@@ -29,7 +29,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 m_showHelp = true;
                 break;
             case 1:  // --logging-min-level
-                m_loggingMinLevel = logging::Logger::levelFromName(optarg);
+                m_loggingMinLevel = logging::levelFromName(optarg);
                 break;
             case 2:  // --logging-prefix
                 m_loggingPrefixes.push_back(optarg);

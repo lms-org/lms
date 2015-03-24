@@ -29,9 +29,9 @@ void ConsoleSink::sink(const LogMessage &message) {
         m_out << buffer << " ";
     }
     if(m_colored) {
-        m_out << Logger::levelColor(message.level);
+        m_out << levelColor(message.level);
     }
-    m_out << Logger::levelName(message.level) << " " << message.tag;
+    m_out << levelName(message.level) << " " << message.tag;
     if(m_colored) {
         m_out << COLOR_WHITE;
     }

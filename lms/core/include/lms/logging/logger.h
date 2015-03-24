@@ -32,37 +32,6 @@ public:
     virtual ~Logger() {}
 
     /**
-     * @brief Returns the name of the given log level.
-     *
-     * Example: LogLevel::DEBUG returns "DEBUG".
-     *
-     * @param lvl a log level
-     * @return string representation of the given log level
-     */
-    static std::string levelName(LogLevel lvl);
-
-    /**
-     * @brief Returns the log level from a given name.
-     *
-     * Example: levelFromName("WARN") returns LogLevel::WARN.
-     *
-     * @param name exact name of a log level
-     * @return log level
-     */
-    static LogLevel levelFromName(const std::string &name);
-
-    /**
-     * @brief Returns a linux terminal compatible color code
-     * suitable for the log level.
-     *
-     * Example: LogLevel::ERROR returns COLOR_RED
-     *
-     * @param lvl a log level
-     * @return an ANSI escape color code
-     */
-    static std::string levelColor(LogLevel lvl);
-
-    /**
      * @brief Log a debug message.
      * @see log(lvl, tag)
      */

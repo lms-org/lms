@@ -51,6 +51,7 @@ set (SOURCE
         "main/type/module_config.cpp"
         "main/messaging.cpp"
 
+        "main/logging/log_level.cpp"
         "main/logging/logger.cpp"
         "main/logging/root_logger.cpp"
         "main/logging/child_logger.cpp"
