@@ -1,6 +1,7 @@
 //TODO remove unused imports
 #include <climits>
 #include <cstring>
+#include <cstdio>
 #include <dlfcn.h>
 #include <unistd.h>
 #include <sys/stat.h>
