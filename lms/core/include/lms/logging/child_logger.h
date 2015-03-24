@@ -8,7 +8,6 @@
 #include "logger.h"
 
 namespace lms {
-
 namespace logging {
 
 /**
@@ -37,6 +36,7 @@ public:
         std::cout << "New child logger "<< name << std::endl;
     }
 
+    // TODO remove this, it's only for debugging
     ~ChildLogger() { std::cout << "Delete child logger " << name << std::endl; }
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
@@ -56,4 +56,3 @@ private:
 } // namespace lms
 
 #endif /* LMS_LOGGING_CHILD_LOGGER_H */
-

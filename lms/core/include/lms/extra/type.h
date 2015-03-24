@@ -23,6 +23,10 @@ std::string demangle(const char* name);
 /**
  * @brief Get the demangled name of a type
  *
+ * Usage:
+ * std::vector<int> i;
+ * assert(typeName(i) == "std::vector<int>");
+ *
  * @param t parameter with type T
  * @return demangled name
  */
@@ -31,6 +35,17 @@ std::string typeName(const T& t) {
     return demangle(typeid(t).name());
 }
 
+/**
+ * @brief Get the demangled name of a type
+ *
+ * This function works like typeName(t), except
+ * it uses only the template parameter as the argument.
+ *
+ * Usage:
+ * assert(typeName<std::vector<int>>() == "std::vector<int>");
+ *
+ * @return demangled name
+ */
 template <typename T>
 std::string typeName() {
     return demangle(typeid(T).name());

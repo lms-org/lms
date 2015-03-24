@@ -5,7 +5,8 @@
 #include <lms/type/module_config.h>
 #include <lms/extra/string.h>
 
-namespace lms { namespace type {
+namespace lms {
+namespace type {
 
 /**
  * @brief Specialization for string
@@ -13,11 +14,11 @@ namespace lms { namespace type {
  * @return value of type string
  */
 template<>
-std::string ModuleConfig::get<std::string>(const std::string &key) const {
+std::string ModuleConfig::get<std::string>(const std::string &key, const std::string &defaultValue) const {
     const auto it = properties.find(key);
 
     if(it == properties.end()) {
-        return "";
+        return defaultValue;
     } else {
         return it->second;
     }
@@ -29,11 +30,11 @@ std::string ModuleConfig::get<std::string>(const std::string &key) const {
  * @return value of type int
  */
 template<>
-int ModuleConfig::get<int>(const std::string &key) const {
+int ModuleConfig::get<int>(const std::string &key, const int &defaultValue) const {
     const auto it = properties.find(key);
 
     if(it == properties.end()) {
-        return 0;
+        return defaultValue;
     } else {
         return std::atoi(it->second.c_str());
     }
@@ -45,11 +46,11 @@ int ModuleConfig::get<int>(const std::string &key) const {
  * @return value of type double
  */
 template<>
-double ModuleConfig::get<double>(const std::string &key) const {
+double ModuleConfig::get<double>(const std::string &key, const double &defaultValue) const {
     const auto it = properties.find(key);
 
     if(it == properties.end()) {
-        return 0;
+        return defaultValue;
     } else {
         return std::atof(it->second.c_str());
     }
@@ -77,6 +78,14 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
     in.close();
 
     return true;
+}
+
+bool ModuleConfig::hasKey(const std::string &key) const {
+    return properties.count(key) == 1;
+}
+
+bool ModuleConfig::empty() const {
+    return properties.empty();
 }
 
 } // namespace type

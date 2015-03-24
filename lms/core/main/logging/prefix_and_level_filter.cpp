@@ -3,6 +3,17 @@
 namespace lms {
 namespace logging {
 
+PrefixAndLevelFilter::PrefixAndLevelFilter(LogLevel minLevel, const std::vector<std::string> &prefixes)
+    : m_minLevel(minLevel), m_prefixes(prefixes) {}
+
+void PrefixAndLevelFilter::addPrefix(const std::string &prefix) {
+    m_prefixes.push_back(prefix);
+}
+
+void PrefixAndLevelFilter::minLevel(LogLevel minLevel) {
+    m_minLevel = minLevel;
+}
+
 bool PrefixAndLevelFilter::filter(LogLevel level, const std::string &tag) {
     if(level < m_minLevel) {
         return false;

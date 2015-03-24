@@ -41,6 +41,7 @@ public:
      */
     RootLogger();
 
+    // TODO remove, it's only for debugging
     ~RootLogger() { debug() << "Delete RootLogger"; }
 
     /**

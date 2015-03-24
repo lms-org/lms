@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <sstream>
 
-namespace lms { namespace type {
+namespace lms {
+namespace type {
 
 /**
  * @brief ModuleConfig is a property map
@@ -49,6 +50,7 @@ public:
     T get(const std::string &key) const {
         return get(key, T());
     }
+
     /**
      * @brief Return the value by the given config key.
      *
@@ -63,7 +65,7 @@ public:
      * @return value of type T
      */
     template<typename T>
-    T get(const std::string &key,const T& defaultValue) const {
+    T get(const std::string &key, const T &defaultValue) const {
         const auto it = properties.find(key);
         if(it == properties.end()) {
             return defaultValue;
@@ -77,16 +79,19 @@ public:
 
     /**
      * @brief Check if the given key is available.
+     *
      * @param key the key to look for
      * @return true, if the key is found
      */
-    bool hasKey(const std::string &key) const {
-        return properties.count(key) == 1;
-    }
+    bool hasKey(const std::string &key) const;
 
-    bool empty(){
-        return properties.empty();
-    }
+    /**
+     * @brief Check if this configuration object contains
+     * no key-value-pairs.
+     *
+     * @return true if underlying map is empty, false otherwise
+     */
+    bool empty() const;
 
 private:
     std::unordered_map<std::string, std::string> properties;

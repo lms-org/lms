@@ -80,7 +80,8 @@ public:
 /**
  * @brief Make the LogMessage appendable.
  */
-std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, std::ostream& (*pf) (std::ostream&));
+std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message,
+                                         std::ostream& (*pf) (std::ostream&));
 
 /**
  * @brief Make the LogMessage appendable.

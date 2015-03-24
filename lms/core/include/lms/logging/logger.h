@@ -41,6 +41,14 @@ public:
      */
     static std::string levelName(LogLevel lvl);
 
+    /**
+     * @brief Returns the log level from a given name.
+     *
+     * Example: levelFromName("WARN") returns LogLevel::WARN.
+     *
+     * @param name exact name of a log level
+     * @return log level
+     */
     static LogLevel levelFromName(const std::string &name);
 
     /**
@@ -125,6 +133,9 @@ public:
      */
     virtual std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) = 0;
 protected:
+    /**
+     * @brief Logger is abstract.
+     */
     Logger() {}
 private:
     std::map<std::string, extra::PrecisionTime> timestampCache;

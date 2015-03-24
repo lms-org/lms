@@ -200,7 +200,8 @@ public:
      * @param name name of the config file without the suffix
      * @return module configuration object, returns an empty config if the config wasn't found
      */
-    const type::ModuleConfig* getConfig(Module *module, const std::string &name,const std::vector<std::string> privateDirectories = {});
+    const type::ModuleConfig* getConfig(Module *module, const std::string &name,
+                                        const std::vector<std::string> privateDirectories = {});
 
 private:
     /**
@@ -226,6 +227,12 @@ private:
      */
     void printMapping() const;
 
+    /**
+     * @brief Set the content of a data channel
+     *
+     * @param name datachannel name
+     * @param data initial content
+     */
     template<typename T>
     void setChannel(const std::string &name, const T &data) {
         DataChannel &channel = channels[name];
