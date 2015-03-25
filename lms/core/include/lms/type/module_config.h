@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <sstream>
+#include <vector>
 
 namespace lms {
 namespace type {
@@ -75,6 +76,46 @@ public:
             stream >> result;
             return result;
         }
+    }
+
+    /**
+     * @brief Return a vector of values for the given key.
+     *
+     * This is similar to the get<T>(...) method, but the
+     * value will be separated by commas.
+     *
+     * @param key the key to look for
+     * @return list of values of type T
+     */
+    template<typename T>
+    std::vector<T> getArray(const std::string &key) const {
+        std::string fullValue(get<std::string>(key));
+        std::vector<T> array;
+
+        // if the key/value-pair was not set
+        // -> just return empty vector
+        if(fullValue.empty()) {
+            return array;
+        }
+
+        size_t pos, nextPos = -1;
+
+        do {
+            pos = nextPos + 1;
+            nextPos = fullValue.find(',', pos);
+
+            // slice one value out of the string
+            std::istringstream stream(fullValue.substr(pos, nextPos == std::string::npos ?
+                                                           nextPos : nextPos - pos));
+            // parse the value
+            T value;
+            stream >> value;
+
+            // add the value to the vector
+            array.push_back(value);
+        } while(nextPos != std::string::npos);
+
+        return array;
     }
 
     /**
