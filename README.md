@@ -32,7 +32,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
  * [Camera importer](https://github.com/Phibedy/camera)
  * [Ogre window handler](https://github.com/Phibedy/ogre_window_manager)
  * [camera renderer](https://github.com/Phibedy/camera_renderer)
- * [socket data](https://github.com/Phibedy/socket_data)
+ * [socket data](https://github.com/Phibedy/socket_data) (work in progress)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
 
