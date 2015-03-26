@@ -74,7 +74,7 @@ public:
             return defaultValue;
         } else {
             T result;
-            if(parse<T>(it->second, result)) {
+            if(parse(it->second, result)) {
                 return result;
             } else {
                 // if parsing failed take the default value

@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <iostream>
 
 #include <lms/type/module_config.h>
 #include <lms/extra/string.h>
@@ -35,13 +36,37 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
     }
 
     std::string line;
+    bool isMultiline = false;
+    std::string lineBuffer;
 
     while(std::getline(in, line)) {
-        if(!line.empty() && line[0] != '#') {
-            size_t index = line.find_first_of('=');
+        if(line.empty()) {
+            // ignore empty lines
+            continue;
+        }
+
+        if(line[0] == '#') {
+            // ignore comment lines
+            continue;
+        }
+
+        bool isCurrentMultiline = line[line.size() - 1] == '\\';
+        std::string normalizedLine = isCurrentMultiline ? line.erase(line.size() - 1) : line;
+
+        if(isMultiline) {
+            lineBuffer += normalizedLine;
+        } else {
+            lineBuffer = normalizedLine;
+        }
+
+        isMultiline = isCurrentMultiline;
+
+        if(! isMultiline) {
+            size_t index = lineBuffer.find_first_of('=');
 
             if(index != std::string::npos) {
-                properties[extra::trim(line.substr(0, index))] = extra::trim(line.substr(index+1));
+                properties[extra::trim(lineBuffer.substr(0, index))]
+                        = extra::trim(lineBuffer.substr(index+1));
             }
         }
     }
