@@ -15,6 +15,7 @@ set (PUBLIC_HEADERS
         "include/lms/loader.h"
         "include/lms/lms_exports.h"
         "include/lms/messaging.h"
+        "include/lms/serializable.h"
 
         "include/lms/type/module_config.h"
 #        "include/lms/type/serializable.h"
