@@ -7,11 +7,13 @@
 #include <iostream>
 #include <memory>
 #include <typeinfo>
+#include <type_traits>
 
 #include <lms/module.h>
 #include <lms/logger.h>
 #include <lms/configurationloader.h>
 #include <lms/extra/type.h>
+#include <lms/serializable.h>
 
 namespace lms {
 
@@ -55,6 +57,7 @@ private:
         size_t dataSize; // currently only for idiot checks
         std::string dataTypeName;
         size_t dataHashCode;
+        bool serializable;
         bool exclusiveWrite;
         std::vector<Module*> readers;
         std::vector<Module*> writers;
@@ -182,6 +185,67 @@ public:
     }
 
     /**
+     * @brief Registers the given module to have write access on
+     * a data channel. This will not create the data channel.
+     *
+     * @param module requesting module
+     * @param name data channel name
+     */
+    void getWriteAccess(Module *module, const std::string &name);
+
+    /**
+     * @brief Register the given module to have exclusive write access
+     * on a data channel. This will not create the data channel.
+     *
+     * @param module requesting module
+     * @param name data channel name
+     */
+    void getExclusiveWriteAccess(Module *module, const std::string &name);
+
+    /**
+     * @brief Register the given module to have read access
+     * on a data channel. This will not create the data channel.
+     *
+     * @param module requesting module
+     * @param name data channel name
+     */
+    void getReadAccess(Module *module, const std::string &name);
+
+    /**
+     * @brief Serialize a data channel into the given output stream.
+     *
+     * The data channel must have been initialized before you can
+     * use this method.
+     *
+     * A module needs at least read access on the data channel
+     * to be able to serialize it.
+     *
+     * @param module requesting module
+     * @param name data channel name
+     * @param os output stream to serialize into
+     * @return false if the data channel was not initialized or if it
+     * is not serializable or if no read or write access, otherwise true
+     */
+    bool serializeChannel(Module *module, const std::string &name, std::ostream &os);
+
+    /**
+     * @brief Deserialize a data channel from the given input stream.
+     *
+     * The data channel must have been initialized before you use
+     * this method.
+     *
+     * A module needs write access on the data channel to
+     * be able to deserialize it.
+     *
+     * @param module requesting module
+     * @param name data channel name
+     * @param is input stream to deserialize from
+     * @return false if the data channel was not initialized
+     * or if it is not serializable or if no write access, otherwise true
+     */
+    bool deserializeChannel(Module *module, const std::string &name, std::istream &is);
+
+    /**
      * @brief Check if a data channel with the given name is
      * currently initialized.
      *
@@ -246,6 +310,7 @@ private:
         channel.dataSize = sizeof(T);
         channel.dataTypeName = extra::typeName<T>();
         channel.dataHashCode = typeid(T).hash_code();
+        channel.serializable = std::is_base_of<Serializable, T>::value;
 
         // Reset channel
         channel.exclusiveWrite = false;
@@ -296,6 +361,7 @@ private:
         channel.dataSize = sizeof(T);
         channel.dataTypeName = extra::typeName<T>();
         channel.dataHashCode = typeid(T).hash_code();
+        channel.serializable = std::is_base_of<Serializable, T>::value;
 
         channel.exclusiveWrite = false;
     }

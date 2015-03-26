@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 #include <lms/module.h>
 #include <lms/datamanager.h>
@@ -20,6 +21,77 @@ DataManager::~DataManager() {
     for(auto it = channels.begin(); it != channels.end(); it++) {
         delete it->second.dataWrapper;
         it->second.dataWrapper = nullptr;
+    }
+}
+
+void DataManager::getWriteAccess(Module *module, const std::string &name) {
+    DataChannel &channel = channels[name];
+
+    if(channel.exclusiveWrite) {
+        logger.error() << "Module " << module->getName() << " requested channel " << name << std::endl
+            << " with write access, but the channel is already exclusive.";
+    }
+
+    channel.writers.push_back(module);
+}
+
+void DataManager::getExclusiveWriteAccess(Module *module, const std::string &name) {
+    DataChannel &channel = channels[name];
+
+    if(channel.exclusiveWrite) {
+        logger.error() << "Module " << module->getName() << " requested channel " << name << std::endl
+            << " with exclusive write access, but the channel is already exclusive.";
+    }
+
+    channel.exclusiveWrite = true;
+    channel.writers.push_back(module);
+}
+
+void DataManager::getReadAccess(Module *module, const std::string &name) {
+    DataChannel &channel = channels[name];
+
+    channel.readers.push_back(module);
+}
+
+bool DataManager::serializeChannel(Module *module, const std::string &name, std::ostream &os) {
+    DataChannel &channel = channels[name];
+
+    if(std::find(channel.readers.begin(), channel.readers.end(), module) == channel.readers.end()
+            && std::find(channel.writers.begin(), channel.writers.end(), module) == channel.writers.end()) {
+        logger.error("serializeChannel") << "Module " << module->getName()
+                                         << " tried to serialize channel " << name
+                                         << " without any permissions.";
+        return false;
+    }
+
+    // if we would use dynamic_cast here, we could remove the serializable
+    // flag of data channels, but that is not necessarily faster or better
+
+    if(channel.dataWrapper != nullptr && channel.serializable) {
+        const Serializable *data = static_cast<Serializable*>(channel.dataWrapper->get());
+        data->serialize(os);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool DataManager::deserializeChannel(Module *module, const std::string &name, std::istream &is) {
+    DataChannel &channel = channels[name];
+
+    if(std::find(channel.writers.begin(), channel.writers.end(), module) == channel.writers.end()) {
+        logger.error("deserializeChannel") << "Module " << module->getName()
+                                         << " tried to deserialize channel " << name
+                                         << " without write permissions.";
+        return false;
+    }
+
+    if(channel.dataWrapper != nullptr && channel.serializable) {
+        Serializable *data = static_cast<Serializable*>(channel.dataWrapper->get());
+        data->deserialize(is);
+        return true;
+    } else {
+        return false;
     }
 }
 

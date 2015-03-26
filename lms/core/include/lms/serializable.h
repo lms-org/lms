@@ -13,11 +13,12 @@ namespace lms {
  * data channel.
  */
 class Serializable {
+public:
     /**
      * @brief Serialize the object into the given output stream.
      * @param os output stream to write in
      */
-    virtual void serialize(std::ostream &os) = 0;
+    virtual void serialize(std::ostream &os) const = 0;
 
     /**
      * @brief Deserialize the object from the given input stream.
