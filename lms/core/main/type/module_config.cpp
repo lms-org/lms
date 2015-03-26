@@ -8,52 +8,23 @@
 namespace lms {
 namespace type {
 
-/**
- * @brief Specialization for string
- * @param key the key to look for
- * @return value of type string
- */
 template<>
-std::string ModuleConfig::get<std::string>(const std::string &key, const std::string &defaultValue) const {
-    const auto it = properties.find(key);
-
-    if(it == properties.end()) {
-        return defaultValue;
-    } else {
-        return it->second;
-    }
+bool ModuleConfig::parse<std::string>(const std::string &src, std::string &dst) {
+    dst = src;
+    return true;
 }
 
-/**
- * @brief Specialization for int
- * @param key the key to look for
- * @return value of type int
- */
 template<>
-int ModuleConfig::get<int>(const std::string &key, const int &defaultValue) const {
-    const auto it = properties.find(key);
-
-    if(it == properties.end()) {
-        return defaultValue;
-    } else {
-        return std::atoi(it->second.c_str());
+bool ModuleConfig::parse<bool>(const std::string &src, bool &dst) {
+    if(src == "0" || src == "false") {
+        dst = false;
+        return true;
     }
-}
-
-/**
- * @brief Specialization for double
- * @param key the key to look for
- * @return value of type double
- */
-template<>
-double ModuleConfig::get<double>(const std::string &key, const double &defaultValue) const {
-    const auto it = properties.find(key);
-
-    if(it == properties.end()) {
-        return defaultValue;
-    } else {
-        return std::atof(it->second.c_str());
+    if(src == "1" || src == "true") {
+        dst = true;
+        return true;
     }
+    return false;
 }
 
 bool ModuleConfig::loadFromFile(const std::string &path) {

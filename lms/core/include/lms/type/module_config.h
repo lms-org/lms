@@ -5,6 +5,8 @@
 #include <sstream>
 #include <vector>
 
+#include <lms/extra/string.h>
+
 namespace lms {
 namespace type {
 
@@ -72,9 +74,12 @@ public:
             return defaultValue;
         } else {
             T result;
-            std::istringstream stream(it->second);
-            stream >> result;
-            return result;
+            if(parse<T>(it->second, result)) {
+                return result;
+            } else {
+                // if parsing failed take the default value
+                return defaultValue;
+            }
         }
     }
 
@@ -105,14 +110,16 @@ public:
             nextPos = fullValue.find(',', pos);
 
             // slice one value out of the string
-            std::istringstream stream(fullValue.substr(pos, nextPos == std::string::npos ?
-                                                           nextPos : nextPos - pos));
-            // parse the value
-            T value;
-            stream >> value;
+            std::string value(lms::extra::trim(fullValue.substr(pos, nextPos == std::string::npos ?
+                                             nextPos : nextPos - pos)));
 
-            // add the value to the vector
-            array.push_back(value);
+            // parse the value
+            T parsedValue;
+
+            if(parse(value, parsedValue)) {
+                // add the value to the vector
+                array.push_back(parsedValue);
+            }
         } while(nextPos != std::string::npos);
 
         return array;
@@ -136,6 +143,19 @@ public:
 
 private:
     std::unordered_map<std::string, std::string> properties;
+
+    /**
+     * @brief Parse the given string into a type T.
+     *
+     * @param src string to parse
+     * @param dst put the parsed thing here
+     * @return true if parsing was successful, otherwise false
+     */
+    template<typename T>
+    static bool parse(const std::string &src, T &dst) {
+        std::istringstream is(src);
+        return is >> dst;
+    }
 };
 
 } // namespace type
