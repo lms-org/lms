@@ -67,8 +67,7 @@ private:
 
     ConfigurationLoader configLoader;
 public:
-    DataManager(logging::Logger &rootLogger) : logger("DATAMGR", &rootLogger), configLoader(rootLogger) {
-    }
+    DataManager(logging::Logger &rootLogger);
     ~DataManager();
 
     /**

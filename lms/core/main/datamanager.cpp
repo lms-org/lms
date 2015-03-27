@@ -9,6 +9,9 @@
 
 namespace lms{
 
+DataManager::DataManager(logging::Logger &rootLogger)
+    : logger("DATAMGR", &rootLogger), configLoader(rootLogger) {}
+
 DataManager::~DataManager() {
     // TODO destruct all dataPointers
 
