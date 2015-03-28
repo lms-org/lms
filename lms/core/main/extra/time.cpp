@@ -2,10 +2,10 @@
 
 #ifdef _WIN32
 #elif __APPLE__
+    #include <mach/mach.h>
+    #include <mach/clock.h>
 #else // unix
-
-#include <time.h>
-
+    #include <time.h>
 #endif
 
 #include "lms/extra/time.h"
@@ -23,8 +23,14 @@ PrecisionTime PrecisionTime::now() {
 #elif __APPLE__
 
 PrecisionTime PrecisionTime::now() {
-    std::cerr << "PrecisionTime::now not implemented on Apple" << std::endl;
-    return PrecisionTime(0);
+    mach_timespec_t time;
+    clock_serv_t cclock;
+    
+    host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
+    clock_get_time(cclock, &time);
+    mach_port_deallocate(mach_task_self(), cclock);
+    
+    return PrecisionTime(time.tv_sec * USEC_PER_SEC + time.tv_nsec / NSEC_PER_USEC);
 }
 
 #else // unix
