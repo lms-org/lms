@@ -36,10 +36,10 @@ std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
         strncpy(msg, "Unknown error", sizeof msg);
         msg[sizeof msg - 1] = '\0';
     }
-    #elif (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600) && ! _GNU_SOURCE
-    if (strerror_r(err_code, msg, sizeof msg) != 0) {
+    #elif ( (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600) && ! _GNU_SOURCE ) || defined(__APPLE__)
+    if (strerror_r(errno, msg, sizeof msg) != 0) {
         strncpy(msg, "Unknown error", sizeof msg);
-        sys_msg[sizeof msg - 1] = '\0';
+        msg[sizeof msg - 1] = '\0';
     }
     #else
     msgPtr = strerror_r(errno, msg, sizeof msg);
