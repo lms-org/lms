@@ -8,6 +8,7 @@
 #include "lms/extra/type.h"
 
 namespace lms {
+namespace extra {
 
 void BacktraceFormatter::print() {
     // http://linux.die.net/man/3/backtrace
@@ -86,5 +87,7 @@ void BacktraceFormatter::print() {
     std::cerr << std::endl;
     std::cerr << std::endl;
     free (messages);
-    }
 }
+
+}  // namespace extra
+}  // namespace lms

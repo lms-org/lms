@@ -4,7 +4,7 @@
 #include <fstream>
 #include <csignal>
 #include <cstdlib>
-#include "backtrace_formatter.h"
+#include "extra/backtrace_formatter.h"
 #include "unistd.h"
 
 namespace lms{
@@ -97,7 +97,7 @@ void Framework::signal(int s) {
         //In Case of Segfault while recovering - shutdown.
         SignalHandler::getInstance().removeListener(SIGSEGV, this);
 
-        BacktraceFormatter::print();
+        extra::BacktraceFormatter::print();
 
         exit(EXIT_FAILURE);
 
