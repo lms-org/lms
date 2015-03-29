@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <ratio>
 
 namespace lms {
 namespace extra {
@@ -51,6 +52,27 @@ class PrecisionTime {
      * @return precision time instance
      */
     static PrecisionTime fromMillis(std::int64_t millis);
+
+    /**
+     * @brief Get time as floating point type
+     * 
+     * To specify the scale, the first template argument should be a std::ratio
+     * template type such as std::milli (defaults to unit-scale, i.e. seconds)
+     * 
+     * To specify the used floating point type, the optional second template
+     * argument can be specified (defaults to single-precision float type)
+     * 
+     * Example: Return time as double in milliseconds
+     *     
+     *     t.toFloat<std::milli, double>()
+     *     
+     * @return time as floating point value (defaults to float in seconds)
+     */
+    template<class Scale = std::ratio<1,1>, typename T = float>
+    T toFloat()
+    {
+        return T( Scale::den * m_micros ) /  T( Scale::num * 1000000L ); 
+    }
 
     PrecisionTime operator +(const PrecisionTime &t);
     PrecisionTime operator -(const PrecisionTime &t);
