@@ -4,7 +4,7 @@
 #include <fstream>
 #include <csignal>
 #include <cstdlib>
-#include "extra/backtrace_formatter.h"
+#include "lms/extra/backtrace_formatter.h"
 #include "unistd.h"
 
 namespace lms{

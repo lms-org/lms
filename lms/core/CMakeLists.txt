@@ -34,8 +34,7 @@ set (PUBLIC_HEADERS
         "include/lms/extra/string.h"
         "include/lms/extra/time.h"
         "include/lms/extra/file_monitor.h"
-#private
-        "main/extra/backtrace_formatter.h"
+        "include/lms/extra/backtrace_formatter.h"
 )
 
 set (SOURCE
@@ -48,7 +47,6 @@ set (SOURCE
         "main/framework.cpp"
         "main/signalhandler.cpp"
         "main/argumenthandler.cpp"
-        "main/extra/backtrace_formatter.cpp"
         "main/type/module_config.cpp"
         "main/messaging.cpp"
 
