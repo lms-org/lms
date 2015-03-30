@@ -97,7 +97,7 @@ void Framework::signal(int s) {
         //In Case of Segfault while recovering - shutdown.
         SignalHandler::getInstance().removeListener(SIGSEGV, this);
 
-        extra::BacktraceFormatter::print();
+        extra::printStacktrace();
 
         exit(EXIT_FAILURE);
 

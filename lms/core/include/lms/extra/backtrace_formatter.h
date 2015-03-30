@@ -5,12 +5,9 @@ namespace lms {
 namespace extra {
 
 /**
- * @brief The BacktraceFormatter class for printing out errors given by the
+ * @brief Print the current stack trace on stdout.
  */
-class BacktraceFormatter {
-public:
-    static void print();
-};
+void printStacktrace();
 
 }  // namespace extra
 }  // namespace lms
