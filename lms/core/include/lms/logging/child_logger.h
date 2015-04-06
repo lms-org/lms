@@ -6,6 +6,7 @@
 
 #include "log_level.h"
 #include "logger.h"
+#include "logging_filter.h"
 
 namespace lms {
 namespace logging {
@@ -31,13 +32,22 @@ public:
      * @param name logger's name, will be prepended to the tag
      * @param parent all logging messages will be delegated to this parent
      */
-    ChildLogger(const std::string &name, Logger *parent)
-        : parent(parent), name(name) {
+    ChildLogger(const std::string &name, Logger *parent, std::unique_ptr<LoggingFilter> filter = nullptr)
+        : parent(parent), name(name), m_filter(std::move(filter)) {
         std::cout << "New child logger "<< name << std::endl;
     }
 
     // TODO remove this, it's only for debugging
     ~ChildLogger() { std::cout << "Delete child logger " << name << std::endl; }
+
+    /**
+     * @brief Set the new filter for this child logger.
+     *
+     * The old filter will be deleted.
+     *
+     * @param filter a filter instance
+     */
+    void filter(std::unique_ptr<LoggingFilter> filter);
 
     std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
 private:
@@ -50,6 +60,8 @@ private:
      * @brief Name of the child logger
      */
     std::string name;
+
+    std::unique_ptr<LoggingFilter> m_filter;
 };
 
 } // namespace logging
