@@ -55,13 +55,26 @@ void Framework::parseConfig(){
 
             //Start modules
             tmpNode = rootNode.child("modulesToLoad");
+
+            lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
+
+            // get attribute "logLevel" of node <modulesToLoad>
+            // its value will be the default for logLevel of <module>
+            for(pugi::xml_attribute_iterator attrIt = tmpNode.attributes_begin();
+                attrIt != tmpNode.attributes_end(); ++attrIt) {
+
+                if(std::string("logLevel") == attrIt->name()) {
+                    defaultModuleLevel = lms::logging::levelFromName(attrIt->value());
+                }
+            }
+
             logger.info() << "Start enabling modules";
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
                 std::string moduleName = it->child_value();
 
                 // get the attribute "logLevel"
-                lms::logging::LogLevel level = lms::logging::SMALLEST_LEVEL;
+                lms::logging::LogLevel level = defaultModuleLevel;
                 for(pugi::xml_attribute_iterator attrIt = it->attributes_begin();
                     attrIt != it->attributes_end(); ++attrIt) {
 
