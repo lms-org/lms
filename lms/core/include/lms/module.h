@@ -44,7 +44,8 @@ public:
      * Do not call this inside a module!
      */
     bool initializeBase(DataManager* datamanager, Messaging *messaging,
-                        Loader::module_entry& loaderEntry, logging::Logger *rootLogger);
+                        Loader::module_entry& loaderEntry, logging::Logger *rootLogger,
+                        logging::LogLevel minLogLevel);
 
     int getPriority() const;
 

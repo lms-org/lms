@@ -5,6 +5,7 @@
 #include <csignal>
 #include <cstdlib>
 #include "lms/extra/backtrace_formatter.h"
+#include "lms/logging/log_level.h"
 #include "unistd.h"
 
 namespace lms{
@@ -58,7 +59,18 @@ void Framework::parseConfig(){
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
                 std::string moduleName = it->child_value();
-                executionManager.enableModule(moduleName);
+
+                // get the attribute "logLevel"
+                lms::logging::LogLevel level = lms::logging::SMALLEST_LEVEL;
+                for(pugi::xml_attribute_iterator attrIt = it->attributes_begin();
+                    attrIt != it->attributes_end(); ++attrIt) {
+
+                    if(std::string("logLevel") == attrIt->name()) {
+                        level = lms::logging::levelFromName(attrIt->value());
+                    }
+                }
+
+                executionManager.enableModule(moduleName, level);
             }
         }else{
             logger.error() << "Failed to parse framework_config.xml as XML";

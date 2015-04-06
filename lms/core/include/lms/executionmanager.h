@@ -37,7 +37,8 @@ namespace lms {
         /**
          * Enable module with the given name, add it to the cycle-queue
          */
-        void enableModule(const std::string &name);
+        void enableModule(const std::string &name, logging::LogLevel minLogLevel
+                          = logging::SMALLEST_LEVEL);
         /**
          * Disable module with the given name, remove it from the cycle-queue
          */

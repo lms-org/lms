@@ -63,7 +63,7 @@ void ExecutionManager::loadAvailabelModules(){
     available  = loader.getModules();
 }
 
-void ExecutionManager::enableModule(const std::string &name){
+void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLevel minLogLevel){
     //Check if module is already enabled
     for(auto* it:enabledModules){
         if(it->getName() == name){
@@ -75,7 +75,7 @@ void ExecutionManager::enableModule(const std::string &name){
         if(it.name == name){
             logger.debug("enable Module") <<"enabling Module: " <<name;
             Module* module = loader.load(it);
-            module->initializeBase(&dataManager, &messaging, it, &rootLogger);
+            module->initializeBase(&dataManager, &messaging, it, &rootLogger, minLogLevel);
 
             if(module->initialize()){
                 enabledModules.push_back(module);
