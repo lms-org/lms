@@ -13,6 +13,10 @@ set(ConfigFiles
         ${frameworkConfigs}
         ${loadConfigs}
         ${moduleConfigs})
+
+# Set source and binary dir in update_configs.sh
+configure_file("update_configs_template.sh" "update_configs.sh" @ONLY)
+
 #compile core
 message("Compile core")
 #set flags
