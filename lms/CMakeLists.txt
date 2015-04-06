@@ -14,8 +14,9 @@ set(ConfigFiles
         ${loadConfigs}
         ${moduleConfigs})
 
-# Set source and binary dir in update_configs.sh
+# Set source and binary dir in update_configs.sh and other scripts
 configure_file("update_configs_template.sh" "update_configs.sh" @ONLY)
+configure_file("pull_repos_template.sh" "pull_repos.sh" @ONLY)
 
 #compile core
 message("Compile core")
