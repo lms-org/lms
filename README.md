@@ -20,6 +20,7 @@ will be a cross-plattform system that allows easy module-handling and sharing.
  * [Ogre-Binding](https://github.com/Phibedy/ogrea_binding)
  * [Imaging](https://github.com/syxolk/imaging)
  * [Cereal](https://github.com/syxolk/cereal)
+ * [sense link](https://github.com/Bitfroest/sense_link)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
