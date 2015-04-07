@@ -42,13 +42,13 @@ public:
 private:
     logging::ChildLogger logger;
 
+    // configuration
     extra::PrecisionTime loopTime;
-    extra::PrecisionTime beforeLoopTimestamp;
 
-    std::array<extra::PrecisionTime, 10> lastIterations;
-    extra::PrecisionTime lastIterationsSum;
-    int bufferInsertIndex;
-    unsigned int bufferSize;
+    // current status variables
+    bool firstIteration;
+    extra::PrecisionTime beforeWorkTimestamp;
+    extra::PrecisionTime overflowTime;
 };
 
 }  // namespace lms
