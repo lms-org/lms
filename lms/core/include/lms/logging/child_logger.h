@@ -32,10 +32,8 @@ public:
      * @param name logger's name, will be prepended to the tag
      * @param parent all logging messages will be delegated to this parent
      */
-    ChildLogger(const std::string &name, Logger *parent, std::unique_ptr<LoggingFilter> filter = nullptr)
-        : parent(parent), name(name), m_filter(std::move(filter)) {
-        std::cout << "New child logger "<< name << std::endl;
-    }
+    ChildLogger(const std::string &name, Logger *parent,
+                std::unique_ptr<LoggingFilter> filter = nullptr);
 
     // TODO remove this, it's only for debugging
     ~ChildLogger() { std::cout << "Delete child logger " << name << std::endl; }
