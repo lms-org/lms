@@ -20,7 +20,7 @@ PrecisionTime PrecisionTime::now() {
     return PrecisionTime();
 }
 
-PrecisionTime PrecisionTime::sleep() {
+PrecisionTime PrecisionTime::sleep() const {
     std::cerr << "PrecisionTime::sleep not implemented on Win32" << std::endl;
     return PrecisionTime();
 }
@@ -38,7 +38,7 @@ PrecisionTime PrecisionTime::now() {
     return PrecisionTime(time.tv_sec * USEC_PER_SEC + time.tv_nsec / NSEC_PER_USEC);
 }
 
-PrecisionTime PrecisionTime::sleep() {
+PrecisionTime PrecisionTime::sleep() const {
     std::cerr << "PrecisionTime::sleep not implemented on Apple" << std::endl;
     return PrecisionTime();
 }
@@ -52,7 +52,7 @@ PrecisionTime PrecisionTime::now() {
     return PrecisionTime::fromMicros(time.tv_sec * 1000000 + time.tv_nsec / 1000);
 }
 
-PrecisionTime PrecisionTime::sleep() {
+PrecisionTime PrecisionTime::sleep() const {
     // http://linux.die.net/man/2/clock_nanosleep
     timespec request, remaining;
     request.tv_sec = m_micros / 1000000;
@@ -69,6 +69,8 @@ PrecisionTime PrecisionTime::sleep() {
 }
 
 #endif
+
+const PrecisionTime PrecisionTime::ZERO(0);
 
 PrecisionTime::PrecisionTime(std::int64_t micros) : m_micros(micros) {
 }
@@ -98,19 +100,19 @@ PrecisionTime& PrecisionTime::operator -=(const PrecisionTime &t) {
     return *this;
 }
 
-PrecisionTime PrecisionTime::operator +(const PrecisionTime &t) {
+PrecisionTime PrecisionTime::operator +(const PrecisionTime &t) const {
     return PrecisionTime(micros() + t.micros());
 }
 
-PrecisionTime PrecisionTime::operator -(const PrecisionTime &t) {
+PrecisionTime PrecisionTime::operator -(const PrecisionTime &t) const {
     return PrecisionTime(micros() - t.micros());
 }
 
-PrecisionTime PrecisionTime::operator * (int scalar) {
+PrecisionTime PrecisionTime::operator * (int scalar) const {
     return PrecisionTime(micros() * scalar);
 }
 
-PrecisionTime PrecisionTime::operator / (int scalar) {
+PrecisionTime PrecisionTime::operator / (int scalar) const {
     return PrecisionTime(micros() / scalar);
 }
 
@@ -124,27 +126,27 @@ PrecisionTime& PrecisionTime::operator /= (int scalar) {
     return *this;
 }
 
-bool PrecisionTime::operator >(const PrecisionTime &t) {
+bool PrecisionTime::operator >(const PrecisionTime &t) const {
     return micros() > t.micros();
 }
 
-bool PrecisionTime::operator >=(const PrecisionTime &t) {
+bool PrecisionTime::operator >=(const PrecisionTime &t) const {
     return micros() >= t.micros();
 }
 
-bool PrecisionTime::operator <(const PrecisionTime &t) {
+bool PrecisionTime::operator <(const PrecisionTime &t) const {
     return micros() < t.micros();
 }
 
-bool PrecisionTime::operator <=(const PrecisionTime &t) {
+bool PrecisionTime::operator <=(const PrecisionTime &t) const {
     return micros() <= t.micros();
 }
 
-bool PrecisionTime::operator ==(const PrecisionTime &t) {
+bool PrecisionTime::operator ==(const PrecisionTime &t) const {
     return micros() == t.micros();
 }
 
-bool PrecisionTime::operator !=(const PrecisionTime &t) {
+bool PrecisionTime::operator !=(const PrecisionTime &t) const {
     return micros() != t.micros();
 }
 

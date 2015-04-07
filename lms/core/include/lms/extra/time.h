@@ -13,6 +13,8 @@ namespace extra {
  */
 class PrecisionTime {
  public:
+    static const PrecisionTime ZERO;
+
     /**
      * @brief Create a timestamp pointing to
      * a "zero" time.
@@ -69,8 +71,7 @@ class PrecisionTime {
      * @return time as floating point value (defaults to float in seconds)
      */
     template<class Scale = std::ratio<1,1>, typename T = float>
-    T toFloat()
-    {
+    T toFloat() const {
         return T( Scale::den * m_micros ) /  T( Scale::num * 1000000L ); 
     }
 
@@ -82,22 +83,22 @@ class PrecisionTime {
      *
      * @return the remaining time (if interrupted) or zero
      */
-    PrecisionTime sleep();
+    PrecisionTime sleep() const;
 
-    PrecisionTime operator +(const PrecisionTime &t);
-    PrecisionTime operator -(const PrecisionTime &t);
+    PrecisionTime operator +(const PrecisionTime &t) const;
+    PrecisionTime operator -(const PrecisionTime &t) const;
     PrecisionTime& operator +=(const PrecisionTime &t);
     PrecisionTime& operator -=(const PrecisionTime &t);
-    PrecisionTime operator * (int scalar);
-    PrecisionTime operator / (int scalar);
+    PrecisionTime operator * (int scalar) const;
+    PrecisionTime operator / (int scalar) const;
     PrecisionTime& operator *= (int scalar);
     PrecisionTime& operator /= (int scalar);
-    bool operator >(const PrecisionTime &t);
-    bool operator >=(const PrecisionTime &t);
-    bool operator <(const PrecisionTime &t);
-    bool operator <=(const PrecisionTime &t);
-    bool operator ==(const PrecisionTime &t);
-    bool operator !=(const PrecisionTime &t);
+    bool operator >(const PrecisionTime &t) const;
+    bool operator >=(const PrecisionTime &t) const;
+    bool operator <(const PrecisionTime &t) const;
+    bool operator <=(const PrecisionTime &t) const;
+    bool operator ==(const PrecisionTime &t) const;
+    bool operator !=(const PrecisionTime &t) const;
  private:
     std::int64_t m_micros;
 
