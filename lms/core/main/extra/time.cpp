@@ -106,6 +106,24 @@ PrecisionTime PrecisionTime::operator -(const PrecisionTime &t) {
     return PrecisionTime(micros() - t.micros());
 }
 
+PrecisionTime PrecisionTime::operator * (int scalar) {
+    return PrecisionTime(micros() * scalar);
+}
+
+PrecisionTime PrecisionTime::operator / (int scalar) {
+    return PrecisionTime(micros() / scalar);
+}
+
+PrecisionTime& PrecisionTime::operator *= (int scalar) {
+    m_micros *= scalar;
+    return *this;
+}
+
+PrecisionTime& PrecisionTime::operator /= (int scalar) {
+    m_micros /= scalar;
+    return *this;
+}
+
 bool PrecisionTime::operator >(const PrecisionTime &t) {
     return micros() > t.micros();
 }

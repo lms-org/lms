@@ -88,6 +88,10 @@ class PrecisionTime {
     PrecisionTime operator -(const PrecisionTime &t);
     PrecisionTime& operator +=(const PrecisionTime &t);
     PrecisionTime& operator -=(const PrecisionTime &t);
+    PrecisionTime operator * (int scalar);
+    PrecisionTime operator / (int scalar);
+    PrecisionTime& operator *= (int scalar);
+    PrecisionTime& operator /= (int scalar);
     bool operator >(const PrecisionTime &t);
     bool operator >=(const PrecisionTime &t);
     bool operator <(const PrecisionTime &t);
