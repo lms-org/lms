@@ -16,6 +16,7 @@ set (PUBLIC_HEADERS
         "include/lms/lms_exports.h"
         "include/lms/messaging.h"
         "include/lms/serializable.h"
+        "include/lms/clock.h"
 
         "include/lms/type/module_config.h"
 #        "include/lms/type/serializable.h"
@@ -49,6 +50,7 @@ set (SOURCE
         "main/argumenthandler.cpp"
         "main/type/module_config.cpp"
         "main/messaging.cpp"
+        "main/clock.cpp"
 
         "main/logging/log_level.cpp"
         "main/logging/logger.cpp"
