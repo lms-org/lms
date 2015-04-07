@@ -74,6 +74,16 @@ class PrecisionTime {
         return T( Scale::den * m_micros ) /  T( Scale::num * 1000000L ); 
     }
 
+    /**
+     * @brief Sleep the current thread for micros() microseconds.
+     *
+     * This function uses the best sleep function that
+     * is available on the system.
+     *
+     * @return the remaining time (if interrupted) or zero
+     */
+    PrecisionTime sleep();
+
     PrecisionTime operator +(const PrecisionTime &t);
     PrecisionTime operator -(const PrecisionTime &t);
     PrecisionTime& operator +=(const PrecisionTime &t);
