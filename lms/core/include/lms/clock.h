@@ -26,7 +26,21 @@ public:
      * loop is to slow
      * @param loopTime duration of a single loop iteration
      */
-    Clock(logging::Logger &rootLogger, extra::PrecisionTime loopTime);
+    Clock(logging::Logger &rootLogger);
+
+    /**
+     * @brief Set the clock's loop time for
+     * one loop iteration.
+     *
+     * @param cycleTime microseconds
+     */
+    void cycleTime(extra::PrecisionTime cycleTime);
+
+    /**
+     * @brief Get the clock's loop time.
+     * @return cycle time in microseconds
+     */
+    extra::PrecisionTime cycleTime() const;
 
     /**
      * @brief Should be called directly at the beginning

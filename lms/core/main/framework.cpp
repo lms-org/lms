@@ -6,12 +6,14 @@
 #include <cstdlib>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
+#include "lms/extra/time.h"
 #include "unistd.h"
 
 namespace lms{
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger) {
+    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
+    clockEnabled(false), clock(rootLogger) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
@@ -29,11 +31,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
     running = true;
 
     while(running) {
+        if(clockEnabled) {
+            clock.beforeLoopIteration();
+        }
+
         executionManager.loop();
-//        if(usleep(4000*1000) == -1) {
-//            logger.error("sleep") << errno;
-//            usleep(4000*1000);
-//        }
+
+        if(clockEnabled) {
+            clock.afterLoopIteration();
+        }
     }
 }
 /*
@@ -51,6 +57,43 @@ void Framework::parseConfig(){
             pugi::xml_node tmpNode;
             //parse executionManager-stuff
             tmpNode = rootNode.child("executionManager");
+
+            pugi::xml_node clockNode = tmpNode.child("clock");
+
+            if(clockNode) {
+                std::string clockUnit;
+                std::int64_t clockValue = atoll(clockNode.child_value());
+
+                for(pugi::xml_attribute_iterator attrIt = clockNode.attributes_begin();
+                    attrIt != clockNode.attributes_end(); ++attrIt) {
+
+                    if(std::string("enabled") == attrIt->name()) {
+                        clockEnabled = attrIt->as_bool();
+                    } else if(std::string("unit") == attrIt->name()) {
+                        clockUnit = attrIt->value();
+                    }
+                }
+
+                if(clockEnabled) {
+                    if(clockUnit == "hz") {
+                        clock.cycleTime(extra::PrecisionTime::fromMicros(1000000 / clockValue));
+                    } else if(clockUnit == "ms") {
+                        clock.cycleTime(extra::PrecisionTime::fromMillis(clockValue));
+                    } else if(clockUnit == "us") {
+                        clock.cycleTime(extra::PrecisionTime::fromMicros(clockValue));
+                    } else {
+                        logger.error("parseConfig") << "Invalid clock unit: " << clockUnit;
+                        clockEnabled = false;
+                    }
+                }
+            }
+
+            if(clockEnabled) {
+                logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
+            } else {
+                logger.info("parseConfig") << "Disabled clock";
+            }
+
             //TODO set values for executionManager
 
             //Start modules

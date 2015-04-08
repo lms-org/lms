@@ -2,9 +2,17 @@
 
 namespace lms {
 
-Clock::Clock(logging::Logger &rootLogger, extra::PrecisionTime loopTime)
-    : logger("Clock", &rootLogger), loopTime(loopTime), firstIteration(true),
-    overflowTime(extra::PrecisionTime::ZERO) {
+Clock::Clock(logging::Logger &rootLogger)
+    : logger("Clock", &rootLogger), loopTime(extra::PrecisionTime::ZERO),
+      firstIteration(true), overflowTime(extra::PrecisionTime::ZERO) {
+}
+
+void Clock::cycleTime(extra::PrecisionTime cycleTime) {
+    this->loopTime = cycleTime;
+}
+
+extra::PrecisionTime Clock::cycleTime() const {
+    return this->loopTime;
 }
 
 void Clock::beforeLoopIteration() {

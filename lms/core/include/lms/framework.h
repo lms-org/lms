@@ -6,6 +6,7 @@
 #include <lms/argumenthandler.h>
 #include <lms/executionmanager.h>
 #include <lms/logger.h>
+#include "lms/clock.h"
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
  */
@@ -41,6 +42,10 @@ private:
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;
+
+    bool clockEnabled;
+    Clock clock;
+
     /**
      * @brief running just for main-while-loop if it's set to false, the programm will terminate
      */
