@@ -1,6 +1,7 @@
 <framework>
 	<executionManager>
 		<maxThreadCount> 1 </maxThreadCount>
+		<clock enabled="false" unit="hz">100</clock>
 	</executionManager>
 	<modulesToLoad>
 		<module>scheduler</module>
