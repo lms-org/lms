@@ -7,7 +7,7 @@
 
 namespace lms {
 
-ArgumentHandler::ArgumentHandler() : m_loadConfiguration("default"),
+ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
     m_showHelp(false), m_loggingMinLevel(logging::SMALLEST_LEVEL) {
 }
 
