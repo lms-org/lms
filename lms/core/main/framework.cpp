@@ -46,7 +46,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
  * TODO suffix for config
  */
 void Framework::parseConfig(){
-    std::string configPath = Framework::programDirectory()+"configs/framework_conf.xml";
+
+    std::string configPath = Framework::programDirectory()+"configs/";
+    if(argumentHandler.argLoadConfiguration().size() == 0){
+        configPath +="framework_conf.xml";
+    }else{
+        configPath +="framework_conf_"+argumentHandler.argLoadConfiguration()+".xml";
+    }
     std::ifstream ifs;
     ifs.open (configPath, std::ifstream::in);
     if(ifs.is_open()){
@@ -132,7 +138,7 @@ void Framework::parseConfig(){
             logger.error() << "Failed to parse framework_config.xml as XML";
         }
     }else{
-        logger.error() << "Failed to open framework_config.xml";
+        logger.error() << "Failed to open framework_config: " << configPath;
 
 
     }
