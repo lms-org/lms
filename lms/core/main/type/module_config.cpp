@@ -10,7 +10,8 @@ namespace lms {
 namespace type {
 
 template<>
-bool ModuleConfig::parse<std::string>(const std::string &src, std::string &dst) {
+bool ModuleConfig::parse<std::string>(const std::string &src,
+                                      std::string &dst) {
     dst = src;
     return true;
 }
@@ -51,7 +52,8 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
         }
 
         bool isCurrentMultiline = line[line.size() - 1] == '\\';
-        std::string normalizedLine = isCurrentMultiline ? line.erase(line.size() - 1) : line;
+        std::string normalizedLine = isCurrentMultiline ?
+                    line.erase(line.size() - 1) : line;
 
         if(isMultiline) {
             lineBuffer += normalizedLine;
