@@ -7,7 +7,10 @@ copyFile() {
     cp -u -v "$SOURCE_DIR/$1" "$BINARY_DIR/$1"
 }
 
-copyFile "configs/framework_conf.xml"
+for FILE in $(find "$SOURCE_DIR/configs" -name "*.xml" -printf "%P\n")
+do
+    copyFile "configs/$FILE"
+done
 
 for FILE in $(find $SOURCE_DIR -name "*.lconf" -printf "%P\n")
 do
