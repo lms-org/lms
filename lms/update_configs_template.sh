@@ -4,6 +4,7 @@ SOURCE_DIR="@CMAKE_SOURCE_DIR@"
 BINARY_DIR="@CMAKE_BINARY_DIR@"
 
 copyFile() {
+    mkdir -p -v $(dirname "$BINARY_DIR/$1")
     cp -u -v "$SOURCE_DIR/$1" "$BINARY_DIR/$1"
 }
 
