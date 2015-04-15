@@ -20,7 +20,8 @@ will be a cross-plattform system that allows easy module-handling and sharing.
  * [Ogre-Binding](https://github.com/Phibedy/ogrea_binding)
  * [Imaging](https://github.com/syxolk/imaging)
  * [Cereal](https://github.com/syxolk/cereal)
- * [sense link](https://github.com/Bitfroest/sense_link)
+ * [sense_link](https://github.com/Bitfroest/sense_link)
+ * [gamepad_lib](https://github.com/Phibedy/gamepad_lib)
  * BlueTooth-Adapter (not implemented yet)
  * OpenCV (not implemented yet)
  * Audio
@@ -35,8 +36,18 @@ will be a cross-plattform system that allows easy module-handling and sharing.
  * [Ogre window handler](https://github.com/Phibedy/ogre_window_manager)
  * [camera renderer](https://github.com/Phibedy/camera_renderer)
  * [socket data](https://github.com/Phibedy/socket_data) (work in progress)
+ * [socket connection](https://github.com/Phibedy/socket_connection)
+ * [virtual_sense_link](https://github.com/syxolk/virtual_sense_link)
+ * [virtual_controller](https://github.com/Bitfroest/virtual_controller)
+ * [image_converter](https://github.com/syxolk/image_converter)
+ * [image_logger](https://github.com/syxolk/image_logger)
+ * [image_loader](https://github.com/syxolk/image_loader)
+ * [usb_sense_link](https://github.com/Bitfroest/usb_sense_link)
  * CommandHandler (not implemented yet - may become a library)
  * SocketChat (not implemented)
+
+###Extras
+ * [Senseboard_16](https://github.com/Bitfroest/Senseboard_16) - Arduino implementation for *sense_link*
 
 ###Downloads SA
   * Get the source from github :P
