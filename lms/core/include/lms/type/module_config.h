@@ -11,6 +11,25 @@ namespace lms {
 namespace type {
 
 /**
+ * @brief Parse the given string into a type T.
+ *
+ * @param src string to parse
+ * @param dst put the parsed thing here
+ * @return true if parsing was successful, otherwise false
+ */
+template<typename T>
+bool parse(const std::string &src, T &dst) {
+    std::istringstream is(src);
+    return is >> dst;
+}
+
+template<>
+bool parse<std::string>(const std::string &src, std::string &dst);
+
+template<>
+bool parse<bool>(const std::string &src, bool &dst);
+
+/**
  * @brief ModuleConfig is a key-value mapping that can be read by modules to
  * configure themselves.
  *
@@ -127,16 +146,6 @@ public:
 
 private:
     std::unordered_map<std::string, std::string> properties;
-
-    /**
-     * @brief Parse the given string into a type T.
-     *
-     * @param src string to parse
-     * @param dst put the parsed thing here
-     * @return true if parsing was successful, otherwise false
-     */
-    template<typename T>
-    static bool parse(const std::string &src, T &dst);
 };
 
 template<typename T>
@@ -191,12 +200,6 @@ std::vector<T> ModuleConfig::getArray(const std::string &key) const {
     } while(nextPos != std::string::npos);
 
     return array;
-}
-
-template<typename T>
-bool ModuleConfig::parse(const std::string &src, T &dst) {
-    std::istringstream is(src);
-    return is >> dst;
 }
 
 } // namespace type

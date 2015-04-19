@@ -10,14 +10,14 @@ namespace lms {
 namespace type {
 
 template<>
-bool ModuleConfig::parse<std::string>(const std::string &src,
+bool parse<std::string>(const std::string &src,
                                       std::string &dst) {
     dst = src;
     return true;
 }
 
 template<>
-bool ModuleConfig::parse<bool>(const std::string &src, bool &dst) {
+bool parse<bool>(const std::string &src, bool &dst) {
     if(src == "0" || src == "false") {
         dst = false;
         return true;
