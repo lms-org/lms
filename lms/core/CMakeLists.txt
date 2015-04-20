@@ -109,7 +109,7 @@ target_link_libraries(lms PRIVATE pugixml)
 #System specific source
 #http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
 if(UNIX)
-    target_link_libraries(lms PRIVATE "dl")
+    target_link_libraries(lms PRIVATE dl pthread)
 elseif(WIN32)
 else()
     message("NO OS found!")
