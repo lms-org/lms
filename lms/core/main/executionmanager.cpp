@@ -1,19 +1,20 @@
-#include <lms/executionmanager.h>
-#include <lms/datamanager.h>
-#include <lms/module.h>
-#include <lms/loader.h>
+#include <cstdio>
 #include <queue>
 #include <iostream>
-#include <lms/datamanager.h>
-#include <cstdio>
 #include <memory>
 #include <algorithm>
 
-namespace lms{
+#include "lms/executionmanager.h"
+#include "lms/datamanager.h"
+#include "lms/module.h"
+#include "lms/loader.h"
+#include "lms/datamanager.h"
+
+namespace lms {
 
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
-    : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1), valid(false),
-    loader(rootLogger), dataManager(rootLogger) {
+    : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
+      valid(false), loader(rootLogger), dataManager(rootLogger) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -70,7 +71,7 @@ void ExecutionManager::loop() {
     messaging.resetQueue();
 }
 
-void ExecutionManager::loadAvailabelModules(){
+void ExecutionManager::loadAvailableModules(){
     logger.info() << "load available Modules";
     available  = loader.getModules();
 }
@@ -123,10 +124,6 @@ bool ExecutionManager::disableModule(const std::string &name) {
     return false;
 }
 
-/**
- * @brief ExecutionManager::invalidate calling that method will cause the
- * executionmanager to run validate() in the next loop
- */
 void ExecutionManager::invalidate(){
     valid = false;
 }
@@ -198,5 +195,4 @@ void ExecutionManager::sortByPriority(){
     }
 }
 
-}
-
+}  // namespace lms

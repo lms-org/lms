@@ -24,18 +24,24 @@ public:
     ExecutionManager(logging::Logger &rootLogger);
     ~ExecutionManager();
 
-    /**cycle modues */
+    /**cycle modules */
     void loop();
 
     /**
-     * Searches the programm for all availabe modules and adds them to the availabe list
+     * @brief Searches the program for all available modules and adds them to
+     * the available list.
      */
-    void loadAvailabelModules();
+    void loadAvailableModules();
+
     /**
-     * Enable module with the given name, add it to the cycle-queue
+     * @brief Enable module with the given name, add it to the cycle-queue.
+     *
+     * @param name name of the module that should be enabled
+     * @param minLogLevel minimum logging level
      */
     void enableModule(const std::string &name, logging::LogLevel minLogLevel
                       = logging::SMALLEST_LEVEL);
+
     /**
      * @brief Disable module with the given name, remove it from the
      * cycle-queue.
@@ -45,11 +51,17 @@ public:
      */
     bool disableModule(const std::string &name);
 
-
-    void invalidate();
     /**
-     * @brief validate if invalidate was called before, it will check if all selected modules are initialised
-     * Sorts the modules in the cycle-list
+     * @brief Calling this method will cause the
+     * executionmanager to run validate() in the next loop
+     */
+    void invalidate();
+
+    /**
+     * @brief If invalidate was called before, this method will create the
+     * dependency graph.
+     *
+     * Sorts the modules in the cycle-list.
      */
     void validate();
 private:
@@ -67,28 +79,43 @@ private:
      * @brief enabledModules contains all loaded Modules
      */
     std::vector<Module*> enabledModules;
+
     /**
      * @brief cycleListT the cycleListType
      */
     typedef std::vector<std::vector<Module*>> cycleListType;
     cycleListType cycleList;
+
     /**
      * @brief available contains all Modules which can be loaded
      */
     Loader::moduleList available;
+
     /**
-     * @brief sort call this method for sorting the cycleList
-     * As this method isn't called often I won't care about performance but readability. If you have to call this method often you might have to improve it.
+     * @brief Call this method for sorting the cycleList.
+     *
+     * As this method isn't called often I won't care about performance but
+     * readability. If you have to call this method often you might have to
+     * improve it.
      */
     void sort();
+
     /**
-     * @brief sortByDataChannel Sorts enableModules into cycleList. Call this method before sortByPriority().
-     * As this method isn't called often I won't care about performance but readability. If you have to call this method often you might have to improve it.
+     * @brief sortByDataChannel Sorts enableModules into cycleList. Call this
+     * method before sortByPriority().
+     *
+     * As this method isn't called often I won't care about performance but
+     * readability. If you have to call this method often you might have to
+     * improve it.
      */
     void sortByDataChannel();
+
     /**
-     * @brief sortByDataChannel Sorts loadedModules into cycleList
-     * As this method isn't called often I won't care about performance but readability. If you have to call this method often you might have to improve it.
+     * @brief Sorts loadedModules into cycleList
+     *
+     * As this method isn't called often I won't care about performance but
+     * readability. If you have to call this method often you might have to
+     * improve it.
      */
     void sortByPriority();
 };

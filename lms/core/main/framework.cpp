@@ -23,7 +23,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGSEGV, this);
 
     //load all Availabel Modules
-    executionManager.loadAvailabelModules();
+    executionManager.loadAvailableModules();
 
     //parse framework config
     parseConfig();
