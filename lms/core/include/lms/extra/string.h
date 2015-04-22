@@ -2,6 +2,7 @@
 #define LMS_EXTRA_STRING_H
 
 #include <string>
+#include <vector>
 
 namespace lms {
 namespace extra {
@@ -14,6 +15,16 @@ namespace extra {
  * @return trimmed string
  */
 std::string trim(const std::string& str, const std::string &delims = " \t\n\r\f\v");
+
+/**
+ * TODO write test cases
+ * @brief split
+ * @param string
+ * @param strLength
+ * @param splitter
+ * @return
+ */
+std::vector<std::string> split(char *string, int strLength, const char splitter);
 
 } // namespace extra
 } // namespace lms
