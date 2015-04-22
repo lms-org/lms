@@ -40,9 +40,13 @@ namespace lms {
         void enableModule(const std::string &name, logging::LogLevel minLogLevel
                           = logging::SMALLEST_LEVEL);
         /**
-         * Disable module with the given name, remove it from the cycle-queue
+         * @brief Disable module with the given name, remove it from the
+         * cycle-queue.
+         *
+         * @param name name of the module that should be disabled
+         * @return true if disabling was successful, false otherwise
          */
-        void disableModule(const std::string &name);
+        bool disableModule(const std::string &name);
 
 
         void invalidate();

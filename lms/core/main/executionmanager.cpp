@@ -17,7 +17,19 @@ ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
 }
 
 ExecutionManager::~ExecutionManager () {
-    //TODO
+    for(std::vector<Module*>::iterator it = enabledModules.begin();
+        it != enabledModules.end(); ++it) {
+
+        if(! (*it)->deinitialize()) {
+            logger.error("disableModule")
+                    << "Deinitialize failed for module" << (*it)->getName()
+                    << ".";
+        }
+
+        loader.unload(*it);
+    }
+
+    enabledModules.clear();
 }
 
 void ExecutionManager::loop() {
@@ -90,19 +102,30 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
 }
 
 /**Disable module with the given name, remove it from the cycle-queue */
-void ExecutionManager::disableModule(const std::string &name){
-    for(size_t i = 0; i< enabledModules.size(); ++i){
-        if(enabledModules[i]->getName() == name){
-            enabledModules.erase(enabledModules.begin() + i);
+bool ExecutionManager::disableModule(const std::string &name) {
+    for(std::vector<Module*>::iterator it = enabledModules.begin();
+        it != enabledModules.end(); ++it) {
+
+        if((*it)->getName() == name) {
+            if(! (*it)->deinitialize()) {
+                logger.error("disableModule")
+                        << "Deinitialize failed for module" << name << ".";
+            }
+            loader.unload(*it);
+            enabledModules.erase(it);
             invalidate();
-            return;
+            return true;
         }
     }
 
-    logger.error("disableModule") << "Module " << name << " was not enabled.";
+    logger.error("disableModule") << "Tried to disable module " << name
+                                  << ", but was not enabled.";
+    return false;
 }
+
 /**
- * @brief ExecutionManager::invalidate calling that method will cause the executionmanager to run validate() in the next loop
+ * @brief ExecutionManager::invalidate calling that method will cause the
+ * executionmanager to run validate() in the next loop
  */
 void ExecutionManager::invalidate(){
     valid = false;

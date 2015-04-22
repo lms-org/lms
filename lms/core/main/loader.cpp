@@ -107,17 +107,19 @@ void Loader::handleLoadConfig(const std::string &configFilePath,
             }
         }else{
             //TODO can't parse plugin-xml
-            logger.error("handleLoadConfig") << "Can't parse plugin-xml";
+            logger.error("handleLoadConfig") << "Could not parse as XML: "
+                                             << configFilePath;
         }
         ifs.close();
     }else{
         //found some folder with no config-file
-        logger.warn("handleLoadConfig") << "There was no plugin-xml in folder";
+        logger.warn("handleLoadConfig") << "Could not open: " << configFilePath;
     }
 }
 
 void Loader::unload(Module* a) {
     delete a;
+    // TODO unload dynamic lib
 }
 
 
