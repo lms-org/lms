@@ -52,7 +52,6 @@ void DataManager::getExclusiveWriteAccess(Module *module, const std::string &nam
 
 void DataManager::getReadAccess(Module *module, const std::string &name) {
     DataChannel &channel = channels[name];
-
     channel.readers.push_back(module);
 }
 
