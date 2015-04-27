@@ -31,6 +31,7 @@ std::vector<std::string> split(char *string, int strLength, const char splitter)
     if(oldFound < strLength){
         std::string name(&resultBuff[oldFound],strLength-oldFound);
         result.push_back(name);
+        std::cout << "found last: " << name <<std::endl;
 
     }
     return result;
