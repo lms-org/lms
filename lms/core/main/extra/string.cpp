@@ -24,6 +24,7 @@ std::vector<std::string> split(char *string, int strLength, const char splitter)
             std::string name(&resultBuff[oldFound],i-oldFound);
             oldFound = i+1;
             result.push_back(name);
+            std::cout <<"part found: " << name << std::endl;
         }
     }
     //add last element if the string doesn't end with the splitter
