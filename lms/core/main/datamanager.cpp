@@ -6,11 +6,13 @@
 
 #include <lms/module.h>
 #include <lms/datamanager.h>
+#include <lms/executionmanager.h>
 
 namespace lms{
 
-DataManager::DataManager(logging::Logger &rootLogger)
-    : logger("DATAMGR", &rootLogger), configLoader(rootLogger) {}
+DataManager::DataManager(logging::Logger &rootLogger, ExecutionManager &execMgr)
+    : logger("DATAMGR", &rootLogger), execMgr(execMgr),
+      configLoader(rootLogger) {}
 
 DataManager::~DataManager() {
     // TODO destruct all dataPointers
@@ -35,6 +37,7 @@ void DataManager::getWriteAccess(Module *module, const std::string &name) {
             << " with write access, but the channel is already exclusive.";
     }
 
+    execMgr.invalidate();
     channel.writers.push_back(module);
 }
 
@@ -46,6 +49,7 @@ void DataManager::getExclusiveWriteAccess(Module *module, const std::string &nam
             << " with exclusive write access, but the channel is already exclusive.";
     }
 
+    execMgr.invalidate();
     channel.exclusiveWrite = true;
     channel.writers.push_back(module);
 }
@@ -53,6 +57,7 @@ void DataManager::getExclusiveWriteAccess(Module *module, const std::string &nam
 void DataManager::getReadAccess(Module *module, const std::string &name) {
     DataChannel &channel = channels[name];
 
+    execMgr.invalidate();
     channel.readers.push_back(module);
 }
 
