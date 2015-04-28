@@ -85,6 +85,15 @@ public:
     bool loadFromFile(const std::string &path);
 
     /**
+     * @brief Set a config value. Overwrite key if existing.
+     *
+     * @param key the key to set
+     * @param value the value to set
+     */
+    template<typename T>
+    void set(const std::string &key, const T &value);
+
+    /**
      * @brief Return the value by the given config key.
      *
      * If the key is not found the default constructor
@@ -147,6 +156,11 @@ public:
 private:
     std::unordered_map<std::string, std::string> properties;
 };
+
+template<typename T>
+void ModuleConfig::set(const std::string &key, const T &value) {
+    properties[key] = value;
+}
 
 template<typename T>
 T ModuleConfig::get(const std::string &key) const {
