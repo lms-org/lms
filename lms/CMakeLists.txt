@@ -1,13 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+#add version if you use that cmake as your
+#cmake_minimum_required(VERSION 2.8)
 project(LightWeightModularSystem)
-
-#Gather all loadConfigs (used to load modules)
-file(GLOB_RECURSE loadConfigs RELATIVE ${CMAKE_CURRENT_LIST_DIR}  external/loadConfig.xml)
-#copy all module-configs (used to set values in modules)
-file(GLOB_RECURSE moduleConfigs RELATIVE ${CMAKE_CURRENT_LIST_DIR}  *.lconf)
-#copy the framework-configs
-file( GLOB_RECURSE frameworkConfigs RELATIVE ${CMAKE_CURRENT_LIST_DIR} configs/*.xml)
-
 #create one list
 set(ConfigFiles
         ${frameworkConfigs}
@@ -15,9 +8,9 @@ set(ConfigFiles
         ${moduleConfigs})
 
 # Set source and binary dir in update_configs.sh and other scripts
-configure_file("update_configs_template.sh" "update_configs.sh" @ONLY)
-configure_file("pull_repos_template.sh" "pull_repos.sh" @ONLY)
-configure_file("fetch_repos_template.sh" "fetch_repos.sh" @ONLY)
+#configure_file("update_configs_template.sh" "update_configs.sh" @ONLY)
+#configure_file("pull_repos_template.sh" "pull_repos.sh" @ONLY)
+#configure_file("fetch_repos_template.sh" "fetch_repos.sh" @ONLY)
 
 #compile core
 message("Compile core")
