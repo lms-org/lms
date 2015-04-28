@@ -17,9 +17,4 @@ message("Compile core")
 #set flags
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -std=c++0x -Wall -Wextra -pedantic -O0 ")
 #Add include path so it's available for all
-include_directories(core/include)
 add_subdirectory(core)
-
-#compile modules
-message("Compile modules")
-add_subdirectory(external)

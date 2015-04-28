@@ -1,4 +1,5 @@
 #include pugixml headers (hpp-files)
+include_directories(include)
 include_directories(xml/pugixml-1.5/src)
 
 #TODO Rename, not public
