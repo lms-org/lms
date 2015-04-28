@@ -7,6 +7,8 @@
 #include <lms/executionmanager.h>
 #include <lms/logger.h>
 #include "lms/clock.h"
+#include "pugixml.hpp"
+
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
  */
@@ -44,6 +46,11 @@ public:
      * @brief Destroy execution manager.
      */
     ~Framework();
+
+    struct ModuleNode {
+        std::string name;
+        type::ModuleConfig config;
+    };
 private:
 
     logging::RootLogger rootLogger;
@@ -59,6 +66,7 @@ private:
      * @brief running just for main-while-loop if it's set to false, the programm will terminate
      */
     bool running;
+
     /**
      * @brief signal called by the system (Segfaults etc)
      * @param s
@@ -68,7 +76,10 @@ private:
      * @brief parseConfig parses the framework-config
      */
     void parseConfig();
-
+    void parseFile(const std::string &file, std::vector<ModuleNode> &mods);
+    void parseExecution(pugi::xml_node execNode);
+    void parseModules(pugi::xml_node rootNode, std::vector<ModuleNode> &mods);
+    void parseIncludes(pugi::xml_node rootNode, std::vector<ModuleNode> &mods);
 };
 
 }  // namespace lms

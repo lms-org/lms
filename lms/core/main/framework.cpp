@@ -8,6 +8,7 @@
 #include "lms/logging/log_level.h"
 #include "lms/extra/time.h"
 #include "unistd.h"
+#include "lms/type/module_config.h"
 
 namespace lms{
 
@@ -50,14 +51,20 @@ Framework::Framework(const ArgumentHandler &arguments) :
  */
 void Framework::parseConfig(){
 
-    std::string configPath = Framework::programDirectory()+"configs/";
+    std::string configPath = Framework::programDirectory()+"../../../configs/";
     if(argumentHandler.argLoadConfiguration().size() == 0){
         configPath +="framework_conf.xml";
     }else{
         configPath +="framework_conf_"+argumentHandler.argLoadConfiguration()+".xml";
     }
+
+    std::vector<ModuleNode> mods;
+    parseFile(configPath, mods);
+}
+
+void Framework::parseFile(const std::string &file, std::vector<ModuleNode> &mods) {
     std::ifstream ifs;
-    ifs.open (configPath, std::ifstream::in);
+    ifs.open (file, std::ifstream::in);
     if(ifs.is_open()){
         pugi::xml_document doc;
         pugi::xml_parse_result result = doc.load(ifs);
@@ -65,44 +72,11 @@ void Framework::parseConfig(){
             pugi::xml_node rootNode =doc.child("framework");
             pugi::xml_node tmpNode;
             //parse executionManager-stuff
-            tmpNode = rootNode.child("executionManager");
+            tmpNode = rootNode.child("execution");
 
-            pugi::xml_node clockNode = tmpNode.child("clock");
-
-            if(clockNode) {
-                std::string clockUnit;
-                std::int64_t clockValue = atoll(clockNode.child_value());
-
-                for(pugi::xml_attribute_iterator attrIt = clockNode.attributes_begin();
-                    attrIt != clockNode.attributes_end(); ++attrIt) {
-
-                    if(std::string("enabled") == attrIt->name()) {
-                        clockEnabled = attrIt->as_bool();
-                    } else if(std::string("unit") == attrIt->name()) {
-                        clockUnit = attrIt->value();
-                    }
-                }
-
-                if(clockEnabled) {
-                    if(clockUnit == "hz") {
-                        clock.cycleTime(extra::PrecisionTime::fromMicros(1000000 / clockValue));
-                    } else if(clockUnit == "ms") {
-                        clock.cycleTime(extra::PrecisionTime::fromMillis(clockValue));
-                    } else if(clockUnit == "us") {
-                        clock.cycleTime(extra::PrecisionTime::fromMicros(clockValue));
-                    } else {
-                        logger.error("parseConfig") << "Invalid clock unit: " << clockUnit;
-                        clockEnabled = false;
-                    }
-                }
+            if(tmpNode) {
+                parseExecution(tmpNode);
             }
-
-            if(clockEnabled) {
-                logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
-            } else {
-                logger.info("parseConfig") << "Disabled clock";
-            }
-
             //TODO set values for executionManager
 
             //Start modules
@@ -137,13 +111,111 @@ void Framework::parseConfig(){
 
                 executionManager.enableModule(moduleName, level);
             }
+
+            parseModules(rootNode, mods);
+
+            parseIncludes(rootNode, mods);
         }else{
             logger.error() << "Failed to parse framework_config.xml as XML";
         }
-    }else{
-        logger.error() << "Failed to open framework_config: " << configPath;
+    } else {
+        logger.error() << "Failed to open framework_config: " << file;
+    }
+}
 
+void Framework::parseExecution(pugi::xml_node execNode) {
+    pugi::xml_node clockNode = execNode.child("clock");
 
+    if(clockNode) {
+        std::string clockUnit;
+        std::int64_t clockValue = atoll(clockNode.child_value());
+
+        for(pugi::xml_attribute attr : clockNode.attributes()) {
+
+            if(std::string("enabled") == attr.name()) {
+                clockEnabled = attr.as_bool();
+            } else if(std::string("unit") == attr.name()) {
+                clockUnit = attr.value();
+            }
+        }
+
+        if(clockEnabled) {
+            if(clockUnit == "hz") {
+                clock.cycleTime(extra::PrecisionTime::fromMicros(1000000 / clockValue));
+            } else if(clockUnit == "ms") {
+                clock.cycleTime(extra::PrecisionTime::fromMillis(clockValue));
+            } else if(clockUnit == "us") {
+                clock.cycleTime(extra::PrecisionTime::fromMicros(clockValue));
+            } else {
+                logger.error("parseConfig") << "Invalid clock unit: " << clockUnit;
+                clockEnabled = false;
+            }
+        }
+    }
+
+    if(clockEnabled) {
+        logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
+    } else {
+        logger.info("parseConfig") << "Disabled clock";
+    }
+}
+
+void Framework::parseModules(pugi::xml_node rootNode, std::vector<ModuleNode> &mods) {
+    // parse all <module> nodes
+    for (pugi::xml_node moduleNode : rootNode.children("module")) {
+
+        ModuleNode module;
+
+        module.name = moduleNode.child("name").child_value();
+        logger.info("parseModules") << "Found def for module " << module.name;
+
+        // parse all config
+        for(pugi::xml_node configNode : moduleNode.children("config")) {
+            bool hasSrcAttr = false;
+
+            for (pugi::xml_attribute attr: configNode.attributes()) {
+                if(std::string("src") == attr.name()) {
+                    bool loadResult = module.config.loadFromFile(attr.value());
+                    if(!loadResult) {
+                        logger.error("parseModules") << "Tried to load "
+                            << attr.value() << " for " << module.name << " but failed";
+
+                    }
+                    hasSrcAttr = true;
+                    break;
+                }
+            }
+
+            // if there was no src attribut then parse the tag's content
+            if(!hasSrcAttr) {
+                for (pugi::xml_node configPropNode: configNode.children()) {
+                    logger.debug("parseModules") << configPropNode.name();
+                    module.config.set(configPropNode.name(),
+                                     std::string(configPropNode.child_value()));
+                }
+            }
+        }
+
+        mods.push_back(module);
+
+        logger.debug("Value for bla") << module.config.get<std::string>("bla");
+    }
+}
+
+void Framework::parseIncludes(pugi::xml_node rootNode, std::vector<ModuleNode> &mods) {
+    for(pugi::xml_node includeNode : rootNode.children("include")) {
+        bool hasSrcAttr = false;
+        for (pugi::xml_attribute attr: includeNode.attributes()) {
+            if(std::string("src") == attr.name()) {
+                hasSrcAttr = true;
+                logger.info("parseIncludes") << "Found include " << attr.value();
+                parseFile(attr.value(), mods);
+            }
+        }
+
+        if(! hasSrcAttr) {
+            logger.error("Include tag has no src attribute");
+        }
     }
 }
 
