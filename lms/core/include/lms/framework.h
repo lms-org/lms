@@ -24,6 +24,15 @@ public:
     static std::string programDirectory();
 
     /**
+     * @brief Framework::externalDirectory absolute path to the external directory
+     */
+    static std::string externalDirectory;
+    /**
+     * @brief Framework::configsDirectory absolute path to the configs directory
+     */
+    static std::string configsDirectory;
+
+    /**
      * @brief Instantiate the framework, initiate datamanager and
      * execution manager and start the main loop.
      *

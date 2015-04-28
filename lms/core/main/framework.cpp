@@ -11,6 +11,9 @@
 
 namespace lms{
 
+std::string Framework::externalDirectory = EXTERNAL_DIR;
+std::string Framework::configsDirectory = CONFIGS_DIR;
+
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
     clockEnabled(false), clock(rootLogger) {
