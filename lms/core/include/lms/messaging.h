@@ -5,6 +5,7 @@
 #include <list>
 #include <mutex>
 #include <string>
+#include "pugixml.hpp"
 
 namespace lms {
 

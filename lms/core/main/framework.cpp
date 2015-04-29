@@ -26,11 +26,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    //load all Availabel Modules
-    executionManager.loadAvailableModules();
-
     //parse framework config
     parseConfig();
+
+    // enable modules after they were made available
+    logger.info() << "Start enabling modules";
+    for(ModuleToLoad mod : tempModulesToLoadList) {
+        executionManager.enableModule(mod.name, mod.logLevel);
+    }
+
     //Execution
     running = true;
 
@@ -51,18 +55,20 @@ Framework::Framework(const ArgumentHandler &arguments) :
  */
 void Framework::parseConfig(){
 
-    std::string configPath = Framework::programDirectory()+"../../../configs/";
+    logger.debug("parseConfig") << "EXTERNAL: " << externalDirectory
+                                << std::endl << "CONFIGS: " << configsDirectory;
+
+    std::string configPath = configsDirectory + "/";
     if(argumentHandler.argLoadConfiguration().size() == 0){
         configPath +="framework_conf.xml";
     }else{
         configPath +="framework_conf_"+argumentHandler.argLoadConfiguration()+".xml";
     }
 
-    std::vector<ModuleNode> mods;
-    parseFile(configPath, mods);
+    parseFile(configPath);
 }
 
-void Framework::parseFile(const std::string &file, std::vector<ModuleNode> &mods) {
+void Framework::parseFile(const std::string &file) {
     std::ifstream ifs;
     ifs.open (file, std::ifstream::in);
     if(ifs.is_open()){
@@ -94,7 +100,6 @@ void Framework::parseFile(const std::string &file, std::vector<ModuleNode> &mods
                 }
             }
 
-            logger.info() << "Start enabling modules";
             for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
                 //parse module content
                 std::string moduleName = it->child_value();
@@ -109,12 +114,15 @@ void Framework::parseFile(const std::string &file, std::vector<ModuleNode> &mods
                     }
                 }
 
-                executionManager.enableModule(moduleName, level);
+                ModuleToLoad mod;
+                mod.name = moduleName;
+                mod.logLevel = level;
+                tempModulesToLoadList.push_back(mod);
             }
 
-            parseModules(rootNode, mods);
+            parseModules(rootNode);
 
-            parseIncludes(rootNode, mods);
+            parseIncludes(rootNode);
         }else{
             logger.error() << "Failed to parse framework_config.xml as XML";
         }
@@ -160,14 +168,24 @@ void Framework::parseExecution(pugi::xml_node execNode) {
     }
 }
 
-void Framework::parseModules(pugi::xml_node rootNode, std::vector<ModuleNode> &mods) {
+void Framework::parseModules(pugi::xml_node rootNode) {
     // parse all <module> nodes
     for (pugi::xml_node moduleNode : rootNode.children("module")) {
 
-        ModuleNode module;
+        Loader::module_entry module;
+        type::ModuleConfig config;
 
         module.name = moduleNode.child("name").child_value();
         logger.info("parseModules") << "Found def for module " << module.name;
+
+        pugi::xml_node libpathNode = moduleNode.child("libpath");
+        if(libpathNode) {
+            // TODO better relative path here
+            module.libpath = libpathNode.child_value();
+        } else {
+            module.libpath = externalDirectory + "/modules/" + module.name + "/"
+                + Loader::getModulePath(module.name);
+        }
 
         // parse all config
         for(pugi::xml_node configNode : moduleNode.children("config")) {
@@ -175,7 +193,8 @@ void Framework::parseModules(pugi::xml_node rootNode, std::vector<ModuleNode> &m
 
             for (pugi::xml_attribute attr: configNode.attributes()) {
                 if(std::string("src") == attr.name()) {
-                    bool loadResult = module.config.loadFromFile(attr.value());
+                    bool loadResult = config.loadFromFile(configsDirectory
+                                                          + "/" + attr.value());
                     if(!loadResult) {
                         logger.error("parseModules") << "Tried to load "
                             << attr.value() << " for " << module.name << " but failed";
@@ -190,26 +209,24 @@ void Framework::parseModules(pugi::xml_node rootNode, std::vector<ModuleNode> &m
             if(!hasSrcAttr) {
                 for (pugi::xml_node configPropNode: configNode.children()) {
                     logger.debug("parseModules") << configPropNode.name();
-                    module.config.set(configPropNode.name(),
+                    config.set(configPropNode.name(),
                                      std::string(configPropNode.child_value()));
                 }
             }
         }
 
-        mods.push_back(module);
-
-        logger.debug("Value for bla") << module.config.get<std::string>("bla");
+        executionManager.addAvailableModule(module);
     }
 }
 
-void Framework::parseIncludes(pugi::xml_node rootNode, std::vector<ModuleNode> &mods) {
+void Framework::parseIncludes(pugi::xml_node rootNode) {
     for(pugi::xml_node includeNode : rootNode.children("include")) {
         bool hasSrcAttr = false;
         for (pugi::xml_attribute attr: includeNode.attributes()) {
             if(std::string("src") == attr.name()) {
                 hasSrcAttr = true;
                 logger.info("parseIncludes") << "Found include " << attr.value();
-                parseFile(attr.value(), mods);
+                parseFile(configsDirectory + "/" + attr.value());
             }
         }
 

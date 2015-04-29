@@ -71,9 +71,9 @@ void ExecutionManager::loop() {
     messaging.resetQueue();
 }
 
-void ExecutionManager::loadAvailableModules(){
-    logger.info() << "load available Modules";
-    available  = loader.getModules();
+void ExecutionManager::addAvailableModule(const Loader::module_entry &mod){
+    logger.info() << "Add module " << mod.name;
+    available.push_back(mod);
 }
 
 void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLevel minLogLevel){

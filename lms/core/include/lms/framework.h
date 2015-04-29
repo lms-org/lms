@@ -47,9 +47,9 @@ public:
      */
     ~Framework();
 
-    struct ModuleNode {
+    struct ModuleToLoad {
         std::string name;
-        type::ModuleConfig config;
+        logging::LogLevel logLevel;
     };
 private:
 
@@ -67,6 +67,8 @@ private:
      */
     bool running;
 
+    std::vector<ModuleToLoad> tempModulesToLoadList;
+
     /**
      * @brief signal called by the system (Segfaults etc)
      * @param s
@@ -76,10 +78,10 @@ private:
      * @brief parseConfig parses the framework-config
      */
     void parseConfig();
-    void parseFile(const std::string &file, std::vector<ModuleNode> &mods);
+    void parseFile(const std::string &file);
     void parseExecution(pugi::xml_node execNode);
-    void parseModules(pugi::xml_node rootNode, std::vector<ModuleNode> &mods);
-    void parseIncludes(pugi::xml_node rootNode, std::vector<ModuleNode> &mods);
+    void parseModules(pugi::xml_node rootNode);
+    void parseIncludes(pugi::xml_node rootNode);
 };
 
 }  // namespace lms

@@ -28,10 +28,9 @@ public:
     void loop();
 
     /**
-     * @brief Searches the program for all available modules and adds them to
-     * the available list.
+     * @brief Add a new module to the list of available modules.
      */
-    void loadAvailableModules();
+    void addAvailableModule(const Loader::module_entry &mod);
 
     /**
      * @brief Enable module with the given name, add it to the cycle-queue.
