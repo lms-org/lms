@@ -163,12 +163,4 @@ void DataManager::printMapping() const {
     }
 }
 
-const type::ModuleConfig* DataManager::getConfig(Module *module, const std::string &name, const std::vector<std::string> privateDirectories) {
-    if(! hasChannel(name)) {
-        setChannel<type::ModuleConfig>(name, configLoader.loadConfig(name,privateDirectories));
-    }
-
-    return readChannel<type::ModuleConfig>(module, name);
-}
-
 }

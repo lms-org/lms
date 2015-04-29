@@ -33,6 +33,10 @@ ExecutionManager::~ExecutionManager () {
     enabledModules.clear();
 }
 
+DataManager& ExecutionManager::getDataManager() {
+    return dataManager;
+}
+
 void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();

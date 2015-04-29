@@ -63,6 +63,8 @@ public:
      * Sorts the modules in the cycle-list.
      */
     void validate();
+
+    DataManager& getDataManager();
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;

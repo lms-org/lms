@@ -215,6 +215,9 @@ void Framework::parseModules(pugi::xml_node rootNode) {
             }
         }
 
+        executionManager.getDataManager()
+            .setChannel<type::ModuleConfig>("CONFIG_" + module.name, config);
+
         executionManager.addAvailableModule(module);
     }
 }

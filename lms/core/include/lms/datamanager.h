@@ -32,6 +32,7 @@ class ExecutionManager;
 class DataManager {
 friend class ConfigurationLoader;
 friend class ExecutionManager;
+friend class Framework;
 private:
     logging::ChildLogger logger;
     ExecutionManager &execMgr;
@@ -253,19 +254,6 @@ public:
      * @return true if channel is existing
      */
     bool hasChannel(const std::string &name) const;
-
-    /**
-     * @brief Return a configuration object or load it from a
-     * config file first.
-     *
-     * NOTE: The returned object cannot be changed.
-     *
-     * @param module requesting module
-     * @param name name of the config file without the suffix
-     * @return module configuration object, returns an empty config if the config wasn't found
-     */
-    const type::ModuleConfig* getConfig(Module *module, const std::string &name,
-                                        const std::vector<std::string> privateDirectories = {});
 
 private:
     /**

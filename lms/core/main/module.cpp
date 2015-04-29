@@ -36,6 +36,6 @@ namespace lms{
     }
 
     lms_EXPORT const type::ModuleConfig* Module::getConfig(){
-        return datamanager()->getConfig(this, getName(), loaderEntry.configPaths);
+        return datamanager()->readChannel<type::ModuleConfig>(this, "CONFIG_" + getName());
     }
 }
