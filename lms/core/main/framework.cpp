@@ -183,9 +183,9 @@ void Framework::parseModules(pugi::xml_node rootNode) {
 
         std::string libname;
         if(libnameNode) {
-            libname = Loader.getModulePath(libnameNode.child_value());
+            libname = Loader::getModulePath(libnameNode.child_value());
         } else {
-            libname = Loader.getModulePath(module.name);
+            libname = Loader::getModulePath(module.name);
         }
 
         if(libpathNode) {
