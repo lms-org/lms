@@ -181,7 +181,8 @@ void Framework::parseModules(pugi::xml_node rootNode) {
         pugi::xml_node libpathNode = moduleNode.child("libpath");
         if(libpathNode) {
             // TODO better relative path here
-            module.libpath = libpathNode.child_value();
+            module.libpath = externalDirectory + "/modules/" +
+                    libpathNode.child_value();
         } else {
             module.libpath = externalDirectory + "/modules/" + module.name + "/"
                 + Loader::getModulePath(module.name);
