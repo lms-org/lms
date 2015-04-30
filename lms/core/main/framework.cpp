@@ -179,13 +179,22 @@ void Framework::parseModules(pugi::xml_node rootNode) {
         logger.info("parseModules") << "Found def for module " << module.name;
 
         pugi::xml_node libpathNode = moduleNode.child("libpath");
+        pugi::xml_node libnameNode = moduleNode.child("libname");
+
+        std::string libname;
+        if(libnameNode) {
+            libname = Loader.getModulePath(libnameNode.child_value());
+        } else {
+            libname = Loader.getModulePath(module.name);
+        }
+
         if(libpathNode) {
             // TODO better relative path here
             module.libpath = externalDirectory + "/modules/" +
-                    libpathNode.child_value();
+                    libpathNode.child_value() + "/" + libname;
         } else {
             module.libpath = externalDirectory + "/modules/" + module.name + "/"
-                + Loader::getModulePath(module.name);
+                + libname;
         }
 
         // parse all config
