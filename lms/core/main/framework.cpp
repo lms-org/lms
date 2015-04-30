@@ -59,10 +59,10 @@ void Framework::parseConfig(){
                                 << std::endl << "CONFIGS: " << configsDirectory;
 
     std::string configPath = configsDirectory + "/";
-    if(argumentHandler.argLoadConfiguration().size() == 0){
-        configPath +="framework_conf.xml";
-    }else{
-        configPath +="framework_conf_"+argumentHandler.argLoadConfiguration()+".xml";
+    if(argumentHandler.argLoadConfiguration().empty()) {
+        configPath += "framework_conf.xml";
+    } else {
+        configPath += argumentHandler.argLoadConfiguration() + ".xml";
     }
 
     parseFile(configPath);
