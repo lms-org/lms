@@ -91,7 +91,8 @@ public:
      * @return const data channel (only reading)
      */
     template<typename T>
-    const T*  readChannel(Module *module, const std::string &name) {
+    const T*  readChannel(Module *module, const std::string &reqName) {
+        std::string name = module->getChannelMapping(reqName);
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
@@ -120,7 +121,8 @@ public:
      * @return data channel (reading and writing)
      */
     template<typename T>
-    T* writeChannel(Module *module, const std::string &name) {
+    T* writeChannel(Module *module, const std::string &reqName) {
+        std::string name = module->getChannelMapping(reqName);
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
@@ -155,7 +157,8 @@ public:
      * @return data channel (reading + writing)
      */
     template<typename T>
-    T* exclusiveWriteChannel(Module *module, const std::string &name) {
+    T* exclusiveWriteChannel(Module *module, const std::string &reqName) {
+        std::string name = module->getChannelMapping(reqName);
         DataChannel &channel = channels[name];
 
         if(channel.exclusiveWrite) {
@@ -250,6 +253,8 @@ public:
      * @brief Check if a data channel with the given name is
      * currently initialized.
      *
+     * NOTE: This function does not use the transparent channel mapping.
+     *
      * @param name data channel name
      * @return true if channel is existing
      */
@@ -282,6 +287,8 @@ private:
     /**
      * @brief Set the content of a data channel
      *
+     * NOTE: This function does not use the transparent channel mapping.
+     *
      * @param name datachannel name
      * @param data initial content
      */
@@ -309,6 +316,8 @@ private:
     /**
      * @brief Check if requested channel data type T is the same as the data type
      * that is saved in the channel.
+     *
+     * NOTE: This function does not use transparent channel mapping.
      *
      * @param channel the current state of the datachannel
      * @param name data channel name
@@ -356,6 +365,8 @@ private:
 
     /**
      * @brief Return a data channel without creating it
+     *
+     * NOTE: This function does not use transparent channel mapping.
      *
      * @param name data channel name
      * @return NULL, if the datachannel was not yet initialized

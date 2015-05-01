@@ -100,17 +100,15 @@ void Framework::parseFile(const std::string &file) {
                 }
             }
 
-            for (pugi::xml_node_iterator it = tmpNode.begin(); it != tmpNode.end(); ++it){
+            for (pugi::xml_node moduleNode : tmpNode.children()){
                 //parse module content
-                std::string moduleName = it->child_value();
+                std::string moduleName = moduleNode.child_value();
 
                 // get the attribute "logLevel"
                 lms::logging::LogLevel level = defaultModuleLevel;
-                for(pugi::xml_attribute_iterator attrIt = it->attributes_begin();
-                    attrIt != it->attributes_end(); ++attrIt) {
-
-                    if(std::string("logLevel") == attrIt->name()) {
-                        level = lms::logging::levelFromName(attrIt->value());
+                for(pugi::xml_attribute attr : moduleNode.attributes()) {
+                    if(std::string("logLevel") == attr.name()) {
+                        level = lms::logging::levelFromName(attr.value());
                     }
                 }
 
@@ -195,6 +193,20 @@ void Framework::parseModules(pugi::xml_node rootNode) {
         } else {
             module.libpath = externalDirectory + "/modules/" + module.name + "/"
                 + libname;
+        }
+
+        // parse all channel mappings
+        for(pugi::xml_node mappingNode : moduleNode.children("channelMapping")) {
+            pugi::xml_attribute fromAttr = mappingNode.attribute("from");
+            pugi::xml_attribute toAttr = mappingNode.attribute("to");
+
+            if(fromAttr && toAttr) {
+                module.channelMapping[fromAttr.value()] = toAttr.value();
+                logger.warn("parseModule") << fromAttr.value() << " -> " << toAttr.value();
+            } else {
+                logger.warn("parseModules")
+                    << "Tag <channelMapping> requires from and to attributes";
+            }
         }
 
         // parse all config

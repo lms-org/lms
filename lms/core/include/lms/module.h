@@ -125,9 +125,10 @@ public:
     /**
      * @brief getDataChannelMapping
      * @param mapFrom
-     * @return the mapping for the given key or the key itself if it has no mapping for it
+     * @return the mapping for the given key or the key itself if it has no
+     * mapping for it
      */
-    std::string getStringMapping(std::string mapFrom);
+    std::string getChannelMapping(std::string mapFrom);
 
 protected:
     /**

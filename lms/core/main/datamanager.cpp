@@ -29,7 +29,8 @@ DataManager::~DataManager() {
     }
 }
 
-void DataManager::getWriteAccess(Module *module, const std::string &name) {
+void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
+    std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
     if(channel.exclusiveWrite) {
@@ -41,7 +42,8 @@ void DataManager::getWriteAccess(Module *module, const std::string &name) {
     channel.writers.push_back(module);
 }
 
-void DataManager::getExclusiveWriteAccess(Module *module, const std::string &name) {
+void DataManager::getExclusiveWriteAccess(Module *module, const std::string &reqName) {
+    std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
     if(channel.exclusiveWrite) {
@@ -54,14 +56,16 @@ void DataManager::getExclusiveWriteAccess(Module *module, const std::string &nam
     channel.writers.push_back(module);
 }
 
-void DataManager::getReadAccess(Module *module, const std::string &name) {
+void DataManager::getReadAccess(Module *module, const std::string &reqName) {
+    std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
     execMgr.invalidate();
     channel.readers.push_back(module);
 }
 
-bool DataManager::serializeChannel(Module *module, const std::string &name, std::ostream &os) {
+bool DataManager::serializeChannel(Module *module, const std::string &reqName, std::ostream &os) {
+    std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
     if(std::find(channel.readers.begin(), channel.readers.end(), module) == channel.readers.end()
@@ -84,7 +88,8 @@ bool DataManager::serializeChannel(Module *module, const std::string &name, std:
     }
 }
 
-bool DataManager::deserializeChannel(Module *module, const std::string &name, std::istream &is) {
+bool DataManager::deserializeChannel(Module *module, const std::string &reqName, std::istream &is) {
+    std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
     if(std::find(channel.writers.begin(), channel.writers.end(), module) == channel.writers.end()) {

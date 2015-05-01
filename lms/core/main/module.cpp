@@ -28,9 +28,9 @@ namespace lms{
         return priority;
     }
 
-    lms_EXPORT std::string Module::getStringMapping(std::string mapFrom){
-        if(loaderEntry.stringMapping.count(mapFrom) == 1){
-            return loaderEntry.stringMapping[mapFrom];
+    lms_EXPORT std::string Module::getChannelMapping(std::string mapFrom){
+        if(loaderEntry.channelMapping.count(mapFrom) == 1){
+            return loaderEntry.channelMapping[mapFrom];
         }
         return mapFrom;
     }
