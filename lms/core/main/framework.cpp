@@ -69,80 +69,73 @@ void Framework::parseConfig(){
 }
 
 void Framework::parseFile(const std::string &file) {
+    logger.debug("parseFile") << "Reading XML file: " << file;
+
     std::ifstream ifs;
     ifs.open (file, std::ifstream::in);
     if(ifs.is_open()){
         pugi::xml_document doc;
         pugi::xml_parse_result result = doc.load(ifs);
         if (result){
-            pugi::xml_node rootNode =doc.child("framework");
-            pugi::xml_node tmpNode;
-            //parse executionManager-stuff
-            tmpNode = rootNode.child("execution");
+            pugi::xml_node rootNode = doc.child("framework");
 
-            if(tmpNode) {
-                parseExecution(tmpNode);
-            }
-            //TODO set values for executionManager
+            // parse <execution> tag (or deprecated <executionManager>)
+            parseExecution(rootNode);
 
-            //Start modules
-            tmpNode = rootNode.child("modulesToLoad");
+            // parse <moduleToEnable> tag (or deprecated <modulesToLoad>)
+            parseModulesToEnable(rootNode);
 
-            lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
-
-            // get attribute "logLevel" of node <modulesToLoad>
-            // its value will be the default for logLevel of <module>
-            for(pugi::xml_attribute_iterator attrIt = tmpNode.attributes_begin();
-                attrIt != tmpNode.attributes_end(); ++attrIt) {
-
-                if(std::string("logLevel") == attrIt->name()) {
-                    defaultModuleLevel = lms::logging::levelFromName(attrIt->value());
-                }
-            }
-
-            for (pugi::xml_node moduleNode : tmpNode.children()){
-                //parse module content
-                std::string moduleName = moduleNode.child_value();
-
-                // get the attribute "logLevel"
-                lms::logging::LogLevel level = defaultModuleLevel;
-                for(pugi::xml_attribute attr : moduleNode.attributes()) {
-                    if(std::string("logLevel") == attr.name()) {
-                        level = lms::logging::levelFromName(attr.value());
-                    }
-                }
-
-                ModuleToLoad mod;
-                mod.name = moduleName;
-                mod.logLevel = level;
-                tempModulesToLoadList.push_back(mod);
-            }
-
+            // parse all <module> tags
             parseModules(rootNode);
 
+            // parse all <include> tags
             parseIncludes(rootNode);
-        }else{
-            logger.error() << "Failed to parse framework_config.xml as XML";
+        } else {
+            logger.error() << "Failed to parse " << file << " as XML";
         }
     } else {
-        logger.error() << "Failed to open framework_config: " << file;
+        logger.error() << "Failed to open XML file " << file;
     }
 }
 
-void Framework::parseExecution(pugi::xml_node execNode) {
+void Framework::parseExecution(pugi::xml_node rootNode) {
+    pugi::xml_node execNode = rootNode.child("execution");
+
+    if(!execNode) {
+        execNode = rootNode.child("executionManager");
+
+        if(execNode) {
+            logger.warn("parseExecution")
+                << "Found deprecated tag <executionManager>, use <execution> instead";
+        } else {
+            // do not parse anything
+            return;
+        }
+    }
+
     pugi::xml_node clockNode = execNode.child("clock");
 
     if(clockNode) {
         std::string clockUnit;
         std::int64_t clockValue = atoll(clockNode.child_value());
 
-        for(pugi::xml_attribute attr : clockNode.attributes()) {
+        pugi::xml_attribute enabledAttr = clockNode.attribute("enable");
+        pugi::xml_attribute unitAttr = clockNode.attribute("unit");
 
-            if(std::string("enabled") == attr.name()) {
-                clockEnabled = attr.as_bool();
-            } else if(std::string("unit") == attr.name()) {
-                clockUnit = attr.value();
-            }
+        if(enabledAttr) {
+            clockEnabled = enabledAttr.as_bool();
+        } else {
+            // if no enabled attribute is given then the clock is considered
+            // to be enabled
+            clockEnabled = true;
+        }
+
+        if(unitAttr) {
+            clockUnit = unitAttr.value();
+        } else {
+            logger.warn("parseExecution")
+                << "Missing attribute unit=\"hz/ms/us\" for tag <clock>";
+            clockEnabled = false;
         }
 
         if(clockEnabled) {
@@ -153,7 +146,9 @@ void Framework::parseExecution(pugi::xml_node execNode) {
             } else if(clockUnit == "us") {
                 clock.cycleTime(extra::PrecisionTime::fromMicros(clockValue));
             } else {
-                logger.error("parseConfig") << "Invalid clock unit: " << clockUnit;
+                logger.error("parseConfig")
+                    << "Invalid value for attribute unit in <clock>: "
+                    << clockUnit;
                 clockEnabled = false;
             }
         }
@@ -163,6 +158,47 @@ void Framework::parseExecution(pugi::xml_node execNode) {
         logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
     } else {
         logger.info("parseConfig") << "Disabled clock";
+    }
+}
+
+void Framework::parseModulesToEnable(pugi::xml_node rootNode) {
+    pugi::xml_node enableNode = rootNode.child("modulesToEnable");
+
+    if(! enableNode) {
+        enableNode = rootNode.child("modulesToLoad");
+
+        if(enableNode) {
+            logger.warn("parseModulesToEnable")
+                << "Found deprecated tag <modulesToLoad>, use <modulesToEnable> instead";
+        } else {
+            // do not parse anything
+            return;
+        }
+    }
+
+    lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
+
+    // get attribute "logLevel" of node <modulesToLoad>
+    // its value will be the default for logLevel of <module>
+    pugi::xml_attribute globalLogLevelAttr = enableNode.attribute("logLevel");
+    if(globalLogLevelAttr) {
+        defaultModuleLevel = lms::logging::levelFromName(globalLogLevelAttr.value());
+    }
+
+    for (pugi::xml_node moduleNode : enableNode.children("module")){
+        //parse module content
+        ModuleToLoad mod;
+        mod.name = moduleNode.child_value();
+
+        // get the attribute "logLevel"
+        pugi::xml_attribute logLevelAttr = moduleNode.attribute("logLevel");
+        if(logLevelAttr) {
+            mod.logLevel = lms::logging::levelFromName(logLevelAttr.value());
+        } else {
+            mod.logLevel = defaultModuleLevel;
+        }
+
+        tempModulesToLoadList.push_back(mod);
     }
 }
 
@@ -211,24 +247,18 @@ void Framework::parseModules(pugi::xml_node rootNode) {
 
         // parse all config
         for(pugi::xml_node configNode : moduleNode.children("config")) {
-            bool hasSrcAttr = false;
+            pugi::xml_attribute srcAttr = configNode.attribute("src");
 
-            for (pugi::xml_attribute attr: configNode.attributes()) {
-                if(std::string("src") == attr.name()) {
-                    bool loadResult = config.loadFromFile(configsDirectory
-                                                          + "/" + attr.value());
-                    if(!loadResult) {
-                        logger.error("parseModules") << "Tried to load "
-                            << attr.value() << " for " << module.name << " but failed";
+            if(srcAttr) {
+                bool loadResult = config.loadFromFile(configsDirectory
+                                                      + "/" + srcAttr.value());
+                if(!loadResult) {
+                    logger.error("parseModules") << "Tried to load "
+                        << srcAttr.value() << " for " << module.name << " but failed";
 
-                    }
-                    hasSrcAttr = true;
-                    break;
                 }
-            }
-
-            // if there was no src attribut then parse the tag's content
-            if(!hasSrcAttr) {
+            } else {
+                // if there was no src attribut then parse the tag's content
                 for (pugi::xml_node configPropNode: configNode.children()) {
                     logger.debug("parseModules") << configPropNode.name();
                     config.set(configPropNode.name(),
@@ -246,16 +276,12 @@ void Framework::parseModules(pugi::xml_node rootNode) {
 
 void Framework::parseIncludes(pugi::xml_node rootNode) {
     for(pugi::xml_node includeNode : rootNode.children("include")) {
-        bool hasSrcAttr = false;
-        for (pugi::xml_attribute attr: includeNode.attributes()) {
-            if(std::string("src") == attr.name()) {
-                hasSrcAttr = true;
-                logger.info("parseIncludes") << "Found include " << attr.value();
-                parseFile(configsDirectory + "/" + attr.value());
-            }
-        }
+        pugi::xml_attribute srcAttr = includeNode.attribute("src");
 
-        if(! hasSrcAttr) {
+        if(srcAttr) {
+            logger.info("parseIncludes") << "Found include " << srcAttr.value();
+            parseFile(configsDirectory + "/" + srcAttr.value());
+        } else {
             logger.error("Include tag has no src attribute");
         }
     }

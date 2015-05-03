@@ -79,7 +79,8 @@ private:
      */
     void parseConfig();
     void parseFile(const std::string &file);
-    void parseExecution(pugi::xml_node execNode);
+    void parseExecution(pugi::xml_node rootNode);
+    void parseModulesToEnable(pugi::xml_node rootNode);
     void parseModules(pugi::xml_node rootNode);
     void parseIncludes(pugi::xml_node rootNode);
 };
