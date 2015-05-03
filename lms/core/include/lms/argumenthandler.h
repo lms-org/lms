@@ -12,6 +12,28 @@
 
 namespace lms {
 
+enum class RunLevel {
+    /**
+     * @brief Parse XML and LCONF files.
+     */
+    CONFIG = 0,
+
+    /**
+     * @brief Like CONFIG, and enable and disable all modules that should
+     * be enabled according the config files.
+     */
+    ENABLE,
+
+    /**
+     * @brief Like ENABLE, and start module cycling.
+     */
+    CYCLE
+};
+
+bool runLevelByName(const std::string &str, RunLevel &runLevel);
+
+std::ostream& operator << (std::ostream &out, RunLevel runLevel);
+
 /**
  * @brief The ArgumentHandler class used to parse the command line arguments and stores them
  */
@@ -54,6 +76,12 @@ class ArgumentHandler {
     bool argHelp() const;
 
     /**
+     * @brief Return the "RunLevel" setting. This can be set by "--run-level"
+     * or "-r". The framework will only run until a certain level and then exit.
+     */
+    RunLevel argRunLevel() const;
+
+    /**
      * @brief All values of "--logging-prefix" as a vector of strings.
      */
     std::vector<std::string> argLoggingPrefixes() const;
@@ -66,6 +94,7 @@ class ArgumentHandler {
  private:
     std::string m_loadConfiguration;
     bool m_showHelp;
+    RunLevel m_runLevel;
     std::vector<std::string> m_loggingPrefixes;
     logging::LogLevel m_loggingMinLevel;
 };

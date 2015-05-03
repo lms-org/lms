@@ -13,6 +13,7 @@
  *TODO: Framework config that contains max threads for executionManager etc.
  */
 namespace lms {
+
 /**
  * @brief Main entry point into the lightweight module system.
  *

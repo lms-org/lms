@@ -26,27 +26,35 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    //parse framework config
-    parseConfig();
+    logger.info() << "RunLevel " <<  arguments.argRunLevel();
 
-    // enable modules after they were made available
-    logger.info() << "Start enabling modules";
-    for(ModuleToLoad mod : tempModulesToLoadList) {
-        executionManager.enableModule(mod.name, mod.logLevel);
+    //parse framework config
+    if(arguments.argRunLevel() >= RunLevel::CONFIG) {
+        parseConfig();
     }
 
-    //Execution
-    running = true;
-
-    while(running) {
-        if(clockEnabled) {
-            clock.beforeLoopIteration();
+    if(arguments.argRunLevel() >= RunLevel::ENABLE) {
+        // enable modules after they were made available
+        logger.info() << "Start enabling modules";
+        for(ModuleToLoad mod : tempModulesToLoadList) {
+            executionManager.enableModule(mod.name, mod.logLevel);
         }
+    }
 
-        executionManager.loop();
+    if(arguments.argRunLevel() >= RunLevel::CYCLE) {
+        //Execution
+        running = true;
 
-        if(clockEnabled) {
-            clock.afterLoopIteration();
+        while(running) {
+            if(clockEnabled) {
+                clock.beforeLoopIteration();
+            }
+
+            executionManager.loop();
+
+            if(clockEnabled) {
+                clock.afterLoopIteration();
+            }
         }
     }
 }
