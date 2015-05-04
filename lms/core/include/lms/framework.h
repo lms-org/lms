@@ -78,6 +78,7 @@ private:
     std::vector<ModuleToLoad> tempModulesToLoadList;
 
     extra::FileMonitor monitor;
+    bool monitorEnabled;
 
     /**
      * @brief signal called by the system (Segfaults etc)

@@ -17,7 +17,7 @@ std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
-    clockEnabled(false), clock(rootLogger) {
+    clockEnabled(false), clock(rootLogger), monitorEnabled(false) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
@@ -56,7 +56,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 clock.afterLoopIteration();
             }
 
-            if(lms::extra::FILE_MONITOR_SUPPORTED && monitor.hasChangedFiles()) {
+            if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
+                    && monitor.hasChangedFiles()) {
                 monitor.unwatchAll();
                 parseConfig(LoadConfigFlag::ONLY_MODULE_CONFIG);
             }
@@ -176,6 +177,26 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
     } else {
         logger.info("parseConfig") << "Disabled clock";
+    }
+
+    pugi::xml_node configMonitorNode = execNode.child("configMonitor");
+
+    if(configMonitorNode) {
+        std::string configMonitorText = configMonitorNode.child_value();
+
+        if(configMonitorText == "true") {
+            monitorEnabled = true;
+        } else if(configMonitorText == "false") {
+            monitorEnabled = false;
+        } else {
+            logger.warn("parseConfig") << "Invalid value for <configMonitor>";
+        }
+    }
+
+    if(monitorEnabled) {
+        logger.info("parseConfig") << "Enabled config monitor";
+    } else {
+        logger.info("parseConfig") << "Disable config monitor";
     }
 }
 
