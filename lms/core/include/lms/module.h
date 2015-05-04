@@ -155,7 +155,7 @@ protected:
      * @brief Returns a pointer to the default module-private
      * configuration.
      */
-    const type::ModuleConfig* getConfig();
+    const type::ModuleConfig* getConfig(const std::string &name = "default");
 private:
     Loader::module_entry loaderEntry;
     DataManager* m_datamanager;

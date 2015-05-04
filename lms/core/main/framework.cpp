@@ -3,6 +3,7 @@
 #include <pugixml.hpp>
 #include <fstream>
 #include <csignal>
+#include <map>
 #include <cstdlib>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
@@ -246,7 +247,7 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
     for (pugi::xml_node moduleNode : rootNode.children("module")) {
 
         Loader::module_entry module;
-        type::ModuleConfig config;
+        std::map<std::string, type::ModuleConfig> configMap;
 
         module.name = moduleNode.child("name").child_value();
         logger.info("parseModules") << "Found def for module " << module.name;
@@ -287,11 +288,17 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
         // parse all config
         for(pugi::xml_node configNode : moduleNode.children("config")) {
             pugi::xml_attribute srcAttr = configNode.attribute("src");
+            pugi::xml_attribute nameAttr = configNode.attribute("name");
+
+            std::string name = "default";
+            if(nameAttr) {
+                name = nameAttr.value();
+            }
 
             if(srcAttr) {
                 std::string lconfPath = configsDirectory
                         + "/" + srcAttr.value();
-                bool loadResult = config.loadFromFile(lconfPath);
+                bool loadResult = configMap[name].loadFromFile(lconfPath);
                 if(!loadResult) {
                     logger.error("parseModules") << "Tried to load "
                         << srcAttr.value() << " for " << module.name << " but failed";
@@ -303,14 +310,17 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
                 // if there was no src attribut then parse the tag's content
                 for (pugi::xml_node configPropNode: configNode.children()) {
                     logger.debug("parseModules") << configPropNode.name();
-                    config.set(configPropNode.name(),
+                    configMap[name].set(configPropNode.name(),
                                      std::string(configPropNode.child_value()));
                 }
             }
         }
 
-        executionManager.getDataManager()
-            .setChannel<type::ModuleConfig>("CONFIG_" + module.name, config);
+        for(std::pair<std::string, type::ModuleConfig> pair : configMap) {
+            executionManager.getDataManager()
+                .setChannel<type::ModuleConfig>(
+                "CONFIG_" + module.name + "_" + pair.first, pair.second);
+        }
 
         if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
             executionManager.addAvailableModule(module);

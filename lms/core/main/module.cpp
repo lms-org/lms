@@ -35,7 +35,7 @@ namespace lms{
         return mapFrom;
     }
 
-    lms_EXPORT const type::ModuleConfig* Module::getConfig(){
-        return datamanager()->readChannel<type::ModuleConfig>(this, "CONFIG_" + getName());
+    lms_EXPORT const type::ModuleConfig* Module::getConfig(const std::string &name){
+        return datamanager()->readChannel<type::ModuleConfig>(this, "CONFIG_" + getName() + "_" + name);
     }
 }
