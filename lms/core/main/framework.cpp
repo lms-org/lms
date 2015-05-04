@@ -30,7 +30,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     //parse framework config
     if(arguments.argRunLevel() >= RunLevel::CONFIG) {
-        parseConfig();
+        parseConfig(LoadConfigFlag::LOAD_EVERYTHING);
     }
 
     if(arguments.argRunLevel() >= RunLevel::ENABLE) {
@@ -55,13 +55,18 @@ Framework::Framework(const ArgumentHandler &arguments) :
             if(clockEnabled) {
                 clock.afterLoopIteration();
             }
+
+            if(lms::extra::FILE_MONITOR_SUPPORTED && monitor.hasChangedFiles()) {
+                monitor.unwatchAll();
+                parseConfig(LoadConfigFlag::ONLY_MODULE_CONFIG);
+            }
         }
     }
 }
 /*
  * TODO suffix for config
  */
-void Framework::parseConfig(){
+void Framework::parseConfig(LoadConfigFlag flag){
 
     logger.debug("parseConfig") << "EXTERNAL: " << externalDirectory
                                 << std::endl << "CONFIGS: " << configsDirectory;
@@ -73,11 +78,12 @@ void Framework::parseConfig(){
         configPath += argumentHandler.argLoadConfiguration() + ".xml";
     }
 
-    parseFile(configPath);
+    parseFile(configPath, flag);
 }
 
-void Framework::parseFile(const std::string &file) {
+void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
     logger.debug("parseFile") << "Reading XML file: " << file;
+    monitor.watch(file);
 
     std::ifstream ifs;
     ifs.open (file, std::ifstream::in);
@@ -87,17 +93,21 @@ void Framework::parseFile(const std::string &file) {
         if (result){
             pugi::xml_node rootNode = doc.child("framework");
 
-            // parse <execution> tag (or deprecated <executionManager>)
-            parseExecution(rootNode);
+            if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
+                // parse <execution> tag (or deprecated <executionManager>)
+                parseExecution(rootNode);
 
-            // parse <moduleToEnable> tag (or deprecated <modulesToLoad>)
-            parseModulesToEnable(rootNode);
+                // parse <moduleToEnable> tag (or deprecated <modulesToLoad>)
+                parseModulesToEnable(rootNode);
+            }
 
             // parse all <module> tags
-            parseModules(rootNode);
+            parseModules(rootNode, flag);
 
-            // parse all <include> tags
-            parseIncludes(rootNode);
+            if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
+                // parse all <include> tags
+                parseIncludes(rootNode, flag);
+            }
         } else {
             logger.error() << "Failed to parse " << file << " as XML";
         }
@@ -210,7 +220,7 @@ void Framework::parseModulesToEnable(pugi::xml_node rootNode) {
     }
 }
 
-void Framework::parseModules(pugi::xml_node rootNode) {
+void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
     // parse all <module> nodes
     for (pugi::xml_node moduleNode : rootNode.children("module")) {
 
@@ -258,12 +268,15 @@ void Framework::parseModules(pugi::xml_node rootNode) {
             pugi::xml_attribute srcAttr = configNode.attribute("src");
 
             if(srcAttr) {
-                bool loadResult = config.loadFromFile(configsDirectory
-                                                      + "/" + srcAttr.value());
+                std::string lconfPath = configsDirectory
+                        + "/" + srcAttr.value();
+                bool loadResult = config.loadFromFile(lconfPath);
                 if(!loadResult) {
                     logger.error("parseModules") << "Tried to load "
                         << srcAttr.value() << " for " << module.name << " but failed";
 
+                } else {
+                    monitor.watch(lconfPath);
                 }
             } else {
                 // if there was no src attribut then parse the tag's content
@@ -278,17 +291,19 @@ void Framework::parseModules(pugi::xml_node rootNode) {
         executionManager.getDataManager()
             .setChannel<type::ModuleConfig>("CONFIG_" + module.name, config);
 
-        executionManager.addAvailableModule(module);
+        if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
+            executionManager.addAvailableModule(module);
+        }
     }
 }
 
-void Framework::parseIncludes(pugi::xml_node rootNode) {
+void Framework::parseIncludes(pugi::xml_node rootNode, LoadConfigFlag flag) {
     for(pugi::xml_node includeNode : rootNode.children("include")) {
         pugi::xml_attribute srcAttr = includeNode.attribute("src");
 
         if(srcAttr) {
             logger.info("parseIncludes") << "Found include " << srcAttr.value();
-            parseFile(configsDirectory + "/" + srcAttr.value());
+            parseFile(configsDirectory + "/" + srcAttr.value(), flag);
         } else {
             logger.error("Include tag has no src attribute");
         }

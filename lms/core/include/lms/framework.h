@@ -8,6 +8,7 @@
 #include <lms/logger.h>
 #include "lms/clock.h"
 #include "pugixml.hpp"
+#include "lms/extra/file_monitor.h"
 
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
@@ -52,6 +53,12 @@ public:
         std::string name;
         logging::LogLevel logLevel;
     };
+
+    enum class LoadConfigFlag {
+        LOAD_EVERYTHING,
+        ONLY_MODULE_CONFIG
+    };
+
 private:
 
     logging::RootLogger rootLogger;
@@ -70,6 +77,8 @@ private:
 
     std::vector<ModuleToLoad> tempModulesToLoadList;
 
+    extra::FileMonitor monitor;
+
     /**
      * @brief signal called by the system (Segfaults etc)
      * @param s
@@ -78,12 +87,12 @@ private:
     /**
      * @brief parseConfig parses the framework-config
      */
-    void parseConfig();
-    void parseFile(const std::string &file);
+    void parseConfig(LoadConfigFlag flag);
+    void parseFile(const std::string &file, LoadConfigFlag flag);
     void parseExecution(pugi::xml_node rootNode);
     void parseModulesToEnable(pugi::xml_node rootNode);
-    void parseModules(pugi::xml_node rootNode);
-    void parseIncludes(pugi::xml_node rootNode);
+    void parseModules(pugi::xml_node rootNode, LoadConfigFlag flag);
+    void parseIncludes(pugi::xml_node rootNode, LoadConfigFlag flag);
 };
 
 }  // namespace lms
