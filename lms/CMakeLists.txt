@@ -9,7 +9,6 @@ include_directories(xml/pugixml-1.5/src)
 
 #TODO Rename, not public
 set (PUBLIC_HEADERS
-        "include/lms/configurationloader.h"
         "include/lms/framework.h"
         "include/lms/signalhandler.h"
         "include/lms/extra/colors.h"
@@ -49,7 +48,6 @@ set (SOURCE
         "main/loader.cpp"
         "main/module.cpp"
         "main/datamanager.cpp"
-        "main/configurationloader.cpp"
         "main/executionmanager.cpp"
         "main/framework.cpp"
         "main/signalhandler.cpp"

@@ -11,7 +11,6 @@
 
 #include <lms/module.h>
 #include <lms/logger.h>
-#include <lms/configurationloader.h>
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
 
@@ -66,8 +65,6 @@ private:
     };
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
-
-    ConfigurationLoader configLoader;
 public:
     DataManager(logging::Logger &rootLogger, ExecutionManager &execMgr);
     ~DataManager();
