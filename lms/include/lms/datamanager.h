@@ -308,6 +308,7 @@ private:
         channel.serializable = std::is_base_of<Serializable, T>::value;
 
         // Reset channel
+        // TODO not needed, wrong
         channel.exclusiveWrite = false;
         channel.readers.clear();
         channel.writers.clear();
