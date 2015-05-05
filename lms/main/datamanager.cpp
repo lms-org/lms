@@ -141,28 +141,30 @@ void DataManager::releaseChannelsOf(const Module *module) {
     }
 }
 
-void DataManager::printMapping() const {
+void DataManager::printMapping()  {
     for(auto const &ch : channels) {
-        std::cout << ch.first;
+        std::string channelLine = ch.first;
         if(ch.second.exclusiveWrite) {
-            std::cout << " (EXCLUSIVE)";
+            channelLine += " (EXCLUSIVE)";
         }
-        std::cout << " (" <<ch.second.dataSize << " Bytes) :" << std::endl;
+        channelLine = channelLine + " (" + std::to_string(ch.second.dataSize)
+                + " Bytes, " + ch.second.dataTypeName + ") :";
+        logger.debug("mapping") << channelLine;
 
         if(! ch.second.readers.empty()) {
-            std::cout << "\treading: ";
+            std::string readerLine = "    reading: ";
             for(const Module *reader : ch.second.readers) {
-                std::cout << reader->getName() << " ";
+                readerLine += reader->getName() + " ";
             }
-            std::cout << std::endl;
+            logger.debug("mapping") << readerLine;
         }
 
         if(! ch.second.writers.empty()) {
-            std::cout << "\twriting: ";
+            std::string writerLine = "    writing: ";
             for(const Module *writer : ch.second.writers) {
-                std::cout << writer->getName() << " ";
+                writerLine += writer->getName() + " ";
             }
-            std::cout << std::endl;
+            logger.debug("mapping") << writerLine;
         }
     }
 }
