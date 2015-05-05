@@ -38,7 +38,7 @@ bool Loader::checkSharedLibrary(const std::string &libpath) {
     return valid;
 }
 
-Module* Loader::load( const module_entry& entry) {
+Module* Loader::load(module_entry& entry) {
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
@@ -66,6 +66,8 @@ Module* Loader::load( const module_entry& entry) {
             << std::endl << "Message: " << err;
         return nullptr;
     }
+
+    entry.dlHandle = lib;
 
     // TODO check if close is needed here
 //    if(dlclose(lib) != 0) {

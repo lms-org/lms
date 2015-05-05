@@ -1,16 +1,20 @@
-#include <core/loader.h>
+#include <lms/loader.h>
+#include <lms/module.h>
 
+namespace lms {
 
-namespace lms{
-
-    bool Loader::checkModule(const char* path){
-        //TODO
-        return false;
-    }
-
-    Module* Loader::load( const module_entry& entry){
-        //TODO
-        return nullptr;
-    }
-
+std::string Loader::getModulePath(const std::string &libname) {
+    return libname + ".dll";
 }
+
+bool Loader::checkSharedLibrary(const std::string &libpath) {
+	logger.error("checkSharedLibrary") << "Not implemented on Win32";
+	return false;
+}
+
+Module* Loader::load(module_entry& entry) {
+	logger.error("load") << "Not implemented on Win32";
+	return nullptr;
+}
+
+}  // namespace lms

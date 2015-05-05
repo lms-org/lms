@@ -41,6 +41,15 @@ public:
          * datachannels to the real ones.
          */
         std::map<std::string, std::string> channelMapping;
+
+#ifdef _WIN32
+        // TODO pointer to open shared library or something similar
+#else
+        /**
+         * @brief Handle that is returned by dlopen and is needed by dlclose.
+         */
+        void *dlHandle;
+#endif
     };
     typedef std::list<Loader::module_entry> moduleList;
 
@@ -48,7 +57,7 @@ public:
      * @brief load
      * @return the instance of the module
      */
-    Module* load (const module_entry &);
+    Module* load (module_entry &);
     //Doesnt needed at all
     void unload(Module*);
 
