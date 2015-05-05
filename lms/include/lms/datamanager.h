@@ -257,6 +257,18 @@ public:
      */
     bool hasChannel(const std::string &name) const;
 
+    /**
+     * @brief Check if a data channel with the given name is currently
+     * initialized.
+     *
+     * This function uses transparent channel mapping.
+     *
+     * @param module the module that calls this method
+     * @param name channel name
+     * @return true if channel is existing
+     */
+    bool hasChannel(Module *module, const std::string &name) const;
+
 private:
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT

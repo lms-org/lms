@@ -115,6 +115,10 @@ bool DataManager::hasChannel(const std::string &name) const {
     return channels.count(name) == 1;
 }
 
+bool DataManager::hasChannel(Module *module, const std::string &name) const {
+    return hasChannel(module->getChannelMapping(name));
+}
+
 void DataManager::releaseChannelsOf(const Module *module) {
     for(auto &ch : channels) {
         for(auto it = ch.second.readers.begin(); it != ch.second.readers.end(); ++it) {
