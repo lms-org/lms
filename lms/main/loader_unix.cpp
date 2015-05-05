@@ -18,18 +18,21 @@ union converter {
     _Target target;
 };
 
-bool Loader::checkModule(const char* path){
-    void* lib = dlopen (path, RTLD_LAZY);
+std::string Loader::getModulePath(const std::string &libname) {
+    return "lib" + libname + ".so";
+}
+
+bool Loader::checkSharedLibrary(const std::string &libpath) {
+    void* lib = dlopen (libpath.c_str(), RTLD_LAZY);
     bool valid = false;
     if (lib != NULL) {
-        //			printf("OK\n\tTesting for Necessary functions... ");
         //Testing for Necessary functions
         valid =  (dlsym(lib, "getInstance") != NULL);
 
         dlclose(lib);
     }else{
-        fprintf(stderr, "dlopen failed: %s\n", dlerror());
-        logger.error("checkModule") << "Module doesn't exist! path:" << path;
+        logger.error("checkModule") << "Module doesn't exist! path: " << libpath
+                                    << std::endl << dlerror();
     }
     //TODO: not sure if dlclose needed if lib == null
     return valid;

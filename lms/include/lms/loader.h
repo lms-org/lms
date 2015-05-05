@@ -60,7 +60,6 @@ public:
      */
     static std::string getModulePath(const std::string &libname);
 private:
-
     logging::ChildLogger logger;
 
     /**
@@ -68,12 +67,7 @@ private:
      * @param path
      * @return true if module is fine
      */
-    bool checkModule(const char* path);
-
-    /**
-     * @brief pathToModules path from programm_directory to the modules folder
-     */
-    std::string pathToModules;
+    bool checkSharedLibrary(const std::string &libpath);
 };
 
 }  // namespace lms
