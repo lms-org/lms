@@ -143,6 +143,18 @@ void ExecutionManager::setMaxThreads(int maxThreads) {
     this->maxThreads = maxThreads;
 }
 
+void ExecutionManager::printCycleList() {
+    for(const std::vector<Module*> &list : cycleList) {
+        std::string line;
+
+        for(Module* mod : list) {
+            line += mod->getName() + " ";
+        }
+
+        logger.debug("cycleList") << line;
+    }
+}
+
 void ExecutionManager::sort(){
     cycleList.clear();
     logger.debug("sort modules") << "sort it size: " << enabledModules.size();

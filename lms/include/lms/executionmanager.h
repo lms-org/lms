@@ -70,6 +70,8 @@ public:
     void setMaxThreads(int maxThreads);
 
     DataManager& getDataManager();
+
+    void printCycleList();
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;

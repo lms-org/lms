@@ -40,6 +40,12 @@ Framework::Framework(const ArgumentHandler &arguments) :
         for(ModuleToLoad mod : tempModulesToLoadList) {
             executionManager.enableModule(mod.name, mod.logLevel);
         }
+
+        if(arguments.argRunLevel() == RunLevel::ENABLE) {
+            executionManager.getDataManager().printMapping();
+            executionManager.validate();
+            executionManager.printCycleList();
+        }
     }
 
     if(arguments.argRunLevel() >= RunLevel::CYCLE) {
