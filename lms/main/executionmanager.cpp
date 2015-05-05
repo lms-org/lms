@@ -176,9 +176,9 @@ void ExecutionManager::sortByDataChannel(){
             // usual & here
             for(std::vector<Module*> &list: cycleList){
                 for(Module* toAdd : list){
-                    //add all writers to the needed modules
-                    for(Module* writer : pair.second.writers){
-                        if(toAdd->getName() == reader->getName()){
+                    //add all writers to the reader
+                    if(toAdd->getName() == reader->getName()){
+                        for(Module* writer : pair.second.writers){
                             list.push_back(writer);
                         }
                     }
@@ -191,21 +191,18 @@ void ExecutionManager::sortByDataChannel(){
 void ExecutionManager::sortByPriority(){
     // const& here again
     for(const std::pair<std::string, DataManager::DataChannel>& pair : dataManager.getChannels()){
+        //sort writer-order read-order isn't needed as readers don't change the dataChannel
+        //check insert is in the writers-list BEGIN
         for(Module* writer1 : pair.second.writers){
-            for(Module* writer2 : pair.second.writers){
-                if(writer1->getName() != writer2->getName()){
-                    // usual & here
-                    for(std::vector<Module*> &list: cycleList){
-                        for(Module* insert : list){
-                            if(writer1->getPriority() >= writer2->getPriority()){
-                                if(insert->getName() == writer2->getName()){
-                                    list.push_back(writer1);
-                                }
-                            }else{
-                                if(insert->getName() == writer1->getName()){
-                                    list.push_back(writer2);
-                                }
-                            }
+            for(std::vector<Module*> &list: cycleList){
+                Module* insert = list[0];
+                //check insert is in the writers-list END
+                if(insert->getName() == writer1->getName()){
+                    //yes it is contained
+                    for(Module* writer2 : pair.second.writers){
+                        //add all writers(2) with a higher priority to the list
+                        if(writer2->getPriority() > insert->getPriority()){
+                            list.push_back(writer2);
                         }
                     }
                 }
