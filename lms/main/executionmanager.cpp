@@ -139,6 +139,10 @@ void ExecutionManager::validate(){
     }
 }
 
+void ExecutionManager::setMaxThreads(int maxThreads) {
+    this->maxThreads = maxThreads;
+}
+
 void ExecutionManager::sort(){
     cycleList.clear();
     logger.debug("sort modules") << "sort it size: " << enabledModules.size();

@@ -133,6 +133,14 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         }
     }
 
+    pugi::xml_node threadPoolNode = execNode.child("maxThreadCount");
+
+    if(threadPoolNode) {
+        int maxThreads = atoi(threadPoolNode.child_value());
+        executionManager.setMaxThreads(maxThreads);
+        logger.info("parseExecution") << "Thread pool size: " << maxThreads;
+    }
+
     pugi::xml_node clockNode = execNode.child("clock");
 
     if(clockNode) {

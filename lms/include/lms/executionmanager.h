@@ -64,6 +64,11 @@ public:
      */
     void validate();
 
+    /**
+     * @brief Set the thread pool size.
+     */
+    void setMaxThreads(int maxThreads);
+
     DataManager& getDataManager();
 private:
     logging::Logger &rootLogger;
