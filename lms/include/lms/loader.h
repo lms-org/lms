@@ -26,27 +26,21 @@ public:
      */
 	struct module_entry {
         /**
-         *name of the module
+         * @brief Name of the module
          */
 		std::string name;
+
         /**
-         * @brief libname name of the binary (without suffix or lib) if it's empty, the name will be used to open the library
+         * @brief full, absolute name of the shared library that shall be loaded
+         * if the module is enabled
          */
         std::string libpath;
+
         /**
-         * @brief localPathToModule path from external/ to the directory containing the .so or .dll file
-         */
-        std::string localPathToModule;
-        /**
-         * @brief localPathToConfigs TODO not used yet?!
-         */
-        std::string localPathToConfigs;
-        /**
-         * @brief stringMapping used to store string mapping. For examples it's used to get different dataChannel in modules that share one binary
+         * @brief Used for transparent datachannel mapping. Maps requested
+         * datachannels to the real ones.
          */
         std::map<std::string, std::string> channelMapping;
-
-        std::vector<std::string> configPaths;
     };
     typedef std::list<Loader::module_entry> moduleList;
 
