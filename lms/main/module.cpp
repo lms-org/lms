@@ -25,7 +25,7 @@ namespace lms{
     }
 
     lms_EXPORT int Module::getPriority() const{
-        return priority;
+        return loaderEntry.writePriority;
     }
 
     lms_EXPORT std::string Module::getChannelMapping(std::string mapFrom){

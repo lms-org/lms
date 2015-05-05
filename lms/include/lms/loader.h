@@ -42,6 +42,14 @@ public:
          */
         std::map<std::string, std::string> channelMapping;
 
+        /**
+         * @brief Priority that is used if more than one module is writing
+         * into a single datachannel.
+         *
+         * Modules with higher priority will be executed earlier.
+         */
+        int writePriority;
+
 #ifdef _WIN32
         // TODO pointer to open shared library or something similar
 #else

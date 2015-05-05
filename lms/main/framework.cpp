@@ -279,6 +279,14 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
                 + libname;
         }
 
+        pugi::xml_node writePrioNode = moduleNode.child("writePriority");
+
+        if(writePrioNode) {
+            module.writePriority = atoi(writePrioNode.child_value());
+        } else {
+            module.writePriority = 0;
+        }
+
         // parse all channel mappings
         for(pugi::xml_node mappingNode : moduleNode.children("channelMapping")) {
             pugi::xml_attribute fromAttr = mappingNode.attribute("from");

@@ -25,7 +25,7 @@ class DataManager;
 class Module {
 public:
     Module(): logger("", nullptr), m_datamanager(nullptr),
-        m_messaging(nullptr), priority(0) { }
+        m_messaging(nullptr) { }
     virtual ~Module() { }
 	
     /**
@@ -160,7 +160,6 @@ private:
     Loader::module_entry loaderEntry;
     DataManager* m_datamanager;
     Messaging* m_messaging;
-    int priority;
 };
 
 }  // namespace lms
