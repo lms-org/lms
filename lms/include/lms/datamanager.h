@@ -279,7 +279,7 @@ private:
      * @brief Print all channels with their corresponding readers
      * and writers to stdout.
      */
-    void printMapping() const;
+    void printMapping();
 
     /**
      * @brief Set the content of a data channel
