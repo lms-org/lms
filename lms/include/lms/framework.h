@@ -92,8 +92,10 @@ private:
     void parseFile(const std::string &file, LoadConfigFlag flag);
     void parseExecution(pugi::xml_node rootNode);
     void parseModulesToEnable(pugi::xml_node rootNode);
-    void parseModules(pugi::xml_node rootNode, LoadConfigFlag flag);
-    void parseIncludes(pugi::xml_node rootNode, LoadConfigFlag flag);
+    void parseModules(pugi::xml_node rootNode, const std::string &currentFile,
+                      LoadConfigFlag flag);
+    void parseIncludes(pugi::xml_node rootNode, const std::string &currentFile,
+                       LoadConfigFlag flag);
 };
 
 }  // namespace lms
