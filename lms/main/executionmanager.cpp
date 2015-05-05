@@ -175,12 +175,13 @@ void ExecutionManager::sortByDataChannel(){
         for(Module* reader : pair.second.readers){
             // usual & here
             for(std::vector<Module*> &list: cycleList){
-                for(Module* toAdd : list){
-                    //add all writers to the reader
-                    if(toAdd->getName() == reader->getName()){
-                        for(Module* writer : pair.second.writers){
-                            list.push_back(writer);
-                        }
+                Module *toAdd = list[0];
+                //add all writers to the reader
+                if(toAdd->getName() == reader->getName()){
+                    for(Module* writer : pair.second.writers){
+                        list.push_back(writer);
+                        logger.info("adding: ") <<toAdd->getName() << " <- "<< writer->getName();
+
                     }
                 }
             }
