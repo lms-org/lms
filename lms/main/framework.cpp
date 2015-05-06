@@ -92,7 +92,8 @@ void Framework::parseConfig(LoadConfigFlag flag){
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
     logger.debug("parseFile") << "Reading XML file: " << file;
-    if(!monitor.watch(file)) {
+    if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
+            && !monitor.watch(file)) {
         logger.error("parseFile") << "Could not monitor " << file;
     }
 
@@ -335,7 +336,8 @@ void Framework::parseModules(pugi::xml_node rootNode,
 
                 } else {
                     logger.info("parseModules") << "Loaded " << lconfPath;
-                    if(!monitor.watch(lconfPath)) {
+                    if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
+                            && !monitor.watch(lconfPath)) {
                         logger.error("parseModules") << "Failed to monitor "
                                                      << lconfPath;
                     }
