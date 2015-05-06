@@ -270,23 +270,31 @@ void Framework::parseModules(pugi::xml_node rootNode,
         module.name = moduleNode.child("name").child_value();
         logger.info("parseModules") << "Found def for module " << module.name;
 
-        pugi::xml_node libpathNode = moduleNode.child("libpath");
-        pugi::xml_node libnameNode = moduleNode.child("libname");
+        pugi::xml_node realNameNode = moduleNode.child("realName");
 
-        std::string libname;
-        if(libnameNode) {
-            libname = Loader::getModulePath(libnameNode.child_value());
-        } else {
-            libname = Loader::getModulePath(module.name);
-        }
-
-        if(libpathNode) {
-            // TODO better relative path here
+        if(realNameNode) {
             module.libpath = externalDirectory + "/modules/" +
-                    libpathNode.child_value() + "/" + libname;
+                    realNameNode.child_value() + "/" +
+                    Loader::getModulePath(realNameNode.child_value());
         } else {
-            module.libpath = externalDirectory + "/modules/" + module.name + "/"
-                + libname;
+            pugi::xml_node libpathNode = moduleNode.child("libpath");
+            pugi::xml_node libnameNode = moduleNode.child("libname");
+
+            std::string libname;
+            if(libnameNode) {
+                libname = Loader::getModulePath(libnameNode.child_value());
+            } else {
+                libname = Loader::getModulePath(module.name);
+            }
+
+            if(libpathNode) {
+                // TODO better relative path here
+                module.libpath = externalDirectory + "/modules/" +
+                        libpathNode.child_value() + "/" + libname;
+            } else {
+                module.libpath = externalDirectory + "/modules/" + module.name
+                        + "/" + libname;
+            }
         }
 
         pugi::xml_node writePrioNode = moduleNode.child("writePriority");
