@@ -1,4 +1,6 @@
+#if ! defined(_MSC_VER)
 #include <getopt.h>
+#endif
 
 #include <string>
 #include <vector>
@@ -43,6 +45,7 @@ ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
 }
 
 void ArgumentHandler::parseArguments(int argc, char* const*argv) {
+#if ! defined(_MSC_VER)
     static const option LONG_OPTIONS[] = {
         {"help", no_argument, 0, 'h'},
         {"run-level", required_argument, 0, 'r'},
@@ -76,6 +79,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 m_showHelp = true;
         }
     }
+#endif
 }
 
 void ArgumentHandler::printHelp(std::ostream *out) const {

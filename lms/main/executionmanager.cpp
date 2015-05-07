@@ -14,7 +14,8 @@ namespace lms {
 
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
     : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
-      valid(false), loader(rootLogger), dataManager(rootLogger, *this) {
+      valid(false), loader(rootLogger), dataManager(rootLogger, *this),
+      messaging() {
 }
 
 ExecutionManager::~ExecutionManager () {

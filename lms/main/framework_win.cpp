@@ -1,16 +1,17 @@
 //TODO remove unused imports
 #include <climits>
 #include <cstring>
-#include <core/framework.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <algorithm>
 #include <string>
 #include <Windows.h>
 
-#include <core/loader.h>
-#include <core/module.h>
-#include <core/logger.h>
+#include <lms/loader.h>
+#include <lms/module.h>
+#include <lms/logger.h>
+#include <lms/framework.h>
+
 namespace lms{
 template<typename _Target>
 union converter {
