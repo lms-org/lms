@@ -1,6 +1,7 @@
 #include "lms/extra/backtrace_formatter.h"
 #include <iostream>
 #include <Windows.h>
+#include <DbgHelp.h>
 
 namespace lms {
 namespace extra {
