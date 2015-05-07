@@ -64,12 +64,15 @@ bool parse<bool>(const std::string &src, bool &dst);
  */
 class ModuleConfig {
 public:
+    // Microsoft VisualStudio does not support C++11 Move Semantics
+#if ! defined(_MSC_VER)
     /* Default contructors and assignment operators */
     ModuleConfig() = default;
     ModuleConfig(const ModuleConfig &) = default;
     ModuleConfig(ModuleConfig &&) = default;
     ModuleConfig& operator= (const ModuleConfig &) = default;
     ModuleConfig& operator= (ModuleConfig &&) = default;
+#endif
 
     /**
      * @brief Load a config file from the given path.

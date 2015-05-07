@@ -8,7 +8,6 @@
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
 #include "lms/extra/time.h"
-#include "unistd.h"
 #include "lms/type/module_config.h"
 #include "lms/extra/string.h"
 
