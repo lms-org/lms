@@ -2,6 +2,8 @@
 
 namespace lms {
 
+Messaging::Messaging() {}
+
 void Messaging::send(const std::string &command, const std::string &content) {
     // do not allow concurrent access to the send queue
     std::lock_guard<std::mutex> lock(mtx);

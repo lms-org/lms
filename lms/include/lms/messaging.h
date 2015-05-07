@@ -23,6 +23,11 @@ namespace lms {
 class Messaging {
 public:
     /**
+     * @brief Empty default constructor. Only needed for MSVC.
+     */
+    Messaging();
+
+    /**
      * @brief Send a message with the specified command and content.
      *
      * The sent message can be received with the receive method
