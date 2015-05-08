@@ -91,7 +91,6 @@ public:
     const T*  readChannel(Module *module, const std::string &reqName) {
         std::string name = module->getChannelMapping(reqName);
         DataChannel &channel = channels[name];
-        logger.error("TEST") << module->getName() << " " << name;
 
         if(channel.dataWrapper == nullptr) {
             logger.warn() << "Module " << module->getName() << " requested read access for "
