@@ -14,7 +14,12 @@ namespace lms {
 namespace extra {
 
 #ifdef _WIN32
-    constexpr bool FILE_MONITOR_SUPPORTED = false;
+    // Microsoft VisualStudio does not support constexpr
+    #ifdef _MSC_VER
+        const bool FILE_MONITOR_SUPPORTED = false;
+    #else
+        constexpr bool FILE_MONITOR_SUPPORTED = false;
+    #endif
 #elif __APPLE__
     constexpr bool FILE_MONITOR_SUPPORTED = false;
 #else // UNIX

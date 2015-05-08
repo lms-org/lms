@@ -37,5 +37,37 @@ std::vector<std::string> split(char *string, int strLength, const char splitter)
     return result;
 }
 
+std::string dirname(std::string path) {
+    // delete trailing slashes
+    size_t lastNotSlash = path.find_last_not_of('/');
+
+    if(lastNotSlash != std::string::npos) {
+        path.erase(lastNotSlash + 1);
+    } else {
+        // path was a sequence of only slashs
+        return "/";
+    }
+
+    // delete file name
+    size_t slash = path.find_last_of('/');
+
+    if(slash == std::string::npos) {
+        // there was only a basename and no dirname
+        return ".";
+    } else {
+        path.erase(slash);
+
+        if(path.empty()) {
+            return "/";
+        } else {
+            return path;
+        }
+    }
+}
+
+bool isAbsolute(const std::string &path) {
+    return !path.empty() && path[0] == '/';
+}
+
 } // namespace extra
 } // namespace lms

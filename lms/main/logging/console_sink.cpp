@@ -31,7 +31,7 @@ void ConsoleSink::sink(const LogMessage &message) {
     }
     m_out << levelName(message.level) << " " << message.tag;
     if(m_colored) {
-        m_out << COLOR_WHITE;
+        m_out << lms::extra::COLOR_WHITE;
     }
     m_out << " " << message.messageText() << std::endl;
 }

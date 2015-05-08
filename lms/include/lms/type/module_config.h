@@ -20,7 +20,12 @@ namespace type {
 template<typename T>
 bool parse(const std::string &src, T &dst) {
     std::istringstream is(src);
+    // Microsoft VisualStudio does not support operator bool on std::istream
+#ifdef _MSC_VER
+    return !! (is >> dst);
+#else
     return is >> dst;
+#endif
 }
 
 template<>
@@ -64,12 +69,15 @@ bool parse<bool>(const std::string &src, bool &dst);
  */
 class ModuleConfig {
 public:
+    // Microsoft VisualStudio does not support C++11 Move Semantics
+#if ! defined(_MSC_VER)
     /* Default contructors and assignment operators */
     ModuleConfig() = default;
     ModuleConfig(const ModuleConfig &) = default;
     ModuleConfig(ModuleConfig &&) = default;
     ModuleConfig& operator= (const ModuleConfig &) = default;
     ModuleConfig& operator= (ModuleConfig &&) = default;
+#endif
 
     /**
      * @brief Load a config file from the given path.

@@ -8,8 +8,8 @@
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
 #include "lms/extra/time.h"
-#include "unistd.h"
 #include "lms/type/module_config.h"
+#include "lms/extra/string.h"
 
 namespace lms{
 
@@ -91,7 +91,10 @@ void Framework::parseConfig(LoadConfigFlag flag){
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
     logger.debug("parseFile") << "Reading XML file: " << file;
-    monitor.watch(file);
+    if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
+            && !monitor.watch(file)) {
+        logger.error("parseFile") << "Could not monitor " << file;
+    }
 
     std::ifstream ifs;
     ifs.open (file, std::ifstream::in);
@@ -110,12 +113,10 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
             }
 
             // parse all <module> tags
-            parseModules(rootNode, flag);
+            parseModules(rootNode, file, flag);
 
-            if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
-                // parse all <include> tags
-                parseIncludes(rootNode, flag);
-            }
+            // parse all <include> tags
+            parseIncludes(rootNode, file, flag);
         } else {
             logger.error() << "Failed to parse " << file << " as XML";
         }
@@ -256,7 +257,9 @@ void Framework::parseModulesToEnable(pugi::xml_node rootNode) {
     }
 }
 
-void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
+void Framework::parseModules(pugi::xml_node rootNode,
+                             const std::string &currentFile,
+                             LoadConfigFlag flag) {
     // parse all <module> nodes
     for (pugi::xml_node moduleNode : rootNode.children("module")) {
 
@@ -266,23 +269,31 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
         module.name = moduleNode.child("name").child_value();
         logger.info("parseModules") << "Found def for module " << module.name;
 
-        pugi::xml_node libpathNode = moduleNode.child("libpath");
-        pugi::xml_node libnameNode = moduleNode.child("libname");
+        pugi::xml_node realNameNode = moduleNode.child("realName");
 
-        std::string libname;
-        if(libnameNode) {
-            libname = Loader::getModulePath(libnameNode.child_value());
-        } else {
-            libname = Loader::getModulePath(module.name);
-        }
-
-        if(libpathNode) {
-            // TODO better relative path here
+        if(realNameNode) {
             module.libpath = externalDirectory + "/modules/" +
-                    libpathNode.child_value() + "/" + libname;
+                    realNameNode.child_value() + "/" +
+                    Loader::getModulePath(realNameNode.child_value());
         } else {
-            module.libpath = externalDirectory + "/modules/" + module.name + "/"
-                + libname;
+            pugi::xml_node libpathNode = moduleNode.child("libpath");
+            pugi::xml_node libnameNode = moduleNode.child("libname");
+
+            std::string libname;
+            if(libnameNode) {
+                libname = Loader::getModulePath(libnameNode.child_value());
+            } else {
+                libname = Loader::getModulePath(module.name);
+            }
+
+            if(libpathNode) {
+                // TODO better relative path here
+                module.libpath = externalDirectory + "/modules/" +
+                        libpathNode.child_value() + "/" + libname;
+            } else {
+                module.libpath = externalDirectory + "/modules/" + module.name
+                        + "/" + libname;
+            }
         }
 
         pugi::xml_node writePrioNode = moduleNode.child("writePriority");
@@ -300,7 +311,6 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
 
             if(fromAttr && toAttr) {
                 module.channelMapping[fromAttr.value()] = toAttr.value();
-                logger.warn("parseModule") << fromAttr.value() << " -> " << toAttr.value();
             } else {
                 logger.warn("parseModules")
                     << "Tag <channelMapping> requires from and to attributes";
@@ -318,15 +328,26 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
             }
 
             if(srcAttr) {
-                std::string lconfPath = configsDirectory
-                        + "/" + srcAttr.value();
+                std::string lconfPath = srcAttr.value();
+
+                if(extra::isAbsolute(lconfPath)) {
+                    lconfPath = configsDirectory + lconfPath;
+                } else {
+                    lconfPath = extra::dirname(currentFile) + "/" + lconfPath;
+                }
+
                 bool loadResult = configMap[name].loadFromFile(lconfPath);
                 if(!loadResult) {
                     logger.error("parseModules") << "Tried to load "
                         << srcAttr.value() << " for " << module.name << " but failed";
 
                 } else {
-                    monitor.watch(lconfPath);
+                    logger.info("parseModules") << "Loaded " << lconfPath;
+                    if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
+                            && !monitor.watch(lconfPath)) {
+                        logger.error("parseModules") << "Failed to monitor "
+                                                     << lconfPath;
+                    }
                 }
             } else {
                 // if there was no src attribut then parse the tag's content
@@ -350,13 +371,24 @@ void Framework::parseModules(pugi::xml_node rootNode, LoadConfigFlag flag) {
     }
 }
 
-void Framework::parseIncludes(pugi::xml_node rootNode, LoadConfigFlag flag) {
+void Framework::parseIncludes(pugi::xml_node rootNode,
+                              const std::string &currentFile,
+                              LoadConfigFlag flag) {
     for(pugi::xml_node includeNode : rootNode.children("include")) {
         pugi::xml_attribute srcAttr = includeNode.attribute("src");
 
         if(srcAttr) {
             logger.info("parseIncludes") << "Found include " << srcAttr.value();
-            parseFile(configsDirectory + "/" + srcAttr.value(), flag);
+
+            std::string includePath = srcAttr.value();
+            if(extra::isAbsolute(includePath)) {
+                // if absolute then start from configs dir
+                includePath = configsDirectory + includePath;
+            } else {
+                // otherwise go from current file's directory
+                includePath = extra::dirname(currentFile) + "/" + includePath;
+            }
+            parseFile(includePath, flag);
         } else {
             logger.error("Include tag has no src attribute");
         }

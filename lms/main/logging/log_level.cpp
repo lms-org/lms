@@ -24,11 +24,11 @@ LogLevel levelFromName(const std::string &name) {
 
 std::string levelColor(LogLevel lvl) {
     switch(lvl) {
-    case LogLevel::DEBUG : return COLOR_GREEN;
-    case LogLevel::INFO : return COLOR_BLUE;
-    case LogLevel::WARN : return COLOR_YELLOW;
-    case LogLevel::ERROR : return COLOR_RED;
-    default: return COLOR_WHITE; // this should never happen
+    case LogLevel::DEBUG : return lms::extra::COLOR_GREEN;
+    case LogLevel::INFO : return lms::extra::COLOR_BLUE;
+    case LogLevel::WARN : return lms::extra::COLOR_YELLOW;
+    case LogLevel::ERROR : return lms::extra::COLOR_RED;
+    default: return lms::extra::COLOR_WHITE; // this should never happen
     }
 }
 
