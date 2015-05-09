@@ -22,6 +22,7 @@ set (PUBLIC_HEADERS
         "include/lms/messaging.h"
         "include/lms/serializable.h"
         "include/lms/clock.h"
+        "include/lms/deprecated.h"
 
         "include/lms/type/module_config.h"
 #        "include/lms/type/serializable.h"
