@@ -154,15 +154,15 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         std::string clockUnit;
         std::int64_t clockValue = atoll(clockNode.child_value());
 
-        pugi::xml_attribute enabledAttr = clockNode.attribute("enable");
+        pugi::xml_attribute enabledAttr = clockNode.attribute("enabled");
         pugi::xml_attribute unitAttr = clockNode.attribute("unit");
 
         if(enabledAttr) {
             clockEnabled = enabledAttr.as_bool();
         } else {
             // if no enabled attribute is given then the clock is considered
-            // to be enabled
-            clockEnabled = true;
+            // to be disabled
+            clockEnabled = false;
         }
 
         if(unitAttr) {
