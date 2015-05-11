@@ -42,6 +42,7 @@ set (PUBLIC_HEADERS
         "include/lms/extra/time.h"
         "include/lms/extra/file_monitor.h"
         "include/lms/extra/backtrace_formatter.h"
+        "include/lms/extra/math.h"
 )
 
 set (SOURCE
