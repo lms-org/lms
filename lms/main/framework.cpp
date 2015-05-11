@@ -18,7 +18,7 @@ std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
-    clockEnabled(false), clock(rootLogger), monitorEnabled(false) {
+    clockEnabled(false), clock(rootLogger), monitor(), monitorEnabled(false) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
@@ -91,8 +91,7 @@ void Framework::parseConfig(LoadConfigFlag flag){
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
     logger.debug("parseFile") << "Reading XML file: " << file;
-    if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
-            && !monitor.watch(file)) {
+    if(lms::extra::FILE_MONITOR_SUPPORTED && !monitor.watch(file)) {
         logger.error("parseFile") << "Could not monitor " << file;
     }
 
@@ -343,8 +342,8 @@ void Framework::parseModules(pugi::xml_node rootNode,
 
                 } else {
                     logger.info("parseModules") << "Loaded " << lconfPath;
-                    if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
-                            && !monitor.watch(lconfPath)) {
+                    if(lms::extra::FILE_MONITOR_SUPPORTED &&
+                            !monitor.watch(lconfPath)) {
                         logger.error("parseModules") << "Failed to monitor "
                                                      << lconfPath;
                     }
