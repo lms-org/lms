@@ -25,9 +25,9 @@ void Clock::beforeLoopIteration() {
         PrecisionTime computedSleep = loopTime - deltaWork - overflowTime;
 
         if(computedSleep > PrecisionTime::ZERO) {
-            PrecisionTime beforeSleep = PrecisionTime::now();
+            //PrecisionTime beforeSleep = PrecisionTime::now();
             computedSleep.sleep();
-            PrecisionTime actualSleep = PrecisionTime::now() - beforeSleep;
+            //PrecisionTime actualSleep = PrecisionTime::now() - beforeSleep;
 
             //logger.info("sleep") << "Computed " << computedSleep << " Actual " << actualSleep;
         }
