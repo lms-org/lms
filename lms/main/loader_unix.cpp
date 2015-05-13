@@ -68,6 +68,7 @@ Module* Loader::load(module_entry& entry) {
     }
 
     entry.dlHandle = lib;
+    entry.enabled = true;
 
     // TODO check if close is needed here
 //    if(dlclose(lib) != 0) {
@@ -83,8 +84,7 @@ Module* Loader::load(module_entry& entry) {
 
     // call the getInstance function and cast it to a Module pointer
     // -> getInstance should return a newly created object.
-    return (Module*)conv.target();
-
+    return entry.moduleInstance = reinterpret_cast<Module*> (conv.target());
 
     // Cast symbol to function pointer returning a pointer to a Module instance and
     // call the function to get the a module instance
@@ -95,4 +95,14 @@ Module* Loader::load(module_entry& entry) {
     */
     //return reinterpret_cast<Module*(*)()>( func )();
 }
+
+void Loader::unload(module_entry &entry) {
+    if(entry.enabled) {
+        delete (entry.moduleInstance);
+        dlclose(entry.dlHandle);
+        logger.info() << "Closed dl for " << entry.name;
+        entry.enabled = false;
+    }
+}
+
 }

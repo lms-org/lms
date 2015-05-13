@@ -26,8 +26,10 @@ ExecutionManager::~ExecutionManager () {
             logger.error("disableModule")
                     << "Deinitialize failed for module " << (*it)->getName();
         }
+    }
 
-        loader.unload(*it);
+    for(Loader::module_entry &entry : available) {
+        loader.unload(entry);
     }
 
     enabledModules.clear();
@@ -116,7 +118,14 @@ bool ExecutionManager::disableModule(const std::string &name) {
                 logger.error("disableModule")
                         << "Deinitialize failed for module " << name;
             }
-            loader.unload(*it);
+
+            for(Loader::module_entry &entry : available) {
+                if(entry.name == name) {
+                    loader.unload(entry);
+                    break;
+                }
+            }
+
             enabledModules.erase(it);
             invalidate();
             return true;

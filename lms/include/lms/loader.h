@@ -25,6 +25,8 @@ public:
      * used to store available modules
      */
 	struct module_entry {
+        module_entry();
+
         /**
          * @brief Name of the module
          */
@@ -50,6 +52,17 @@ public:
          */
         int writePriority;
 
+        /**
+         * @brief Is set to true if the module is enabled
+         */
+        bool enabled;
+
+        /**
+         * @brief Points to the loaded module instance if enabled, otherwise
+         * equals to nullptr
+         */
+        Module *moduleInstance;
+
 #ifdef _WIN32
         // TODO pointer to open shared library or something similar
 #else
@@ -67,7 +80,7 @@ public:
      */
     Module* load (module_entry &);
     //Doesnt needed at all
-    void unload(Module*);
+    void unload(module_entry &entry);
 
     /**
      * @brief getModulePath

@@ -7,9 +7,7 @@ namespace lms {
 Loader::Loader(logging::Logger &rootLogger) : logger("LOADER", &rootLogger) {
 }
 
-void Loader::unload(Module* a) {
-    delete a;
-    // TODO unload dynamic lib
-}
+Loader::module_entry::module_entry() : writePriority(0), enabled(false),
+  moduleInstance(nullptr) {}
 
 }  // namespace lms
