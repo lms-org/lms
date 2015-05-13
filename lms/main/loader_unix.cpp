@@ -99,7 +99,15 @@ Module* Loader::load(module_entry& entry) {
 void Loader::unload(module_entry &entry) {
     if(entry.enabled) {
         delete (entry.moduleInstance);
-        dlclose(entry.dlHandle);
+        entry.moduleInstance = nullptr;
+
+        // even with dlclose there is a 32 byte memory leak reported by valgrind
+        // http://stackoverflow.com/questions/1542457/memory-leak-reported-by-valgrind-in-dlopen
+        if(0 != dlclose(entry.dlHandle)) {
+            logger.error("unload") << "dlclose failed for " << entry.name;
+        }
+        entry.dlHandle = nullptr;
+
         logger.info() << "Closed dl for " << entry.name;
         entry.enabled = false;
     }
