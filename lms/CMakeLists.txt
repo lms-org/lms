@@ -1,7 +1,13 @@
 project(LightWeightModularSystem)
 
 message("Compile core")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+if(APPLE)
+    # /bin suffix is needed on OS X
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+else()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+endif()
 
 #include pugixml headers (hpp-files)
 include_directories(include)
