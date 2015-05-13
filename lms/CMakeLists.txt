@@ -25,7 +25,6 @@ set (PUBLIC_HEADERS
         "include/lms/deprecated.h"
 
         "include/lms/type/module_config.h"
-#        "include/lms/type/serializable.h"
 
         "include/lms/logging/log_level.h"
         "include/lms/logging/logger.h"
@@ -42,7 +41,6 @@ set (PUBLIC_HEADERS
         "include/lms/extra/time.h"
         "include/lms/extra/file_monitor.h"
         "include/lms/extra/backtrace_formatter.h"
-        "include/lms/extra/math.h"
 )
 
 set (SOURCE
