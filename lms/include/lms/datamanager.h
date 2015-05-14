@@ -98,13 +98,17 @@ public:
                 << " but the channel was not yet initialized -> Initializing, just for you <3";
 
             initChannel<T>(channel);
-        } else {
-            if(! checkType<T>(channel, name)) {
-                return nullptr;
-            }
+        } else if(! checkType<T>(channel, name)) {
+            return nullptr;
         }
 
-        channel.readers.push_back(module);
+        if(checkIfReaderOrWriter(channel, module)) {
+//            logger.error("readChannel") << "Module " << module->getName() <<
+//                                        " is already reader or writer of channel "
+//                                        << name;
+        } else {
+            channel.readers.push_back(module);
+        }
 
         return (const T*)channel.dataWrapper->get();
     }
@@ -131,13 +135,17 @@ public:
         // if dataPointer is null, then the channel did not exist yet
         if(channel.dataWrapper == nullptr) {
             initChannel<T>(channel);
-        } else {
-            if(! checkType<T>(channel, name)) {
-                return nullptr;
-            }
+        } else if(! checkType<T>(channel, name)) {
+            return nullptr;
         }
 
-        channel.writers.push_back(module);
+        if(checkIfReaderOrWriter(channel, module)) {
+            logger.error("writeChannel") << "Module " << module->getName() <<
+                                        " is already reader or writer of channel "
+                                        << name;
+        } else {
+            channel.writers.push_back(module);
+        }
 
         return (T*)channel.dataWrapper->get();
     }
@@ -168,19 +176,21 @@ public:
             // create channel if not yet there
             initChannel<T>(channel);
             channel.exclusiveWrite = true;
-        } else {
+        } else if(! checkType<T>(channel, name)) {
             // check if requested type is the same as in the datachannel
-            if(! checkType<T>(channel, name)) {
-                return nullptr;
-            }
-
-            if(! channel.writers.empty()) {
-                logger.error() << "Channel " << name << " has already writers!";
-                return nullptr;
-            }
+            return nullptr;
+        } else if(! channel.writers.empty()) {
+            logger.error() << "Channel " << name << " has already writers!";
+            return nullptr;
         }
 
-        channel.writers.push_back(module);
+        if(checkIfReaderOrWriter(channel, module)) {
+            logger.error("exclusiveWriteChannel") << "Module " << module->getName() <<
+                                        " is already reader or writer of channel "
+                                        << name;
+        } else {
+            channel.writers.push_back(module);
+        }
 
         return (T*)channel.dataWrapper->get();
     }
@@ -268,7 +278,6 @@ public:
      * @return true if channel is existing
      */
     bool hasChannel(Module *module, const std::string &name) const;
-
 private:
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
@@ -386,16 +395,22 @@ private:
     T* getChannel(const std::string &name) {
         DataChannel &channel = channels[name];
 
-        if(channel.dataWrapper == nullptr) {
+        if(channel.dataWrapper == nullptr || ! checkType<T>(channel, name)) {
             return nullptr;
-        } else {
-            if(! checkType<T>(channel, name)) {
-                return nullptr;
-            }
         }
 
         return (T*)channel.dataWrapper->get();
     }
+
+    /**
+     * @brief Check if the given module (or a module with the same name) is
+     * reading or writing into the given datachannel.
+     *
+     * @param channel channel to check
+     * @param module module to look for
+     * @return true if the module is reader or writer, false otherwise
+     */
+    bool checkIfReaderOrWriter(const DataChannel &channel, Module *module);
 };
 
 }  // namespace lms

@@ -37,8 +37,14 @@ void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
             << " with write access, but the channel is already exclusive.";
     }
 
-    execMgr.invalidate();
-    channel.writers.push_back(module);
+    if(checkIfReaderOrWriter(channel, module)) {
+        logger.error("getWriteAccess") << "Module " << module->getName() <<
+                                    " is already reader or writer of channel "
+                                    << name;
+    } else {
+        execMgr.invalidate();
+        channel.writers.push_back(module);
+    }
 }
 
 void DataManager::getExclusiveWriteAccess(Module *module, const std::string &reqName) {
@@ -50,17 +56,29 @@ void DataManager::getExclusiveWriteAccess(Module *module, const std::string &req
             << " with exclusive write access, but the channel is already exclusive.";
     }
 
-    execMgr.invalidate();
-    channel.exclusiveWrite = true;
-    channel.writers.push_back(module);
+    if(checkIfReaderOrWriter(channel, module)) {
+        logger.error("getExclusiveWriteAccess") << "Module " << module->getName() <<
+                                    " is already reader or writer of channel "
+                                    << name;
+    } else {
+        execMgr.invalidate();
+        channel.exclusiveWrite = true;
+        channel.writers.push_back(module);
+    }
 }
 
 void DataManager::getReadAccess(Module *module, const std::string &reqName) {
     std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
-    execMgr.invalidate();
-    channel.readers.push_back(module);
+    if(checkIfReaderOrWriter(channel, module)) {
+        logger.error("getReadAccess") << "Module " << module->getName() <<
+                                    " is already reader or writer of channel "
+                                    << name;
+    } else {
+        execMgr.invalidate();
+        channel.readers.push_back(module);
+    }
 }
 
 bool DataManager::serializeChannel(Module *module, const std::string &reqName, std::ostream &os) {
@@ -171,6 +189,22 @@ void DataManager::printMapping()  {
             logger.debug("mapping") << writerLine;
         }
     }
+}
+
+bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {
+    for(Module *mod : channel.readers) {
+        if(mod->getName() == module->getName()) {
+            return true;
+        }
+    }
+
+    for(Module *mod : channel.writers) {
+        if(mod->getName() == module->getName()) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }
