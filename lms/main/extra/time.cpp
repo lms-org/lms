@@ -4,8 +4,10 @@
 #elif __APPLE__
     #include <mach/mach.h>
     #include <mach/clock.h>
+    #include <time.h>
 #else // unix
     #include <time.h>
+    #include <features.h>
 #endif
 
 #include "lms/extra/time.h"
@@ -38,11 +40,6 @@ PrecisionTime PrecisionTime::now() {
     return PrecisionTime(time.tv_sec * USEC_PER_SEC + time.tv_nsec / NSEC_PER_USEC);
 }
 
-PrecisionTime PrecisionTime::sleep() const {
-    std::cerr << "PrecisionTime::sleep not implemented on Apple" << std::endl;
-    return PrecisionTime();
-}
-
 #else // unix
 
 PrecisionTime PrecisionTime::now() {
@@ -52,13 +49,27 @@ PrecisionTime PrecisionTime::now() {
     return PrecisionTime::fromMicros(time.tv_sec * 1000000 + time.tv_nsec / 1000);
 }
 
+#endif
+
+#ifndef _WIN32
 PrecisionTime PrecisionTime::sleep() const {
-    // http://linux.die.net/man/2/clock_nanosleep
     timespec request, remaining;
     request.tv_sec = m_micros / 1000000;
     request.tv_nsec = (m_micros - request.tv_sec * 1000000) * 1000;
+    
+#if _XOPEN_SOURCE >= 600 || _POSIX_C_SOURCE >= 200112L
+    // http://linux.die.net/man/2/clock_nanosleep
     int result = clock_nanosleep(CLOCK_MONOTONIC, 0, &request, &remaining);
-
+#elif _POSIX_C_SOURCE >= 199309L || __APPLE__
+    // http://linux.die.net/man/2/nanosleep
+    int result = nanosleep(&request, &remaining);
+    if( -1 == result )
+    {
+        result = errno;
+    }
+#else
+    #error missing POSIX nanosleep function
+#endif
     if(result == EINTR) {
         // in case of an interrupt return the remaining time
         return PrecisionTime::fromMicros(remaining.tv_sec * 1000000 + remaining.tv_nsec / 1000);
@@ -67,7 +78,6 @@ PrecisionTime PrecisionTime::sleep() const {
         return PrecisionTime();
     }
 }
-
 #endif
 
 const PrecisionTime PrecisionTime::ZERO(0);
