@@ -1,37 +1,66 @@
-#include <sys/inotify.h>
-#include <unistd.h>
-
 #include <lms/extra/file_monitor.h>
+
+#ifdef __APPLE__
+    // TODO
+#else
+    #include <unistd.h>
+#endif
+
 //http://www.ibm.com/developerworks/linux/library/l-ubuntu-inotify/index.html
 
 namespace lms {
 namespace extra {
 
 FileMonitor::FileMonitor() {
+#ifdef __APPLE__
+    // TODO
+#else
     fd = inotify_init1(IN_NONBLOCK);
     //fd = inotify_init();
+#endif
 }
 
 FileMonitor::~FileMonitor() {
+#ifdef __APPLE__
+    // TODO
+#else
     close(fd);
+#endif
 }
 
 FileMonitor::operator bool () const {
+#ifdef __APPLE__
+    // TODO
+    return false;
+#else
     return fd != -1;
+#endif
 }
 
 bool FileMonitor::watch(const std::string &path) {
+#ifdef __APPLE__
+    // TODO
+    return false;
+#else
     int wd = inotify_add_watch(fd, path.c_str(), MASK);
-
     return wd != -1;
+#endif
 }
 
 void FileMonitor::unwatchAll() {
+#ifdef __APPLE__
+    // TODO
+#else
     close(fd);
     fd = inotify_init1(IN_NONBLOCK);
+#endif
 }
 
 bool FileMonitor::hasChangedFiles() {
+#ifdef __APPLE__
+    // TODO
+    return false;
+#else
     fd_set rfds;
 
     FD_ZERO(&rfds);
@@ -75,12 +104,15 @@ bool FileMonitor::hasChangedFiles() {
     }
 
     return false;
+#endif
 }
 
+#ifndef __APPLE__
 bool FileMonitor::checkEvent(inotify_event *evt) {
     // check for either MODIFY, MOVE_SELF or DELETE
     return (evt->mask & MASK) || (evt->mask & IN_IGNORED);
 }
+#endif
 
 }  // namespace extra
 }  // namespace lms

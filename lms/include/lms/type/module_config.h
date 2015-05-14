@@ -20,8 +20,8 @@ namespace type {
 template<typename T>
 bool parse(const std::string &src, T &dst) {
     std::istringstream is(src);
-    // Microsoft VisualStudio does not support operator bool on std::istream
-#ifdef _MSC_VER
+    // Microsoft VisualStudio and clang do not support operator bool on std::istream
+#if defined(_MSC_VER) || defined(__clang__)
     return !! (is >> dst);
 #else
     return is >> dst;
