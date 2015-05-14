@@ -90,6 +90,10 @@ PrecisionTime PrecisionTime::fromMillis(std::int64_t millis) {
     return PrecisionTime(millis * 1000);
 }
 
+PrecisionTime PrecisionTime::since(const PrecisionTime& reference) {
+    return PrecisionTime( now() - reference );
+}
+
 PrecisionTime& PrecisionTime::operator +=(const PrecisionTime &t) {
     m_micros += t.micros();
     return *this;
