@@ -95,6 +95,14 @@ void ExecutionManager::loop() {
 }
 
 void ExecutionManager::addAvailableModule(const Loader::module_entry &mod){
+    for(const Loader::module_entry &modEntry : available) {
+        if(modEntry.name == mod.name) {
+            logger.error("addAvailableModule") << "Tried to add available "
+                << "module " << mod.name << " but was already available.";
+            return;
+        }
+    }
+
     logger.info() << "Add module " << mod.name;
     available.push_back(mod);
 }

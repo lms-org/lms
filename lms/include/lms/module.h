@@ -156,6 +156,7 @@ protected:
      * configuration.
      */
     const type::ModuleConfig* getConfig(const std::string &name = "default");
+    bool hasConfig(const std::string &name = "default");
 private:
     Loader::module_entry loaderEntry;
     DataManager* m_datamanager;

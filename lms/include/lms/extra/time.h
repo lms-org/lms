@@ -32,6 +32,14 @@ class PrecisionTime {
     static PrecisionTime now();
 
     /**
+     * @brief Calculate the time passed since a reference timestamp
+     *
+     * @param reference The reference point in time
+     * @return precision time instance representing the time passed since reference
+     */
+    static PrecisionTime since( const PrecisionTime& reference );
+
+    /**
      * @brief Get the time as microseconds.
      * @return microseconds
      */
