@@ -319,8 +319,6 @@ private:
     void setChannel(const std::string &name, const T &data) {
         DataChannel &channel = channels[name];
 
-        logger.info("setChannelBefore") << channel.dataWrapper;
-
         if(channel.dataWrapper == nullptr) {
             // initialize channel
             channel.dataSize = sizeof(T);
@@ -337,8 +335,6 @@ private:
             PointerWrapperImpl<T> *wrapper = static_cast<PointerWrapperImpl<T>*>(channel.dataWrapper);
             wrapper->set(data);
         }
-
-        logger.info("setChannelAfter") << channel.dataWrapper;
 
         // Reset channel
         // TODO create a resetChannel method for this code:
