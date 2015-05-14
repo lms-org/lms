@@ -350,11 +350,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
                 }
             } else {
                 // if there was no src attribut then parse the tag's content
-                for (pugi::xml_node configPropNode: configNode.children()) {
-                    logger.debug("parseModules") << configPropNode.name();
-                    configMap[name].set(configPropNode.name(),
-                                     std::string(configPropNode.child_value()));
-                }
+                parseModuleConfig(configNode, "", configMap[name]);
             }
         }
 
@@ -366,6 +362,28 @@ void Framework::parseModules(pugi::xml_node rootNode,
 
         if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
             executionManager.addAvailableModule(module);
+        }
+    }
+}
+
+void Framework::parseModuleConfig(pugi::xml_node node, const std::string &key,
+                                  type::ModuleConfig &config) {
+    // if node has no children
+    if(node.type() == pugi::node_pcdata) {
+        //logger.debug("parseModules") << key << " = " << node.value();
+        config.set<std::string>(key, node.value());
+    } else if(node.type() == pugi::node_element) {
+        std::string newKey;
+
+        for(pugi::xml_node subnode : node.children()) {
+            if(key.empty()) {
+                newKey = subnode.name();
+            } else if(subnode.type() == pugi::node_element) {
+                newKey = key + "." + subnode.name();
+            } else {
+                newKey = key;
+            }
+            parseModuleConfig(subnode, newKey , config);
         }
     }
 }
