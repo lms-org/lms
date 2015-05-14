@@ -38,4 +38,7 @@ namespace lms{
     lms_EXPORT const type::ModuleConfig* Module::getConfig(const std::string &name){
         return datamanager()->readChannel<type::ModuleConfig>(this, "CONFIG_" + getName() + "_" + name);
     }
+    lms_EXPORT bool Module::hasConfig(const std::string &name){
+        return datamanager()->hasChannel(this, "CONFIG_" + getName() + "_" + name);
+    }
 }
