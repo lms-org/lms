@@ -48,6 +48,7 @@ private:
         PointerWrapperImpl() {}
         PointerWrapperImpl(const T &data) : data(data) {}
         void* get() { return &data; }
+        void set(const T &data) { this->data = data; }
         T data;
     };
 
@@ -294,7 +295,8 @@ private:
     void printMapping();
 
     /**
-     * @brief Set the content of a data channel
+     * @brief Set the content of a data channel. This will NOT reset the
+     * channel, instead it just sets the data with the assignment operator.
      *
      * NOTE: This function does not use the transparent channel mapping.
      *
@@ -305,22 +307,32 @@ private:
     void setChannel(const std::string &name, const T &data) {
         DataChannel &channel = channels[name];
 
-        // Delete old channel if there was one
-        if(channel.dataWrapper != nullptr) {
-            delete channel.dataWrapper;
+        logger.info("setChannelBefore") << channel.dataWrapper;
+
+        if(channel.dataWrapper == nullptr) {
+            // initialize channel
+            channel.dataSize = sizeof(T);
+            channel.dataTypeName = extra::typeName<T>();
+            channel.dataHashCode = typeid(T).hash_code();
+            channel.serializable = std::is_base_of<Serializable, T>::value;
+
+            channel.dataWrapper = new PointerWrapperImpl<T>(data);
+        } else {
+            if(! checkType<T>(channel, name)) {
+                return;
+            }
+
+            PointerWrapperImpl<T> *wrapper = static_cast<PointerWrapperImpl<T>*>(channel.dataWrapper);
+            wrapper->set(data);
         }
 
-        channel.dataWrapper = new PointerWrapperImpl<T>(data);
-        channel.dataSize = sizeof(T);
-        channel.dataTypeName = extra::typeName<T>();
-        channel.dataHashCode = typeid(T).hash_code();
-        channel.serializable = std::is_base_of<Serializable, T>::value;
+        logger.info("setChannelAfter") << channel.dataWrapper;
 
         // Reset channel
-        // TODO not needed, wrong
-        channel.exclusiveWrite = false;
-        channel.readers.clear();
-        channel.writers.clear();
+        // TODO create a resetChannel method for this code:
+//        channel.exclusiveWrite = false;
+//        channel.readers.clear();
+//        channel.writers.clear();
     }
 
     /**

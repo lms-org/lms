@@ -31,6 +31,7 @@ set (PUBLIC_HEADERS
         "include/lms/deprecated.h"
 
         "include/lms/type/module_config.h"
+        "include/lms/type/framework_info.h"
 
         "include/lms/logging/log_level.h"
         "include/lms/logging/logger.h"
@@ -59,6 +60,7 @@ set (SOURCE
         "main/signalhandler.cpp"
         "main/argumenthandler.cpp"
         "main/type/module_config.cpp"
+        "main/type/framework_info.cpp"
         "main/messaging.cpp"
         "main/clock.cpp"
 

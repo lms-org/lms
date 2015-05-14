@@ -12,6 +12,7 @@
 #include "lms/datamanager.h"
 #include "lms/executionmanager.h"
 #include "lms/logger.h"
+#include "lms/type/framework_info.h"
 
 namespace lms {
 
@@ -72,6 +73,8 @@ public:
     DataManager& getDataManager();
 
     void printCycleList();
+
+    void enableProfiling(bool enable);
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;
@@ -82,6 +85,9 @@ private:
     Loader loader;
     DataManager dataManager;
     Messaging messaging;
+
+    bool m_enabledProfiling;
+    type::FrameworkInfo frameworkInfo;
 
     /**
      * @brief enabledModules contains all loaded Modules

@@ -9,13 +9,14 @@
 #include "lms/module.h"
 #include "lms/loader.h"
 #include "lms/datamanager.h"
+#include "lms/type/framework_info.h"
 
 namespace lms {
 
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
     : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
-      messaging() {
+      messaging(), m_enabledProfiling(false) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -38,19 +39,37 @@ DataManager& ExecutionManager::getDataManager() {
 }
 
 void ExecutionManager::loop() {
+    dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
+    frameworkInfo.incrementCycleIteration();
+    frameworkInfo.resetProfiling();
+
     //validate the ExecutionManager
     validate();
     //copy cycleList so it can be modified
     cycleListType cycleListTmp = cycleList;
 
     if(maxThreads == 1){
+        type::FrameworkInfo::ModuleMeasurement measurement;
+
         //simple single list
         while(cycleListTmp.size() > 0){
             //Iter over all module-vectors and check if they can be executed
             for(size_t i = 0; i < cycleListTmp.size();i++){
                 std::vector<Module*>& moduleV = cycleListTmp[i];
                 if(moduleV.size() == 1){
+
+                    if(m_enabledProfiling) {
+                        measurement.module = moduleV[0]->getName();
+                        measurement.begin = lms::extra::PrecisionTime::now();
+                    }
+
                     moduleV[0]->cycle();
+
+                    if(m_enabledProfiling) {
+                        measurement.end = lms::extra::PrecisionTime::now();
+                        frameworkInfo.addProfilingData(measurement);
+                    }
+
                     //remove module from others
                     for(std::vector<Module*>& moduleV2:cycleListTmp){
                         moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),moduleV[0]),moduleV2.end());
@@ -211,6 +230,10 @@ void ExecutionManager::sortByPriority(){
             }
         }
     }
+}
+
+void ExecutionManager::enableProfiling(bool enable) {
+    m_enabledProfiling = enable;
 }
 
 }  // namespace lms
