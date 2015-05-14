@@ -370,8 +370,8 @@ void Framework::parseModuleConfig(pugi::xml_node node, const std::string &key,
                                   type::ModuleConfig &config) {
     // if node has no children
     if(node.type() == pugi::node_pcdata) {
-        //logger.debug("parseModules") << key << " = " << node.value();
-        config.set<std::string>(key, node.value());
+        //logger.debug("parseModules") << key << " = " << extra::trim(node.value());
+        config.set<std::string>(key, extra::trim(node.value()));
     } else if(node.type() == pugi::node_element) {
         std::string newKey;
 
