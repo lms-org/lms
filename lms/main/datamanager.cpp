@@ -207,4 +207,8 @@ bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *modu
     return false;
 }
 
+void DataManager::invalidateExecutionManager() {
+    execMgr.invalidate();
+}
+
 }

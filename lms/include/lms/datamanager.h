@@ -108,6 +108,7 @@ public:
 //                                        << name;
         } else {
             channel.readers.push_back(module);
+            invalidateExecutionManager();
         }
 
         return (const T*)channel.dataWrapper->get();
@@ -145,6 +146,7 @@ public:
                                         << name;
         } else {
             channel.writers.push_back(module);
+            invalidateExecutionManager();
         }
 
         return (T*)channel.dataWrapper->get();
@@ -190,6 +192,7 @@ public:
                                         << name;
         } else {
             channel.writers.push_back(module);
+            invalidateExecutionManager();
         }
 
         return (T*)channel.dataWrapper->get();
@@ -411,6 +414,14 @@ private:
      * @return true if the module is reader or writer, false otherwise
      */
     bool checkIfReaderOrWriter(const DataChannel &channel, Module *module);
+
+    /**
+     * @brief Invoke invalidate() on the execution manager instance.
+     *
+     * This cannot be implemented in this header due to cycling header
+     * referencing.
+     */
+    void invalidateExecutionManager();
 };
 
 }  // namespace lms
