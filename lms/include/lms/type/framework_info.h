@@ -14,6 +14,7 @@ namespace type {
 class FrameworkInfo {
 public:
     struct ModuleMeasurement {
+        int thread;
         std::string module;
         lms::extra::PrecisionTime begin;
         lms::extra::PrecisionTime end;

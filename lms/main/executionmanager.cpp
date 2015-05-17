@@ -121,10 +121,23 @@ void ExecutionManager::loop() {
                             logger.info() << "Thread " << threadNum << " executes "
                                           << executableModule->getName();
 
+                            // Profiling stuff
+                            type::FrameworkInfo::ModuleMeasurement measurement;
+                            if(m_enabledProfiling) {
+                                measurement.thread = threadNum;
+                                measurement.module = executableModule->getName();
+                            }
+
                             // now we can execute it
                             lck.unlock();
+                            measurement.begin = lms::extra::PrecisionTime::now();
                             executableModule->cycle();
+                            measurement.end = lms::extra::PrecisionTime::now();
                             lck.lock();
+
+                            if(m_enabledProfiling) {
+                                frameworkInfo.addProfilingData(measurement);
+                            }
 
                             logger.info() << "Thread " << threadNum << " executed "
                                              << executableModule->getName();
