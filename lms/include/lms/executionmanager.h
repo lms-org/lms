@@ -94,7 +94,9 @@ private:
     std::mutex mutex;
     std::condition_variable cv;
     int numModulesToExecute;
+    bool running;
     bool hasExecutableModules();
+    void stopRunning();
 
     bool m_enabledProfiling;
     type::FrameworkInfo frameworkInfo;

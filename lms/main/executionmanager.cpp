@@ -16,12 +16,14 @@ namespace lms {
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
     : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
-      messaging(), m_enabledProfiling(false) {
+      messaging(), running(true), m_enabledProfiling(false) {
 
     dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
 }
 
 ExecutionManager::~ExecutionManager () {
+    stopRunning();
+
     for(std::vector<Module*>::iterator it = enabledModules.begin();
         it != enabledModules.end(); ++it) {
 
@@ -95,7 +97,7 @@ void ExecutionManager::loop() {
 
                     std::unique_lock<std::mutex> lck(mutex);
 
-                    while(true) {
+                    while(running) {
                         // wait until something is in the cycleList
                         cv.wait(lck, [this]() { return hasExecutableModules(); });
 
@@ -175,6 +177,10 @@ void ExecutionManager::loop() {
 }
 
 bool ExecutionManager::hasExecutableModules() {
+    if(! running) {
+        return true;
+    }
+
     if(cycleListTmp.empty()) {
         return false;
     }
@@ -187,6 +193,18 @@ bool ExecutionManager::hasExecutableModules() {
     }
 
     return false;
+}
+
+void ExecutionManager::stopRunning() {
+    {
+        std::lock_guard<std::mutex> lck(mutex);
+        running = false;
+        cv.notify_all();
+    }
+
+    for(std::thread &th : threadPool) {
+        th.join();
+    }
 }
 
 void ExecutionManager::addAvailableModule(const Loader::module_entry &mod){
