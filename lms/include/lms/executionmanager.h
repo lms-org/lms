@@ -6,6 +6,9 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 #include "lms/module.h"
 #include "lms/loader.h"
@@ -86,6 +89,13 @@ private:
     DataManager dataManager;
     Messaging messaging;
 
+    // stuff for multithreading
+    std::vector<std::thread> threadPool;
+    std::mutex mutex;
+    std::condition_variable cv;
+    int numModulesToExecute;
+    bool hasExecutableModules();
+
     bool m_enabledProfiling;
     type::FrameworkInfo frameworkInfo;
 
@@ -99,6 +109,9 @@ private:
      */
     typedef std::vector<std::vector<Module*>> cycleListType;
     cycleListType cycleList;
+    cycleListType cycleListTmp;
+
+    void printCycleList(cycleListType &list);
 
     /**
      * @brief available contains all Modules which can be loaded

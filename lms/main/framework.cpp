@@ -4,6 +4,7 @@
 #include <fstream>
 #include <csignal>
 #include <map>
+#include <thread>
 #include <cstdlib>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
@@ -145,6 +146,7 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         int maxThreads = atoi(threadPoolNode.child_value());
         executionManager.setMaxThreads(maxThreads);
         logger.info("parseExecution") << "Thread pool size: " << maxThreads;
+        logger.info("parseExecution") << "Hardware Concurrency: " << std::thread::hardware_concurrency();
     }
 
     pugi::xml_node clockNode = execNode.child("clock");

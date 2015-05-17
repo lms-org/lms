@@ -47,10 +47,11 @@ void ExecutionManager::loop() {
 
     //validate the ExecutionManager
     validate();
-    //copy cycleList so it can be modified
-    cycleListType cycleListTmp = cycleList;
 
-    if(maxThreads == 1){
+    if(maxThreads == 1) {
+        //copy cycleList so it can be modified
+        cycleListTmp = cycleList;
+
         type::FrameworkInfo::ModuleMeasurement measurement;
 
         //simple single list
@@ -84,7 +85,87 @@ void ExecutionManager::loop() {
             }
         }
     }else{
-        //TODO Woker threads
+        logger.info() << "Cycle start";
+
+        // if thread pool is not yet initialized then do it now
+        if(threadPool.empty()) {
+            for(int threadNum = 0; threadNum < maxThreads; threadNum++) {
+                threadPool.push_back(std::thread([threadNum, this] () {
+                    // Thread function
+
+                    std::unique_lock<std::mutex> lck(mutex);
+
+                    while(true) {
+                        logger.info() << "while " << threadNum;
+
+                        // wait until something is in the cycleList
+                        cv.wait(lck, [this]() { return hasExecutableModules(); });
+
+                        Module* executableModule = nullptr;
+                        int executableModuleIndex = 0;
+
+                        for(size_t i = 0; i < cycleListTmp.size();i++){
+                            std::vector<Module*>& moduleV = cycleListTmp[i];
+                            if(moduleV.size() == 1) {
+                                executableModuleIndex = i;
+                                executableModule = moduleV[0];
+                                break;
+                            }
+                        }
+
+                        if(executableModule != nullptr) {
+                            // if an executable module was found
+                            // then delete it from the cycleListTmp
+                            cycleListTmp.erase(cycleListTmp.begin() + executableModuleIndex);
+
+                            logger.info() << "Thread " << threadNum << " executes "
+                                          << executableModule->getName();
+
+                            // now we can execute it
+                            lck.unlock();
+                            executableModule->cycle();
+                            lck.lock();
+
+                            logger.info() << "Thread " << threadNum << " executed "
+                                             << executableModule->getName();
+
+                            // now we should delete the executed module from
+                            // the dependencies of other modules
+                            for(std::vector<Module*>& moduleV2:cycleListTmp){
+                                moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),executableModule),moduleV2.end());
+                            }
+
+                            printCycleList(cycleListTmp);
+
+                            numModulesToExecute --;
+
+                            // now inform our fellow threads that something new
+                            // can be executed
+                            cv.notify_all();
+                        }
+                    }
+                }));
+            }
+        }
+
+        {
+            std::lock_guard<std::mutex> lck(mutex);
+            // copy cycleList so it can be modified
+            cycleListTmp = cycleList;
+            numModulesToExecute = cycleListTmp.size();
+        }
+        // inform all threads that there are new jobs to do
+        cv.notify_all();
+
+        {
+            // wait until the cycle list is empty
+            std::unique_lock<std::mutex> lck(mutex);
+            cv.wait(lck, [this] () {
+                return numModulesToExecute == 0;
+            });
+        }
+
+        logger.info() << "Cycle end";
     }
 
     // TODO load or unload modules or do anything else
@@ -94,6 +175,21 @@ void ExecutionManager::loop() {
 
     // Remove all messages from the message queue
     messaging.resetQueue();
+}
+
+bool ExecutionManager::hasExecutableModules() {
+    if(cycleListTmp.empty()) {
+        return false;
+    }
+
+    for(size_t i = 0; i < cycleListTmp.size();i++){
+        std::vector<Module*>& moduleV = cycleListTmp[i];
+        if(moduleV.size() == 1) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void ExecutionManager::addAvailableModule(const Loader::module_entry &mod){
@@ -173,8 +269,8 @@ void ExecutionManager::setMaxThreads(int maxThreads) {
     this->maxThreads = maxThreads;
 }
 
-void ExecutionManager::printCycleList() {
-    for(const std::vector<Module*> &list : cycleList) {
+void ExecutionManager::printCycleList(cycleListType &clist) {
+    for(const std::vector<Module*> &list : clist) {
         std::string line;
 
         for(Module* mod : list) {
@@ -183,6 +279,10 @@ void ExecutionManager::printCycleList() {
 
         logger.debug("cycleList") << line;
     }
+}
+
+void ExecutionManager::printCycleList() {
+    printCycleList(cycleList);
 }
 
 void ExecutionManager::sort(){
