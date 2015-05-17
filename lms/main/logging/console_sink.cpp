@@ -14,6 +14,8 @@ void ConsoleSink::printColored(bool colored) {
 }
 
 void ConsoleSink::sink(const LogMessage &message) {
+    std::lock_guard<std::mutex> lck(mtx);
+
     if(m_time) {
         // get time now
         time_t rawtime;

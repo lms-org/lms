@@ -2,6 +2,7 @@
 #define LMS_LOGGING_CONSOLE_SINK_H
 
 #include <iostream>
+#include <mutex>
 
 namespace lms {
 namespace logging {
@@ -47,6 +48,7 @@ private:
     std::ostream &m_out;
     bool m_colored;
     bool m_time;
+    std::mutex mtx;
 };
 
 } // namespace logging
