@@ -96,8 +96,6 @@ void ExecutionManager::loop() {
                     std::unique_lock<std::mutex> lck(mutex);
 
                     while(true) {
-                        logger.info() << "while " << threadNum;
-
                         // wait until something is in the cycleList
                         cv.wait(lck, [this]() { return hasExecutableModules(); });
 
@@ -135,8 +133,6 @@ void ExecutionManager::loop() {
                                 moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),executableModule),moduleV2.end());
                             }
 
-                            printCycleList(cycleListTmp);
-
                             numModulesToExecute --;
 
                             // now inform our fellow threads that something new
@@ -153,9 +149,10 @@ void ExecutionManager::loop() {
             // copy cycleList so it can be modified
             cycleListTmp = cycleList;
             numModulesToExecute = cycleListTmp.size();
+
+            // inform all threads that there are new jobs to do
+            cv.notify_all();
         }
-        // inform all threads that there are new jobs to do
-        cv.notify_all();
 
         {
             // wait until the cycle list is empty
