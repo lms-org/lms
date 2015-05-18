@@ -50,6 +50,18 @@ public:
          */
         int writePriority;
 
+        enum ExecutionType {
+            ONLY_MAIN_THREAD, NEVER_MAIN_THREAD
+        };
+
+        /**
+         * @brief The module can only be executed on the specified thread.
+         *
+         * - ONLY_MAIN_THREAD: The module will only be executed on the main thread.
+         * - NEVER_MAIN_THREAD: The module will never be executed on the main thread.
+         */
+        ExecutionType executionType;
+
 #ifdef _WIN32
         // TODO pointer to open shared library or something similar
 #else

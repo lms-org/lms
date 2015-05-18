@@ -91,70 +91,9 @@ void ExecutionManager::loop() {
 
         // if thread pool is not yet initialized then do it now
         if(threadPool.empty()) {
-            for(int threadNum = 0; threadNum < maxThreads; threadNum++) {
+            for(int threadNum = 1; threadNum <= maxThreads; threadNum++) {
                 threadPool.push_back(std::thread([threadNum, this] () {
-                    // Thread function
-
-                    std::unique_lock<std::mutex> lck(mutex);
-
-                    while(running) {
-                        // wait until something is in the cycleList
-                        cv.wait(lck, [this]() { return hasExecutableModules(); });
-
-                        Module* executableModule = nullptr;
-                        int executableModuleIndex = 0;
-
-                        for(size_t i = 0; i < cycleListTmp.size();i++){
-                            std::vector<Module*>& moduleV = cycleListTmp[i];
-                            if(moduleV.size() == 1) {
-                                executableModuleIndex = i;
-                                executableModule = moduleV[0];
-                                break;
-                            }
-                        }
-
-                        if(executableModule != nullptr) {
-                            // if an executable module was found
-                            // then delete it from the cycleListTmp
-                            cycleListTmp.erase(cycleListTmp.begin() + executableModuleIndex);
-
-                            logger.info() << "Thread " << threadNum << " executes "
-                                          << executableModule->getName();
-
-                            // Profiling stuff
-                            type::FrameworkInfo::ModuleMeasurement measurement;
-                            if(m_enabledProfiling) {
-                                measurement.thread = threadNum;
-                                measurement.module = executableModule->getName();
-                            }
-
-                            // now we can execute it
-                            lck.unlock();
-                            measurement.begin = lms::extra::PrecisionTime::now();
-                            executableModule->cycle();
-                            measurement.end = lms::extra::PrecisionTime::now();
-                            lck.lock();
-
-                            if(m_enabledProfiling) {
-                                frameworkInfo.addProfilingData(measurement);
-                            }
-
-                            logger.info() << "Thread " << threadNum << " executed "
-                                             << executableModule->getName();
-
-                            // now we should delete the executed module from
-                            // the dependencies of other modules
-                            for(std::vector<Module*>& moduleV2:cycleListTmp){
-                                moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),executableModule),moduleV2.end());
-                            }
-
-                            numModulesToExecute --;
-
-                            // now inform our fellow threads that something new
-                            // can be executed
-                            cv.notify_all();
-                        }
-                    }
+                    threadFunction(threadNum);
                 }));
             }
         }
@@ -171,10 +110,12 @@ void ExecutionManager::loop() {
 
         {
             // wait until the cycle list is empty
-            std::unique_lock<std::mutex> lck(mutex);
+            /*std::unique_lock<std::mutex> lck(mutex);
             cv.wait(lck, [this] () {
                 return numModulesToExecute == 0;
-            });
+            });*/
+
+            threadFunction(0);
         }
 
         logger.info() << "Cycle end";
@@ -189,7 +130,87 @@ void ExecutionManager::loop() {
     messaging.resetQueue();
 }
 
-bool ExecutionManager::hasExecutableModules() {
+void ExecutionManager::threadFunction(int threadNum) {
+    // Thread function
+
+    std::unique_lock<std::mutex> lck(mutex);
+
+    while(running) {
+        // wait until something is in the cycleList
+        cv.wait(lck, [this, threadNum]() {
+            // the main thread stops
+            if(threadNum == 0 && numModulesToExecute == 0) {
+                return true;
+            }
+
+            return hasExecutableModules(threadNum);
+        });
+
+        if(numModulesToExecute == 0) {
+            break;
+        }
+
+        Module* executableModule = nullptr;
+        int executableModuleIndex = 0;
+
+        for(size_t i = 0; i < cycleListTmp.size();i++){
+            std::vector<Module*>& moduleV = cycleListTmp[i];
+            if(moduleV.size() == 1) {
+                Loader::module_entry::ExecutionType execType = moduleV[0]->getExecutionType();
+                if((execType == Loader::module_entry::ONLY_MAIN_THREAD && threadNum == 0) ||
+                        (execType == Loader::module_entry::NEVER_MAIN_THREAD && threadNum != 0)) {
+                    executableModuleIndex = i;
+                    executableModule = moduleV[0];
+                    break;
+                }
+            }
+        }
+
+        if(executableModule != nullptr) {
+            // if an executable module was found
+            // then delete it from the cycleListTmp
+            cycleListTmp.erase(cycleListTmp.begin() + executableModuleIndex);
+
+            logger.info() << "Thread " << threadNum << " executes "
+                          << executableModule->getName();
+
+            // Profiling stuff
+            type::FrameworkInfo::ModuleMeasurement measurement;
+            if(m_enabledProfiling) {
+                measurement.thread = threadNum;
+                measurement.module = executableModule->getName();
+            }
+
+            // now we can execute it
+            lck.unlock();
+            measurement.begin = lms::extra::PrecisionTime::now();
+            executableModule->cycle();
+            measurement.end = lms::extra::PrecisionTime::now();
+            lck.lock();
+
+            if(m_enabledProfiling) {
+                frameworkInfo.addProfilingData(measurement);
+            }
+
+            logger.info() << "Thread " << threadNum << " executed "
+                             << executableModule->getName();
+
+            // now we should delete the executed module from
+            // the dependencies of other modules
+            for(std::vector<Module*>& moduleV2:cycleListTmp){
+                moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),executableModule),moduleV2.end());
+            }
+
+            numModulesToExecute --;
+
+            // now inform our fellow threads that something new
+            // can be executed
+            cv.notify_all();
+        }
+    }
+}
+
+bool ExecutionManager::hasExecutableModules(int thread) {
     if(! running) {
         return true;
     }
@@ -201,7 +222,12 @@ bool ExecutionManager::hasExecutableModules() {
     for(size_t i = 0; i < cycleListTmp.size();i++){
         std::vector<Module*>& moduleV = cycleListTmp[i];
         if(moduleV.size() == 1) {
-            return true;
+            Loader::module_entry::ExecutionType execType = moduleV[0]->getExecutionType();
+            if(execType == Loader::module_entry::ONLY_MAIN_THREAD && thread == 0) {
+                return true;
+            } else if(execType == Loader::module_entry::NEVER_MAIN_THREAD && thread != 0) {
+                return true;
+            }
         }
     }
 

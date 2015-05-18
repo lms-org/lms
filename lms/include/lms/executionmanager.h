@@ -95,7 +95,8 @@ private:
     std::condition_variable cv;
     int numModulesToExecute;
     bool running;
-    bool hasExecutableModules();
+    bool hasExecutableModules(int thread);
+    void threadFunction(int threadNum);
     void stopRunning();
 
     bool m_enabledProfiling;

@@ -48,6 +48,7 @@ public:
                         logging::LogLevel minLogLevel);
 
     int getPriority() const;
+    Loader::module_entry::ExecutionType getExecutionType() const;
 
     /**
      * @brief Informs a module of the start of its

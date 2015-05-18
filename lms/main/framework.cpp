@@ -58,7 +58,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 clock.beforeLoopIteration();
             }
 
+            logger.time("loop");
             executionManager.loop();
+            logger.timeEnd("loop");
 
             if(clockEnabled) {
                 clock.afterLoopIteration();
@@ -316,6 +318,23 @@ void Framework::parseModules(pugi::xml_node rootNode,
             module.writePriority = atoi(writePrioNode.child_value());
         } else {
             module.writePriority = 0;
+        }
+
+        pugi::xml_node executionTypeNode = moduleNode.child("executionType");
+
+        if(executionTypeNode) {
+            std::string executionType = executionTypeNode.child_value();
+
+            if(executionType == "ONLY_MAIN_THREAD") {
+                module.executionType = Loader::module_entry::ONLY_MAIN_THREAD;
+            } else if(executionType == "NEVER_MAIN_THREAD") {
+                module.executionType = Loader::module_entry::NEVER_MAIN_THREAD;
+            } else {
+                logger.error("parseModule") << "Invalid value for executionType: "
+                                            << executionType;
+            }
+        } else {
+            module.executionType = Loader::module_entry::NEVER_MAIN_THREAD;
         }
 
         // parse all channel mappings

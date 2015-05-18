@@ -28,6 +28,10 @@ namespace lms{
         return loaderEntry.writePriority;
     }
 
+    lms_EXPORT Loader::module_entry::ExecutionType Module::getExecutionType() const {
+        return loaderEntry.executionType;
+    }
+
     lms_EXPORT std::string Module::getChannelMapping(std::string mapFrom){
         if(loaderEntry.channelMapping.count(mapFrom) == 1){
             return loaderEntry.channelMapping[mapFrom];
