@@ -43,6 +43,12 @@ DataManager& ExecutionManager::getDataManager() {
 }
 
 void ExecutionManager::loop() {
+    if(m_enabledProfiling) {
+        for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfiling()) {
+            logger.debug("profiling") << m.thread << " " << m.module << " " << (m.end - m.begin);
+        }
+    }
+
     dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
     frameworkInfo.incrementCycleIteration();
     frameworkInfo.resetProfiling();
@@ -64,6 +70,7 @@ void ExecutionManager::loop() {
                 if(moduleV.size() == 1){
 
                     if(m_enabledProfiling) {
+                        measurement.thread = 0;
                         measurement.module = moduleV[0]->getName();
                         measurement.begin = lms::extra::PrecisionTime::now();
                     }
