@@ -91,12 +91,18 @@ class ArgumentHandler {
      */
     logging::LogLevel argLoggingMinLevel() const;
 
+    /**
+     * @brief The value of the command line argument "--user"
+     */
+    std::string argUser() const;
+
  private:
     std::string m_loadConfiguration;
     bool m_showHelp;
     RunLevel m_runLevel;
     std::vector<std::string> m_loggingPrefixes;
     logging::LogLevel m_loggingMinLevel;
+    std::string m_user;
 };
 
 }  // namespace lms

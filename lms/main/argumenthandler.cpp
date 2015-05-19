@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "lms/argumenthandler.h"
+#include "lms/extra/os.h"
 
 namespace lms {
 
@@ -41,7 +42,9 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
     m_showHelp(false), m_runLevel(RunLevel::CYCLE),
-    m_loggingMinLevel(logging::SMALLEST_LEVEL) {
+    m_loggingMinLevel(logging::SMALLEST_LEVEL), m_user("") {
+
+    m_user = lms::extra::username();
 }
 
 void ArgumentHandler::parseArguments(int argc, char* const*argv) {
@@ -50,7 +53,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         {"help", no_argument, 0, 'h'},
         {"run-level", required_argument, 0, 'r'},
         {"logging-min-level", required_argument, 0, 1},
-        {"logging-prefix", required_argument, 0, 2}
+        {"logging-prefix", required_argument, 0, 2},
+        {"user", required_argument, 0, 3}
     };
 
     opterr = 0;
@@ -74,6 +78,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
             case 2:  // --logging-prefix
                 m_loggingPrefixes.push_back(optarg);
                 break;  // Don't forget to break!
+            case 3: // --user
+                m_user = optarg;
+                break;
             default:
                 std::cerr << "Invalid option" << std::endl;
                 m_showHelp = true;
@@ -91,6 +98,10 @@ void ArgumentHandler::printHelp(std::ostream *out) const {
         << "  -r, --run-level     Execute until a certain run level\n"
         << "                       valid values: CONFIG, ENABLE, CYCLE\n"
         << "                       defaults to CYCLE\n"
+        << "  --user              Set the username, used for config loading\n"
+        << "                        defaults to $LOGNAME on linux\n"
+        << "                        defaults to $USER on MacOSX\n"
+        << "                        defaults to $USERNAME on Windows\n"
         << "  --logging-min-level Filter minimum logging level, e.g. ERROR\n"
         << "  --logging-prefix    Prefix of logging tags to filter\n"
         << std::endl;
@@ -114,6 +125,10 @@ std::vector<std::string> ArgumentHandler::argLoggingPrefixes() const {
 
 logging::LogLevel ArgumentHandler::argLoggingMinLevel() const {
     return m_loggingMinLevel;
+}
+
+std::string ArgumentHandler::argUser() const {
+    return m_user;
 }
 
 }  // namespace lms

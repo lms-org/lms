@@ -5,12 +5,13 @@
 #include <csignal>
 #include <map>
 #include <cstdlib>
+#include <cstring>
+#include <algorithm>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
 #include "lms/extra/time.h"
 #include "lms/type/module_config.h"
 #include "lms/extra/string.h"
-#include "lms/extra/os.h"
 
 namespace lms{
 
@@ -336,8 +337,14 @@ void Framework::parseModules(pugi::xml_node rootNode,
             pugi::xml_attribute nameAttr = configNode.attribute("name");
             pugi::xml_attribute userAttr = configNode.attribute("user");
 
-            if(userAttr && lms::extra::username() != userAttr.value()) {
-                continue;
+            if(userAttr) {
+                std::vector<std::string> allowedUsers =
+                        lms::extra::split(std::string(userAttr.value()), ',');
+
+                if(std::find(allowedUsers.begin(), allowedUsers.end(),
+                             argumentHandler.argUser()) == allowedUsers.end()) {
+                    continue;
+                }
             }
 
             std::string name = "default";

@@ -24,7 +24,9 @@ std::string trim(const std::string& str, const std::string &delims = " \t\n\r\f\
  * @param splitter
  * @return
  */
-std::vector<std::string> split(char *string, int strLength, const char splitter);
+std::vector<std::string> split(const char *string, int strLength, char splitter);
+
+std::vector<std::string> split(const std::string &string, char splitter);
 
 /**
  * @brief Returns the directory of a path without trailing slash.
