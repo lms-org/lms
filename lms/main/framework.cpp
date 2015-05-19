@@ -6,6 +6,8 @@
 #include <map>
 #include <thread>
 #include <cstdlib>
+#include <cstring>
+#include <algorithm>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logging/log_level.h"
 #include "lms/extra/time.h"
@@ -352,6 +354,17 @@ void Framework::parseModules(pugi::xml_node rootNode,
         for(pugi::xml_node configNode : moduleNode.children("config")) {
             pugi::xml_attribute srcAttr = configNode.attribute("src");
             pugi::xml_attribute nameAttr = configNode.attribute("name");
+            pugi::xml_attribute userAttr = configNode.attribute("user");
+
+            if(userAttr) {
+                std::vector<std::string> allowedUsers =
+                        lms::extra::split(std::string(userAttr.value()), ',');
+
+                if(std::find(allowedUsers.begin(), allowedUsers.end(),
+                             argumentHandler.argUser()) == allowedUsers.end()) {
+                    continue;
+                }
+            }
 
             std::string name = "default";
             if(nameAttr) {

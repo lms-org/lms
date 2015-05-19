@@ -12,29 +12,28 @@ std::string trim(const std::string& str, const std::string& delims) {
     result.erase(result.find_last_not_of(delims) + 1);
     return result;
 }
-std::vector<std::string> split(char *string, int strLength, const char splitter){
+std::vector<std::string> split(const char *string, int strLength, char splitter){
     std::vector<std::string> result;
-    std::cout <<"CALLED"<<std::endl;
-    char *resultBuff = string;
+    const char *resultBuff = string;
     int oldFound = 0;
     for(int i = 0; i < strLength; i++){
-        std::cout<<"char: "<< resultBuff[i] <<std::endl;
         if(resultBuff[i] == splitter){
             //found new part
             std::string name(&resultBuff[oldFound],i-oldFound);
             oldFound = i+1;
             result.push_back(name);
-            std::cout <<"part found: " << name << std::endl;
         }
     }
     //add last element if the string doesn't end with the splitter
     if(oldFound < strLength){
         std::string name(&resultBuff[oldFound],strLength-oldFound);
         result.push_back(name);
-        std::cout << "found last: " << name <<std::endl;
-
     }
     return result;
+}
+
+std::vector<std::string> split(const std::string &string, char splitter) {
+    return split(string.c_str(), string.length(), splitter);
 }
 
 std::string dirname(std::string path) {

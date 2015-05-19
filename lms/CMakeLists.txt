@@ -48,6 +48,7 @@ set (PUBLIC_HEADERS
         "include/lms/extra/time.h"
         "include/lms/extra/file_monitor.h"
         "include/lms/extra/backtrace_formatter.h"
+        "include/lms/extra/os.h"
 )
 
 set (SOURCE
@@ -76,6 +77,7 @@ set (SOURCE
         "main/extra/string.cpp"
         "main/extra/time.cpp"
         "main/extra/file_monitor.cpp"
+        "main/extra/os.cpp"
 )
 #Add system-specific source
 if(UNIX)
