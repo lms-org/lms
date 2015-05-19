@@ -337,7 +337,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
             pugi::xml_attribute userAttr = configNode.attribute("user");
 
             if(userAttr && lms::extra::username() != userAttr.value()) {
-                break;
+                continue;
             }
 
             std::string name = "default";
