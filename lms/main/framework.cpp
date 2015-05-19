@@ -58,9 +58,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 clock.beforeLoopIteration();
             }
 
-            logger.time("loop");
             executionManager.loop();
-            logger.timeEnd("loop");
 
             if(clockEnabled) {
                 clock.afterLoopIteration();
