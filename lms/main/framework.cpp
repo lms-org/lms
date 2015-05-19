@@ -10,6 +10,7 @@
 #include "lms/extra/time.h"
 #include "lms/type/module_config.h"
 #include "lms/extra/string.h"
+#include "lms/extra/os.h"
 
 namespace lms{
 
@@ -333,6 +334,11 @@ void Framework::parseModules(pugi::xml_node rootNode,
         for(pugi::xml_node configNode : moduleNode.children("config")) {
             pugi::xml_attribute srcAttr = configNode.attribute("src");
             pugi::xml_attribute nameAttr = configNode.attribute("name");
+            pugi::xml_attribute userAttr = configNode.attribute("user");
+
+            if(userAttr && lms::extra::username() != userAttr.value()) {
+                break;
+            }
 
             std::string name = "default";
             if(nameAttr) {
