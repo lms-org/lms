@@ -78,6 +78,7 @@ public:
     void printCycleList();
 
     void enableProfiling(bool enable);
+    bool enableProfiling() const;
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;
@@ -148,6 +149,7 @@ private:
      * improve it.
      */
     void sortByPriority();
+
 };
 
 }  // namespace lms

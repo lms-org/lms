@@ -59,9 +59,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
             if(clockEnabled) {
                 clock.beforeLoopIteration();
             }
-            logger.time("StartLopp");
+            if(executionManager.enableProfiling()){
+                logger.time("totalTime");
+            }
             executionManager.loop();
-            logger.timeEnd("StartLopp");
+            if(executionManager.enableProfiling()){
+                logger.timeEnd("totalTime");
+            }
 
             if(clockEnabled) {
                 clock.afterLoopIteration();

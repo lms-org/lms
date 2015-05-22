@@ -403,6 +403,11 @@ void ExecutionManager::sortByPriority(){
     }
 }
 
+
+bool ExecutionManager::enableProfiling() const{
+    return m_enabledProfiling;
+}
+
 void ExecutionManager::enableProfiling(bool enable) {
     m_enabledProfiling = enable;
 }
