@@ -9,6 +9,14 @@ namespace lms {
 namespace extra {
 
 /**
+ * @brief Generate timestamp string formatted as "YYYYMMDD-HHMMSS".
+ * This string can be used as a filename for logging.
+ *
+ * @return timestamp string
+ */
+std::string currentTimeString();
+
+/**
  * @brief Generate timestamps with microsecond precision.
  */
 class PrecisionTime {
