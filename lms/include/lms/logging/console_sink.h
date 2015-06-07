@@ -4,6 +4,8 @@
 #include <iostream>
 #include <mutex>
 
+#include "lms/logging/sink.h"
+
 namespace lms {
 namespace logging {
 
@@ -24,7 +26,19 @@ public:
      * @brief Create a new console sink that will write into the given ostream.
      * @param out an ostream instance, e.g. std::cout or std::cerr
      */
-    explicit ConsoleSink(std::ostream& out = std::cout) : m_out(out), m_colored(true), m_time(true) {}
+    explicit ConsoleSink(std::ostream& out = std::cout)
+        : m_out(out), m_colored(true), m_time(true) {}
+
+    /**
+     * @brief Create a new console sink that will write into the given ostream.
+     * @param out an ostream instance
+     * @param colored set to true if the output should be ASCII colored
+     * depending on the log level
+     * @param time set to true if each logging message should be prepended by
+     * the current time
+     */
+    ConsoleSink(std::ostream& out, bool colored, bool time)
+        : m_out(out), m_colored(colored), m_time(time) {}
 
     /**
      * @brief Log the given message to the ostream.

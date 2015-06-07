@@ -9,7 +9,7 @@
 #include <cstring>
 #include <algorithm>
 #include "lms/extra/backtrace_formatter.h"
-#include "lms/logging/log_level.h"
+#include "lms/logger.h"
 #include "lms/extra/time.h"
 #include "lms/type/module_config.h"
 #include "lms/extra/string.h"
@@ -25,6 +25,23 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
+
+    std::unique_ptr<logging::Sink> loggingSink;
+
+    if(!arguments.argLogFile().empty() && arguments.argQuiet()) {
+        loggingSink.reset(new logging::FileSink(arguments.argLogFile()));
+    } else if(! arguments.argQuiet() && arguments.argLogFile().empty()) {
+        loggingSink.reset(new logging::ConsoleSink(std::cout));
+    } else if(! arguments.argLogFile().empty() && ! arguments.argQuiet()) {
+        logging::MultiSink *sink = new logging::MultiSink();
+        sink->add(new logging::FileSink(arguments.argLogFile()));
+        sink->add(new logging::ConsoleSink(std::cout));
+        loggingSink.reset(sink);
+    } else {
+        loggingSink.reset(new logging::MultiSink());
+    }
+
+    rootLogger.sink(std::move(loggingSink));
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)

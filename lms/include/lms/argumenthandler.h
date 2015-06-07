@@ -60,7 +60,7 @@ class ArgumentHandler {
      * @param out the output stream where the help
      * message should be printed.
      */
-    void printHelp(std::ostream *out = &std::cout) const;
+    void printHelp(std::ostream &out = std::cout) const;
 
     /**
      * @brief Return the "load configuration" setting. This can
@@ -96,12 +96,26 @@ class ArgumentHandler {
      */
     std::string argUser() const;
 
+    /**
+     * @brief The value of the command line argument "--quiet"
+     */
+    bool argQuiet() const;
+
+    /**
+     * @brief The value of the command line argument "--log-file"
+     */
+    std::string argLogFile() const;
+
  private:
+    void parseBoolArg(const std::string &argName, bool &arg);
+
     std::string m_loadConfiguration;
     bool m_showHelp;
     RunLevel m_runLevel;
     std::vector<std::string> m_loggingPrefixes;
     logging::LogLevel m_loggingMinLevel;
+    bool m_quiet;
+    std::string m_logFile;
     std::string m_user;
 };
 
