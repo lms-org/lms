@@ -100,21 +100,21 @@ PrecisionTime PrecisionTime::sleep() const {
 
 const PrecisionTime PrecisionTime::ZERO(0);
 
-PrecisionTime::PrecisionTime(std::int64_t micros) : m_micros(micros) {
+PrecisionTime::PrecisionTime(PrecisionTime::TimeType micros) : m_micros(micros) {
 }
 
 PrecisionTime::PrecisionTime() : m_micros(0) {
 }
 
-std::int64_t PrecisionTime::micros() const {
+PrecisionTime::TimeType PrecisionTime::micros() const {
     return m_micros;
 }
 
-PrecisionTime PrecisionTime::fromMicros(std::int64_t micros) {
+PrecisionTime PrecisionTime::fromMicros(PrecisionTime::TimeType micros) {
     return PrecisionTime(micros);
 }
 
-PrecisionTime PrecisionTime::fromMillis(std::int64_t millis) {
+PrecisionTime PrecisionTime::fromMillis(PrecisionTime::TimeType millis) {
     return PrecisionTime(millis * 1000);
 }
 
