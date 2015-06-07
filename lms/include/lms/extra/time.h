@@ -21,6 +21,7 @@ std::string currentTimeString();
  */
 class PrecisionTime {
  public:
+    typedef std::int64_t TimeType;
     static const PrecisionTime ZERO;
 
     /**
@@ -51,7 +52,7 @@ class PrecisionTime {
      * @brief Get the time as microseconds.
      * @return microseconds
      */
-    std::int64_t micros() const;
+    TimeType micros() const;
 
     /**
      * @brief Construct a precision time from given
@@ -60,7 +61,7 @@ class PrecisionTime {
      * @param micros microseconds
      * @return precision time instance
      */
-    static PrecisionTime fromMicros(std::int64_t micros);
+    static PrecisionTime fromMicros(TimeType micros);
 
     /**
      * @brief Construct a precision time from given
@@ -69,7 +70,7 @@ class PrecisionTime {
      * @param millis milliseconds
      * @return precision time instance
      */
-    static PrecisionTime fromMillis(std::int64_t millis);
+    static PrecisionTime fromMillis(TimeType millis);
 
     /**
      * @brief Get time as floating point type
@@ -116,7 +117,7 @@ class PrecisionTime {
     bool operator ==(const PrecisionTime &t) const;
     bool operator !=(const PrecisionTime &t) const;
  private:
-    std::int64_t m_micros;
+    TimeType m_micros;
 
     /**
      * @brief Create a timestamp pointing to the given timestamp
@@ -124,7 +125,7 @@ class PrecisionTime {
      *
      * @param micros
      */
-    explicit PrecisionTime(std::int64_t micros);
+    explicit PrecisionTime(TimeType micros);
 };
 
 /**
