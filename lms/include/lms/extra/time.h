@@ -101,6 +101,24 @@ class PrecisionTime {
      * @return the remaining time (if interrupted) or zero
      */
     PrecisionTime sleep() const;
+    
+    /**
+     * Cereal save serialization function (using minimal save)
+     */
+    template <class Archive>
+    TimeType save_minimal( const Archive& ) const
+    {
+        return m_micros;
+    }
+
+    /**
+     * Cereal load serialization function (using minimal load)
+     */
+    template <class Archive>
+    void load_minimal( const Archive&, const TimeType& value )
+    {
+        m_micros = value;
+    }
 
     PrecisionTime operator +(const PrecisionTime &t) const;
     PrecisionTime operator -(const PrecisionTime &t) const;
