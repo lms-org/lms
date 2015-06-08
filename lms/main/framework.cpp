@@ -199,16 +199,25 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
 
     if(clockNode) {
         std::string clockUnit;
-        std::int64_t clockValue = atoll(clockNode.child_value());
+        std::int64_t clockValue = 0;
 
         pugi::xml_attribute enabledAttr = clockNode.attribute("enabled");
         pugi::xml_attribute unitAttr = clockNode.attribute("unit");
+        pugi::xml_attribute valueAttr = clockNode.attribute("value");
 
         if(enabledAttr) {
             clockEnabled = enabledAttr.as_bool();
         } else {
             // if no enabled attribute is given then the clock is considered
             // to be disabled
+            clockEnabled = false;
+        }
+
+        if(valueAttr) {
+            clockValue = valueAttr.as_llong();
+        } else {
+            logger.error("parseExecution")
+                << "Missing attribute value for tag <clock>";
             clockEnabled = false;
         }
 
@@ -245,14 +254,13 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
     pugi::xml_node configMonitorNode = execNode.child("configMonitor");
 
     if(configMonitorNode) {
-        std::string configMonitorText = configMonitorNode.child_value();
+        pugi::xml_attribute enabledAttr = configMonitorNode.attribute("enabled");
 
-        if(configMonitorText == "true") {
-            monitorEnabled = true;
-        } else if(configMonitorText == "false") {
-            monitorEnabled = false;
+        if(enabledAttr) {
+            monitorEnabled = enabledAttr.as_bool(false);
         } else {
-            logger.warn("parseConfig") << "Invalid value for <configMonitor>";
+            logger.error("parseExecution")
+                << "Missing attribute enabled for tag <configMonitor>";
         }
     }
 
