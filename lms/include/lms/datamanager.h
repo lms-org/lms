@@ -112,7 +112,7 @@ public:
             invalidateExecutionManager();
         }
 
-        return (const T*)channel.dataWrapper->get();
+        return static_cast<const T*>(channel.dataWrapper->get());
     }
 
     /**
@@ -150,7 +150,7 @@ public:
             invalidateExecutionManager();
         }
 
-        return (T*)channel.dataWrapper->get();
+        return static_cast<T*>(channel.dataWrapper->get());
     }
 
     /**
@@ -196,7 +196,7 @@ public:
             invalidateExecutionManager();
         }
 
-        return (T*)channel.dataWrapper->get();
+        return static_cast<T*>(channel.dataWrapper->get());
     }
 
     /**
@@ -410,7 +410,7 @@ private:
             return nullptr;
         }
 
-        return (T*)channel.dataWrapper->get();
+        return static_cast<T*>(channel.dataWrapper->get());
     }
 
     /**
