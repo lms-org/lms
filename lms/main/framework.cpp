@@ -13,6 +13,7 @@
 #include "lms/extra/time.h"
 #include "lms/type/module_config.h"
 #include "lms/extra/string.h"
+#include "lms/xml_parser.h"
 
 namespace lms{
 
@@ -127,6 +128,7 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
         pugi::xml_parse_result result = doc.load(ifs);
         if (result){
             pugi::xml_node rootNode = doc.child("framework");
+            lms::preprocessXML(rootNode, argumentHandler.argFlags());
 
             if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
                 // parse <execution> tag (or deprecated <executionManager>)
@@ -142,7 +144,8 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
             // parse all <include> tags
             parseIncludes(rootNode, file, flag);
         } else {
-            logger.error() << "Failed to parse " << file << " as XML";
+            logger.error() << "Failed to parse " << file << " as XML: ";
+            logger.error() << result.offset << " " << result.description();
         }
     } else {
         logger.error() << "Failed to open XML file " << file;

@@ -7,6 +7,7 @@
 
 #include "lms/argumenthandler.h"
 #include "lms/extra/os.h"
+#include "lms/extra/string.h"
 
 namespace lms {
 
@@ -56,7 +57,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         {"logging-prefix", required_argument, 0, 2},
         {"user", required_argument, 0, 3},
         {"log-file", required_argument, 0, 4},
-        {"quiet", no_argument, 0, 'q'}
+        {"quiet", no_argument, 0, 'q'},
+        {"flags", required_argument, 0, 5}
     };
 
     opterr = 0;
@@ -88,6 +90,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 break;
             case 'q': // --quiet
                 m_quiet = true;
+                break;
+            case 5: // --flags
+                m_flags = lms::extra::split(optarg, ',');
                 break;
             default:
                 std::cerr << "Invalid option" << std::endl;
@@ -125,6 +130,7 @@ void ArgumentHandler::printHelp(std::ostream &out) const {
         << "  --logging-prefix    Prefix of logging tags to filter\n"
         << "  --quiet             Do not log anything to stdout\n"
         << "  --log-file          Log to the given file\n"
+        << "  --flags             Config flags, can be used in <if> tags\n"
         << std::endl;
 }
 
@@ -158,6 +164,10 @@ std::string ArgumentHandler::argLogFile() const {
 
 bool ArgumentHandler::argQuiet() const {
     return m_quiet;
+}
+
+std::vector<std::string> ArgumentHandler::argFlags() const {
+    return m_flags;
 }
 
 }  // namespace lms

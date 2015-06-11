@@ -106,6 +106,11 @@ class ArgumentHandler {
      */
     std::string argLogFile() const;
 
+    /**
+     * @brief The value of the command line argument "--flags"
+     */
+    std::vector<std::string> argFlags() const;
+
  private:
     void parseBoolArg(const std::string &argName, bool &arg);
 
@@ -117,6 +122,7 @@ class ArgumentHandler {
     bool m_quiet;
     std::string m_logFile;
     std::string m_user;
+    std::vector<std::string> m_flags;
 };
 
 }  // namespace lms

@@ -29,6 +29,7 @@ set (PUBLIC_HEADERS
         "include/lms/serializable.h"
         "include/lms/clock.h"
         "include/lms/deprecated.h"
+        "include/lms/xml_parser.h"
 
         "include/lms/type/module_config.h"
         "include/lms/type/framework_info.h"
@@ -66,6 +67,7 @@ set (SOURCE
         "main/type/framework_info.cpp"
         "main/messaging.cpp"
         "main/clock.cpp"
+        "main/xml_parser.cpp"
 
         "main/logging/log_level.cpp"
         "main/logging/logger.cpp"
