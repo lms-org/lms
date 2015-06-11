@@ -68,5 +68,13 @@ bool isAbsolute(const std::string &path) {
     return !path.empty() && path[0] == '/';
 }
 
+std::istream& safeGetline(std::istream& is, std::string& str) {
+    std::getline(is, str);
+    if(!str.empty() && str.back() == '\r') {
+        str.resize(str.length() - 1);
+    }
+    return is;
+}
+
 } // namespace extra
 } // namespace lms

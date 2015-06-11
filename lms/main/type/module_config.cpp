@@ -40,7 +40,7 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
     bool isMultiline = false;
     std::string lineBuffer;
 
-    while(std::getline(in, line)) {
+    while(lms::extra::safeGetline(in, line)) {
         if(line.empty()) {
             // ignore empty lines
             continue;

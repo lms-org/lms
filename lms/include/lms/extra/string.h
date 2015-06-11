@@ -49,6 +49,15 @@ std::string dirname(std::string path);
  */
 bool isAbsolute(const std::string &path);
 
+/**
+ * @brief Platform safe implementation for std::getline. \r and \n are handled
+ * correctly.
+ * @param is input stream
+ * @param str line
+ * @return the same input stream as given
+ */
+std::istream& safeGetline(std::istream& is, std::string& str);
+
 } // namespace extra
 } // namespace lms
 
