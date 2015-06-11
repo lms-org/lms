@@ -12,6 +12,9 @@ namespace lms {
  * @brief Traverse an XML node and evaluate <if> tags with the given condition.
  *
  * <if> attributes:
+ * - set: a single flag. The flag must be set to evaluate the condition to true.
+ * - notSet: a single flag. The flag must not be set to evaluate the condition
+ *          to true.
  * - anyOf: comma-separated list of flags. One of the flags must be set to
  *          evaluate the condition to true.
  * - allOf: comma-separated list of flags. All of the flags must be set to

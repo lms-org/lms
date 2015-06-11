@@ -6,6 +6,16 @@
 
 namespace lms {
 
+bool evaluateSet(const std::string &condition,
+                 const std::vector<std::string> &flags) {
+    return std::find(flags.begin(), flags.end(), condition) != flags.end();
+}
+
+bool evaluateNotSet(const std::string &condition,
+                 const std::vector<std::string> &flags) {
+    return std::find(flags.begin(), flags.end(), condition) == flags.end();
+}
+
 bool evaluateAnyOf(const std::vector<std::string> &condition,
                    const std::vector<std::string> &flags) {
     return std::find_first_of(condition.begin(), condition.end(),
@@ -44,15 +54,21 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
         if(std::string("if") == child.name()) {
             bool result = false;
 
+            pugi::xml_attribute setAttr = child.attribute("set");
+            pugi::xml_attribute notSetAttr = child.attribute("notSet");
             pugi::xml_attribute anyOfAttr = child.attribute("anyOf");
             pugi::xml_attribute allOfAttr = child.attribute("allOf");
             pugi::xml_attribute nothingOfAttr = child.attribute("nothingOf");
 
-            if(anyOfAttr && !allOfAttr && !nothingOfAttr) {
+            if(setAttr) {
+                result = evaluateSet(setAttr.value(), flags);
+            } else if(notSetAttr) {
+                result = evaluateNotSet(notSetAttr.value(), flags);
+            } else if(anyOfAttr) {
                 result = evaluateAnyOf(lms::extra::split(anyOfAttr.value(), ','), flags);
-            } else if(allOfAttr && !nothingOfAttr && !anyOfAttr) {
+            } else if(allOfAttr) {
                 result = evaluateAllOf(lms::extra::split(allOfAttr.value(), ','), flags);
-            } else if(nothingOfAttr && !anyOfAttr && !allOfAttr) {
+            } else if(nothingOfAttr) {
                 result = evaluateNothingOf(lms::extra::split(nothingOfAttr.value(), ','), flags);
             } else {
                 std::cout << "Failed to preprocess XML <if>" << std::endl;
