@@ -111,6 +111,11 @@ class ArgumentHandler {
      */
     std::vector<std::string> argFlags() const;
 
+    /**
+     * @brief The value of the command line argument "--profiling"
+     */
+    bool argProfiling() const;
+
  private:
     void parseBoolArg(const std::string &argName, bool &arg);
 
@@ -123,6 +128,7 @@ class ArgumentHandler {
     std::string m_logFile;
     std::string m_user;
     std::vector<std::string> m_flags;
+    bool m_profiling;
 };
 
 }  // namespace lms

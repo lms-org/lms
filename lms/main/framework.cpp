@@ -48,6 +48,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
+    executionManager.enableProfiling(argumentHandler.argProfiling());
+
     logger.info() << "RunLevel " <<  arguments.argRunLevel();
 
     //parse framework config
@@ -271,19 +273,6 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         logger.info("parseConfig") << "Enabled config monitor";
     } else {
         logger.info("parseConfig") << "Disable config monitor";
-    }
-
-    pugi::xml_node profilingNode = execNode.child("profiling");
-
-    if(profilingNode) {
-        pugi::xml_attribute enabledAttr = profilingNode.attribute("enabled");
-
-        if(enabledAttr) {
-            executionManager.enableProfiling(enabledAttr.as_bool(false));
-        } else {
-            logger.error("parseConfig") << "Found <profiling /> tag without"
-                                       << " enabled attribute";
-        }
     }
 }
 

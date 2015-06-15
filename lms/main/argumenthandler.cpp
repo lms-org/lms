@@ -43,7 +43,8 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
     m_showHelp(false), m_runLevel(RunLevel::CYCLE),
-    m_loggingMinLevel(logging::SMALLEST_LEVEL), m_quiet(false), m_user("") {
+    m_loggingMinLevel(logging::SMALLEST_LEVEL), m_quiet(false), m_user(""),
+    m_profiling(false) {
 
     m_user = lms::extra::username();
 }
@@ -58,7 +59,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         {"user", required_argument, 0, 3},
         {"log-file", required_argument, 0, 4},
         {"quiet", no_argument, 0, 'q'},
-        {"flags", required_argument, 0, 5}
+        {"flags", required_argument, 0, 5},
+        {"profiling", no_argument, 0, 6}
     };
 
     opterr = 0;
@@ -93,6 +95,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 break;
             case 5: // --flags
                 m_flags = lms::extra::split(optarg, ',');
+                break;
+            case 6: // --profiling
+                m_profiling = true;
                 break;
             default:
                 std::cerr << "Invalid option" << std::endl;
@@ -131,6 +136,7 @@ void ArgumentHandler::printHelp(std::ostream &out) const {
         << "  --quiet             Do not log anything to stdout\n"
         << "  --log-file          Log to the given file\n"
         << "  --flags             Config flags, can be used in <if> tags\n"
+        << "  --profiling         Measure execution time of all modules\n"
         << std::endl;
 }
 
@@ -168,6 +174,10 @@ bool ArgumentHandler::argQuiet() const {
 
 std::vector<std::string> ArgumentHandler::argFlags() const {
     return m_flags;
+}
+
+bool ArgumentHandler::argProfiling() const {
+    return m_profiling;
 }
 
 }  // namespace lms
