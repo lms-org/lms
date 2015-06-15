@@ -43,6 +43,7 @@ Module* Loader::load(module_entry& entry) {
     // see here: http://linux.die.net/man/3/dlclose
 
     // open dynamic library (*.so file)
+    // http://stackoverflow.com/questions/10765320/compile-c-program-using-dlopen-and-dlsym-with-fpic
     void *lib = dlopen(entry.libpath.c_str(),RTLD_NOW | RTLD_DEEPBIND);
 
     // check for errors while opening
