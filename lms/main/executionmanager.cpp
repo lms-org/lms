@@ -35,6 +35,7 @@ ExecutionManager::~ExecutionManager () {
 
     for(Loader::moduleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
+        dataManager.releaseChannelsOf(it->moduleInstance);
         loader.unload(*it);
     }
 
@@ -132,8 +133,17 @@ void ExecutionManager::loop() {
     }
 
     // TODO load or unload modules or do anything else
-    for(std::string message : messaging.receive("mod-unload")) {
-        // TODO do something
+    for(const std::string &message : messaging.receive("enableModule")) {
+        enableModule(message, logging::LogLevel::WARN);
+    }
+
+    for(const std::string &message : messaging.receive("disableModule")) {
+        disableModule(message);
+    }
+
+    for(const std::string &message : messaging.receive("reloadModule")) {
+        disableModule(message);
+        enableModule(message, logging::LogLevel::WARN);
     }
 
     // Remove all messages from the message queue
@@ -314,6 +324,9 @@ bool ExecutionManager::disableModule(const std::string &name) {
             }
 
             enabledModules.erase(it);
+
+            dataManager.releaseChannelsOf(*it);
+
             invalidate();
             return true;
         }

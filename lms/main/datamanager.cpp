@@ -139,19 +139,11 @@ bool DataManager::hasChannel(Module *module, const std::string &name) const {
 
 void DataManager::releaseChannelsOf(const Module *module) {
     for(auto &ch : channels) {
-        for(auto it = ch.second.readers.begin(); it != ch.second.readers.end(); ++it) {
-            if(*it == module) {
-                ch.second.readers.erase(it);
-                break;
-            }
-        }
+        ch.second.readers.erase(std::remove(ch.second.readers.begin(),
+            ch.second.readers.end(), module), ch.second.readers.end());
 
-        for(auto it = ch.second.writers.begin(); it != ch.second.writers.end(); ++it) {
-            if(*it == module) {
-                ch.second.writers.erase(it);
-                break;
-            }
-        }
+        ch.second.writers.erase(std::remove(ch.second.writers.begin(),
+            ch.second.writers.end(), module), ch.second.writers.end());
 
         if(ch.second.writers.empty()) {
             ch.second.exclusiveWrite = false;
