@@ -445,4 +445,8 @@ Messaging& ExecutionManager::messaging() {
     return m_messaging;
 }
 
+const std::vector<Module*>& ExecutionManager::getEnabledModules() const {
+    return enabledModules;
+}
+
 }  // namespace lms

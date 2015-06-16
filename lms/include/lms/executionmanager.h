@@ -86,6 +86,8 @@ public:
     bool enableProfiling() const;
 
     Messaging& messaging();
+
+    const std::vector<Module*>& getEnabledModules() const;
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;

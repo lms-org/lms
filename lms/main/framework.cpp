@@ -100,10 +100,45 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
             for(const std::string &message : executionManager.messaging().
                 receive("loadConfig")) {
-                executionManager.disableAllModules();
+
+                logger.info("loadConfig") << "START";
+
+                std::vector<Module*> forDisable;
+
+                // disable all modules that are not needed anymore
+                for(Module* mod : executionManager.getEnabledModules()) {
+                    bool found = false;
+
+                    for(const ModuleToLoad &loadMod : modulesToLoadLists[message]) {
+                        if(mod->getName() == loadMod.name) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(! found) {
+                        forDisable.push_back(mod);
+                    }
+                }
+
+                // disable in reversed order
+                std::reverse(forDisable.begin(), forDisable.end());
+
+                for(Module* mod : forDisable) {
+                    executionManager.disableModule(mod->getName());
+                }
+
+                logger.info("loadConfig") << "MID";
+
                 for(const ModuleToLoad &mod : modulesToLoadLists[message]) {
                     executionManager.enableModule(mod.name, mod.logLevel);
                 }
+
+                executionManager.invalidate();
+
+                executionManager.getDataManager().printMapping();
+
+                logger.info("loadConfig") << "STOP";
             }
         }
     }
