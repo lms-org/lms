@@ -22,7 +22,7 @@ std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
-    clockEnabled(false), clock(rootLogger), monitor(), monitorEnabled(false) {
+    clockEnabled(false), clock(rootLogger), configMonitor(), configMonitorEnabled(false) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
@@ -91,9 +91,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 clock.afterLoopIteration();
             }
 
-            if(lms::extra::FILE_MONITOR_SUPPORTED && monitorEnabled
-                    && monitor.hasChangedFiles()) {
-                monitor.unwatchAll();
+            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
+                    && configMonitor.hasChangedFiles()) {
+                configMonitor.unwatchAll();
+                tempModulesToLoadList.clear();
                 parseConfig(LoadConfigFlag::ONLY_MODULE_CONFIG);
             }
         }
@@ -119,7 +120,7 @@ void Framework::parseConfig(LoadConfigFlag flag){
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
     logger.debug("parseFile") << "Reading XML file: " << file;
-    if(lms::extra::FILE_MONITOR_SUPPORTED && !monitor.watch(file)) {
+    if(lms::extra::FILE_MONITOR_SUPPORTED && !configMonitor.watch(file)) {
         logger.error("parseFile") << "Could not monitor " << file;
     }
 
@@ -262,14 +263,14 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         pugi::xml_attribute enabledAttr = configMonitorNode.attribute("enabled");
 
         if(enabledAttr) {
-            monitorEnabled = enabledAttr.as_bool(false);
+            configMonitorEnabled = enabledAttr.as_bool(false);
         } else {
             logger.error("parseExecution")
                 << "Missing attribute enabled for tag <configMonitor>";
         }
     }
 
-    if(monitorEnabled) {
+    if(configMonitorEnabled) {
         logger.info("parseConfig") << "Enabled config monitor";
     } else {
         logger.info("parseConfig") << "Disable config monitor";
@@ -432,7 +433,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
                 } else {
                     logger.info("parseModules") << "Loaded " << lconfPath;
                     if(lms::extra::FILE_MONITOR_SUPPORTED &&
-                            !monitor.watch(lconfPath)) {
+                            !configMonitor.watch(lconfPath)) {
                         logger.error("parseModules") << "Failed to monitor "
                                                      << lconfPath;
                     }

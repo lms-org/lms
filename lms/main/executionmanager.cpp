@@ -24,6 +24,10 @@ ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
 ExecutionManager::~ExecutionManager () {
     stopRunning();
 
+    disableAllModules();
+}
+
+void ExecutionManager::disableAllModules() {
     for(std::vector<Module*>::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
@@ -40,6 +44,8 @@ ExecutionManager::~ExecutionManager () {
     }
 
     enabledModules.clear();
+
+    invalidate();
 }
 
 DataManager& ExecutionManager::getDataManager() {

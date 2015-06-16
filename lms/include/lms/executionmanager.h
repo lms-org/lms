@@ -37,6 +37,11 @@ public:
     void addAvailableModule(const Loader::module_entry &mod);
 
     /**
+     * @brief Disable all modules that are currently enabled.
+     */
+    void disableAllModules();
+
+    /**
      * @brief Enable module with the given name, add it to the cycle-queue.
      *
      * @param name name of the module that should be enabled
