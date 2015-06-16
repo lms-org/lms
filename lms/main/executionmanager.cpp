@@ -16,7 +16,7 @@ namespace lms {
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
     : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
-      messaging(), running(true), m_enabledProfiling(false) {
+      m_messaging(), running(true), m_enabledProfiling(false) {
 
     dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
 }
@@ -53,6 +53,9 @@ DataManager& ExecutionManager::getDataManager() {
 }
 
 void ExecutionManager::loop() {
+    // Remove all messages from the message queue
+    m_messaging.resetQueue();
+
     if(m_enabledProfiling) {
         for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfiling()) {
             logger.debug("profiling") << m.thread << " " << m.module << " " << (m.end - m.begin);
@@ -139,21 +142,18 @@ void ExecutionManager::loop() {
     }
 
     // TODO load or unload modules or do anything else
-    for(const std::string &message : messaging.receive("enableModule")) {
+    for(const std::string &message : messaging().receive("enableModule")) {
         enableModule(message, logging::LogLevel::WARN);
     }
 
-    for(const std::string &message : messaging.receive("disableModule")) {
+    for(const std::string &message : messaging().receive("disableModule")) {
         disableModule(message);
     }
 
-    for(const std::string &message : messaging.receive("reloadModule")) {
+    for(const std::string &message : messaging().receive("reloadModule")) {
         disableModule(message);
         enableModule(message, logging::LogLevel::WARN);
     }
-
-    // Remove all messages from the message queue
-    messaging.resetQueue();
 }
 
 void ExecutionManager::threadFunction(int threadNum) {
@@ -297,7 +297,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
         if(it.name == name){
             logger.debug("enable Module") <<"enabling Module: " <<name;
             Module* module = loader.load(it);
-            module->initializeBase(&dataManager, &messaging, it, &rootLogger, minLogLevel);
+            module->initializeBase(&dataManager, &m_messaging, it, &rootLogger, minLogLevel);
 
             if(module->initialize()){
                 enabledModules.push_back(module);
@@ -439,6 +439,10 @@ bool ExecutionManager::enableProfiling() const{
 
 void ExecutionManager::enableProfiling(bool enable) {
     m_enabledProfiling = enable;
+}
+
+Messaging& ExecutionManager::messaging() {
+    return m_messaging;
 }
 
 }  // namespace lms

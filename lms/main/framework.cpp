@@ -60,7 +60,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
     if(arguments.argRunLevel() >= RunLevel::ENABLE) {
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
-        for(ModuleToLoad mod : tempModulesToLoadList) {
+        for(ModuleToLoad mod : modulesToLoadLists["default"]) {
             executionManager.enableModule(mod.name, mod.logLevel);
         }
 
@@ -94,8 +94,16 @@ Framework::Framework(const ArgumentHandler &arguments) :
             if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
                     && configMonitor.hasChangedFiles()) {
                 configMonitor.unwatchAll();
-                tempModulesToLoadList.clear();
+                modulesToLoadLists.clear();
                 parseConfig(LoadConfigFlag::ONLY_MODULE_CONFIG);
+            }
+
+            for(const std::string &message : executionManager.messaging().
+                receive("loadConfig")) {
+                executionManager.disableAllModules();
+                for(const ModuleToLoad &mod : modulesToLoadLists[message]) {
+                    executionManager.enableModule(mod.name, mod.logLevel);
+                }
             }
         }
     }
@@ -136,10 +144,10 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
             if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
                 // parse <execution> tag (or deprecated <executionManager>)
                 parseExecution(rootNode);
-
-                // parse <moduleToEnable> tag (or deprecated <modulesToLoad>)
-                parseModulesToEnable(rootNode);
             }
+
+            // parse <moduleToEnable> tag
+            parseModulesToEnable(rootNode);
 
             // parse all <module> tags
             parseModules(rootNode, file, flag);
@@ -278,43 +286,39 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
 }
 
 void Framework::parseModulesToEnable(pugi::xml_node rootNode) {
-    pugi::xml_node enableNode = rootNode.child("modulesToEnable");
+    for(pugi::xml_node enableNode : rootNode.children("modulesToEnable")) {
+        std::string name = "default";
 
-    if(! enableNode) {
-        enableNode = rootNode.child("modulesToLoad");
+        pugi::xml_attribute nameAttr = enableNode.attribute("name");
 
-        if(enableNode) {
-            logger.warn("parseModulesToEnable")
-                << "Found deprecated tag <modulesToLoad>, use <modulesToEnable> instead";
-        } else {
-            // do not parse anything
-            return;
-        }
-    }
-
-    lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
-
-    // get attribute "logLevel" of node <modulesToLoad>
-    // its value will be the default for logLevel of <module>
-    pugi::xml_attribute globalLogLevelAttr = enableNode.attribute("logLevel");
-    if(globalLogLevelAttr) {
-        defaultModuleLevel = lms::logging::levelFromName(globalLogLevelAttr.value());
-    }
-
-    for (pugi::xml_node moduleNode : enableNode.children("module")){
-        //parse module content
-        ModuleToLoad mod;
-        mod.name = moduleNode.child_value();
-
-        // get the attribute "logLevel"
-        pugi::xml_attribute logLevelAttr = moduleNode.attribute("logLevel");
-        if(logLevelAttr) {
-            mod.logLevel = lms::logging::levelFromName(logLevelAttr.value());
-        } else {
-            mod.logLevel = defaultModuleLevel;
+        if(nameAttr) {
+            name = nameAttr.as_string();
         }
 
-        tempModulesToLoadList.push_back(mod);
+        lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
+
+        // get attribute "logLevel" of node <modulesToLoad>
+        // its value will be the default for logLevel of <module>
+        pugi::xml_attribute globalLogLevelAttr = enableNode.attribute("logLevel");
+        if(globalLogLevelAttr) {
+            defaultModuleLevel = lms::logging::levelFromName(globalLogLevelAttr.value());
+        }
+
+        for (pugi::xml_node moduleNode : enableNode.children("module")){
+            //parse module content
+            ModuleToLoad mod;
+            mod.name = moduleNode.child_value();
+
+            // get the attribute "logLevel"
+            pugi::xml_attribute logLevelAttr = moduleNode.attribute("logLevel");
+            if(logLevelAttr) {
+                mod.logLevel = lms::logging::levelFromName(logLevelAttr.value());
+            } else {
+                mod.logLevel = defaultModuleLevel;
+            }
+
+            modulesToLoadLists[name].push_back(mod);
+        }
     }
 }
 

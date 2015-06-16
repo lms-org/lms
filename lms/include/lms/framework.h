@@ -75,7 +75,7 @@ private:
      */
     bool running;
 
-    std::vector<ModuleToLoad> tempModulesToLoadList;
+    std::map<std::string, std::vector<ModuleToLoad>> modulesToLoadLists;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;

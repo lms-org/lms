@@ -84,6 +84,8 @@ public:
 
     void enableProfiling(bool enable);
     bool enableProfiling() const;
+
+    Messaging& messaging();
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;
@@ -93,7 +95,7 @@ private:
 
     Loader loader;
     DataManager dataManager;
-    Messaging messaging;
+    Messaging m_messaging;
 
     // stuff for multithreading
     std::vector<std::thread> threadPool;
