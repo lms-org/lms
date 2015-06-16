@@ -24,14 +24,17 @@ ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
 ExecutionManager::~ExecutionManager () {
     stopRunning();
 
-    for(std::vector<Module*>::iterator it = enabledModules.begin();
-        it != enabledModules.end(); ++it) {
+    for(std::vector<Module*>::reverse_iterator it = enabledModules.rbegin();
+        it != enabledModules.rend(); ++it) {
 
         if(! (*it)->deinitialize()) {
             logger.error("disableModule")
                     << "Deinitialize failed for module " << (*it)->getName();
         }
+    }
 
+    for(Loader::moduleList::reverse_iterator it = available.rbegin();
+        it != available.rend(); ++it) {
         loader.unload(*it);
     }
 
@@ -302,7 +305,14 @@ bool ExecutionManager::disableModule(const std::string &name) {
                 logger.error("disableModule")
                         << "Deinitialize failed for module " << name;
             }
-            loader.unload(*it);
+
+            for(Loader::module_entry &entry : available) {
+                if(entry.name == name) {
+                    loader.unload(entry);
+                    break;
+                }
+            }
+
             enabledModules.erase(it);
             invalidate();
             return true;
