@@ -96,6 +96,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 configMonitor.unwatchAll();
                 modulesToLoadLists.clear();
                 parseConfig(LoadConfigFlag::ONLY_MODULE_CONFIG);
+                executionManager.fireConfigsChangedEvent();
             }
 
             for(const std::string &message : executionManager.messaging().

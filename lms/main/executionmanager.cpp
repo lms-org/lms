@@ -449,4 +449,10 @@ const std::vector<Module*>& ExecutionManager::getEnabledModules() const {
     return enabledModules;
 }
 
+void ExecutionManager::fireConfigsChangedEvent() {
+    for(Module *mod : enabledModules) {
+        mod->configsChanged();
+    }
+}
+
 }  // namespace lms

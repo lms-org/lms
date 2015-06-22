@@ -124,6 +124,17 @@ public:
     virtual bool isResettable() { return false; }
 
     /**
+     * @brief This method gets called whenever a config changed during execution.
+     *
+     * A config is usually only changed when the config monitor found changes
+     * in the config files.
+     *
+     * NOTE: This method can be called even if no config files accessed by this
+     * module were changed.
+     */
+    virtual void configsChanged() {}
+
+    /**
      * @brief getDataChannelMapping
      * @param mapFrom
      * @return the mapping for the given key or the key itself if it has no

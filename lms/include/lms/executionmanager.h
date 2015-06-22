@@ -88,6 +88,11 @@ public:
     Messaging& messaging();
 
     const std::vector<Module*>& getEnabledModules() const;
+
+    /**
+     * @brief Invoke configsChanged() of all enabled modules.
+     */
+    void fireConfigsChangedEvent();
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;
