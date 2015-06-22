@@ -30,6 +30,7 @@ set (PUBLIC_HEADERS
         "include/lms/clock.h"
         "include/lms/deprecated.h"
         "include/lms/xml_parser.h"
+        "include/lms/config_observer.h"
 
         "include/lms/type/module_config.h"
         "include/lms/type/framework_info.h"
@@ -68,6 +69,7 @@ set (SOURCE
         "main/messaging.cpp"
         "main/clock.cpp"
         "main/xml_parser.cpp"
+        "main/config_observer.cpp"
 
         "main/logging/log_level.cpp"
         "main/logging/logger.cpp"
