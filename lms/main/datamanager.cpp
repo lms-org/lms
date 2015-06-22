@@ -98,7 +98,7 @@ bool DataManager::serializeChannel(Module *module, const std::string &reqName, s
 
     if(channel.dataWrapper != nullptr && channel.serializable) {
         const Serializable *data = static_cast<Serializable*>(channel.dataWrapper->get());
-        data->serialize(os);
+        data->lmsSerialize(os);
         return true;
     } else {
         return false;
@@ -118,7 +118,7 @@ bool DataManager::deserializeChannel(Module *module, const std::string &reqName,
 
     if(channel.dataWrapper != nullptr && channel.serializable) {
         Serializable *data = static_cast<Serializable*>(channel.dataWrapper->get());
-        data->deserialize(is);
+        data->lmsDeserialize(is);
         return true;
     } else {
         return false;

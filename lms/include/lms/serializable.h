@@ -18,13 +18,13 @@ public:
      * @brief Serialize the object into the given output stream.
      * @param os output stream to write in
      */
-    virtual void serialize(std::ostream &os) const = 0;
+    virtual void lmsSerialize(std::ostream &os) const = 0;
 
     /**
      * @brief Deserialize the object from the given input stream.
      * @param is input stream to read from
      */
-    virtual void deserialize(std::istream &is) = 0;
+    virtual void lmsDeserialize(std::istream &is) = 0;
 };
 
 }  // namespace lms
