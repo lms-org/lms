@@ -14,6 +14,8 @@ namespace lms {
  */
 class Serializable {
 public:
+    virtual ~Serializable() {}
+
     /**
      * @brief Serialize the object into the given output stream.
      * @param os output stream to write in
