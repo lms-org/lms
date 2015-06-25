@@ -12,6 +12,30 @@ namespace lms {
 /**
  * @brief Traverse an XML node and evaluate <if> tags with the given condition.
  *
+ * The <if> tags get evaluated before an XML documented is parsed.
+ *
+ * Example:
+ * The framework started with --flags=logging,norender
+ *
+ * <framework>
+ * <modulesToEnable>
+ *   <if set="logging">
+ *     <module>image_logger</module>
+ *   </if>
+ *   <if notSet="norender">
+ *     <module>image_renderer</module>
+ *   </if>
+ * </modulesToEnable>
+ * </framework>
+ *
+ * This gets preprocessed to:
+ *
+ * <framework>
+ * <modulesToEnable>
+ *   <module>image_logger</module>
+ * </modulesToEnable>
+ * </framework>
+ *
  * <if> attributes:
  * - set: a single flag. The flag must be set to evaluate the condition to true.
  * - notSet: a single flag. The flag must not be set to evaluate the condition
