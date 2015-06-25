@@ -94,8 +94,6 @@ private:
     void parseModulesToEnable(pugi::xml_node rootNode);
     void parseModules(pugi::xml_node rootNode, const std::string &currentFile,
                       LoadConfigFlag flag);
-    void parseModuleConfig(pugi::xml_node node, const std::string &key,
-                                      type::ModuleConfig &config);
     void parseIncludes(pugi::xml_node rootNode, const std::string &currentFile,
                        LoadConfigFlag flag);
 };

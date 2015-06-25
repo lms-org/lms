@@ -103,4 +103,25 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
     }
 }
 
+void parseModuleConfig(pugi::xml_node node, type::ModuleConfig &config,
+                       const std::string &key) {
+    // if node has no children
+    if(node.type() == pugi::node_pcdata) {
+        config.set<std::string>(key, extra::trim(node.value()));
+    } else if(node.type() == pugi::node_element) {
+        std::string newKey;
+
+        for(pugi::xml_node subnode : node.children()) {
+            if(key.empty()) {
+                newKey = subnode.name();
+            } else if(subnode.type() == pugi::node_element) {
+                newKey = key + "." + subnode.name();
+            } else {
+                newKey = key;
+            }
+            parseModuleConfig(subnode, config, newKey);
+        }
+    }
+}
+
 }  // namespace lms
