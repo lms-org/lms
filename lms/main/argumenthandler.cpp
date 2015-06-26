@@ -42,7 +42,7 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 }
 
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
-    m_showHelp(false), m_runLevel(RunLevel::CYCLE),
+    m_showHelp(false), m_showError(false), m_runLevel(RunLevel::CYCLE),
     m_loggingMinLevel(logging::SMALLEST_LEVEL), m_quiet(false), m_user(""),
     m_profiling(false) {
 
@@ -60,7 +60,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         {"log-file", required_argument, 0, 4},
         {"quiet", no_argument, 0, 'q'},
         {"flags", required_argument, 0, 5},
-        {"profiling", no_argument, 0, 6}
+        {"profiling", no_argument, 0, 6},
+        {0, 0, 0, 0}
     };
 
     opterr = 0;
@@ -75,7 +76,10 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 break;
             case 'r':  // --run-level
                 if(! runLevelByName(optarg, m_runLevel)) {
-                    std::cerr << "Invalid value for run level " << optarg << std::endl;
+                    m_errorMessage = "ArgumentHandler: Invalid value for run level "
+                            + std::string(optarg);
+                    m_showError = true;
+                    return;
                 }
                 break;
             case 1:  // --logging-min-level
@@ -99,9 +103,14 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
             case 6: // --profiling
                 m_profiling = true;
                 break;
+            case '?':
+                m_errorMessage = "ArgumentHandler: Unknown option";
+                m_showError = true;
+                return;
             default:
-                std::cerr << "Invalid option" << std::endl;
-                m_showHelp = true;
+                m_errorMessage = "ArgumentHandler: WTF exception";
+                m_showError = true;
+                return;
         }
     }
 #endif
@@ -178,6 +187,14 @@ std::vector<std::string> ArgumentHandler::argFlags() const {
 
 bool ArgumentHandler::argProfiling() const {
     return m_profiling;
+}
+
+bool ArgumentHandler::hasError() const {
+    return m_showError;
+}
+
+std::string ArgumentHandler::errorMessage() const {
+    return m_errorMessage;
 }
 
 }  // namespace lms

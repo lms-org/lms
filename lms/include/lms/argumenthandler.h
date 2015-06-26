@@ -116,11 +116,22 @@ class ArgumentHandler {
      */
     bool argProfiling() const;
 
+    /**
+     * @brief Returns true if an error occured during parsing.
+     */
+    bool hasError() const;
+
+    /**
+     * @brief Returns the error message if hasError() returned true.
+     */
+    std::string errorMessage() const;
  private:
     void parseBoolArg(const std::string &argName, bool &arg);
 
     std::string m_loadConfiguration;
     bool m_showHelp;
+    bool m_showError;
+    std::string m_errorMessage;
     RunLevel m_runLevel;
     std::vector<std::string> m_loggingPrefixes;
     logging::LogLevel m_loggingMinLevel;
