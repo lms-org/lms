@@ -28,6 +28,10 @@ namespace lms{
         return loaderEntry.writePriority;
     }
 
+    lms_EXPORT extra::PrecisionTime Module::getExpectedRuntime() const {
+        return loaderEntry.expectedRuntime;
+    }
+
     lms_EXPORT Loader::module_entry::ExecutionType Module::getExecutionType() const {
         return loaderEntry.executionType;
     }

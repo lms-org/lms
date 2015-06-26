@@ -10,6 +10,7 @@
 #include "lms/loader.h"
 #include "lms/datamanager.h"
 #include "lms/type/framework_info.h"
+#include "lms/logger.h"
 
 namespace lms {
 
@@ -58,7 +59,23 @@ void ExecutionManager::loop() {
 
     if(m_enabledProfiling) {
         for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfiling()) {
-            logger.debug("profiling") << m.thread << " " << m.module << " " << (m.end - m.begin);
+            extra::PrecisionTime runtime = m.end - m.begin;
+            extra::PrecisionTime expectedRuntime = m.expected;
+
+            logging::LogLevel logLevel = logging::LogLevel::INFO;
+
+            if(expectedRuntime != extra::PrecisionTime::ZERO) {
+                float ratio = float(runtime.micros()) / float(expectedRuntime.micros());
+                float growthPercentage = (ratio - 1) * 100;
+
+                if(growthPercentage >= 100) {
+                    logLevel = logging::LogLevel::ERROR;
+                } else if(growthPercentage >= 20) {
+                    logLevel = logging::LogLevel::WARN;
+                }
+            }
+
+            logger.log(logLevel, "profiling") << m.thread << " " << m.module << " " << runtime;
         }
     }
 
@@ -86,6 +103,7 @@ void ExecutionManager::loop() {
                         measurement.thread = 0;
                         measurement.module = moduleV[0]->getName();
                         measurement.begin = lms::extra::PrecisionTime::now();
+                        measurement.expected = moduleV[0]->getExpectedRuntime();
                     }
 
                     moduleV[0]->cycle();

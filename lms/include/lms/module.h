@@ -48,6 +48,7 @@ public:
                         logging::LogLevel minLogLevel);
 
     int getPriority() const;
+    extra::PrecisionTime getExpectedRuntime() const;
     Loader::module_entry::ExecutionType getExecutionType() const;
 
     /**

@@ -391,6 +391,15 @@ void Framework::parseModules(pugi::xml_node rootNode,
             module.executionType = Loader::module_entry::NEVER_MAIN_THREAD;
         }
 
+        pugi::xml_node expectedRuntimeNode = moduleNode.child("expectedRuntime");
+
+        if(expectedRuntimeNode) {
+            module.expectedRuntime = extra::PrecisionTime::fromMicros(
+                        atoi(expectedRuntimeNode.child_value()));
+        } else {
+            module.expectedRuntime = extra::PrecisionTime::ZERO;
+        }
+
         // parse all channel mappings
         for(pugi::xml_node mappingNode : moduleNode.children("channelMapping")) {
             pugi::xml_attribute fromAttr = mappingNode.attribute("from");

@@ -75,6 +75,13 @@ public:
          */
         Module *moduleInstance;
 
+        /**
+         * @brief Expected time needed to execute this module.
+         *
+         * Set to zero if unknown.
+         */
+        extra::PrecisionTime expectedRuntime;
+
 #ifdef _WIN32
         // TODO pointer to open shared library or something similar
 #else

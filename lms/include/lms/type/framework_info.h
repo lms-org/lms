@@ -18,6 +18,7 @@ public:
         std::string module;
         lms::extra::PrecisionTime begin;
         lms::extra::PrecisionTime end;
+        lms::extra::PrecisionTime expected;
     };
 
     typedef std::vector<ModuleMeasurement> Profiling;
