@@ -6,6 +6,7 @@
 
 #include "pugixml.hpp"
 #include "lms/type/module_config.h"
+#include "lms/logger.h"
 
 namespace lms {
 
@@ -76,6 +77,23 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags);
  */
 void parseModuleConfig(pugi::xml_node node,  type::ModuleConfig &config,
                        const std::string &key = "");
+
+/**
+ * @brief This struct is instantiated for each module that shall be enabled
+ * but is not yet available.
+ */
+struct ModuleToLoad {
+    std::string name;
+    logging::LogLevel logLevel;
+};
+
+/**
+ * @brief Parse the given XML node as <modulesToEnable>
+ * @param node node to parse
+ * @param modulesToLoadLists parsed enable modules will be put into this map
+ */
+void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
+                          std::vector<ModuleToLoad>> &modulesToLoadLists);
 
 }  // namespace lms
 

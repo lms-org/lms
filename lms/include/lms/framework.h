@@ -9,6 +9,7 @@
 #include "lms/clock.h"
 #include "pugixml.hpp"
 #include "lms/extra/file_monitor.h"
+#include "lms/xml_parser.h"
 
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
@@ -49,11 +50,6 @@ public:
      */
     ~Framework();
 
-    struct ModuleToLoad {
-        std::string name;
-        logging::LogLevel logLevel;
-    };
-
     enum class LoadConfigFlag {
         LOAD_EVERYTHING,
         ONLY_MODULE_CONFIG
@@ -91,7 +87,7 @@ private:
     void parseConfig(LoadConfigFlag flag);
     void parseFile(const std::string &file, LoadConfigFlag flag);
     void parseExecution(pugi::xml_node rootNode);
-    void parseModulesToEnable(pugi::xml_node rootNode);
+    void parseAllModulesToEnable(pugi::xml_node rootNode);
     void parseModules(pugi::xml_node rootNode, const std::string &currentFile,
                       LoadConfigFlag flag);
     void parseIncludes(pugi::xml_node rootNode, const std::string &currentFile,

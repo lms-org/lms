@@ -183,7 +183,7 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
             }
 
             // parse <moduleToEnable> tag
-            parseModulesToEnable(rootNode);
+            parseAllModulesToEnable(rootNode);
 
             // parse all <module> tags
             parseModules(rootNode, file, flag);
@@ -321,40 +321,9 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
     }
 }
 
-void Framework::parseModulesToEnable(pugi::xml_node rootNode) {
-    for(pugi::xml_node enableNode : rootNode.children("modulesToEnable")) {
-        std::string name = "default";
-
-        pugi::xml_attribute nameAttr = enableNode.attribute("name");
-
-        if(nameAttr) {
-            name = nameAttr.as_string();
-        }
-
-        lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
-
-        // get attribute "logLevel" of node <modulesToLoad>
-        // its value will be the default for logLevel of <module>
-        pugi::xml_attribute globalLogLevelAttr = enableNode.attribute("logLevel");
-        if(globalLogLevelAttr) {
-            defaultModuleLevel = lms::logging::levelFromName(globalLogLevelAttr.value());
-        }
-
-        for (pugi::xml_node moduleNode : enableNode.children("module")){
-            //parse module content
-            ModuleToLoad mod;
-            mod.name = moduleNode.child_value();
-
-            // get the attribute "logLevel"
-            pugi::xml_attribute logLevelAttr = moduleNode.attribute("logLevel");
-            if(logLevelAttr) {
-                mod.logLevel = lms::logging::levelFromName(logLevelAttr.value());
-            } else {
-                mod.logLevel = defaultModuleLevel;
-            }
-
-            modulesToLoadLists[name].push_back(mod);
-        }
+void Framework::parseAllModulesToEnable(pugi::xml_node rootNode) {
+    for(pugi::xml_node node : rootNode.children("modulesToEnable")) {
+        parseModulesToEnable(node, modulesToLoadLists);
     }
 }
 
