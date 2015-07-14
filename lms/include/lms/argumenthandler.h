@@ -117,6 +117,11 @@ class ArgumentHandler {
     bool argProfiling() const;
 
     /**
+     * @brief The value of command line argument "--config-monitor"
+     */
+    bool argConfigMonitor() const;
+
+    /**
      * @brief Returns true if an error occured during parsing.
      */
     bool hasError() const;
@@ -140,6 +145,7 @@ class ArgumentHandler {
     std::string m_user;
     std::vector<std::string> m_flags;
     bool m_profiling;
+    bool m_configMonitor;
 };
 
 }  // namespace lms

@@ -50,6 +50,20 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     executionManager.enableProfiling(argumentHandler.argProfiling());
 
+    if(argumentHandler.argProfiling()) {
+        logger.info() << "Enable profiling";
+    } else {
+        logger.info() << "Disable profiling";
+    }
+
+    configMonitorEnabled = argumentHandler.argConfigMonitor();
+
+    if(configMonitorEnabled) {
+        logger.info() << "Enable config monitor";
+    } else {
+        logger.info() << "Disable config monitor";
+    }
+
     logger.info() << "RunLevel " <<  arguments.argRunLevel();
 
     //parse framework config
@@ -299,25 +313,6 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
     } else {
         logger.info("parseConfig") << "Disabled clock";
-    }
-
-    pugi::xml_node configMonitorNode = execNode.child("configMonitor");
-
-    if(configMonitorNode) {
-        pugi::xml_attribute enabledAttr = configMonitorNode.attribute("enabled");
-
-        if(enabledAttr) {
-            configMonitorEnabled = enabledAttr.as_bool(false);
-        } else {
-            logger.error("parseExecution")
-                << "Missing attribute enabled for tag <configMonitor>";
-        }
-    }
-
-    if(configMonitorEnabled) {
-        logger.info("parseConfig") << "Enabled config monitor";
-    } else {
-        logger.info("parseConfig") << "Disable config monitor";
     }
 }
 

@@ -44,7 +44,7 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
     m_showHelp(false), m_showError(false), m_runLevel(RunLevel::CYCLE),
     m_loggingMinLevel(logging::SMALLEST_LEVEL), m_quiet(false), m_user(""),
-    m_profiling(false) {
+    m_profiling(false), m_configMonitor(false) {
 
     m_user = lms::extra::username();
 }
@@ -61,6 +61,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         {"quiet", no_argument, 0, 'q'},
         {"flags", required_argument, 0, 5},
         {"profiling", no_argument, 0, 6},
+        {"config-monitor", no_argument, 0, 7},
         {0, 0, 0, 0}
     };
 
@@ -102,6 +103,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 break;
             case 6: // --profiling
                 m_profiling = true;
+                break;
+            case 7: // --config-monitor
+                m_configMonitor = true;
                 break;
             case '?':
                 m_errorMessage = "ArgumentHandler: Unknown option";
@@ -146,6 +150,7 @@ void ArgumentHandler::printHelp(std::ostream &out) const {
         << "  --log-file          Log to the given file\n"
         << "  --flags             Config flags, can be used in <if> tags\n"
         << "  --profiling         Measure execution time of all modules\n"
+        << "  --config-monitor    Enable live config monitoring\n"
         << std::endl;
 }
 
@@ -187,6 +192,10 @@ std::vector<std::string> ArgumentHandler::argFlags() const {
 
 bool ArgumentHandler::argProfiling() const {
     return m_profiling;
+}
+
+bool ArgumentHandler::argConfigMonitor() const {
+    return m_configMonitor;
 }
 
 bool ArgumentHandler::hasError() const {
