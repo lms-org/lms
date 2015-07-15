@@ -64,6 +64,22 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Disable config monitor";
     }
 
+    if(argumentHandler.argMultithreaded()) {
+        int threads;
+
+        if(argumentHandler.argThreadsAuto()) {
+            threads = std::thread::hardware_concurrency();
+            logger.info() << "Multithreaded with " << threads << " threads (auto)";
+        } else {
+            threads = argumentHandler.argThreads();
+            logger.info() << "Multithreaded with " << threads << " threads";
+        }
+
+        executionManager.setMaxThreads(threads);
+    } else {
+        logger.info() << "Single threaded";
+    }
+
     logger.info() << "RunLevel " <<  arguments.argRunLevel();
 
     //parse framework config
@@ -228,37 +244,6 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         }
     }
 
-    pugi::xml_node multithreadingNode = execNode.child("multithreading");
-
-    if(multithreadingNode) {
-        pugi::xml_attribute enabledAttr = multithreadingNode.attribute("enabled");
-        pugi::xml_attribute threadsAttr = multithreadingNode.attribute("threads");
-
-        if(enabledAttr && threadsAttr) {
-            int threads;
-            if(std::string("auto") == threadsAttr.as_string()) {
-                threads = std::thread::hardware_concurrency();
-            } else {
-                threads = threadsAttr.as_int();
-            }
-
-            if(threads <= 0) {
-                logger.error("parseExecution") << "Thread pool size invalid: "
-                                               << threads;
-            } else if(enabledAttr.as_bool(false)) {
-                executionManager.setMaxThreads(threads);
-                logger.info("parseExecution") << "Thread pool size: "
-                                          << threads
-                                          << std::endl
-                                          << "Hardware Concurrency: "
-                                          << std::thread::hardware_concurrency();
-            }
-        } else {
-            logger.error("parseExecution") << "Found <multithreading> with"
-                                           << "missing attribute 'enabled' or 'threads'";
-        }
-    }
-
     pugi::xml_node clockNode = execNode.child("clock");
 
     if(clockNode) {
@@ -272,7 +257,7 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         if(enabledAttr) {
             clockEnabled = enabledAttr.as_bool();
         } else {
-            // if no enabled attribute is given then the clock is considered
+            // if not enabled attribute is given then the clock is considered
             // to be disabled
             clockEnabled = false;
         }

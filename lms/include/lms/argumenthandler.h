@@ -121,6 +121,12 @@ class ArgumentHandler {
      */
     bool argConfigMonitor() const;
 
+    bool argMultithreaded() const;
+
+    bool argThreadsAuto() const;
+
+    int argThreads() const;
+
     /**
      * @brief Returns true if an error occured during parsing.
      */
@@ -146,6 +152,9 @@ class ArgumentHandler {
     std::vector<std::string> m_flags;
     bool m_profiling;
     bool m_configMonitor;
+    bool m_multithreaded;
+    bool m_threadsAuto;
+    int m_threads;
 };
 
 }  // namespace lms

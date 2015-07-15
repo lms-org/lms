@@ -44,7 +44,8 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 ArgumentHandler::ArgumentHandler() : m_loadConfiguration(""),
     m_showHelp(false), m_showError(false), m_runLevel(RunLevel::CYCLE),
     m_loggingMinLevel(logging::SMALLEST_LEVEL), m_quiet(false), m_user(""),
-    m_profiling(false), m_configMonitor(false) {
+    m_profiling(false), m_configMonitor(false), m_multithreaded(false),
+    m_threadsAuto(false), m_threads(1) {
 
     m_user = lms::extra::username();
 }
@@ -62,6 +63,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         {"flags", required_argument, 0, 5},
         {"profiling", no_argument, 0, 6},
         {"config-monitor", no_argument, 0, 7},
+        {"threads", required_argument, 0, 8},
         {0, 0, 0, 0}
     };
 
@@ -106,6 +108,14 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
                 break;
             case 7: // --config-monitor
                 m_configMonitor = true;
+                break;
+            case 8: // --threads
+                m_multithreaded = true;
+                if(std::string("auto") == optarg) {
+                    m_threadsAuto = true;
+                } else {
+                    m_threads = atoi(optarg);
+                }
                 break;
             case '?':
                 m_errorMessage = "ArgumentHandler: Unknown option";
@@ -204,6 +214,18 @@ bool ArgumentHandler::hasError() const {
 
 std::string ArgumentHandler::errorMessage() const {
     return m_errorMessage;
+}
+
+bool ArgumentHandler::argMultithreaded() const {
+    return m_multithreaded;
+}
+
+bool ArgumentHandler::argThreadsAuto() const {
+    return m_threadsAuto;
+}
+
+int ArgumentHandler::argThreads() const {
+    return m_threads;
 }
 
 }  // namespace lms
