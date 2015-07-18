@@ -17,13 +17,7 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attribute name="value" use="required">
-            <xs:simpleType>
-              <xs:restriction base="xs:integer">
-                <xs:minExclusive value="0" />
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:attribute>
+          <xs:attribute name="value" type="xs:positiveInteger" use="required" />
         </xs:complexType>
       </xs:element>
     </xs:sequence>
@@ -61,17 +55,14 @@
   <xs:complexType name="module">
     <xs:sequence>
       <xs:element name="name" type="xs:string" />
-      <!-- TODO EITHER realName OR libname/libpath-->
-      <xs:element name="realName" type="xs:string" minOccurs="0" />
-      <xs:element name="libname" type="xs:string" minOccurs="0" />
-      <xs:element name="libpath" type="xs:string" minOccurs="0" />
-      <xs:element name="expectedRuntime" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:integer">
-            <xs:minExclusive value="0" />
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
+      <xs:choice>
+        <xs:element name="realName" type="xs:string" minOccurs="0" />
+        <xs:sequence>
+          <xs:element name="libname" type="xs:string" minOccurs="0" />
+          <xs:element name="libpath" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="expectedRuntime" type="xs:positiveInteger" minOccurs="0" />
       <xs:element name="writePriority" type="xs:integer" minOccurs="0" />
       <xs:element name="executionType" minOccurs="0">
         <xs:simpleType>
