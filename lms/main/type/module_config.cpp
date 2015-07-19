@@ -41,27 +41,22 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
     std::string lineBuffer;
 
     while(lms::extra::safeGetline(in, line)) {
-        if(line.empty()) {
-            // ignore empty lines
-            continue;
-        }
-
-        if(line[0] == '#') {
-            // ignore comment lines
-            continue;
-        }
-
-        bool isCurrentMultiline = line[line.size() - 1] == '\\';
-        std::string normalizedLine = isCurrentMultiline ?
-                    line.erase(line.size() - 1) : line;
-
-        if(isMultiline) {
-            lineBuffer += normalizedLine;
+        if(extra::trim(line).empty() || line[0] == '#') {
+            // ignore empty lines and comment lines
+            isMultiline = false;
         } else {
-            lineBuffer = normalizedLine;
-        }
+            bool isCurrentMultiline = line[line.size() - 1] == '\\';
+            std::string normalizedLine = isCurrentMultiline ?
+                        line.erase(line.size() - 1) : line;
 
-        isMultiline = isCurrentMultiline;
+            if(isMultiline) {
+                lineBuffer += normalizedLine;
+            } else {
+                lineBuffer = normalizedLine;
+            }
+
+            isMultiline = isCurrentMultiline;
+        }
 
         if(! isMultiline) {
             size_t index = lineBuffer.find_first_of('=');
@@ -84,6 +79,11 @@ bool ModuleConfig::hasKey(const std::string &key) const {
 
 bool ModuleConfig::empty() const {
     return properties.empty();
+}
+
+template<>
+void ModuleConfig::set<std::string>(const std::string &key, const std::string &value) {
+    properties[key] = value;
 }
 
 } // namespace type

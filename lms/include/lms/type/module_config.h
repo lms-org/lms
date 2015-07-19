@@ -99,7 +99,11 @@ public:
      * @param value the value to set
      */
     template<typename T>
-    void set(const std::string &key, const T &value);
+    void set(const std::string &key, const T &value) {
+        std::ostringstream oss;
+        oss << value;
+        properties[key] = oss.str();
+    }
 
     /**
      * @brief Return the value by the given config key.
@@ -165,10 +169,8 @@ private:
     std::unordered_map<std::string, std::string> properties;
 };
 
-template<typename T>
-void ModuleConfig::set(const std::string &key, const T &value) {
-    properties[key] = value;
-}
+template<>
+void ModuleConfig::set<std::string>(const std::string &key, const std::string &value);
 
 template<typename T>
 T ModuleConfig::get(const std::string &key) const {
