@@ -16,6 +16,9 @@ LMS is licensed under the [Apache 2.0 license](http://www.apache.org/licenses/LI
 
 We have some code-guidelines:
 - [Google Styleguide](google-styleguide.googlecode.com/svn/trunk/cppguide.html)
+- [C++ Coding Standard](www.possibility.com/Cpp/CppCodingStandard.html)
+
+We do not enforce the style guides but you can learn a lot by just reading.
 
 A few things we'd like to see:
 
@@ -44,15 +47,19 @@ If you create a new file:
   usage / *What is it doing?*
 - For every method: Comment the method if the name is not self-descriptive
 - For every coding hack include a `TODO HACK` comment with an explanation
+- Use header guards in every header file
+- Write a *TODO* comment at the file's top if incomplete
 
 ### Performance Considerations
 
 LMS is meant to run fast and reliable.
 
 A couple of guidelines:
-  * Avoid temporary object allocation
-  * Do not perform argument checks for methods (in some cases they might be usefull). The person who calls your method is bound to check them
-  * Use pooling if necessary, if possible, avoid exposing the pooling to the user as it complicates the API
+- Avoid temporary object allocation
+- Do not perform argument checks for methods (in some cases they might be
+  useful). The person who calls your method is bound to check them
+- Use pooling if necessary, if possible, avoid exposing the pooling to the user
+  as it complicates the API
 
 ### Git
 
