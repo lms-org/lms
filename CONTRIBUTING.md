@@ -1,4 +1,4 @@
-##Contributing to LMS:
+## Contributing to LMS:
 
 //TODO link getting started working with source
 
@@ -9,24 +9,41 @@ If you want to make sure, that your changes will be included start a conversatio
 ### Contributor License Agreement
 
 LMS is licensed under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
+
 //TODO Contributor License Agreement (CLA)
 
 ### Code Style
 
-We have some code-guidelines //TODO add link, in short:
+We have some code-guidelines:
+- [Google Styleguide](google-styleguide.googlecode.com/svn/trunk/cppguide.html)
 
 A few things we'd like to see:
 
-  * It's a C++ project, use C++ and avoid C
-  * Use & for * see //TODO insert link
-  * code => CamelCase
-  * files => snake_case
+- It's a C++ project, use C++ and avoid C
+- Use references (&) instead of pointers (\*), whenever possible
+- C++ Classes => UpperCamelCase
+- C++ Class methods and attributes => lowerCamelCase
+- C/C++ constants and enum values => TITLE_CASE
+- file names => snake_case
 
 If you create a new file:
-  * make sure to add the Apache file header, as seen //TODO add link
-  * if the name isn't self explained please add a README that states what the file is for
-If you create a new source-file, please add documentation that explains the usage and scope of he src and add comment your methods and difficult parts in your code.
-No comments = no code
+- make sure to add the Apache file header, as seen //TODO add link
+- if the name isn't self explained please add a README that states what the file
+  is for
+- If you create a new source-file, please add documentation that explains the
+  usage and scope of he src and add comment your methods and difficult parts in
+  your code.
+- No comments = no code
+
+### Every module and library
+- Include `README.md` with information of the author, the creation date
+  and its usage
+
+### Every .CPP, .H file
+- Comment with information of the author, the creation date and its
+  usage / *What is it doing?*
+- For every method: Comment the method if the name is not self-descriptive
+- For every coding hack include a `TODO HACK` comment with an explanation
 
 ### Performance Considerations
 
@@ -39,4 +56,8 @@ A couple of guidelines:
 
 ### Git
 
-Pull requests for the master repository will be checked before inclusion.
+- Pull requests for the master repository will be checked before inclusion.
+- Push only compilable, working code on the *master* branch.
+- Create branches for features and issues, not for perons.
+- Merge feature branches with master if they work and are well tested.
+- Create branches of branches if you implement a sub feature.
