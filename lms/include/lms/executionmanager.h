@@ -34,7 +34,7 @@ public:
     /**
      * @brief Add a new module to the list of available modules.
      */
-    void addAvailableModule(const Loader::module_entry &mod);
+    void addAvailableModule(std::shared_ptr<ModuleWrapper> mod);
 
     /**
      * @brief Disable all modules that are currently enabled.
@@ -134,7 +134,7 @@ private:
     /**
      * @brief available contains all Modules which can be loaded
      */
-    Loader::moduleList available;
+    ModuleList available;
 
     /**
      * @brief Call this method for sorting the cycleList.

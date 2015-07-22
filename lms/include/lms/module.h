@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+
 #include <lms/loader.h>
 #include <lms/type/module_config.h>
 #include <lms/messaging.h>
@@ -38,18 +39,22 @@ public:
      */
     std::string getName() const;
 
+    std::shared_ptr<ModuleWrapper> wrapper() const {
+        return m_wrapper;
+    }
+
     /**
      * @brief Called by the framework itself at module-creation.
      *
      * Do not call this inside a module!
      */
     bool initializeBase(DataManager* datamanager, Messaging *messaging,
-                        Loader::module_entry& loaderEntry, logging::Logger *rootLogger,
+        std::shared_ptr<ModuleWrapper> loaderEntry, logging::Logger *rootLogger,
                         logging::LogLevel minLogLevel);
 
     int getPriority() const;
     extra::PrecisionTime getExpectedRuntime() const;
-    Loader::module_entry::ExecutionType getExecutionType() const;
+    ModuleWrapper::ExecutionType getExecutionType() const;
 
     /**
      * @brief Informs a module of the start of its
@@ -141,7 +146,7 @@ public:
      * @return the mapping for the given key or the key itself if it has no
      * mapping for it
      */
-    std::string getChannelMapping(std::string mapFrom);
+    std::string getChannelMapping(const std::string &mapFrom);
 
 protected:
     /**
@@ -171,7 +176,7 @@ protected:
     const type::ModuleConfig* getConfig(const std::string &name = "default");
     bool hasConfig(const std::string &name = "default");
 private:
-    Loader::module_entry loaderEntry;
+    std::shared_ptr<ModuleWrapper> m_wrapper;
     DataManager* m_datamanager;
     Messaging* m_messaging;
 };

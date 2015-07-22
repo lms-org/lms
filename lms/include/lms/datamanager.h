@@ -13,6 +13,7 @@
 #include <lms/logger.h>
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
+#include "lms/module_wrapper.h"
 
 namespace lms {
 
@@ -61,8 +62,8 @@ private:
         size_t dataHashCode;
         bool serializable;
         bool exclusiveWrite;
-        std::vector<Module*> readers;
-        std::vector<Module*> writers;
+        ModuleList readers;
+        ModuleList writers;
     };
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
@@ -108,7 +109,7 @@ public:
 //                                        " is already reader or writer of channel "
 //                                        << name;
         } else {
-            channel.readers.push_back(module);
+            channel.readers.push_back(module->wrapper());
             invalidateExecutionManager();
         }
 
@@ -146,7 +147,7 @@ public:
                                         " is already reader or writer of channel "
                                         << name;
         } else {
-            channel.writers.push_back(module);
+            channel.writers.push_back(module->wrapper());
             invalidateExecutionManager();
         }
 
@@ -192,7 +193,7 @@ public:
                                         " is already reader or writer of channel "
                                         << name;
         } else {
-            channel.writers.push_back(module);
+            channel.writers.push_back(module->wrapper());
             invalidateExecutionManager();
         }
 
