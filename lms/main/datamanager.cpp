@@ -137,15 +137,15 @@ bool DataManager::hasChannel(Module *module, const std::string &name) const {
     return hasChannel(module->getChannelMapping(name));
 }
 
-void DataManager::releaseChannelsOf(const Module *module) {
-    logger.debug("release") << module->getName();
+void DataManager::releaseChannelsOf(std::shared_ptr<ModuleWrapper> module) {
+    logger.debug("release") << module->name;
 
     for(auto &ch : channels) {
         ch.second.readers.erase(std::remove(ch.second.readers.begin(),
-            ch.second.readers.end(), module->wrapper()), ch.second.readers.end());
+            ch.second.readers.end(), module), ch.second.readers.end());
 
         ch.second.writers.erase(std::remove(ch.second.writers.begin(),
-            ch.second.writers.end(), module->wrapper()), ch.second.writers.end());
+            ch.second.writers.end(), module), ch.second.writers.end());
 
         if(ch.second.writers.empty()) {
             ch.second.exclusiveWrite = false;

@@ -41,7 +41,7 @@ void ExecutionManager::disableAllModules() {
 
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
-        dataManager.releaseChannelsOf((*it)->moduleInstance);
+        dataManager.releaseChannelsOf(*it);
         loader.unload(it->get());
     }
 
@@ -351,7 +351,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
 
             enabledModules.erase(it);
 
-            dataManager.releaseChannelsOf(*it);
+            dataManager.releaseChannelsOf((*it)->wrapper());
 
             invalidate();
             return true;

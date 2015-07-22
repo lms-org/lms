@@ -299,7 +299,7 @@ private:
      *
      * @param module the module to look for
      */
-    void releaseChannelsOf(const Module *module);
+    void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
 
     /**
      * @brief Print all channels with their corresponding readers
