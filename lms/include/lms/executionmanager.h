@@ -87,7 +87,7 @@ public:
 
     Messaging& messaging();
 
-    const std::vector<Module*>& getEnabledModules() const;
+    const ModuleList& getEnabledModules() const;
 
     /**
      * @brief Invoke configsChanged() of all enabled modules.
@@ -120,7 +120,7 @@ private:
     /**
      * @brief enabledModules contains all loaded Modules
      */
-    std::vector<Module*> enabledModules;
+    ModuleList enabledModules;
 
     /**
      * @brief cycleListT the cycleListType

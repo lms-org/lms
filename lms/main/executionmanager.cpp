@@ -30,12 +30,12 @@ ExecutionManager::~ExecutionManager () {
 }
 
 void ExecutionManager::disableAllModules() {
-    for(std::vector<Module*>::reverse_iterator it = enabledModules.rbegin();
+    for(ModuleList::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
-        if(! (*it)->deinitialize()) {
+        if(! (*it)->moduleInstance->deinitialize()) {
             logger.error("disableModule")
-                    << "Deinitialize failed for module " << (*it)->getName();
+                    << "Deinitialize failed for module " << (*it)->name;
         }
     }
 
@@ -306,8 +306,8 @@ void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
 
 void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLevel minLogLevel){
     //Check if module is already enabled
-    for(auto* it:enabledModules){
-        if(it->getName() == name){
+    for(auto it:enabledModules){
+        if(it->name == name){
             logger.error("enableModule") << "Module " << name << " is already enabled.";
             return;
         }
@@ -320,7 +320,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
             module->initializeBase(&dataManager, &m_messaging, it, &rootLogger, minLogLevel);
 
             if(module->initialize()){
-                enabledModules.push_back(module);
+                enabledModules.push_back(it);
             }else{
                 logger.error("enable Module") <<"Enabling Module "<< name << " failed";
             }
@@ -333,11 +333,11 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
 
 /**Disable module with the given name, remove it from the cycle-queue */
 bool ExecutionManager::disableModule(const std::string &name) {
-    for(std::vector<Module*>::iterator it = enabledModules.begin();
+    for(ModuleList::iterator it = enabledModules.begin();
         it != enabledModules.end(); ++it) {
 
-        if((*it)->getName() == name) {
-            if(! (*it)->deinitialize()) {
+        if((*it)->name == name) {
+            if(! (*it)->moduleInstance->deinitialize()) {
                 logger.error("disableModule")
                         << "Deinitialize failed for module " << name;
             }
@@ -351,7 +351,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
 
             enabledModules.erase(it);
 
-            dataManager.releaseChannelsOf((*it)->wrapper());
+            dataManager.releaseChannelsOf(*it);
 
             invalidate();
             return true;
@@ -399,9 +399,9 @@ void ExecutionManager::sort(){
     cycleList.clear();
     logger.debug("sort modules") << "sort it size: " << enabledModules.size();
     //add modules to the list
-    for(Module* it : enabledModules){
+    for(std::shared_ptr<ModuleWrapper> it : enabledModules){
         std::vector<Module*> tmp;
-        tmp.push_back(it);
+        tmp.push_back(it->moduleInstance);
         cycleList.push_back(tmp);
     }
     sortByDataChannel();
@@ -465,13 +465,13 @@ Messaging& ExecutionManager::messaging() {
     return m_messaging;
 }
 
-const std::vector<Module*>& ExecutionManager::getEnabledModules() const {
+const ModuleList& ExecutionManager::getEnabledModules() const {
     return enabledModules;
 }
 
 void ExecutionManager::fireConfigsChangedEvent() {
-    for(Module *mod : enabledModules) {
-        mod->configsChanged();
+    for(std::shared_ptr<ModuleWrapper> mod : enabledModules) {
+        mod->moduleInstance->configsChanged();
     }
 }
 

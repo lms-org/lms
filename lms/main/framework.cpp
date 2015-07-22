@@ -134,14 +134,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
                 logger.info("loadConfig") << "START";
 
-                std::vector<Module*> forDisable;
+                ModuleList forDisable;
 
                 // disable all modules that are not needed anymore
-                for(Module* mod : executionManager.getEnabledModules()) {
+                for(std::shared_ptr<ModuleWrapper> mod : executionManager.getEnabledModules()) {
                     bool found = false;
 
                     for(const ModuleToLoad &loadMod : modulesToLoadLists[message]) {
-                        if(mod->getName() == loadMod.name) {
+                        if(mod->name == loadMod.name) {
                             found = true;
                             break;
                         }
@@ -155,8 +155,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 // disable in reversed order
                 std::reverse(forDisable.begin(), forDisable.end());
 
-                for(Module* mod : forDisable) {
-                    executionManager.disableModule(mod->getName());
+                for(std::shared_ptr<ModuleWrapper> mod : forDisable) {
+                    executionManager.disableModule(mod->name);
                 }
 
                 logger.info("loadConfig") << "MID";
