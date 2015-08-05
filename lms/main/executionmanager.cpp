@@ -62,6 +62,10 @@ void ExecutionManager::loop() {
         for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfMeasurements()) {
             type::FrameworkInfo::ModuleProfiling &profiling = frameworkInfo.getProfiling(m.module);
             extra::PrecisionTime runtime = m.end - m.begin;
+            // runtime will be rounded to be at least 1 us if lower than 1 us
+            if(runtime == extra::PrecisionTime::ZERO) {
+                runtime = extra::PrecisionTime::fromMicros(1);
+            }
             extra::PrecisionTime expectedRuntime = m.expected;
 
             // adjust maximum und minimum runtime
