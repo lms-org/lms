@@ -300,7 +300,6 @@ void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
         }
     }
 
-    logger.info() << "Add module " << mod->name;
     available.push_back(mod);
 }
 
@@ -314,7 +313,6 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
     }
     for(std::shared_ptr<ModuleWrapper> it:available){
         if(it->name == name){
-            logger.debug("enable Module") <<"enabling Module: " <<name;
             loader.load(it.get());
             Module *module = it->moduleInstance;
             module->initializeBase(&dataManager, &m_messaging, it, &rootLogger, minLogLevel);
@@ -397,7 +395,7 @@ void ExecutionManager::printCycleList() {
 
 void ExecutionManager::sort(){
     cycleList.clear();
-    logger.debug("sort modules") << "sort it size: " << enabledModules.size();
+    logger.debug("sort") << "No. of enabled modules: " << enabledModules.size();
     //add modules to the list
     for(std::shared_ptr<ModuleWrapper> it : enabledModules){
         std::vector<Module*> tmp;
@@ -420,8 +418,6 @@ void ExecutionManager::sortByDataChannel(){
                 if(toAdd->getName() == reader->name){
                     for(std::shared_ptr<ModuleWrapper> writer : pair.second.writers){
                         list.push_back(writer->moduleInstance);
-                        logger.info("adding: ") <<toAdd->getName() << " <- "<< writer->name;
-
                     }
                 }
             }

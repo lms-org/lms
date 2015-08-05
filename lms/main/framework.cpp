@@ -193,7 +193,6 @@ void Framework::parseConfig(LoadConfigFlag flag){
 }
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
-    logger.debug("parseFile") << "Reading XML file: " << file;
     if(lms::extra::FILE_MONITOR_SUPPORTED && !configMonitor.watch(file)) {
         logger.error("parseFile") << "Could not monitor " << file;
     }
@@ -317,7 +316,6 @@ void Framework::parseModules(pugi::xml_node rootNode,
         std::map<std::string, type::ModuleConfig> configMap;
 
         module->name = moduleNode.child("name").child_value();
-        logger.info("parseModules") << "Found def for module " << module->name;
 
         pugi::xml_node realNameNode = moduleNode.child("realName");
 
@@ -429,7 +427,6 @@ void Framework::parseModules(pugi::xml_node rootNode,
                         << srcAttr.value() << " for " << module->name << " but failed";
 
                 } else {
-                    logger.info("parseModules") << "Loaded " << lconfPath;
                     if(lms::extra::FILE_MONITOR_SUPPORTED &&
                             !configMonitor.watch(lconfPath)) {
                         logger.error("parseModules") << "Failed to monitor "
@@ -461,8 +458,6 @@ void Framework::parseIncludes(pugi::xml_node rootNode,
         pugi::xml_attribute srcAttr = includeNode.attribute("src");
 
         if(srcAttr) {
-            logger.info("parseIncludes") << "Found include " << srcAttr.value();
-
             std::string includePath = srcAttr.value();
             if(extra::isAbsolute(includePath)) {
                 // if absolute then start from configs dir
@@ -479,7 +474,6 @@ void Framework::parseIncludes(pugi::xml_node rootNode,
 }
 
 Framework::~Framework() {
-    logger.info() << "Removing Signal listeners";
     SignalHandler::getInstance()
             .removeListener(SIGINT, this)
             .removeListener(SIGSEGV, this);

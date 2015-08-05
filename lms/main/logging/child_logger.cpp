@@ -9,7 +9,6 @@ namespace logging {
 ChildLogger::ChildLogger(const std::string &name, Logger *parent,
                          std::unique_ptr<LoggingFilter> filter)
     : parent(parent), name(name), m_filter(std::move(filter)) {
-    std::cout << "New child logger "<< name << std::endl;
 }
 
 std::unique_ptr<LogMessage> ChildLogger::log(LogLevel lvl, const std::string& tag) {

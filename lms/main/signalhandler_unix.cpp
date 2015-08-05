@@ -6,7 +6,6 @@
 namespace lms {
 
 void SignalHandler::platform_registerSignal(int signalCode) {
-    std::cout << "Register listener for " << signalCode << std::endl;
     signal(signalCode, handlerForAllSignals);
 
     // initialize signal action struct
@@ -19,7 +18,6 @@ void SignalHandler::platform_registerSignal(int signalCode) {
 
 void SignalHandler::platform_unregisterSignal(int signalCode) {
     //TODO Not sure if we really should set it to the DFL-one. Comment needed!
-    std::cout << "Unregister listener for " << signalCode << std::endl;
     signal(signalCode, SIG_DFL);
 }
 

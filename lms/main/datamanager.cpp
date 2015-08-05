@@ -138,8 +138,6 @@ bool DataManager::hasChannel(Module *module, const std::string &name) const {
 }
 
 void DataManager::releaseChannelsOf(std::shared_ptr<ModuleWrapper> module) {
-    logger.debug("release") << module->name;
-
     for(auto &ch : channels) {
         ch.second.readers.erase(std::remove(ch.second.readers.begin(),
             ch.second.readers.end(), module), ch.second.readers.end());

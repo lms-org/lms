@@ -95,10 +95,6 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
-            logger.warn() << "Module " << module->getName() << " requested read access for "
-                << name << std::endl
-                << " but the channel was not yet initialized -> Initializing, just for you <3";
-
             initChannel<T>(channel);
         } else if(! checkType<T>(channel, name)) {
             return nullptr;

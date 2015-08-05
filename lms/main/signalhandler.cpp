@@ -42,8 +42,6 @@ SignalHandler& SignalHandler::removeListener(int signalCode, Listener *listener)
 }
 
 void SignalHandler::handlerForAllSignals(int signal) {
-    std::cout << "Signal " << signal << " was triggered" << std::endl;
-
     for(auto& listener : SignalHandler::getInstance().listeners[signal]) {
         listener->signal(signal);
     }
