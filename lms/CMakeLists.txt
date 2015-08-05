@@ -32,6 +32,7 @@ set (PUBLIC_HEADERS
         "include/lms/deprecated.h"
         "include/lms/xml_parser.h"
         "include/lms/config_observer.h"
+        "include/lms/module_wrapper.h"
 
         "include/lms/type/module_config.h"
         "include/lms/type/framework_info.h"

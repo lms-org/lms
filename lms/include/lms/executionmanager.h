@@ -34,7 +34,7 @@ public:
     /**
      * @brief Add a new module to the list of available modules.
      */
-    void addAvailableModule(const Loader::module_entry &mod);
+    void addAvailableModule(std::shared_ptr<ModuleWrapper> mod);
 
     /**
      * @brief Disable all modules that are currently enabled.
@@ -87,7 +87,7 @@ public:
 
     Messaging& messaging();
 
-    const std::vector<Module*>& getEnabledModules() const;
+    const ModuleList& getEnabledModules() const;
 
     /**
      * @brief Invoke configsChanged() of all enabled modules.
@@ -120,7 +120,7 @@ private:
     /**
      * @brief enabledModules contains all loaded Modules
      */
-    std::vector<Module*> enabledModules;
+    ModuleList enabledModules;
 
     /**
      * @brief cycleListT the cycleListType
@@ -134,7 +134,7 @@ private:
     /**
      * @brief available contains all Modules which can be loaded
      */
-    Loader::moduleList available;
+    ModuleList available;
 
     /**
      * @brief Call this method for sorting the cycleList.

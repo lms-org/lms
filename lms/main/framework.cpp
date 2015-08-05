@@ -134,14 +134,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
                 logger.info("loadConfig") << "START";
 
-                std::vector<Module*> forDisable;
+                ModuleList forDisable;
 
                 // disable all modules that are not needed anymore
-                for(Module* mod : executionManager.getEnabledModules()) {
+                for(std::shared_ptr<ModuleWrapper> mod : executionManager.getEnabledModules()) {
                     bool found = false;
 
                     for(const ModuleToLoad &loadMod : modulesToLoadLists[message]) {
-                        if(mod->getName() == loadMod.name) {
+                        if(mod->name == loadMod.name) {
                             found = true;
                             break;
                         }
@@ -155,8 +155,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 // disable in reversed order
                 std::reverse(forDisable.begin(), forDisable.end());
 
-                for(Module* mod : forDisable) {
-                    executionManager.disableModule(mod->getName());
+                for(std::shared_ptr<ModuleWrapper> mod : forDisable) {
+                    executionManager.disableModule(mod->name);
                 }
 
                 logger.info("loadConfig") << "MID";
@@ -193,7 +193,6 @@ void Framework::parseConfig(LoadConfigFlag flag){
 }
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
-    logger.debug("parseFile") << "Reading XML file: " << file;
     if(lms::extra::FILE_MONITOR_SUPPORTED && !configMonitor.watch(file)) {
         logger.error("parseFile") << "Could not monitor " << file;
     }
@@ -313,16 +312,15 @@ void Framework::parseModules(pugi::xml_node rootNode,
     // parse all <module> nodes
     for (pugi::xml_node moduleNode : rootNode.children("module")) {
 
-        Loader::module_entry module;
+        std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>();
         std::map<std::string, type::ModuleConfig> configMap;
 
-        module.name = moduleNode.child("name").child_value();
-        logger.info("parseModules") << "Found def for module " << module.name;
+        module->name = moduleNode.child("name").child_value();
 
         pugi::xml_node realNameNode = moduleNode.child("realName");
 
         if(realNameNode) {
-            module.libpath = externalDirectory + "/modules/" +
+            module->libpath = externalDirectory + "/modules/" +
                     realNameNode.child_value() + "/" +
                     Loader::getModulePath(realNameNode.child_value());
         } else {
@@ -333,15 +331,15 @@ void Framework::parseModules(pugi::xml_node rootNode,
             if(libnameNode) {
                 libname = Loader::getModulePath(libnameNode.child_value());
             } else {
-                libname = Loader::getModulePath(module.name);
+                libname = Loader::getModulePath(module->name);
             }
 
             if(libpathNode) {
                 // TODO better relative path here
-                module.libpath = externalDirectory + "/modules/" +
+                module->libpath = externalDirectory + "/modules/" +
                         libpathNode.child_value() + "/" + libname;
             } else {
-                module.libpath = externalDirectory + "/modules/" + module.name
+                module->libpath = externalDirectory + "/modules/" + module->name
                         + "/" + libname;
             }
         }
@@ -349,9 +347,9 @@ void Framework::parseModules(pugi::xml_node rootNode,
         pugi::xml_node writePrioNode = moduleNode.child("writePriority");
 
         if(writePrioNode) {
-            module.writePriority = atoi(writePrioNode.child_value());
+            module->writePriority = atoi(writePrioNode.child_value());
         } else {
-            module.writePriority = 0;
+            module->writePriority = 0;
         }
 
         pugi::xml_node executionTypeNode = moduleNode.child("executionType");
@@ -360,24 +358,24 @@ void Framework::parseModules(pugi::xml_node rootNode,
             std::string executionType = executionTypeNode.child_value();
 
             if(executionType == "ONLY_MAIN_THREAD") {
-                module.executionType = Loader::module_entry::ONLY_MAIN_THREAD;
+                module->executionType = ModuleWrapper::ONLY_MAIN_THREAD;
             } else if(executionType == "NEVER_MAIN_THREAD") {
-                module.executionType = Loader::module_entry::NEVER_MAIN_THREAD;
+                module->executionType = ModuleWrapper::NEVER_MAIN_THREAD;
             } else {
                 logger.error("parseModule") << "Invalid value for executionType: "
                                             << executionType;
             }
         } else {
-            module.executionType = Loader::module_entry::NEVER_MAIN_THREAD;
+            module->executionType = ModuleWrapper::NEVER_MAIN_THREAD;
         }
 
         pugi::xml_node expectedRuntimeNode = moduleNode.child("expectedRuntime");
 
         if(expectedRuntimeNode) {
-            module.expectedRuntime = extra::PrecisionTime::fromMicros(
+            module->expectedRuntime = extra::PrecisionTime::fromMicros(
                         atoi(expectedRuntimeNode.child_value()));
         } else {
-            module.expectedRuntime = extra::PrecisionTime::ZERO;
+            module->expectedRuntime = extra::PrecisionTime::ZERO;
         }
 
         // parse all channel mappings
@@ -386,7 +384,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
             pugi::xml_attribute toAttr = mappingNode.attribute("to");
 
             if(fromAttr && toAttr) {
-                module.channelMapping[fromAttr.value()] = toAttr.value();
+                module->channelMapping[fromAttr.value()] = toAttr.value();
             } else {
                 logger.warn("parseModules")
                     << "Tag <channelMapping> requires from and to attributes";
@@ -426,10 +424,9 @@ void Framework::parseModules(pugi::xml_node rootNode,
                 bool loadResult = configMap[name].loadFromFile(lconfPath);
                 if(!loadResult) {
                     logger.error("parseModules") << "Tried to load "
-                        << srcAttr.value() << " for " << module.name << " but failed";
+                        << srcAttr.value() << " for " << module->name << " but failed";
 
                 } else {
-                    logger.info("parseModules") << "Loaded " << lconfPath;
                     if(lms::extra::FILE_MONITOR_SUPPORTED &&
                             !configMonitor.watch(lconfPath)) {
                         logger.error("parseModules") << "Failed to monitor "
@@ -445,7 +442,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
         for(std::pair<std::string, type::ModuleConfig> pair : configMap) {
             executionManager.getDataManager()
                 .setChannel<type::ModuleConfig>(
-                "CONFIG_" + module.name + "_" + pair.first, pair.second);
+                "CONFIG_" + module->name + "_" + pair.first, pair.second);
         }
 
         if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
@@ -461,8 +458,6 @@ void Framework::parseIncludes(pugi::xml_node rootNode,
         pugi::xml_attribute srcAttr = includeNode.attribute("src");
 
         if(srcAttr) {
-            logger.info("parseIncludes") << "Found include " << srcAttr.value();
-
             std::string includePath = srcAttr.value();
             if(extra::isAbsolute(includePath)) {
                 // if absolute then start from configs dir
@@ -479,7 +474,6 @@ void Framework::parseIncludes(pugi::xml_node rootNode,
 }
 
 Framework::~Framework() {
-    logger.info() << "Removing Signal listeners";
     SignalHandler::getInstance()
             .removeListener(SIGINT, this)
             .removeListener(SIGSEGV, this);

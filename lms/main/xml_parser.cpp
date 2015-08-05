@@ -76,7 +76,6 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
 
             // if the condition evaluated to true
             if(result) {
-                std::cout << "Evaluate to true" << std::endl;
                 // then move all children of <if> to be siblings of <if>
 
                 pugi::xml_node moveNode;
@@ -86,7 +85,6 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
 
                 node.remove_child(child);
             } else {
-                std::cout << "Evaluate to false" << std::endl;
                 node.remove_child(child);
             }
 

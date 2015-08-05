@@ -36,7 +36,7 @@ public:
                 std::unique_ptr<LoggingFilter> filter = nullptr);
 
     // TODO remove this, it's only for debugging
-    ~ChildLogger() { std::cout << "Delete child logger " << name << std::endl; }
+    ~ChildLogger() { }
 
     /**
      * @brief Set the new filter for this child logger.

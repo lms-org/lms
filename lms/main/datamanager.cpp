@@ -8,7 +8,7 @@
 #include <lms/datamanager.h>
 #include <lms/executionmanager.h>
 
-namespace lms{
+namespace lms {
 
 DataManager::DataManager(logging::Logger &rootLogger, ExecutionManager &execMgr)
     : logger("DATAMGR", &rootLogger), execMgr(execMgr) {}
@@ -43,7 +43,7 @@ void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
                                     << name;
     } else {
         execMgr.invalidate();
-        channel.writers.push_back(module);
+        channel.writers.push_back(module->wrapper());
     }
 }
 
@@ -63,7 +63,7 @@ void DataManager::getExclusiveWriteAccess(Module *module, const std::string &req
     } else {
         execMgr.invalidate();
         channel.exclusiveWrite = true;
-        channel.writers.push_back(module);
+        channel.writers.push_back(module->wrapper());
     }
 }
 
@@ -77,7 +77,7 @@ void DataManager::getReadAccess(Module *module, const std::string &reqName) {
                                     << name;
     } else {
         execMgr.invalidate();
-        channel.readers.push_back(module);
+        channel.readers.push_back(module->wrapper());
     }
 }
 
@@ -85,8 +85,8 @@ bool DataManager::serializeChannel(Module *module, const std::string &reqName, s
     std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
-    if(std::find(channel.readers.begin(), channel.readers.end(), module) == channel.readers.end()
-            && std::find(channel.writers.begin(), channel.writers.end(), module) == channel.writers.end()) {
+    if(std::find(channel.readers.begin(), channel.readers.end(), module->wrapper()) == channel.readers.end()
+            && std::find(channel.writers.begin(), channel.writers.end(), module->wrapper()) == channel.writers.end()) {
         logger.error("serializeChannel") << "Module " << module->getName()
                                          << " tried to serialize channel " << name
                                          << " without any permissions.";
@@ -109,7 +109,7 @@ bool DataManager::deserializeChannel(Module *module, const std::string &reqName,
     std::string name = module->getChannelMapping(reqName);
     DataChannel &channel = channels[name];
 
-    if(std::find(channel.writers.begin(), channel.writers.end(), module) == channel.writers.end()) {
+    if(std::find(channel.writers.begin(), channel.writers.end(), module->wrapper()) == channel.writers.end()) {
         logger.error("deserializeChannel") << "Module " << module->getName()
                                          << " tried to deserialize channel " << name
                                          << " without write permissions.";
@@ -137,9 +137,7 @@ bool DataManager::hasChannel(Module *module, const std::string &name) const {
     return hasChannel(module->getChannelMapping(name));
 }
 
-void DataManager::releaseChannelsOf(const Module *module) {
-    logger.debug("release") << module->getName();
-
+void DataManager::releaseChannelsOf(std::shared_ptr<ModuleWrapper> module) {
     for(auto &ch : channels) {
         ch.second.readers.erase(std::remove(ch.second.readers.begin(),
             ch.second.readers.end(), module), ch.second.readers.end());
@@ -169,16 +167,16 @@ void DataManager::printMapping()  {
 
         if(! ch.second.readers.empty()) {
             std::string readerLine = "    reading: ";
-            for(const Module *reader : ch.second.readers) {
-                readerLine += reader->getName() + " ";
+            for(std::shared_ptr<ModuleWrapper> reader : ch.second.readers) {
+                readerLine += reader->name + " ";
             }
             logger.debug("mapping") << readerLine;
         }
 
         if(! ch.second.writers.empty()) {
             std::string writerLine = "    writing: ";
-            for(const Module *writer : ch.second.writers) {
-                writerLine += writer->getName() + " ";
+            for(std::shared_ptr<ModuleWrapper> writer : ch.second.writers) {
+                writerLine += writer->name + " ";
             }
             logger.debug("mapping") << writerLine;
         }
@@ -186,14 +184,14 @@ void DataManager::printMapping()  {
 }
 
 bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {
-    for(Module *mod : channel.readers) {
-        if(mod->getName() == module->getName()) {
+    for(std::shared_ptr<ModuleWrapper> mod : channel.readers) {
+        if(mod->moduleInstance == module) {
             return true;
         }
     }
 
-    for(Module *mod : channel.writers) {
-        if(mod->getName() == module->getName()) {
+    for(std::shared_ptr<ModuleWrapper> mod : channel.writers) {
+        if(mod->moduleInstance == module) {
             return true;
         }
     }
@@ -205,4 +203,4 @@ void DataManager::invalidateExecutionManager() {
     execMgr.invalidate();
 }
 
-}
+}  // namespace lms

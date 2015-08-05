@@ -7,11 +7,9 @@ namespace logging {
 
 RootLogger::RootLogger(std::unique_ptr<Sink> sink, std::unique_ptr<LoggingFilter> filter) :
     m_sink(std::move(sink)), m_filter(std::move(filter)) {
-    debug() << "New root logger with sink";
 }
 
 RootLogger::RootLogger() : m_sink(new ConsoleSink()), m_filter(nullptr) {
-    debug() << "New root logger";
 }
 
 void RootLogger::sink(std::unique_ptr<Sink> sink) {

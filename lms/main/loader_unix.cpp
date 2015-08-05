@@ -38,18 +38,17 @@ bool Loader::checkSharedLibrary(const std::string &libpath) {
     return valid;
 }
 
-Module* Loader::load(module_entry& entry) {
+void Loader::load(ModuleWrapper *entry) {
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
     // open dynamic library (*.so file)
-    void *lib = dlopen(entry.libpath.c_str(),RTLD_NOW);
+    void *lib = dlopen(entry->libpath.c_str(),RTLD_NOW);
 
     // check for errors while opening
     if(lib == NULL) {
-        logger.error("load") << "Could not open dynamic lib: " << entry.name
+        logger.error("load") << "Could not open dynamic lib: " << entry->name
             << std::endl << "Message: " << dlerror();
-        return nullptr;
     }
 
     // clear error code
@@ -62,13 +61,12 @@ Module* Loader::load(module_entry& entry) {
     // check for errors while calling dlsym
     char *err;
     if ((err = dlerror()) != NULL) {
-        logger.error("load") << "Could not get symbol 'getInstance' of module " << entry.name
+        logger.error("load") << "Could not get symbol 'getInstance' of module " << entry->name
             << std::endl << "Message: " << err;
-        return nullptr;
     }
 
-    entry.dlHandle = lib;
-    entry.enabled = true;
+    entry->dlHandle = lib;
+    entry->enabled = true;
 
     // TODO check if close is needed here
 //    if(dlclose(lib) != 0) {
@@ -84,7 +82,7 @@ Module* Loader::load(module_entry& entry) {
 
     // call the getInstance function and cast it to a Module pointer
     // -> getInstance should return a newly created object.
-    return entry.moduleInstance = reinterpret_cast<Module*> (conv.target());
+    entry->moduleInstance = reinterpret_cast<Module*> (conv.target());
 
     // Cast symbol to function pointer returning a pointer to a Module instance and
     // call the function to get the a module instance
@@ -96,10 +94,10 @@ Module* Loader::load(module_entry& entry) {
     //return reinterpret_cast<Module*(*)()>( func )();
 }
 
-void Loader::unload(module_entry &entry) {
-    if(entry.enabled) {
-        delete (entry.moduleInstance);
-        entry.moduleInstance = nullptr;
+void Loader::unload(ModuleWrapper *entry) {
+    if(entry->enabled) {
+        delete (entry->moduleInstance);
+        entry->moduleInstance = nullptr;
 
         // even with dlclose there is a 32 byte memory leak reported by valgrind
         // http://stackoverflow.com/questions/1542457/memory-leak-reported-by-valgrind-in-dlopen
@@ -108,10 +106,10 @@ void Loader::unload(module_entry &entry) {
 //        if(0 != dlclose(entry.dlHandle)) {
 //            logger.error("unload") << "dlclose failed for " << entry.name;
 //        }
-        entry.dlHandle = nullptr;
+        entry->dlHandle = nullptr;
 
         //logger.info() << "Closed dl for " << entry.name;
-        entry.enabled = false;
+        entry->enabled = false;
     }
 }
 

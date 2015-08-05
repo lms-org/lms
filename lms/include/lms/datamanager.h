@@ -13,6 +13,7 @@
 #include <lms/logger.h>
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
+#include "lms/module_wrapper.h"
 
 namespace lms {
 
@@ -61,8 +62,8 @@ private:
         size_t dataHashCode;
         bool serializable;
         bool exclusiveWrite;
-        std::vector<Module*> readers;
-        std::vector<Module*> writers;
+        ModuleList readers;
+        ModuleList writers;
     };
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
@@ -94,10 +95,6 @@ public:
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
-            logger.warn() << "Module " << module->getName() << " requested read access for "
-                << name << std::endl
-                << " but the channel was not yet initialized -> Initializing, just for you <3";
-
             initChannel<T>(channel);
         } else if(! checkType<T>(channel, name)) {
             return nullptr;
@@ -108,7 +105,7 @@ public:
 //                                        " is already reader or writer of channel "
 //                                        << name;
         } else {
-            channel.readers.push_back(module);
+            channel.readers.push_back(module->wrapper());
             invalidateExecutionManager();
         }
 
@@ -146,7 +143,7 @@ public:
                                         " is already reader or writer of channel "
                                         << name;
         } else {
-            channel.writers.push_back(module);
+            channel.writers.push_back(module->wrapper());
             invalidateExecutionManager();
         }
 
@@ -192,7 +189,7 @@ public:
                                         " is already reader or writer of channel "
                                         << name;
         } else {
-            channel.writers.push_back(module);
+            channel.writers.push_back(module->wrapper());
             invalidateExecutionManager();
         }
 
@@ -298,7 +295,7 @@ private:
      *
      * @param module the module to look for
      */
-    void releaseChannelsOf(const Module *module);
+    void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
 
     /**
      * @brief Print all channels with their corresponding readers

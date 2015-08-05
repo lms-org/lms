@@ -7,6 +7,7 @@
 #include "lms/executionmanager.h"
 #include "lms/datamanager.h"
 #include "lms/module.h"
+#include "lms/module_wrapper.h"
 #include "lms/loader.h"
 #include "lms/datamanager.h"
 #include "lms/type/framework_info.h"
@@ -29,19 +30,19 @@ ExecutionManager::~ExecutionManager () {
 }
 
 void ExecutionManager::disableAllModules() {
-    for(std::vector<Module*>::reverse_iterator it = enabledModules.rbegin();
+    for(ModuleList::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
-        if(! (*it)->deinitialize()) {
+        if(! (*it)->moduleInstance->deinitialize()) {
             logger.error("disableModule")
-                    << "Deinitialize failed for module " << (*it)->getName();
+                    << "Deinitialize failed for module " << (*it)->name;
         }
     }
 
-    for(Loader::moduleList::reverse_iterator it = available.rbegin();
+    for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
-        dataManager.releaseChannelsOf(it->moduleInstance);
-        loader.unload(*it);
+        dataManager.releaseChannelsOf(*it);
+        loader.unload(it->get());
     }
 
     enabledModules.clear();
@@ -243,9 +244,9 @@ void ExecutionManager::threadFunction(int threadNum) {
         for(size_t i = 0; i < cycleListTmp.size();i++){
             std::vector<Module*>& moduleV = cycleListTmp[i];
             if(moduleV.size() == 1) {
-                Loader::module_entry::ExecutionType execType = moduleV[0]->getExecutionType();
-                if((execType == Loader::module_entry::ONLY_MAIN_THREAD && threadNum == 0) ||
-                        (execType == Loader::module_entry::NEVER_MAIN_THREAD && threadNum != 0)) {
+                ModuleWrapper::ExecutionType execType = moduleV[0]->getExecutionType();
+                if((execType == ModuleWrapper::ONLY_MAIN_THREAD && threadNum == 0) ||
+                        (execType == ModuleWrapper::NEVER_MAIN_THREAD && threadNum != 0)) {
                     executableModuleIndex = i;
                     executableModule = moduleV[0];
                     break;
@@ -309,10 +310,10 @@ bool ExecutionManager::hasExecutableModules(int thread) {
     for(size_t i = 0; i < cycleListTmp.size();i++){
         std::vector<Module*>& moduleV = cycleListTmp[i];
         if(moduleV.size() == 1) {
-            Loader::module_entry::ExecutionType execType = moduleV[0]->getExecutionType();
-            if(execType == Loader::module_entry::ONLY_MAIN_THREAD && thread == 0) {
+            ModuleWrapper::ExecutionType execType = moduleV[0]->getExecutionType();
+            if(execType == ModuleWrapper::ONLY_MAIN_THREAD && thread == 0) {
                 return true;
-            } else if(execType == Loader::module_entry::NEVER_MAIN_THREAD && thread != 0) {
+            } else if(execType == ModuleWrapper::NEVER_MAIN_THREAD && thread != 0) {
                 return true;
             }
         }
@@ -333,35 +334,34 @@ void ExecutionManager::stopRunning() {
     }
 }
 
-void ExecutionManager::addAvailableModule(const Loader::module_entry &mod){
-    for(const Loader::module_entry &modEntry : available) {
-        if(modEntry.name == mod.name) {
+void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
+    for(std::shared_ptr<ModuleWrapper> modEntry : available) {
+        if(modEntry->name == mod->name) {
             logger.error("addAvailableModule") << "Tried to add available "
-                << "module " << mod.name << " but was already available.";
+                << "module " << mod->name << " but was already available.";
             return;
         }
     }
 
-    logger.info() << "Add module " << mod.name;
     available.push_back(mod);
 }
 
 void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLevel minLogLevel){
     //Check if module is already enabled
-    for(auto* it:enabledModules){
-        if(it->getName() == name){
+    for(auto it:enabledModules){
+        if(it->name == name){
             logger.error("enableModule") << "Module " << name << " is already enabled.";
             return;
         }
     }
-    for(auto& it:available){
-        if(it.name == name){
-            logger.debug("enable Module") <<"enabling Module: " <<name;
-            Module* module = loader.load(it);
+    for(std::shared_ptr<ModuleWrapper> it:available){
+        if(it->name == name){
+            loader.load(it.get());
+            Module *module = it->moduleInstance;
             module->initializeBase(&dataManager, &m_messaging, it, &rootLogger, minLogLevel);
 
             if(module->initialize()){
-                enabledModules.push_back(module);
+                enabledModules.push_back(it);
             }else{
                 logger.error("enable Module") <<"Enabling Module "<< name << " failed";
             }
@@ -374,18 +374,18 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
 
 /**Disable module with the given name, remove it from the cycle-queue */
 bool ExecutionManager::disableModule(const std::string &name) {
-    for(std::vector<Module*>::iterator it = enabledModules.begin();
+    for(ModuleList::iterator it = enabledModules.begin();
         it != enabledModules.end(); ++it) {
 
-        if((*it)->getName() == name) {
-            if(! (*it)->deinitialize()) {
+        if((*it)->name == name) {
+            if(! (*it)->moduleInstance->deinitialize()) {
                 logger.error("disableModule")
                         << "Deinitialize failed for module " << name;
             }
 
-            for(Loader::module_entry &entry : available) {
-                if(entry.name == name) {
-                    loader.unload(entry);
+            for(std::shared_ptr<ModuleWrapper> entry : available) {
+                if(entry->name == name) {
+                    loader.unload(entry.get());
                     break;
                 }
             }
@@ -438,11 +438,11 @@ void ExecutionManager::printCycleList() {
 
 void ExecutionManager::sort(){
     cycleList.clear();
-    logger.debug("sort modules") << "sort it size: " << enabledModules.size();
+    logger.debug("sort") << "No. of enabled modules: " << enabledModules.size();
     //add modules to the list
-    for(Module* it : enabledModules){
+    for(std::shared_ptr<ModuleWrapper> it : enabledModules){
         std::vector<Module*> tmp;
-        tmp.push_back(it);
+        tmp.push_back(it->moduleInstance);
         cycleList.push_back(tmp);
     }
     sortByDataChannel();
@@ -453,16 +453,14 @@ void ExecutionManager::sortByDataChannel(){
     // getChannels() returns const& -> you must use a const& here as well
     for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
         // Module* here is ok, you will make a copy of the pointer
-        for(Module* reader : pair.second.readers){
+        for(std::shared_ptr<ModuleWrapper> reader : pair.second.readers){
             // usual & here
             for(std::vector<Module*> &list: cycleList){
                 Module *toAdd = list[0];
                 //add all writers to the reader
-                if(toAdd->getName() == reader->getName()){
-                    for(Module* writer : pair.second.writers){
-                        list.push_back(writer);
-                        logger.info("adding: ") <<toAdd->getName() << " <- "<< writer->getName();
-
+                if(toAdd->getName() == reader->name){
+                    for(std::shared_ptr<ModuleWrapper> writer : pair.second.writers){
+                        list.push_back(writer->moduleInstance);
                     }
                 }
             }
@@ -475,16 +473,16 @@ void ExecutionManager::sortByPriority(){
     for(const std::pair<std::string, DataManager::DataChannel>& pair : dataManager.getChannels()){
         //sort writer-order read-order isn't needed as readers don't change the dataChannel
         //check insert is in the writers-list BEGIN
-        for(Module* writer1 : pair.second.writers){
+        for(std::shared_ptr<ModuleWrapper> writer1 : pair.second.writers){
             for(std::vector<Module*> &list: cycleList){
                 Module* insert = list[0];
                 //check insert is in the writers-list END
-                if(insert->getName() == writer1->getName()){
+                if(insert->getName() == writer1->name){
                     //yes it is contained
-                    for(Module* writer2 : pair.second.writers){
+                    for(std::shared_ptr<ModuleWrapper> writer2 : pair.second.writers){
                         //add all writers(2) with a higher priority to the list
-                        if(writer2->getPriority() > insert->getPriority()){
-                            list.push_back(writer2);
+                        if(writer2->writePriority > insert->getPriority()){
+                            list.push_back(writer2->moduleInstance);
                         }
                     }
                 }
@@ -506,13 +504,13 @@ Messaging& ExecutionManager::messaging() {
     return m_messaging;
 }
 
-const std::vector<Module*>& ExecutionManager::getEnabledModules() const {
+const ModuleList& ExecutionManager::getEnabledModules() const {
     return enabledModules;
 }
 
 void ExecutionManager::fireConfigsChangedEvent() {
-    for(Module *mod : enabledModules) {
-        mod->configsChanged();
+    for(std::shared_ptr<ModuleWrapper> mod : enabledModules) {
+        mod->moduleInstance->configsChanged();
     }
 }
 

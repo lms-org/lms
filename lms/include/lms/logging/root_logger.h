@@ -42,7 +42,7 @@ public:
     RootLogger();
 
     // TODO remove, it's only for debugging
-    ~RootLogger() { debug() << "Delete RootLogger"; }
+    ~RootLogger() { }
 
     /**
      * @brief Do not allow the root logger to be copied.

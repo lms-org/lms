@@ -1,46 +1,52 @@
-#include <lms/module.h>
 #include <string>
+
+#include "lms/module_wrapper.h"
+#include <lms/module.h>
 #include <lms/lms_exports.h>
 #include <lms/datamanager.h>
 
 namespace lms{
     bool Module::initializeBase(DataManager* datamanager, Messaging *messaging,
-                                Loader::module_entry &loaderEntry, logging::Logger *rootLogger,
-                                logging::LogLevel minLogLevel) {
+        std::shared_ptr<ModuleWrapper> wrapper, logging::Logger *rootLogger,
+        logging::LogLevel minLogLevel) {
+
         m_datamanager = datamanager;
         m_messaging = messaging;
-        this->loaderEntry = loaderEntry;
+        m_wrapper = wrapper;
 
         // delete uninitialized child logger
         logger.~ChildLogger();
         // C++11 placement new
-        new (&logger) logging::ChildLogger(loaderEntry.name, rootLogger,
+        new (&logger) logging::ChildLogger(wrapper->name, rootLogger,
             std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(minLogLevel)));
 
         return true;
     }
 
     lms_EXPORT std::string Module::getName() const{
-        return loaderEntry.name;
+        return m_wrapper->name;
     }
 
     lms_EXPORT int Module::getPriority() const{
-        return loaderEntry.writePriority;
+        return m_wrapper->writePriority;
     }
 
     lms_EXPORT extra::PrecisionTime Module::getExpectedRuntime() const {
-        return loaderEntry.expectedRuntime;
+        return m_wrapper->expectedRuntime;
     }
 
-    lms_EXPORT Loader::module_entry::ExecutionType Module::getExecutionType() const {
-        return loaderEntry.executionType;
+    lms_EXPORT ModuleWrapper::ExecutionType Module::getExecutionType() const {
+        return m_wrapper->executionType;
     }
 
-    lms_EXPORT std::string Module::getChannelMapping(std::string mapFrom){
-        if(loaderEntry.channelMapping.count(mapFrom) == 1){
-            return loaderEntry.channelMapping[mapFrom];
+    lms_EXPORT std::string Module::getChannelMapping(const std::string &mapFrom) {
+        auto it = m_wrapper->channelMapping.find(mapFrom);
+
+        if(it != m_wrapper->channelMapping.end()) {
+            return it->second;
+        } else {
+            return mapFrom;
         }
-        return mapFrom;
     }
 
     lms_EXPORT const type::ModuleConfig* Module::getConfig(const std::string &name){
