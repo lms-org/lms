@@ -12,6 +12,7 @@ endif()
 #include pugixml headers (hpp-files)
 include_directories(include)
 include_directories(xml/pugixml-1.5/src)
+include_directories(tclap-1.2.1/include)
 
 #TODO Rename, not public
 set (PUBLIC_HEADERS

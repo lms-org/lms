@@ -13,15 +13,7 @@ int main(int argc, char *argv[]) {
     lms::ArgumentHandler arguments;
     arguments.parseArguments(argc, argv);
 
-    if(arguments.hasError()) {
-        std::cerr << arguments.errorMessage() << std::endl
-            << "Try lms --help for more information" << std::endl;
-        return EXIT_FAILURE;
-    } else if (arguments.argHelp()) {
-        arguments.printHelp();
-    } else {
-        lms::Framework framework(arguments);
-    }
+    lms::Framework framework(arguments);
 
     return EXIT_SUCCESS;
 }

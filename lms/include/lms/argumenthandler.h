@@ -1,6 +1,3 @@
-/**
-  *Soll später ein handler werden, welcher die geparsten argumente speichert
-  */
 #ifndef LMS_ARGUMENT_HANDLER_H
 #define LMS_ARGUMENT_HANDLER_H
 
@@ -9,6 +6,7 @@
 #include <iostream>
 
 #include "lms/logger.h"
+#include "tclap/CmdLine.h"
 
 namespace lms {
 
@@ -34,6 +32,26 @@ bool runLevelByName(const std::string &str, RunLevel &runLevel);
 
 std::ostream& operator << (std::ostream &out, RunLevel runLevel);
 
+class ThreadsConstraint : public TCLAP::Constraint<std::string> {
+public:
+    std::string description() const {
+        return "integer|auto";
+    }
+
+    std::string shortID() const {
+        return description();
+    }
+
+    bool check(const std::string &value) const {
+        return value == "auto" || isNumber(value);
+    }
+private:
+    bool isNumber(const std::string& s) const {
+        return !s.empty() && std::find_if(s.begin(),
+            s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+    }
+};
+
 /**
  * @brief The ArgumentHandler class used to parse the command line arguments and stores them
  */
@@ -52,109 +70,19 @@ class ArgumentHandler {
      */
     void parseArguments(int argc, char* const*argv);
 
-    /**
-     * @brief Print help on a given output stream.
-     * This will include information to available
-     * command line arguments
-     *
-     * @param out the output stream where the help
-     * message should be printed.
-     */
-    void printHelp(std::ostream &out = std::cout) const;
-
-    /**
-     * @brief Return the "load configuration" setting. This can
-     * be set by "-c arg".
-     */
-    std::string argLoadConfiguration() const;
-
-    /**
-     * @brief Return the "show help" setting. This can
-     * be set by "-h" or "--help". The framework will
-     * stop after showing help information.
-     */
-    bool argHelp() const;
-
-    /**
-     * @brief Return the "RunLevel" setting. This can be set by "--run-level"
-     * or "-r". The framework will only run until a certain level and then exit.
-     */
-    RunLevel argRunLevel() const;
-
-    /**
-     * @brief All values of "--logging-prefix" as a vector of strings.
-     */
-    std::vector<std::string> argLoggingPrefixes() const;
-
-    /**
-     * @brief The value of the command line argument "--logging-min-level".
-     */
-    logging::LogLevel argLoggingMinLevel() const;
-
-    /**
-     * @brief The value of the command line argument "--user"
-     */
-    std::string argUser() const;
-
-    /**
-     * @brief The value of the command line argument "--quiet"
-     */
-    bool argQuiet() const;
-
-    /**
-     * @brief The value of the command line argument "--log-file"
-     */
-    std::string argLogFile() const;
-
-    /**
-     * @brief The value of the command line argument "--flags"
-     */
-    std::vector<std::string> argFlags() const;
-
-    /**
-     * @brief The value of the command line argument "--profiling"
-     */
-    bool argProfiling() const;
-
-    /**
-     * @brief The value of command line argument "--config-monitor"
-     */
-    bool argConfigMonitor() const;
-
-    bool argMultithreaded() const;
-
-    bool argThreadsAuto() const;
-
-    int argThreads() const;
-
-    /**
-     * @brief Returns true if an error occured during parsing.
-     */
-    bool hasError() const;
-
-    /**
-     * @brief Returns the error message if hasError() returned true.
-     */
-    std::string errorMessage() const;
- private:
-    void parseBoolArg(const std::string &argName, bool &arg);
-
-    std::string m_loadConfiguration;
-    bool m_showHelp;
-    bool m_showError;
-    std::string m_errorMessage;
-    RunLevel m_runLevel;
-    std::vector<std::string> m_loggingPrefixes;
-    logging::LogLevel m_loggingMinLevel;
-    bool m_quiet;
-    std::string m_logFile;
-    std::string m_user;
-    std::vector<std::string> m_flags;
-    bool m_profiling;
-    bool m_configMonitor;
-    bool m_multithreaded;
-    bool m_threadsAuto;
-    int m_threads;
+    std::string argLoadConfiguration;
+    RunLevel argRunLevel;
+    std::vector<std::string> argLoggingPrefixes;
+    logging::LogLevel argLoggingMinLevel;
+    bool argQuiet;
+    std::string argLogFile;
+    std::string argUser;
+    std::vector<std::string> argFlags;
+    bool argProfiling;
+    bool argConfigMonitor;
+    bool argMultithreaded;
+    bool argThreadsAuto;
+    int argThreads;
 };
 
 }  // namespace lms

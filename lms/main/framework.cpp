@@ -25,17 +25,17 @@ Framework::Framework(const ArgumentHandler &arguments) :
     clockEnabled(false), clock(rootLogger), configMonitor(), configMonitorEnabled(false) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
-        arguments.argLoggingMinLevel(), arguments.argLoggingPrefixes())));
+        arguments.argLoggingMinLevel, arguments.argLoggingPrefixes)));
 
     std::unique_ptr<logging::Sink> loggingSink;
 
-    if(!arguments.argLogFile().empty() && arguments.argQuiet()) {
-        loggingSink.reset(new logging::FileSink(arguments.argLogFile()));
-    } else if(! arguments.argQuiet() && arguments.argLogFile().empty()) {
+    if(!arguments.argLogFile.empty() && arguments.argQuiet) {
+        loggingSink.reset(new logging::FileSink(arguments.argLogFile));
+    } else if(! arguments.argQuiet && arguments.argLogFile.empty()) {
         loggingSink.reset(new logging::ConsoleSink(std::cout));
-    } else if(! arguments.argLogFile().empty() && ! arguments.argQuiet()) {
+    } else if(! arguments.argLogFile.empty() && ! arguments.argQuiet) {
         logging::MultiSink *sink = new logging::MultiSink();
-        sink->add(new logging::FileSink(arguments.argLogFile()));
+        sink->add(new logging::FileSink(arguments.argLogFile));
         sink->add(new logging::ConsoleSink(std::cout));
         loggingSink.reset(sink);
     } else {
@@ -48,15 +48,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    executionManager.enableProfiling(argumentHandler.argProfiling());
+    executionManager.enableProfiling(argumentHandler.argProfiling);
 
-    if(argumentHandler.argProfiling()) {
+    if(argumentHandler.argProfiling) {
         logger.info() << "Enable profiling";
     } else {
         logger.info() << "Disable profiling";
     }
 
-    configMonitorEnabled = argumentHandler.argConfigMonitor();
+    configMonitorEnabled = argumentHandler.argConfigMonitor;
 
     if(configMonitorEnabled) {
         logger.info() << "Enable config monitor";
@@ -64,14 +64,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Disable config monitor";
     }
 
-    if(argumentHandler.argMultithreaded()) {
+    if(argumentHandler.argMultithreaded) {
         int threads;
 
-        if(argumentHandler.argThreadsAuto()) {
+        if(argumentHandler.argThreadsAuto) {
             threads = std::thread::hardware_concurrency();
             logger.info() << "Multithreaded with " << threads << " threads (auto)";
         } else {
-            threads = argumentHandler.argThreads();
+            threads = argumentHandler.argThreads;
             logger.info() << "Multithreaded with " << threads << " threads";
         }
 
@@ -80,28 +80,28 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Single threaded";
     }
 
-    logger.info() << "RunLevel " <<  arguments.argRunLevel();
+    logger.info() << "RunLevel " <<  arguments.argRunLevel;
 
     //parse framework config
-    if(arguments.argRunLevel() >= RunLevel::CONFIG) {
+    if(arguments.argRunLevel >= RunLevel::CONFIG) {
         parseConfig(LoadConfigFlag::LOAD_EVERYTHING);
     }
 
-    if(arguments.argRunLevel() >= RunLevel::ENABLE) {
+    if(arguments.argRunLevel >= RunLevel::ENABLE) {
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
         for(ModuleToLoad mod : modulesToLoadLists["default"]) {
             executionManager.enableModule(mod.name, mod.logLevel);
         }
 
-        if(arguments.argRunLevel() == RunLevel::ENABLE) {
+        if(arguments.argRunLevel == RunLevel::ENABLE) {
             executionManager.getDataManager().printMapping();
             executionManager.validate();
             executionManager.printCycleList();
         }
     }
 
-    if(arguments.argRunLevel() >= RunLevel::CYCLE) {
+    if(arguments.argRunLevel >= RunLevel::CYCLE) {
         //Execution
         running = true;
 
@@ -183,10 +183,10 @@ void Framework::parseConfig(LoadConfigFlag flag){
                                 << std::endl << "CONFIGS: " << configsDirectory;
 
     std::string configPath = configsDirectory + "/";
-    if(argumentHandler.argLoadConfiguration().empty()) {
+    if(argumentHandler.argLoadConfiguration.empty()) {
         configPath += "framework_conf.xml";
     } else {
-        configPath += argumentHandler.argLoadConfiguration() + ".xml";
+        configPath += argumentHandler.argLoadConfiguration + ".xml";
     }
 
     parseFile(configPath, flag);
@@ -205,7 +205,7 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
         pugi::xml_parse_result result = doc.load(ifs);
         if (result){
             pugi::xml_node rootNode = doc.child("framework");
-            lms::preprocessXML(rootNode, argumentHandler.argFlags());
+            lms::preprocessXML(rootNode, argumentHandler.argFlags);
 
             if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
                 // parse <execution> tag (or deprecated <executionManager>)
@@ -404,7 +404,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
                         lms::extra::split(std::string(userAttr.value()), ',');
 
                 if(std::find(allowedUsers.begin(), allowedUsers.end(),
-                             argumentHandler.argUser()) == allowedUsers.end()) {
+                             argumentHandler.argUser) == allowedUsers.end()) {
                     continue;
                 }
             }
