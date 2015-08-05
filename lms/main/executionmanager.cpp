@@ -58,10 +58,49 @@ void ExecutionManager::loop() {
     m_messaging.resetQueue();
 
     if(m_enabledProfiling) {
-        for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfiling()) {
+        for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfMeasurements()) {
+            type::FrameworkInfo::ModuleProfiling &profiling = frameworkInfo.getProfiling(m.module);
             extra::PrecisionTime runtime = m.end - m.begin;
             extra::PrecisionTime expectedRuntime = m.expected;
 
+            // adjust maximum und minimum runtime
+            if(profiling.max == extra::PrecisionTime::ZERO
+                    || profiling.max < runtime) {
+                profiling.max = runtime;
+            }
+            if(profiling.min == extra::PrecisionTime::ZERO
+                    || profiling.min > runtime) {
+                profiling.min = runtime;
+            }
+
+            // check if new value should be added to buffer
+            if(profiling.measurements % type::FrameworkInfo::MOVING_AVERAGE_FREQUENCY == 0) {
+                // add new value to moving average buffer and adjust buffer index
+                profiling.movingAverageBuffer[profiling.bufferIndex] = runtime;
+                profiling.bufferIndex = (profiling.bufferIndex + 1) % type::FrameworkInfo::MOVING_AVERAGE_SIZE;
+
+                // calculate average of all samples in buffer
+                lms::extra::PrecisionTime masum = lms::extra::PrecisionTime::ZERO;
+                int macount = 0;
+                for (int i=0; i<type::FrameworkInfo::MOVING_AVERAGE_SIZE; i++) {
+                    // skip elements in case buffer is not full yet
+                    if(profiling.movingAverageBuffer[i] != lms::extra::PrecisionTime::ZERO) {
+                        masum += profiling.movingAverageBuffer[i];
+                        macount++;
+                    }
+                }
+                profiling.movingAverage = masum/macount;
+            }
+
+            // adjust total runtime and number of measurements
+            profiling.sum += runtime;
+            profiling.measurements++;
+
+            // calculate average runtime
+            extra::PrecisionTime avgruntime = profiling.sum/profiling.measurements;
+
+
+            // print results
             logging::LogLevel logLevel = logging::LogLevel::INFO;
 
             if(expectedRuntime != extra::PrecisionTime::ZERO) {
@@ -75,13 +114,17 @@ void ExecutionManager::loop() {
                 }
             }
 
-            logger.log(logLevel, "profiling") << m.thread << " " << m.module << " " << runtime;
+
+            logger.log(logLevel, "profiling") << m.thread << " " << m.module << " " << runtime
+                << " (min:" << profiling.min << " | avg:" << avgruntime
+                << " | max:" << profiling.max << " | MA:" << profiling.movingAverage
+                << " | #" << profiling.measurements << ")";
         }
     }
 
     dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
     frameworkInfo.incrementCycleIteration();
-    frameworkInfo.resetProfiling();
+    frameworkInfo.resetProfMeasurements();
 
     //validate the ExecutionManager
     validate();
@@ -110,7 +153,7 @@ void ExecutionManager::loop() {
 
                     if(m_enabledProfiling) {
                         measurement.end = lms::extra::PrecisionTime::now();
-                        frameworkInfo.addProfilingData(measurement);
+                        frameworkInfo.addProfMeasurement(measurement);
                     }
 
                     //remove module from others
@@ -233,7 +276,7 @@ void ExecutionManager::threadFunction(int threadNum) {
             lck.lock();
 
             if(m_enabledProfiling) {
-                frameworkInfo.addProfilingData(measurement);
+                frameworkInfo.addProfMeasurement(measurement);
             }
 
             logger.info() << "Thread " << threadNum << " executed "
