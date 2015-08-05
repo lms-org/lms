@@ -2,6 +2,7 @@
 #define LMS_TYPE_FRAMEWORK_INFO_H
 
 #include <vector>
+#include <map>
 #include <lms/extra/time.h>
 
 namespace lms {
@@ -21,7 +22,26 @@ public:
         lms::extra::PrecisionTime expected;
     };
 
-    typedef std::vector<ModuleMeasurement> Profiling;
+    // how many runtime values should be considered for the MA computation (buffer size)
+    const static int MOVING_AVERAGE_SIZE = 20;
+
+    // how often are values for the MA computation sampled
+    // e.g. 10 = take every 10th value
+    const static int MOVING_AVERAGE_FREQUENCY = 10;
+
+    struct ModuleProfiling {
+        lms::extra::PrecisionTime current = extra::PrecisionTime::ZERO;
+        lms::extra::PrecisionTime min = extra::PrecisionTime::ZERO;
+        lms::extra::PrecisionTime max = extra::PrecisionTime::ZERO;
+        lms::extra::PrecisionTime sum = extra::PrecisionTime::ZERO;
+        int measurements = 0;
+        lms::extra::PrecisionTime movingAverage = extra::PrecisionTime::ZERO;
+        lms::extra::PrecisionTime movingAverageBuffer[MOVING_AVERAGE_SIZE];
+        int bufferIndex = 0;
+    };
+
+    typedef std::vector<ModuleMeasurement> ProfMeasurements;
+    typedef std::map<std::string, ModuleProfiling> ProfilingMap;
 
     FrameworkInfo();
 
@@ -46,23 +66,37 @@ public:
     void resetCycleIteration();
 
     /**
-     * @brief Return module profiling data of the last cycle.
+     * @brief Return module measurement data of the last cycle.
      */
-    const Profiling &getProfiling() const;
+    const ProfMeasurements &getProfMeasurements() const;
 
     /**
-     * @brief Delete all profiling data.
+     * @brief Return profiling map
      */
-    void resetProfiling();
+    const ProfilingMap &getProfilingMap();
 
     /**
-     * @brief Add profiling data of a single module.
+     * @brief Return profiling struct of specific module. Create module profiling
+     * object if necessary
+     * @param module name
+     */
+    ModuleProfiling &getProfiling(std::string module);
+
+    /**
+     * @brief Delete all measurement data.
+     */
+    void resetProfMeasurements();
+
+    /**
+     * @brief Add measurement data of a single module.
      * @param profiling module's profiling
      */
-    void addProfilingData(const ModuleMeasurement &profiling);
+    void addProfMeasurement(const ModuleMeasurement &measurement);
+
 private:
     int m_cycleIteration;
-    Profiling m_moduleProfiling;
+    ProfMeasurements m_profMeasurements;
+    static ProfilingMap m_profilingMap;
 };
 
 }  // namespace type
