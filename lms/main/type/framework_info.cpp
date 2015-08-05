@@ -4,7 +4,9 @@
 namespace lms {
 namespace type {
 
-FrameworkInfo::FrameworkInfo() : m_cycleIteration(0), m_moduleProfiling() {}
+FrameworkInfo::ProfilingMap FrameworkInfo::m_profilingMap = {};
+
+FrameworkInfo::FrameworkInfo() : m_cycleIteration(0), m_profMeasurements() {}
 
 int FrameworkInfo::cycleIteration() const {
     return m_cycleIteration;
@@ -18,17 +20,30 @@ void FrameworkInfo::resetCycleIteration() {
     m_cycleIteration = 0;
 }
 
-const FrameworkInfo::Profiling& FrameworkInfo::getProfiling() const {
-    return m_moduleProfiling;
+const FrameworkInfo::ProfMeasurements& FrameworkInfo::getProfMeasurements() const {
+    return m_profMeasurements;
 }
 
-void FrameworkInfo::resetProfiling() {
-    m_moduleProfiling.clear();
+void FrameworkInfo::resetProfMeasurements() {
+    m_profMeasurements.clear();
 }
 
-void FrameworkInfo::addProfilingData(const ModuleMeasurement &profiling) {
-    m_moduleProfiling.push_back(profiling);
+void FrameworkInfo::addProfMeasurement(const ModuleMeasurement &measurement) {
+    m_profMeasurements.push_back(measurement);
 }
+
+const FrameworkInfo::ProfilingMap& FrameworkInfo::getProfilingMap() {
+    return m_profilingMap;
+}
+
+FrameworkInfo::ModuleProfiling &FrameworkInfo::getProfiling(std::string module) {
+    if(m_profilingMap.find(module) == m_profilingMap.end()) {
+        m_profilingMap[module] = *(new FrameworkInfo::ModuleProfiling());
+    }
+    return m_profilingMap[module];
+}
+
+
 
 }  // namespace type
 }  // namespace lms
