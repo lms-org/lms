@@ -14,6 +14,7 @@
 #include "lms/type/module_config.h"
 #include "lms/extra/string.h"
 #include "lms/xml_parser.h"
+#include "lms/extra/colors.h"
 
 namespace lms{
 
@@ -484,17 +485,16 @@ void Framework::signal(int s) {
     case SIGINT:
         running = false;
 
-        logger.warn() << "Terminating after next Cycle. Press CTRL+C again to terminate immediately";
-
         SignalHandler::getInstance().removeListener(SIGINT, this);
 
         break;
     case SIGSEGV:
         //Segmentation Fault - try to identify what went wrong;
-        logger.error()
+        std::cerr << std::endl << lms::extra::COLOR_RED
                 << "######################################################" << std::endl
                 << "                   Segfault Found                     " << std::endl
-                << "######################################################";
+                << "######################################################" << std::endl
+                << lms::extra::COLOR_WHITE;
 
         //In Case of Segfault while recovering - shutdown.
         SignalHandler::getInstance().removeListener(SIGSEGV, this);
