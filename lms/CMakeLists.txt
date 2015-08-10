@@ -112,8 +112,6 @@ add_library (lmscore SHARED
         ${SOURCE}
 )
 
-set_target_properties(lmscore PROPERTIES ENABLE_EXPORTS 1)
-
 #Compile xml-parser pugixml
 add_library(pugixml STATIC         
 	"xml/pugixml-1.5/src/pugixml.cpp"
