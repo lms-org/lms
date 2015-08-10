@@ -113,23 +113,6 @@ public:
     virtual bool deinitialize() = 0;
 
     /**
-     * @brief reset called by the framework
-     * The following implementation is fully backwards compatible:
-     * Modules can override reset if they can implement it
-     * Don't forget to override isResettable() if you have a reset method!
-     */
-    virtual void reset() {}
-
-    /**
-     * @brief If the reset method is implemented inside a module.
-     *
-     * If a module overrides reset() then isResettable() should be overridden to return true.
-     *
-     * @return true if reset() can be called by the framework, otherwise false
-     */
-    virtual bool isResettable() { return false; }
-
-    /**
      * @brief This method gets called whenever a config changed during execution.
      *
      * A config is usually only changed when the config monitor found changes
