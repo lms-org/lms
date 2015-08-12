@@ -16,6 +16,7 @@
 #include "lms/executionmanager.h"
 #include "lms/logger.h"
 #include "lms/type/framework_info.h"
+#include "lms/messaging.h"
 
 namespace lms {
 
@@ -93,6 +94,12 @@ public:
      * @brief Invoke configsChanged() of all enabled modules.
      */
     void fireConfigsChangedEvent();
+
+    /**
+     * @brief Return the current value of the cycle counter. The value is
+     * incremented before each cycle, starting with 0.
+     */
+    int cycleCounter();
 private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;
@@ -103,6 +110,8 @@ private:
     Loader loader;
     DataManager dataManager;
     Messaging m_messaging;
+
+    int m_cycleCounter;
 
     // stuff for multithreading
     std::vector<std::thread> threadPool;

@@ -4,14 +4,18 @@
 #include <lms/module.h>
 #include <lms/lms_exports.h>
 #include <lms/datamanager.h>
+#include "lms/type/module_config.h"
+#include "lms/executionmanager.h"
 
 namespace lms{
     bool Module::initializeBase(DataManager* datamanager, Messaging *messaging,
+                                ExecutionManager *execManager,
         std::shared_ptr<ModuleWrapper> wrapper, logging::Logger *rootLogger,
         logging::LogLevel minLogLevel) {
 
         m_datamanager = datamanager;
         m_messaging = messaging;
+        m_executionManager = execManager;
         m_wrapper = wrapper;
 
         // delete uninitialized child logger
@@ -54,5 +58,9 @@ namespace lms{
     }
     lms_EXPORT bool Module::hasConfig(const std::string &name){
         return datamanager()->hasChannel(this, "CONFIG_" + getName() + "_" + name);
+    }
+
+    int Module::cycleCounter() {
+        return m_executionManager->cycleCounter();
     }
 }

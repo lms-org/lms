@@ -18,7 +18,8 @@ namespace lms {
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
     : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
-      m_messaging(), running(true), m_enabledProfiling(false) {
+      m_messaging(), m_cycleCounter(-1), running(true),
+      m_enabledProfiling(false) {
 
     dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
 }
@@ -127,8 +128,7 @@ void ExecutionManager::loop() {
         }
     }
 
-    dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
-    frameworkInfo.incrementCycleIteration();
+    m_cycleCounter ++;
     frameworkInfo.resetProfMeasurements();
 
     //validate the ExecutionManager
@@ -362,7 +362,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
         if(it->name == name){
             loader.load(it.get());
             Module *module = it->moduleInstance;
-            module->initializeBase(&dataManager, &m_messaging, it, &rootLogger, minLogLevel);
+            module->initializeBase(&dataManager, &m_messaging, this, it, &rootLogger, minLogLevel);
 
             if(module->initialize()){
                 enabledModules.push_back(it);
@@ -516,6 +516,10 @@ void ExecutionManager::fireConfigsChangedEvent() {
     for(std::shared_ptr<ModuleWrapper> mod : enabledModules) {
         mod->moduleInstance->configsChanged();
     }
+}
+
+int ExecutionManager::cycleCounter() {
+    return m_cycleCounter;
 }
 
 }  // namespace lms

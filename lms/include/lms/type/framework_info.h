@@ -46,26 +46,6 @@ public:
     FrameworkInfo();
 
     /**
-     * @brief Get the current cycle number that is zeroed on each framework
-     * startup. The cycle number is incremented before each cycle.
-     *
-     * During the initial module enabling zero is returned by this method.
-     *
-     * @return current cycle number
-     */
-    int cycleIteration() const;
-
-    /**
-     * @brief Increment the number that is returned by cycleIteration().
-     */
-    void incrementCycleIteration();
-
-    /**
-     * @brief Reset the number that is returned by cycleIteration() to zero.
-     */
-    void resetCycleIteration();
-
-    /**
      * @brief Return module measurement data of the last cycle.
      */
     const ProfMeasurements &getProfMeasurements() const;
@@ -94,7 +74,6 @@ public:
     void addProfMeasurement(const ModuleMeasurement &measurement);
 
 private:
-    int m_cycleIteration;
     ProfMeasurements m_profMeasurements;
     static ProfilingMap m_profilingMap;
 };

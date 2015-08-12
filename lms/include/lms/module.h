@@ -13,6 +13,7 @@
 namespace lms {
 
 class DataManager;
+class ExecutionManager;
 
 /**
  * @brief Abstract super class for dynamic loadable modules
@@ -49,6 +50,7 @@ public:
      * Do not call this inside a module!
      */
     bool initializeBase(DataManager* datamanager, Messaging *messaging,
+                        ExecutionManager* execManager,
         std::shared_ptr<ModuleWrapper> loaderEntry, logging::Logger *rootLogger,
                         logging::LogLevel minLogLevel);
 
@@ -131,6 +133,8 @@ public:
      */
     std::string getChannelMapping(const std::string &mapFrom);
 
+    int cycleCounter();
+
 protected:
     /**
      * @brief Returns the data manager. This is usually
@@ -162,6 +166,7 @@ private:
     std::shared_ptr<ModuleWrapper> m_wrapper;
     DataManager* m_datamanager;
     Messaging* m_messaging;
+    ExecutionManager* m_executionManager;
 };
 
 }  // namespace lms

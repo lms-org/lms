@@ -6,19 +6,7 @@ namespace type {
 
 FrameworkInfo::ProfilingMap FrameworkInfo::m_profilingMap = {};
 
-FrameworkInfo::FrameworkInfo() : m_cycleIteration(0), m_profMeasurements() {}
-
-int FrameworkInfo::cycleIteration() const {
-    return m_cycleIteration;
-}
-
-void FrameworkInfo::incrementCycleIteration() {
-    m_cycleIteration ++;
-}
-
-void FrameworkInfo::resetCycleIteration() {
-    m_cycleIteration = 0;
-}
+FrameworkInfo::FrameworkInfo() : m_profMeasurements() {}
 
 const FrameworkInfo::ProfMeasurements& FrameworkInfo::getProfMeasurements() const {
     return m_profMeasurements;
