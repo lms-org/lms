@@ -15,7 +15,7 @@
 #include "lms/datamanager.h"
 #include "lms/executionmanager.h"
 #include "lms/logger.h"
-#include "lms/type/framework_info.h"
+#include "lms/profiler.h"
 #include "lms/messaging.h"
 
 namespace lms {
@@ -83,8 +83,7 @@ public:
 
     void printCycleList();
 
-    void enableProfiling(bool enable);
-    bool enableProfiling() const;
+    Profiler& profiler();
 
     Messaging& messaging();
 
@@ -123,8 +122,7 @@ private:
     void threadFunction(int threadNum);
     void stopRunning();
 
-    bool m_enabledProfiling;
-    type::FrameworkInfo frameworkInfo;
+    Profiler m_profiler;
 
     /**
      * @brief enabledModules contains all loaded Modules

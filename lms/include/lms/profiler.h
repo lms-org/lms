@@ -1,18 +1,18 @@
-#ifndef LMS_TYPE_FRAMEWORK_INFO_H
-#define LMS_TYPE_FRAMEWORK_INFO_H
+#ifndef LMS_PROFILER_H
+#define LMS_PROFILER_H
 
 #include <vector>
 #include <map>
 #include <lms/extra/time.h>
+#include "lms/logger.h"
 
 namespace lms {
-namespace type {
 
 /**
- * @brief Datachannel class that holds information of the current framework
- * state.
+ * @brief Measures module execution time and logs current, min, max and average
+ * times in a summary.
  */
-class FrameworkInfo {
+class Profiler {
 public:
     struct ModuleMeasurement {
         int thread;
@@ -43,7 +43,7 @@ public:
     typedef std::vector<ModuleMeasurement> ProfMeasurements;
     typedef std::map<std::string, ModuleProfiling> ProfilingMap;
 
-    FrameworkInfo();
+    Profiler(logging::Logger &rootLogger);
 
     /**
      * @brief Return module measurement data of the last cycle.
@@ -60,7 +60,7 @@ public:
      * object if necessary
      * @param module name
      */
-    ModuleProfiling &getProfiling(std::string module);
+    ModuleProfiling &getProfiling(const std::string &module);
 
     /**
      * @brief Delete all measurement data.
@@ -73,12 +73,29 @@ public:
      */
     void addProfMeasurement(const ModuleMeasurement &measurement);
 
+    /**
+     * @brief Print profiling statistics on the logger
+     */
+    void printStats();
+
+    /**
+     * @brief Enable or disable the profiler.
+     */
+    void enabled(bool flag);
+
+    /**
+     * @brief Returns true if enabled, otherwise false.
+     */
+    bool enabled() const;
+
 private:
+    logging::ChildLogger logger;
+
+    bool m_enabled;
     ProfMeasurements m_profMeasurements;
-    static ProfilingMap m_profilingMap;
+    ProfilingMap m_profilingMap;
 };
 
-}  // namespace type
 }  // namespace lms
 
-#endif /* LMS_TYPE_FRAMEWORK_INFO_H */
+#endif /* LMS_PROFILER_H */

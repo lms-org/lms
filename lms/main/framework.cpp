@@ -49,7 +49,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    executionManager.enableProfiling(argumentHandler.argProfiling);
+    executionManager.profiler().enabled(argumentHandler.argProfiling);
 
     if(argumentHandler.argProfiling) {
         logger.info() << "Enable profiling";
@@ -108,11 +108,11 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
         while(running) {
             clock.beforeLoopIteration();
-            if(executionManager.enableProfiling()){
+            if(executionManager.profiler().enabled()){
                 logger.time("totalTime");
             }
             executionManager.loop();
-            if(executionManager.enableProfiling()){
+            if(executionManager.profiler().enabled()){
                 logger.timeEnd("totalTime");
             }
 

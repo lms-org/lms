@@ -10,7 +10,7 @@
 #include "lms/module_wrapper.h"
 #include "lms/loader.h"
 #include "lms/datamanager.h"
-#include "lms/type/framework_info.h"
+#include "lms/profiler.h"
 #include "lms/logger.h"
 
 namespace lms {
@@ -19,7 +19,7 @@ ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
     : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
       m_messaging(), m_cycleCounter(-1), running(true),
-      m_enabledProfiling(false) {
+      m_profiler(rootLogger) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -57,77 +57,12 @@ void ExecutionManager::loop() {
     // Remove all messages from the message queue
     m_messaging.resetQueue();
 
-    if(m_enabledProfiling) {
-        for(const type::FrameworkInfo::ModuleMeasurement &m : frameworkInfo.getProfMeasurements()) {
-            type::FrameworkInfo::ModuleProfiling &profiling = frameworkInfo.getProfiling(m.module);
-            extra::PrecisionTime runtime = m.end - m.begin;
-            // runtime will be rounded to be at least 1 us if lower than 1 us
-            if(runtime == extra::PrecisionTime::ZERO) {
-                runtime = extra::PrecisionTime::fromMicros(1);
-            }
-            extra::PrecisionTime expectedRuntime = m.expected;
-
-            // adjust maximum und minimum runtime
-            if(profiling.max == extra::PrecisionTime::ZERO
-                    || profiling.max < runtime) {
-                profiling.max = runtime;
-            }
-            if(profiling.min == extra::PrecisionTime::ZERO
-                    || profiling.min > runtime) {
-                profiling.min = runtime;
-            }
-
-            // check if new value should be added to buffer
-            if(profiling.measurements % type::FrameworkInfo::MOVING_AVERAGE_FREQUENCY == 0) {
-                // add new value to moving average buffer and adjust buffer index
-                profiling.movingAverageBuffer[profiling.bufferIndex] = runtime;
-                profiling.bufferIndex = (profiling.bufferIndex + 1) % type::FrameworkInfo::MOVING_AVERAGE_SIZE;
-
-                // calculate average of all samples in buffer
-                lms::extra::PrecisionTime masum = lms::extra::PrecisionTime::ZERO;
-                int macount = 0;
-                for (int i=0; i<type::FrameworkInfo::MOVING_AVERAGE_SIZE; i++) {
-                    // skip elements in case buffer is not full yet
-                    if(profiling.movingAverageBuffer[i] != lms::extra::PrecisionTime::ZERO) {
-                        masum += profiling.movingAverageBuffer[i];
-                        macount++;
-                    }
-                }
-                profiling.movingAverage = masum/macount;
-            }
-
-            // adjust total runtime and number of measurements
-            profiling.sum += runtime;
-            profiling.measurements++;
-
-            // calculate average runtime
-            extra::PrecisionTime avgruntime = profiling.sum/profiling.measurements;
-
-
-            // print results
-            logging::LogLevel logLevel = logging::LogLevel::INFO;
-
-            if(expectedRuntime != extra::PrecisionTime::ZERO) {
-                float ratio = float(runtime.micros()) / float(expectedRuntime.micros());
-                float growthPercentage = (ratio - 1) * 100;
-
-                if(growthPercentage >= 100) {
-                    logLevel = logging::LogLevel::ERROR;
-                } else if(growthPercentage >= 20) {
-                    logLevel = logging::LogLevel::WARN;
-                }
-            }
-
-
-            logger.log(logLevel, "profiling") << m.thread << " " << m.module << " " << runtime
-                << " (min:" << profiling.min << " | avg:" << avgruntime
-                << " | max:" << profiling.max << " | MA:" << profiling.movingAverage
-                << " | #" << profiling.measurements << ")";
-        }
+    if(m_profiler.enabled()) {
+        m_profiler.printStats();
     }
 
     m_cycleCounter ++;
-    frameworkInfo.resetProfMeasurements();
+    m_profiler.resetProfMeasurements();
 
     //validate the ExecutionManager
     validate();
@@ -136,7 +71,7 @@ void ExecutionManager::loop() {
         //copy cycleList so it can be modified
         cycleListTmp = cycleList;
 
-        type::FrameworkInfo::ModuleMeasurement measurement;
+        Profiler::ModuleMeasurement measurement;
 
         //simple single list
         while(cycleListTmp.size() > 0){
@@ -145,7 +80,7 @@ void ExecutionManager::loop() {
                 std::vector<Module*>& moduleV = cycleListTmp[i];
                 if(moduleV.size() == 1){
 
-                    if(m_enabledProfiling) {
+                    if(m_profiler.enabled()) {
                         measurement.thread = 0;
                         measurement.module = moduleV[0]->getName();
                         measurement.begin = lms::extra::PrecisionTime::now();
@@ -154,9 +89,9 @@ void ExecutionManager::loop() {
 
                     moduleV[0]->cycle();
 
-                    if(m_enabledProfiling) {
+                    if(m_profiler.enabled()) {
                         measurement.end = lms::extra::PrecisionTime::now();
-                        frameworkInfo.addProfMeasurement(measurement);
+                        m_profiler.addProfMeasurement(measurement);
                     }
 
                     //remove module from others
@@ -265,8 +200,8 @@ void ExecutionManager::threadFunction(int threadNum) {
                           << executableModule->getName();
 
             // Profiling stuff
-            type::FrameworkInfo::ModuleMeasurement measurement;
-            if(m_enabledProfiling) {
+            Profiler::ModuleMeasurement measurement;
+            if(m_profiler.enabled()) {
                 measurement.thread = threadNum;
                 measurement.module = executableModule->getName();
             }
@@ -278,8 +213,8 @@ void ExecutionManager::threadFunction(int threadNum) {
             measurement.end = lms::extra::PrecisionTime::now();
             lck.lock();
 
-            if(m_enabledProfiling) {
-                frameworkInfo.addProfMeasurement(measurement);
+            if(m_profiler.enabled()) {
+                m_profiler.addProfMeasurement(measurement);
             }
 
             logger.info() << "Thread " << threadNum << " executed "
@@ -494,12 +429,8 @@ void ExecutionManager::sortByPriority(){
 }
 
 
-bool ExecutionManager::enableProfiling() const{
-    return m_enabledProfiling;
-}
-
-void ExecutionManager::enableProfiling(bool enable) {
-    m_enabledProfiling = enable;
+Profiler& ExecutionManager::profiler() {
+    return m_profiler;
 }
 
 Messaging& ExecutionManager::messaging() {

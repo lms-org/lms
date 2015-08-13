@@ -33,9 +33,9 @@ set (PUBLIC_HEADERS
         "include/lms/xml_parser.h"
         "include/lms/config_observer.h"
         "include/lms/module_wrapper.h"
+        "include/lms/profiler.h"
 
         "include/lms/type/module_config.h"
-        "include/lms/type/framework_info.h"
 
         "include/lms/logging/log_level.h"
         "include/lms/logging/logger.h"
@@ -67,7 +67,7 @@ set (SOURCE
         "main/signalhandler.cpp"
         "main/argumenthandler.cpp"
         "main/type/module_config.cpp"
-        "main/type/framework_info.cpp"
+        "main/profiler.cpp"
         "main/messaging.cpp"
         "main/clock.cpp"
         "main/xml_parser.cpp"

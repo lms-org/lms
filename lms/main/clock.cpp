@@ -4,8 +4,8 @@ namespace lms {
 
 Clock::Clock(logging::Logger &rootLogger)
     : logger("Clock", &rootLogger), loopTime(extra::PrecisionTime::ZERO),
-      firstIteration(true), overflowTime(extra::PrecisionTime::ZERO),
-    m_enabled(false) {
+      m_enabled(false), firstIteration(true),
+      overflowTime(extra::PrecisionTime::ZERO) {
 }
 
 void Clock::cycleTime(extra::PrecisionTime cycleTime) {
