@@ -23,7 +23,7 @@ std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
-    clockEnabled(false), clock(rootLogger), configMonitor(), configMonitorEnabled(false) {
+    clock(rootLogger), configMonitor(), configMonitorEnabled(false) {
 
     rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
         arguments.argLoggingMinLevel, arguments.argLoggingPrefixes)));
@@ -107,19 +107,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
         running = true;
 
         while(running) {
-            if(clockEnabled) {
-                clock.beforeLoopIteration();
-            }
+            clock.beforeLoopIteration();
             if(executionManager.enableProfiling()){
                 logger.time("totalTime");
             }
             executionManager.loop();
             if(executionManager.enableProfiling()){
                 logger.timeEnd("totalTime");
-            }
-
-            if(clockEnabled) {
-                clock.afterLoopIteration();
             }
 
             if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
@@ -255,11 +249,11 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         pugi::xml_attribute valueAttr = clockNode.attribute("value");
 
         if(enabledAttr) {
-            clockEnabled = enabledAttr.as_bool();
+            clock.enabled(enabledAttr.as_bool());
         } else {
             // if not enabled attribute is given then the clock is considered
             // to be disabled
-            clockEnabled = false;
+            clock.enabled(false);
         }
 
         if(valueAttr) {
@@ -267,7 +261,7 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         } else {
             logger.error("parseExecution")
                 << "Missing attribute value for tag <clock>";
-            clockEnabled = false;
+            clock.enabled(false);
         }
 
         if(unitAttr) {
@@ -275,10 +269,10 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
         } else {
             logger.warn("parseExecution")
                 << "Missing attribute unit=\"hz/ms/us\" for tag <clock>";
-            clockEnabled = false;
+            clock.enabled(false);
         }
 
-        if(clockEnabled) {
+        if(clock.enabled()) {
             if(clockUnit == "hz") {
                 clock.cycleTime(extra::PrecisionTime::fromMicros(1000000 / clockValue));
             } else if(clockUnit == "ms") {
@@ -289,12 +283,12 @@ void Framework::parseExecution(pugi::xml_node rootNode) {
                 logger.error("parseConfig")
                     << "Invalid value for attribute unit in <clock>: "
                     << clockUnit;
-                clockEnabled = false;
+                clock.enabled(false);
             }
         }
     }
 
-    if(clockEnabled) {
+    if(clock.enabled()) {
         logger.info("parseConfig") << "Enabled clock with " << clock.cycleTime();
     } else {
         logger.info("parseConfig") << "Disabled clock";

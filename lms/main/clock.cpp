@@ -4,7 +4,8 @@ namespace lms {
 
 Clock::Clock(logging::Logger &rootLogger)
     : logger("Clock", &rootLogger), loopTime(extra::PrecisionTime::ZERO),
-      firstIteration(true), overflowTime(extra::PrecisionTime::ZERO) {
+      firstIteration(true), overflowTime(extra::PrecisionTime::ZERO),
+    m_enabled(false) {
 }
 
 void Clock::cycleTime(extra::PrecisionTime cycleTime) {
@@ -16,6 +17,8 @@ extra::PrecisionTime Clock::cycleTime() const {
 }
 
 void Clock::beforeLoopIteration() {
+    if(! enabled()) return;
+
     using extra::PrecisionTime;
 
     if(! firstIteration) {
@@ -42,8 +45,12 @@ void Clock::beforeLoopIteration() {
     beforeWorkTimestamp = PrecisionTime::now();
 }
 
-void Clock::afterLoopIteration() {
-    // currently nothing
+void Clock::enabled(bool flag) {
+    m_enabled = flag;
+}
+
+bool Clock::enabled() const {
+    return m_enabled;
 }
 
 }  // namespace lms

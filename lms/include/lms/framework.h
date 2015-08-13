@@ -63,7 +63,6 @@ private:
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;
 
-    bool clockEnabled;
     Clock clock;
 
     /**

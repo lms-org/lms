@@ -20,8 +20,6 @@ ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
       m_messaging(), m_cycleCounter(-1), running(true),
       m_enabledProfiling(false) {
-
-    dataManager.setChannel<lms::type::FrameworkInfo>("FRAMEWORK_INFO", frameworkInfo);
 }
 
 ExecutionManager::~ExecutionManager () {

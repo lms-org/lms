@@ -43,21 +43,27 @@ public:
     extra::PrecisionTime cycleTime() const;
 
     /**
+     * @brief Enable or disable the clock.
+     * @param flag true for enable, false for disable
+     */
+    void enabled(bool flag);
+
+    /**
+     * @brief Returns true if enabled, false otherwise.
+     */
+    bool enabled() const;
+
+    /**
      * @brief Should be called directly at the beginning
      * of the main loop's body.
      */
     void beforeLoopIteration();
-
-    /**
-     * @brief Should be called at the end of the
-     * main loop's body.
-     */
-    void afterLoopIteration();
 private:
     logging::ChildLogger logger;
 
     // configuration
     extra::PrecisionTime loopTime;
+    bool m_enabled;
 
     // current status variables
     bool firstIteration;
