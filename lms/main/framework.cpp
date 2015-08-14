@@ -65,18 +65,16 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Disable config monitor";
     }
 
+    executionManager.enabledMultithreading(argumentHandler.argMultithreaded);
+
     if(argumentHandler.argMultithreaded) {
-        int threads;
-
         if(argumentHandler.argThreadsAuto) {
-            threads = std::thread::hardware_concurrency();
-            logger.info() << "Multithreaded with " << threads << " threads (auto)";
+            executionManager.numThreadsAuto();
+            logger.info() << "Multithreaded with " << executionManager.numThreads() << " threads (auto)";
         } else {
-            threads = argumentHandler.argThreads;
-            logger.info() << "Multithreaded with " << threads << " threads";
+            executionManager.numThreads(argumentHandler.argThreads);
+            logger.info() << "Multithreaded with " << executionManager.numThreads() << " threads";
         }
-
-        executionManager.setMaxThreads(threads);
     } else {
         logger.info() << "Single threaded";
     }

@@ -76,8 +76,33 @@ public:
 
     /**
      * @brief Set the thread pool size.
+     *
+     * This is only used if multithreading is enabled.
      */
-    void setMaxThreads(int maxThreads);
+    void numThreads(int num);
+
+    /**
+     * @brief Set the thread pool size to an automatically determined way
+     * that is believed to be the best for current system LMS is running on.
+     *
+     * This is only used if mulithreading is enabled.
+     */
+    void numThreadsAuto();
+
+    /**
+     * @brief Return the thread pool size.
+     */
+    int numThreads() const;
+
+    /**
+     * @brief Enable or diable multithreading.
+     */
+    void enabledMultithreading(bool flag);
+
+    /**
+     * @brief Return true if multithreading is enabled.
+     */
+    bool enabledMultithreading() const;
 
     DataManager& getDataManager();
 
@@ -103,7 +128,9 @@ private:
     logging::Logger &rootLogger;
     logging::ChildLogger logger;
 
-    int maxThreads;
+    int m_numThreads;
+    bool m_multithreading;
+
     bool valid;
 
     Loader loader;

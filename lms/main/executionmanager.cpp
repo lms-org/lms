@@ -16,7 +16,8 @@
 namespace lms {
 
 ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
-    : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), maxThreads(1),
+    : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), m_numThreads(1),
+      m_multithreading(false),
       valid(false), loader(rootLogger), dataManager(rootLogger, *this),
       m_messaging(), m_cycleCounter(-1), running(true),
       m_profiler(rootLogger) {
@@ -67,7 +68,7 @@ void ExecutionManager::loop() {
     //validate the ExecutionManager
     validate();
 
-    if(maxThreads == 1) {
+    if(! m_multithreading) {
         //copy cycleList so it can be modified
         cycleListTmp = cycleList;
 
@@ -110,7 +111,7 @@ void ExecutionManager::loop() {
 
         // if thread pool is not yet initialized then do it now
         if(threadPool.empty()) {
-            for(int threadNum = 1; threadNum <= maxThreads; threadNum++) {
+            for(int threadNum = 1; threadNum <= m_numThreads; threadNum++) {
                 threadPool.push_back(std::thread([threadNum, this] () {
                     threadFunction(threadNum);
                 }));
@@ -353,8 +354,24 @@ void ExecutionManager::validate(){
     }
 }
 
-void ExecutionManager::setMaxThreads(int maxThreads) {
-    this->maxThreads = maxThreads;
+void ExecutionManager::numThreads(int num) {
+    m_numThreads = num;
+}
+
+void ExecutionManager::numThreadsAuto() {
+    m_numThreads = std::thread::hardware_concurrency();
+}
+
+int ExecutionManager::numThreads() const {
+    return m_numThreads;
+}
+
+void ExecutionManager::enabledMultithreading(bool flag) {
+    m_multithreading = flag;
+}
+
+bool ExecutionManager::enabledMultithreading() const {
+    return m_multithreading;
 }
 
 void ExecutionManager::printCycleList(cycleListType &clist) {
