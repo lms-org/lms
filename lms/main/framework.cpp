@@ -114,8 +114,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 logger.timeEnd("totalTime");
             }
 
-            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
-                    && configMonitor.hasChangedFiles()) {
+            if(configMonitorEnabled && configMonitor.hasChangedFiles()) {
                 configMonitor.unwatchAll();
                 modulesToLoadLists.clear();
                 parseConfig(LoadConfigFlag::ONLY_MODULE_CONFIG);
@@ -186,7 +185,7 @@ void Framework::parseConfig(LoadConfigFlag flag){
 }
 
 void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
-    if(lms::extra::FILE_MONITOR_SUPPORTED && !configMonitor.watch(file)) {
+    if(!configMonitor.watch(file)) {
         logger.error("parseFile") << "Could not monitor " << file;
     }
 
@@ -420,8 +419,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
                         << srcAttr.value() << " for " << module->name << " but failed";
 
                 } else {
-                    if(lms::extra::FILE_MONITOR_SUPPORTED &&
-                            !configMonitor.watch(lconfPath)) {
+                    if(! configMonitor.watch(lconfPath)) {
                         logger.error("parseModules") << "Failed to monitor "
                                                      << lconfPath;
                     }
