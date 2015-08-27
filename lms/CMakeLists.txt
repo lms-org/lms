@@ -58,7 +58,6 @@ set (PUBLIC_HEADERS
 )
 
 set (SOURCE
-        "main/main.cpp"
         "main/loader.cpp"
         "main/module.cpp"
         "main/datamanager.cpp"
@@ -112,12 +111,10 @@ else()
     message("NO OS found!")
 endif()
 
-add_executable (lms
+add_library (lmscore SHARED
         ${PUBLIC_HEADERS}
         ${SOURCE}
 )
-
-set_target_properties(lms PROPERTIES ENABLE_EXPORTS 1)
 
 #Compile xml-parser pugixml
 add_library(pugixml STATIC         
@@ -125,20 +122,24 @@ add_library(pugixml STATIC
 	"xml/pugixml-1.5/src/pugixml.hpp"
 	"xml/pugixml-1.5/src/pugiconfig.hpp"
 )
-
-#link libraries
-#link_libraries(pugixml)
-target_link_libraries(lms PRIVATE pugixml)
+set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE 1)
+target_link_libraries(lmscore PRIVATE pugixml)
 
 #System specific source
 #http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
 if(UNIX)
-    target_link_libraries(lms PRIVATE dl pthread)
+    target_link_libraries(lmscore PRIVATE dl pthread)
 elseif(WIN32)
 else()
     message("NO OS found!")
 endif()
 
+
+#link libraries
+add_executable(lms
+    main/main.cpp
+)
+target_link_libraries(lms PRIVATE lmscore)
 
 #Adds copy commands for configs to the core (core compiled is called lms)
 foreach(ConfigFile ${ConfigFiles})
