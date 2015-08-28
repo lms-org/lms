@@ -37,6 +37,10 @@ std::vector<std::string> split(const std::string &string, char splitter) {
 }
 
 std::string dirname(std::string path) {
+    if(path.empty()) {
+        return ".";
+    }
+
     // delete trailing slashes
     size_t lastNotSlash = path.find_last_not_of('/');
 
