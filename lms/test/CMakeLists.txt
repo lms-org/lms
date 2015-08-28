@@ -1,5 +1,6 @@
 set(TESTS
     extra/string.cpp
+    type/module_config.cpp
 )
 
 if(USE_GOOGLETEST)
