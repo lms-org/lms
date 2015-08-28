@@ -29,13 +29,7 @@ bool parse<bool>(const std::string &src, bool &dst) {
     return false;
 }
 
-bool ModuleConfig::loadFromFile(const std::string &path) {
-    std::ifstream in(path);
-
-    if(! in.is_open()) {
-        return false;
-    }
-
+void ModuleConfig::load(std::istream &in) {
     std::string line;
     bool isMultiline = false;
     std::string lineBuffer;
@@ -67,9 +61,17 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
             }
         }
     }
+}
 
+bool ModuleConfig::loadFromFile(const std::string &path) {
+    std::ifstream in(path);
+
+    if(! in.is_open()) {
+        return false;
+    }
+
+    load(in);
     in.close();
-
     return true;
 }
 

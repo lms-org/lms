@@ -93,6 +93,12 @@ public:
     bool loadFromFile(const std::string &path);
 
     /**
+     * @brief Load a config from the given stream.
+     * @param is input stream to read from (will not be closed automatically)
+     */
+    void load(std::istream &is);
+
+    /**
      * @brief Set a config value. Overwrite key if existing.
      *
      * @param key the key to set
