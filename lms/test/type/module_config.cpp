@@ -1,5 +1,4 @@
 #include <sstream>
-#include <string>
 #include <vector>
 
 #include "lms/type/module_config.h"
@@ -7,7 +6,7 @@
 
 class ModuleConfigTest : public ::testing::Test {
 protected:
-    virtual void SetUp() {
+    virtual void SetUp() override {
         std::istringstream iss(
         "# This is a comment\n"
         "width = 300\n"
