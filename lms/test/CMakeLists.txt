@@ -1,6 +1,7 @@
 set(TESTS
     xml_parser.cpp
     extra/string.cpp
+    extra/time.cpp
     type/module_config.cpp
 )
 
