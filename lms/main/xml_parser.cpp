@@ -132,13 +132,13 @@ void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
         name = nameAttr.as_string();
     }
 
-    lms::logging::LogLevel defaultModuleLevel = lms::logging::SMALLEST_LEVEL;
+    lms::logging::LogLevel defaultModuleLevel = lms::logging::LogLevel::ALL;
 
     // get attribute "logLevel" of node <modulesToLoad>
     // its value will be the default for logLevel of <module>
     pugi::xml_attribute globalLogLevelAttr = node.attribute("logLevel");
     if(globalLogLevelAttr) {
-        defaultModuleLevel = lms::logging::levelFromName(globalLogLevelAttr.value());
+        lms::logging::levelFromName(globalLogLevelAttr.value(), defaultModuleLevel);
     }
 
     for (pugi::xml_node moduleNode : node.children("module")){
@@ -149,7 +149,7 @@ void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
         // get the attribute "logLevel"
         pugi::xml_attribute logLevelAttr = moduleNode.attribute("logLevel");
         if(logLevelAttr) {
-            mod.logLevel = lms::logging::levelFromName(logLevelAttr.value());
+            lms::logging::levelFromName(logLevelAttr.value(), mod.logLevel);
         } else {
             mod.logLevel = defaultModuleLevel;
         }

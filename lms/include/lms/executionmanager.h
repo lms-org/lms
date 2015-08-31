@@ -49,7 +49,7 @@ public:
      * @param minLogLevel minimum logging level
      */
     void enableModule(const std::string &name, logging::LogLevel minLogLevel
-                      = logging::SMALLEST_LEVEL);
+                      = logging::LogLevel::ALL);
 
     /**
      * @brief Disable module with the given name, remove it from the

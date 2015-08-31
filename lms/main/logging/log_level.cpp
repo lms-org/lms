@@ -6,20 +6,26 @@ namespace logging {
 
 std::string levelName(LogLevel lvl) {
     switch(lvl) {
+    case LogLevel::ALL : return "ALL";
     case LogLevel::DEBUG : return "DEBUG";
     case LogLevel::INFO :  return "INFO ";
     case LogLevel::WARN :  return "WARN ";
     case LogLevel::ERROR : return "ERROR";
-    default : return "_"; // this should never happen
+    case LogLevel::OFF : return "OFF";
     }
+    return "?";
 }
 
-LogLevel levelFromName(const std::string &name) {
-    if(name == "DEBUG") return LogLevel::DEBUG;
-    if(name == "INFO") return LogLevel::INFO;
-    if(name == "WARN") return LogLevel::WARN;
-    if(name == "ERROR") return LogLevel::ERROR;
-    return SMALLEST_LEVEL;
+bool levelFromName(const std::string &name, LogLevel &level) {
+    if(name == "ALL") level = LogLevel::ALL;
+    else if(name == "DEBUG") level = LogLevel::DEBUG;
+    else if(name == "INFO") level = LogLevel::INFO;
+    else if(name == "WARN") level = LogLevel::WARN;
+    else if(name == "ERROR") level = LogLevel::ERROR;
+    else if(name == "OFF") level = LogLevel::OFF;
+    else return false;
+
+    return true;
 }
 
 std::string levelColor(LogLevel lvl) {
@@ -28,7 +34,7 @@ std::string levelColor(LogLevel lvl) {
     case LogLevel::INFO : return lms::extra::COLOR_BLUE;
     case LogLevel::WARN : return lms::extra::COLOR_YELLOW;
     case LogLevel::ERROR : return lms::extra::COLOR_RED;
-    default: return lms::extra::COLOR_WHITE; // this should never happen
+    default: return lms::extra::COLOR_WHITE; // ALL, OFF
     }
 }
 

@@ -17,11 +17,20 @@ namespace logging {
  *
  * @author Hans Kirchner
  */
-enum class LogLevel : std::int8_t {
-    DEBUG = 1, INFO = 2, WARN = 3, ERROR = 4
+enum class LogLevel : std::uint8_t {
+    //! The lowest possible rank, will turn on all logging.
+    ALL = 0,
+    //! Detailed information for debugging.
+    DEBUG = 1,
+    //! Should be used for startup/shutdown events.
+    INFO = 2,
+    //! Almost errors that do not interrupt the program's flow.
+    WARN = 3,
+    //! Runtime errors, hardware problems.
+    ERROR = 4,
+    //! The highest possible rank, will turn off all logging.
+    OFF = 255
 };
-
-const LogLevel SMALLEST_LEVEL = LogLevel::DEBUG;
 
 /**
  * @brief Returns the name of the given log level.
@@ -39,9 +48,10 @@ std::string levelName(LogLevel lvl);
  * Example: levelFromName("WARN") returns LogLevel::WARN.
  *
  * @param name exact name of a log level
- * @return log level
+ * @param level the result will be stored in this parameter
+ * @return true if parsing successful, false otherwise
  */
-LogLevel levelFromName(const std::string &name);
+bool levelFromName(const std::string &name, LogLevel &level);
 
 /**
  * @brief Returns a linux terminal compatible color code

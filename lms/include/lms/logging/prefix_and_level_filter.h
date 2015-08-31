@@ -24,7 +24,7 @@ public:
      * @param minLevel defaults to lms::logging::SMALLEST_LEVEL
      * @param prefixes tag prefixes to filter for
      */
-    explicit PrefixAndLevelFilter(LogLevel minLevel = SMALLEST_LEVEL,
+    explicit PrefixAndLevelFilter(LogLevel minLevel = LogLevel::ALL ,
                                   const std::vector<std::string> &prefixes = {});
 
     /**
