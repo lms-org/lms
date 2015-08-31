@@ -20,7 +20,7 @@ std::string currentTimeString();
  * @brief Generate timestamps with microsecond precision.
  */
 class PrecisionTime {
- public:
+public:
     typedef std::int64_t TimeType;
     static const PrecisionTime ZERO;
 
@@ -71,6 +71,22 @@ class PrecisionTime {
      * @return precision time instance
      */
     static PrecisionTime fromMillis(TimeType millis);
+
+    /**
+     * @brief Construct from scalar and unit.
+     *
+     * Put std::milli to construct the time with
+     * milliseconds.
+     *
+     * Example: PrecisionTime::from<std::milli>(1)
+     *
+     * @param time scalar value
+     * @return constructed time object
+     */
+    template<class Scale>
+    static PrecisionTime from(TimeType time) {
+        return PrecisionTime(time * (Scale::num * 1000000L / Scale::den));
+    }
 
     /**
      * @brief Get time as floating point type
@@ -134,7 +150,7 @@ class PrecisionTime {
     bool operator <=(const PrecisionTime &t) const;
     bool operator ==(const PrecisionTime &t) const;
     bool operator !=(const PrecisionTime &t) const;
- private:
+private:
     TimeType m_micros;
 
     /**
