@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-#include "log_level.h"
+#include "level.h"
 
 namespace lms {
 namespace logging {

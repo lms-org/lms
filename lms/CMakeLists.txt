@@ -37,7 +37,7 @@ set (PUBLIC_HEADERS
 
         "include/lms/type/module_config.h"
 
-        "include/lms/logging/log_level.h"
+        "include/lms/logging/level.h"
         "include/lms/logging/logger.h"
         "include/lms/logging/log_message.h"
         "include/lms/logging/sink.h"
@@ -71,7 +71,7 @@ set (SOURCE
         "main/xml_parser.cpp"
         "main/config_observer.cpp"
 
-        "main/logging/log_level.cpp"
+        "main/logging/level.cpp"
         "main/logging/logger.cpp"
         "main/logging/context.cpp"
         "main/logging/child_logger.cpp"

@@ -5,7 +5,7 @@
 #include <memory>
 #include <map>
 
-#include "log_level.h"
+#include "level.h"
 #include "lms/extra/time.h"
 
 namespace lms {

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "log_level.h"
+#include "level.h"
 
 namespace lms {
 namespace logging {

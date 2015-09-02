@@ -1,4 +1,4 @@
-#include "lms/logging/log_level.h"
+#include "lms/logging/level.h"
 #include "lms/extra/colors.h"
 
 namespace lms {

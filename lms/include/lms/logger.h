@@ -2,7 +2,7 @@
 #define LMS_LOGGER_H
 
 // include all logging headers here
-#include <lms/logging/log_level.h>
+#include <lms/logging/level.h>
 #include <lms/logging/logger.h>
 #include <lms/logging/log_message.h>
 #include <lms/logging/sink.h>

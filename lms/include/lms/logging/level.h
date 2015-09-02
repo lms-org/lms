@@ -1,5 +1,5 @@
-#ifndef LMS_LOGGING_LOG_LEVEL_H
-#define LMS_LOGGING_LOG_LEVEL_H
+#ifndef LMS_LOGGING_LEVEL_H
+#define LMS_LOGGING_LEVEL_H
 
 #include <cstdint>
 #include <string>
@@ -67,5 +67,5 @@ std::string levelColor(Level lvl);
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_LOG_LEVEL_H */
+#endif /* LMS_LOGGING_LEVEL_H */
 
