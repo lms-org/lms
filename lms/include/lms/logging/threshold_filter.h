@@ -1,5 +1,5 @@
-#ifndef LMS_LOGGING_PREFIX_AND_LEVEL_FILTER_H
-#define LMS_LOGGING_PREFIX_AND_LEVEL_FILTER_H
+#ifndef LMS_LOGGING_THRESHOLD_FILTER_H
+#define LMS_LOGGING_THRESHOLD_FILTER_H
 
 #include <map>
 #include <string>
@@ -65,5 +65,5 @@ private:
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_PREFIX_AND_LEVEL_FILTER_H */
+#endif /* LMS_LOGGING_THRESHOLD_FILTER_H */
 

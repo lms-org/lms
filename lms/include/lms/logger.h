@@ -11,6 +11,6 @@
 #include <lms/logging/child_logger.h>
 #include <lms/logging/console_sink.h>
 #include <lms/logging/file_sink.h>
-#include <lms/logging/prefix_and_level_filter.h>
+#include <lms/logging/threshold_filter.h>
 
 #endif /* LMS_LOGGER_H */
