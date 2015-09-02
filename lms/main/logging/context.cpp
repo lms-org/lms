@@ -14,7 +14,7 @@ Context::Context() {
 }
 
 void Context::appendSink(Sink *sink) {
-    m_sinks.push_back(std::move(std::unique_ptr<Sink>(sink)));
+    m_sinks.push_back(std::unique_ptr<Sink>(sink));
 }
 
 void Context::clearSinks() {
