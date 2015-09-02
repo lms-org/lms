@@ -39,7 +39,7 @@ set (PUBLIC_HEADERS
 
         "include/lms/logging/level.h"
         "include/lms/logging/logger.h"
-        "include/lms/logging/log_message.h"
+        "include/lms/logging/event.h"
         "include/lms/logging/sink.h"
         "include/lms/logging/filter.h"
         "include/lms/logging/context.h"
@@ -75,7 +75,7 @@ set (SOURCE
         "main/logging/logger.cpp"
         "main/logging/context.cpp"
         "main/logging/child_logger.cpp"
-        "main/logging/log_message.cpp"
+        "main/logging/event.cpp"
         "main/logging/console_sink.cpp"
         "main/logging/file_sink.cpp"
         "main/logging/threshold_filter.cpp"

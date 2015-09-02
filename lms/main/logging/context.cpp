@@ -33,7 +33,7 @@ Filter* Context::filter() const {
     return m_filter.get();
 }
 
-void Context::processMessage(const LogMessage &message) {
+void Context::processMessage(const Event &message) {
     for(size_t i = 0; i < m_sinks.size(); i++) {
         m_sinks[i]->sink(message);
     }

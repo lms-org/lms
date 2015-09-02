@@ -11,7 +11,7 @@
 namespace lms {
 namespace logging {
 
-class LogMessage;
+class Event;
 
 /**
  * @brief A logger is able to receive logging messages
@@ -35,25 +35,25 @@ public:
      * @brief Log a debug message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> debug(const std::string& tag = "");
+    std::unique_ptr<Event> debug(const std::string& tag = "");
 
     /**
      * @brief Log an info message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> info(const std::string& tag = "");
+    std::unique_ptr<Event> info(const std::string& tag = "");
 
     /**
      * @brief Log a warning message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> warn(const std::string& tag = "");
+    std::unique_ptr<Event> warn(const std::string& tag = "");
 
     /**
      * @brief Log an error message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> error(const std::string& tag = "");
+    std::unique_ptr<Event> error(const std::string& tag = "");
 
     /**
      * @brief Start a timer with the specified name.
@@ -89,7 +89,7 @@ public:
      *
      * Useful for linux api calls and calls to standard c functions.
      */
-    std::unique_ptr<LogMessage> perror(const std::string &tag = "");
+    std::unique_ptr<Event> perror(const std::string &tag = "");
 
     /**
      * @brief Log a message with the given level and tag.
@@ -100,7 +100,7 @@ public:
      * @param tag logging tag
      * @return an appendable logging message that will be automatically flushed
      */
-    virtual std::unique_ptr<LogMessage> log(Level lvl, const std::string& tag) = 0;
+    virtual std::unique_ptr<Event> log(Level lvl, const std::string& tag) = 0;
 protected:
     /**
      * @brief Logger is abstract.

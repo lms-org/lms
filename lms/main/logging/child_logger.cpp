@@ -12,7 +12,7 @@ ChildLogger::ChildLogger(Context *ctx, const std::string &name, Level threshold)
 ChildLogger::ChildLogger(const std::string &name, Level threshold)
     : m_context(& Context::getDefault()), m_name(name), m_threshold(threshold) {}
 
-std::unique_ptr<LogMessage> ChildLogger::log(Level lvl, const std::string& tag) {
+std::unique_ptr<Event> ChildLogger::log(Level lvl, const std::string& tag) {
     if(m_context == nullptr) {
         std::cerr << "LOGGER " << m_name << " HAS NO VALID CONTEXT" << std::endl;
         return nullptr;
@@ -31,7 +31,7 @@ std::unique_ptr<LogMessage> ChildLogger::log(Level lvl, const std::string& tag) 
     }
 
     if(lvl >= m_threshold && (filter == nullptr || filter->decide(lvl, newTag))) {
-        return std::unique_ptr<LogMessage>(new LogMessage(*m_context, lvl, newTag));
+        return std::unique_ptr<Event>(new Event(*m_context, lvl, newTag));
     } else {
         return nullptr;
     }

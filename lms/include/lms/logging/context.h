@@ -1,5 +1,5 @@
-#ifndef LMS_LOGGING_ROOT_LOGGER_H
-#define LMS_LOGGING_ROOT_LOGGER_H
+#ifndef LMS_LOGGING_CONTEXT_H
+#define LMS_LOGGING_CONTEXT_H
 
 #include <memory>
 #include <string>
@@ -81,7 +81,7 @@ public:
      */
     bool hasFilter();
 
-    void processMessage(const LogMessage &message);
+    void processMessage(const Event &message);
 private:
     std::vector<std::unique_ptr<Sink>> m_sinks;
     std::unique_ptr<Filter> m_filter;
@@ -90,5 +90,5 @@ private:
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_ROOT_LOGGER_H */
+#endif /* LMS_LOGGING_CONTEXT_H */
 

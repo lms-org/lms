@@ -36,7 +36,7 @@ public:
 
     explicit ChildLogger(const std::string &name, Level threshold = Level::ALL);
 
-    std::unique_ptr<LogMessage> log(Level lvl, const std::string& tag) override;
+    std::unique_ptr<Event> log(Level lvl, const std::string& tag) override;
 
     std::string name() const;
 

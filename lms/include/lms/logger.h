@@ -4,7 +4,7 @@
 // include all logging headers here
 #include <lms/logging/level.h>
 #include <lms/logging/logger.h>
-#include <lms/logging/log_message.h>
+#include <lms/logging/event.h>
 #include <lms/logging/sink.h>
 #include <lms/logging/filter.h>
 #include <lms/logging/context.h>

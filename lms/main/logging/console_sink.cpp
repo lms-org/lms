@@ -13,7 +13,7 @@ void ConsoleSink::printColored(bool colored) {
     m_colored = colored;
 }
 
-void ConsoleSink::sink(const LogMessage &message) {
+void ConsoleSink::sink(const Event &message) {
     std::lock_guard<std::mutex> lck(mtx);
 
     if(m_time) {

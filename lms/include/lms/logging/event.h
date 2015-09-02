@@ -1,5 +1,5 @@
-#ifndef LMS_LOGGING_LOG_MESSAGE_H
-#define LMS_LOGGING_LOG_MESSAGE_H
+#ifndef LMS_LOGGING_EVENT_H
+#define LMS_LOGGING_EVENT_H
 
 #include <string>
 #include <sstream>
@@ -21,7 +21,7 @@ class Context;
  *
  * @author Hans Kirchner
  */
-class LogMessage {
+class Event {
 public:
     /**
      * @brief Create a new log message with the given values.
@@ -29,7 +29,7 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    LogMessage(Context &ctx, Level level, const std::string& tag)
+    Event(Context &ctx, Level level, const std::string& tag)
         : tag(tag), level(level), ctx(ctx) {}
 
     /**
@@ -39,7 +39,7 @@ public:
      * If the log message is wrapped in a unique pointer,
      * this will happen automatically.
      */
-    ~LogMessage();
+    ~Event();
 
     /**
      * @brief The tag of this log message
@@ -75,16 +75,16 @@ public:
 };
 
 /**
- * @brief Make the LogMessage appendable.
+ * @brief Make the Event appendable.
  */
-std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message,
+std::unique_ptr<Event> operator << (std::unique_ptr<Event> message,
                                          std::ostream& (*pf) (std::ostream&));
 
 /**
- * @brief Make the LogMessage appendable.
+ * @brief Make the Event appendable.
  */
 template <typename T>
-std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T const& value) {
+std::unique_ptr<Event> operator << (std::unique_ptr<Event> message, T const& value) {
     if(message) {
         message->messageStream << value;
     }
@@ -95,5 +95,5 @@ std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T 
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_LOG_MESSAGE_H */
+#endif /* LMS_LOGGING_EVENT_H */
 

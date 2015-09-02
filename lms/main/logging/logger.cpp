@@ -7,23 +7,23 @@
 namespace lms {
 namespace logging {
 
-std::unique_ptr<LogMessage> Logger::debug(const std::string& tag) {
+std::unique_ptr<Event> Logger::debug(const std::string& tag) {
     return log(Level::DEBUG, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::info(const std::string& tag) {
+std::unique_ptr<Event> Logger::info(const std::string& tag) {
     return log(Level::INFO, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::warn(const std::string& tag) {
+std::unique_ptr<Event> Logger::warn(const std::string& tag) {
     return log(Level::WARN, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
+std::unique_ptr<Event> Logger::error(const std::string& tag) {
     return log(Level::ERROR, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
+std::unique_ptr<Event> Logger::perror(const std::string &tag) {
     // http://stackoverflow.com/a/901316
     // http://linux.die.net/man/3/strerror
     char msg[64];
