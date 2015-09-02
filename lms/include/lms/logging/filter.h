@@ -1,5 +1,5 @@
-#ifndef LMS_LOGGING_LOGGING_FILTER_H
-#define LMS_LOGGING_LOGGING_FILTER_H
+#ifndef LMS_LOGGING_FILTER_H
+#define LMS_LOGGING_FILTER_H
 
 #include <string>
 
@@ -34,5 +34,5 @@ public:
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_LOGGING_FILTER_H */
+#endif /* LMS_LOGGING_FILTER_H */
 

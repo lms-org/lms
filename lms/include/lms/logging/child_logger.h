@@ -6,7 +6,7 @@
 
 #include "level.h"
 #include "logger.h"
-#include "logging_filter.h"
+#include "filter.h"
 
 namespace lms {
 namespace logging {

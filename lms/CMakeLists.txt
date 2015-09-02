@@ -41,7 +41,7 @@ set (PUBLIC_HEADERS
         "include/lms/logging/logger.h"
         "include/lms/logging/log_message.h"
         "include/lms/logging/sink.h"
-        "include/lms/logging/logging_filter.h"
+        "include/lms/logging/filter.h"
         "include/lms/logging/context.h"
         "include/lms/logging/child_logger.h"
         "include/lms/logging/console_sink.h"
