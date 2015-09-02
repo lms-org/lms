@@ -84,7 +84,7 @@ void parseModuleConfig(pugi::xml_node node,  type::ModuleConfig &config,
  */
 struct ModuleToLoad {
     std::string name;
-    logging::LogLevel logLevel;
+    logging::Level logLevel;
 };
 
 /**

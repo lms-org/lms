@@ -56,8 +56,6 @@ public:
     };
 
 private:
-
-    logging::RootLogger rootLogger;
     logging::ChildLogger logger;
 
     ArgumentHandler argumentHandler;

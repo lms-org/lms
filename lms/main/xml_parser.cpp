@@ -132,7 +132,7 @@ void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
         name = nameAttr.as_string();
     }
 
-    lms::logging::LogLevel defaultModuleLevel = lms::logging::LogLevel::ALL;
+    lms::logging::Level defaultModuleLevel = lms::logging::Level::ALL;
 
     // get attribute "logLevel" of node <modulesToLoad>
     // its value will be the default for logLevel of <module>

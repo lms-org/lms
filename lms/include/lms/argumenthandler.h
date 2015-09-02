@@ -73,7 +73,7 @@ class ArgumentHandler {
     std::string argLoadConfiguration;
     RunLevel argRunLevel;
     std::vector<std::string> argLoggingPrefixes;
-    logging::LogLevel argLoggingMinLevel;
+    logging::Level argLoggingMinLevel;
     bool argQuiet;
     std::string argLogFile;
     std::string argUser;

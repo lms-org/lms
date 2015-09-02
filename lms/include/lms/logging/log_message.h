@@ -10,6 +10,7 @@ namespace lms {
 namespace logging {
 
 class Sink;
+class Context;
 
 /**
  * @brief A log message is not more than a struct consisting
@@ -17,8 +18,6 @@ class Sink;
  *
  * A log message is appendable in the following way:
  * message << "Log message No. " << 1;
- *
- * TODO: the sink should not be a usual pointer
  *
  * @author Hans Kirchner
  */
@@ -30,8 +29,8 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    LogMessage(Sink &sink, LogLevel level, const std::string& tag)
-        : tag(tag), level(level), sink(sink) {}
+    LogMessage(Context &ctx, Level level, const std::string& tag)
+        : tag(tag), level(level), ctx(ctx) {}
 
     /**
      * @brief The destructor will flush the log message to the
@@ -50,17 +49,15 @@ public:
     /**
      * @brief The log level (severity) of this log message.
      */
-    const LogLevel level;
+    const Level level;
 
     /**
      * @brief A reference to a sink instance.
      *
      * This log message will be flushed to
      * that sink in the destructor.
-     *
-     * TODO is in conflict with RootLogger's Sink unique_ptr
      */
-    Sink &sink;
+    Context &ctx;
 
     /**
      * @brief The logging message.
@@ -88,10 +85,7 @@ std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message,
  */
 template <typename T>
 std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T const& value) {
-    if(! message) {
-        // TODO if filter returned false this message will point to NULL
-        // std::cerr << "LOG MESSAGE IS NULL" << std::endl;
-    } else {
+    if(message) {
         message->messageStream << value;
     }
 

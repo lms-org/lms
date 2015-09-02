@@ -26,7 +26,7 @@ public:
      * loop is to slow
      * @param loopTime duration of a single loop iteration
      */
-    Clock(logging::Logger &rootLogger);
+    Clock();
 
     /**
      * @brief Set the clock's loop time for

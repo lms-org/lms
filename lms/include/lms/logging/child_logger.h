@@ -32,34 +32,34 @@ public:
      * @param name logger's name, will be prepended to the tag
      * @param parent all logging messages will be delegated to this parent
      */
-    ChildLogger(const std::string &name, Logger *parent,
-                std::unique_ptr<LoggingFilter> filter = nullptr);
+    ChildLogger(Context *context, const std::string &name, Level threshold = Level::ALL);
 
-    // TODO remove this, it's only for debugging
-    ~ChildLogger() { }
+    explicit ChildLogger(const std::string &name, Level threshold = Level::ALL);
 
-    /**
-     * @brief Set the new filter for this child logger.
-     *
-     * The old filter will be deleted.
-     *
-     * @param filter a filter instance
-     */
-    void filter(std::unique_ptr<LoggingFilter> filter);
+    std::unique_ptr<LogMessage> log(Level lvl, const std::string& tag) override;
 
-    std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
+    std::string name() const;
+
+    void name(const std::string &name);
+
+    Level threshold() const;
+
+    void threshold(Level level);
 private:
     /**
      * @brief Delegate all logging outputs to this parent logger.
      */
-    Logger *parent;
+    Context *m_context;
 
     /**
      * @brief Name of the child logger
      */
-    std::string name;
+    std::string m_name;
 
-    std::unique_ptr<LoggingFilter> m_filter;
+    /**
+     * Minimum logging level.
+     */
+    Level m_threshold;
 };
 
 } // namespace logging

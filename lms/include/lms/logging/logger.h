@@ -100,7 +100,7 @@ public:
      * @param tag logging tag
      * @return an appendable logging message that will be automatically flushed
      */
-    virtual std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) = 0;
+    virtual std::unique_ptr<LogMessage> log(Level lvl, const std::string& tag) = 0;
 protected:
     /**
      * @brief Logger is abstract.

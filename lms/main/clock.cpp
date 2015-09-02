@@ -2,8 +2,8 @@
 
 namespace lms {
 
-Clock::Clock(logging::Logger &rootLogger)
-    : logger("Clock", &rootLogger), loopTime(extra::PrecisionTime::ZERO),
+Clock::Clock()
+    : logger("lms::Clock"), loopTime(extra::PrecisionTime::ZERO),
       m_enabled(false), firstIteration(true),
       overflowTime(extra::PrecisionTime::ZERO) {
 }

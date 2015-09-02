@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <vector>
 
 namespace lms {
 namespace logging {
@@ -12,71 +13,78 @@ class Sink;
 class LoggingFilter;
 
 /**
- * @brief Instantiate one root logger per application.
+ * @brief Instantiate one logging context per application.
  *
- * The root logger forwards all logging messages to its sink.
- *
- * TODO: implement filters
+ * The context object
  *
  * @author Hans Kirchner
  */
-class RootLogger : public Logger {
+class Context {
 public:
+
     /**
-     * @brief Create a new root logger with the given sink instance.
+     * @brief Return default logging context for this process.
      *
-     * NOTE: The sink instance is managed by this root logger.
-     * Do not delete it manually, it will be deleted automatically
-     * when the logger is deleted.
-     *
-     * @param sink a logging sink
+     * The context object is lazy-initialized. It will be created the
+     * first time this method is called.
      */
-    explicit RootLogger(std::unique_ptr<Sink> sink, std::unique_ptr<LoggingFilter> filter);
+    static Context& getDefault();
 
     /**
-     * @brief Create a new root logger with a default console sink.
-     *
-     * You can set the sink with the sink() method later. The old
-     * sink will then be deleted.
+     * @brief Create a new context with no filters and no sinks.
      */
-    RootLogger();
-
-    // TODO remove, it's only for debugging
-    ~RootLogger() { }
+    Context();
 
     /**
-     * @brief Do not allow the root logger to be copied.
+     * @brief Do not allow copy constructing.
      */
-    RootLogger(const RootLogger &logger) = delete;
+    Context(Context const&) = delete;
 
     /**
-     * @brief Set the new sink for this root logger.
+     * @brief Do not allow copy assignments.
+     */
+    Context& operator=(Context const&) = delete;
+
+    /**
+     * @brief Add a new logging sink.
      *
-     * The old sink will be deleted.
+     * The instance is managed by this context
+     * and gets deleted automatically when the context
+     * is destroyed.
      *
      * @param sink a sink instance
      */
-    void sink(std::unique_ptr<Sink> sink);
+    void appendSink(Sink *sink);
 
     /**
-     * @brief Set the new filter for this root logger.
+     * @brief Remove all appended sinks.
+     */
+    void clearSinks();
+
+    /**
+     * @brief Install a logging filter
      *
-     * The old filter will be deleted.
+     * The instance will be managed by this context
+     * and gets deleted automatically when the context
+     * is destroyed.
      *
      * @param filter a filter instance
      */
-    void filter(std::unique_ptr<LoggingFilter> filter);
+    void filter(Filter *filter);
+
+    Filter* filter() const;
 
     /**
-     * @brief Log a message with the given level and tag.
-     * @param lvl logging level
-     * @param tag logging tag
-     * @return an appendable log message
+     * @brief Check if a filter was previously installed.
+     *
+     * @return true if filter is installed, false otherwise
      */
-    std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) override;
+    bool hasFilter();
+
+    void processMessage(const LogMessage &message);
 private:
-     std::unique_ptr<Sink> m_sink;
-     std::unique_ptr<LoggingFilter> m_filter;
+    std::vector<std::unique_ptr<Sink>> m_sinks;
+    std::unique_ptr<Filter> m_filter;
 };
 
 } // namespace logging

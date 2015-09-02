@@ -17,7 +17,7 @@ namespace logging {
  *
  * @author Hans Kirchner
  */
-enum class LogLevel : std::uint8_t {
+enum class Level : std::uint8_t {
     //! The lowest possible rank, will turn on all logging.
     ALL = 0,
     //! Detailed information for debugging.
@@ -35,34 +35,34 @@ enum class LogLevel : std::uint8_t {
 /**
  * @brief Returns the name of the given log level.
  *
- * Example: LogLevel::DEBUG returns "DEBUG".
+ * Example: Level::DEBUG returns "DEBUG".
  *
  * @param lvl a log level
  * @return string representation of the given log level
  */
-std::string levelName(LogLevel lvl);
+std::string levelName(Level lvl);
 
 /**
  * @brief Returns the log level from a given name.
  *
- * Example: levelFromName("WARN") returns LogLevel::WARN.
+ * Example: levelFromName("WARN") returns Level::WARN.
  *
  * @param name exact name of a log level
  * @param level the result will be stored in this parameter
  * @return true if parsing successful, false otherwise
  */
-bool levelFromName(const std::string &name, LogLevel &level);
+bool levelFromName(const std::string &name, Level &level);
 
 /**
  * @brief Returns a linux terminal compatible color code
  * suitable for the log level.
  *
- * Example: LogLevel::ERROR returns COLOR_RED
+ * Example: Level::ERROR returns COLOR_RED
  *
  * @param lvl a log level
  * @return an ANSI escape color code
  */
-std::string levelColor(LogLevel lvl);
+std::string levelColor(Level lvl);
 
 } // namespace logging
 } // namespace lms

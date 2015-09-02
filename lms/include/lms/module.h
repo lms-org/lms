@@ -26,7 +26,7 @@ class ExecutionManager;
  */
 class Module {
 public:
-    Module(): logger("", nullptr), m_datamanager(nullptr),
+    Module(): logger(""), m_datamanager(nullptr),
         m_messaging(nullptr) { }
     virtual ~Module() { }
 	
@@ -51,8 +51,8 @@ public:
      */
     bool initializeBase(DataManager* datamanager, Messaging *messaging,
                         ExecutionManager* execManager,
-        std::shared_ptr<ModuleWrapper> loaderEntry, logging::Logger *rootLogger,
-                        logging::LogLevel minLogLevel);
+        std::shared_ptr<ModuleWrapper> loaderEntry,
+                        logging::Level minLogLevel);
 
     int getPriority() const;
     extra::PrecisionTime getExpectedRuntime() const;

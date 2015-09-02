@@ -20,7 +20,7 @@ class Module;
  */
 class Loader {
 public:
-    explicit Loader(logging::Logger &rootLogger);
+    Loader();
 
     /**
      * @brief load

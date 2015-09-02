@@ -6,32 +6,51 @@
 namespace lms {
 namespace logging {
 
-ChildLogger::ChildLogger(const std::string &name, Logger *parent,
-                         std::unique_ptr<LoggingFilter> filter)
-    : parent(parent), name(name), m_filter(std::move(filter)) {
-}
+ChildLogger::ChildLogger(Context *ctx, const std::string &name, Level threshold)
+    : m_context(ctx), m_name(name), m_threshold(threshold) {}
 
-std::unique_ptr<LogMessage> ChildLogger::log(LogLevel lvl, const std::string& tag) {
-    if(!m_filter || m_filter->filter(lvl, tag)) {
-        if(parent == nullptr) {
-            std::cerr << "CHILD LOGGER " << name << " IS NOT INITIALIZED." << std::endl;
-            return nullptr;
-        }
+ChildLogger::ChildLogger(const std::string &name, Level threshold)
+    : m_context(& Context::getDefault()), m_name(name), m_threshold(threshold) {}
 
-        if(tag.empty()) {
-            return parent->log(lvl, name);
-        } else {
-            std::ostringstream newTag;
-            newTag << name << "." << tag;
-            return parent->log(lvl, newTag.str());
-        }
+std::unique_ptr<LogMessage> ChildLogger::log(Level lvl, const std::string& tag) {
+    if(m_context == nullptr) {
+        std::cerr << "LOGGER " << m_name << " HAS NO VALID CONTEXT" << std::endl;
+        return nullptr;
+    }
+
+    Filter *filter = m_context->filter();
+
+    std::string newTag;
+
+    if(tag.empty()) {
+        // if no tag was given, just use the logger's name
+        newTag = m_name;
+    } else {
+        // otherwise concatenate with the given tag
+        newTag = m_name + "." + tag;
+    }
+
+    if(lvl >= m_threshold && (filter == nullptr || filter->decide(lvl, newTag))) {
+        return std::unique_ptr<LogMessage>(new LogMessage(*m_context, lvl, newTag));
     } else {
         return nullptr;
     }
 }
 
-void ChildLogger::filter(std::unique_ptr<LoggingFilter> filter) {
-    m_filter = std::move(filter);
+std::string ChildLogger::name() const {
+    return m_name;
+}
+
+void ChildLogger::name(const std::string &name) {
+    m_name = name;
+}
+
+Level ChildLogger::threshold() const {
+    return m_threshold;
+}
+
+void ChildLogger::threshold(Level level) {
+    m_threshold = level;
 }
 
 } // namespace logging

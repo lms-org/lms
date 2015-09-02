@@ -10,8 +10,8 @@
 
 namespace lms {
 
-DataManager::DataManager(logging::Logger &rootLogger, ExecutionManager &execMgr)
-    : logger("DATAMGR", &rootLogger), execMgr(execMgr) {}
+DataManager::DataManager(ExecutionManager &execMgr)
+    : logger("lms::DataManager"), execMgr(execMgr) {}
 
 DataManager::~DataManager() {
     // TODO destruct all dataPointers

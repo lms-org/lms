@@ -1,7 +1,8 @@
 #ifndef LMS_LOGGING_PREFIX_AND_LEVEL_FILTER_H
 #define LMS_LOGGING_PREFIX_AND_LEVEL_FILTER_H
 
-#include <vector>
+#include <map>
+#include <string>
 
 namespace lms {
 namespace logging {
@@ -15,7 +16,7 @@ namespace logging {
  *
  * @author Hans Kirchner
  */
-class PrefixAndLevelFilter : public LoggingFilter {
+class ThresholdFilter : public Filter {
 public:
     /**
      * @brief Create a new filter with the given minimum level and
@@ -24,31 +25,41 @@ public:
      * @param minLevel defaults to lms::logging::SMALLEST_LEVEL
      * @param prefixes tag prefixes to filter for
      */
-    explicit PrefixAndLevelFilter(LogLevel minLevel = LogLevel::ALL ,
-                                  const std::vector<std::string> &prefixes = {});
+    explicit ThresholdFilter(Level defaultThreshold = Level::ALL);
 
     /**
      * @brief Add a tag prefix to the the filter list.
      *
      * @param prefix tag prefix
      */
-    void addPrefix(const std::string &prefix);
+    void addPrefix(const std::string &prefix, Level threshold);
+
+    /**
+     * @brief Delete all added prefixes.
+     */
+    void clearPrefixes();
 
     /**
      * @brief Set the minimum logging level.
      *
      * @param minLevel new minimum level
      */
-    void minLevel(LogLevel minLevel);
+    void defaultThreshold(Level threshold);
+
+    /**
+     * @brief Returns the current default threshold.
+     */
+    Level defaultThreshold() const;
 
     /**
      * @brief Overridden filter method.
      */
-    bool filter(LogLevel level, const std::string &tag) override;
+    bool decide(Level level, const std::string &tag) override;
 
 private:
-    LogLevel m_minLevel;
-    std::vector<std::string> m_prefixes;
+    Level m_defaultThreshold;
+
+    std::map<std::string,Level> m_mappings;
 };
 
 } // namespace logging

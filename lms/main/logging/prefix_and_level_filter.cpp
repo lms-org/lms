@@ -3,34 +3,33 @@
 namespace lms {
 namespace logging {
 
-PrefixAndLevelFilter::PrefixAndLevelFilter(LogLevel minLevel, const std::vector<std::string> &prefixes)
-    : m_minLevel(minLevel), m_prefixes(prefixes) {}
+ThresholdFilter::ThresholdFilter(Level defaultThreshold) :
+        m_defaultThreshold(defaultThreshold) {}
 
-void PrefixAndLevelFilter::addPrefix(const std::string &prefix) {
-    m_prefixes.push_back(prefix);
+void ThresholdFilter::addPrefix(const std::string &prefix, Level threshold) {
+    m_mappings[prefix] = threshold;
 }
 
-void PrefixAndLevelFilter::minLevel(LogLevel minLevel) {
-    m_minLevel = minLevel;
+void ThresholdFilter::clearPrefixes() {
+    m_mappings.clear();
 }
 
-bool PrefixAndLevelFilter::filter(LogLevel level, const std::string &tag) {
-    if(level < m_minLevel) {
-        return false;
-    }
+void ThresholdFilter::defaultThreshold(Level threshold) {
+    m_defaultThreshold = threshold;
+}
 
-    // if no prefixes are given, then all tags are valid
-    if(m_prefixes.empty()) {
-        return true;
-    }
+Level ThresholdFilter::defaultThreshold() const {
+    return m_defaultThreshold;
+}
 
-    for(const std::string &prefix : m_prefixes) {
-        if(tag.compare(0, prefix.size(), prefix) == 0) {
-            return true;
+bool ThresholdFilter::decide(Level level, const std::string &tag) {
+    for(const auto &pair : m_mappings) {
+        if(tag.compare(0, pair.first.size(), pair.first) == 0) {
+            return level >= pair.second;
         }
     }
 
-    return false;
+    return level >= m_defaultThreshold;
 }
 
 } // namespace logging

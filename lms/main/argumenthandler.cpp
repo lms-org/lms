@@ -41,7 +41,7 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 
 ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argRunLevel(RunLevel::CYCLE),
-    argLoggingMinLevel(logging::LogLevel::ALL), argQuiet(false), argUser(""),
+    argLoggingMinLevel(logging::Level::ALL), argQuiet(false), argUser(""),
     argProfiling(false), argConfigMonitor(false), argMultithreaded(false),
     argThreadsAuto(false), argThreads(1) {
 

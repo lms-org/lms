@@ -8,19 +8,19 @@ namespace lms {
 namespace logging {
 
 std::unique_ptr<LogMessage> Logger::debug(const std::string& tag) {
-    return log(LogLevel::DEBUG, tag);
+    return log(Level::DEBUG, tag);
 }
 
 std::unique_ptr<LogMessage> Logger::info(const std::string& tag) {
-    return log(LogLevel::INFO, tag);
+    return log(Level::INFO, tag);
 }
 
 std::unique_ptr<LogMessage> Logger::warn(const std::string& tag) {
-    return log(LogLevel::WARN, tag);
+    return log(Level::WARN, tag);
 }
 
 std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
-    return log(LogLevel::ERROR, tag);
+    return log(Level::ERROR, tag);
 }
 
 std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
@@ -45,7 +45,7 @@ std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
     msgPtr = strerror_r(errno, msg, sizeof msg);
     #endif
 
-    return log(LogLevel::ERROR, tag) << msgPtr << " - ";
+    return log(Level::ERROR, tag) << msgPtr << " - ";
 }
 
 void Logger::time(const std::string &timerName) {

@@ -17,9 +17,9 @@ namespace logging {
  *
  * @author Hans Kirchner
  */
-class LoggingFilter {
+class Filter {
 public:
-    virtual ~LoggingFilter() {}
+    virtual ~Filter() {}
 
     /**
      * @brief This method will be called for every log message before being sent to a sink.
@@ -28,7 +28,7 @@ public:
      * @return true if the log message should be sinked, false if the log message
      * should be ignored.
      */
-    virtual bool filter(LogLevel level, const std::string &tag) = 0;
+    virtual bool decide(Level level, const std::string &tag) = 0;
 };
 
 } // namespace logging

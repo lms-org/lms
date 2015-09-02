@@ -4,36 +4,36 @@
 namespace lms {
 namespace logging {
 
-std::string levelName(LogLevel lvl) {
+std::string levelName(Level lvl) {
     switch(lvl) {
-    case LogLevel::ALL : return "ALL";
-    case LogLevel::DEBUG : return "DEBUG";
-    case LogLevel::INFO :  return "INFO ";
-    case LogLevel::WARN :  return "WARN ";
-    case LogLevel::ERROR : return "ERROR";
-    case LogLevel::OFF : return "OFF";
+    case Level::ALL : return "ALL";
+    case Level::DEBUG : return "DEBUG";
+    case Level::INFO :  return "INFO ";
+    case Level::WARN :  return "WARN ";
+    case Level::ERROR : return "ERROR";
+    case Level::OFF : return "OFF";
     }
     return "?";
 }
 
-bool levelFromName(const std::string &name, LogLevel &level) {
-    if(name == "ALL") level = LogLevel::ALL;
-    else if(name == "DEBUG") level = LogLevel::DEBUG;
-    else if(name == "INFO") level = LogLevel::INFO;
-    else if(name == "WARN") level = LogLevel::WARN;
-    else if(name == "ERROR") level = LogLevel::ERROR;
-    else if(name == "OFF") level = LogLevel::OFF;
+bool levelFromName(const std::string &name, Level &level) {
+    if(name == "ALL") level = Level::ALL;
+    else if(name == "DEBUG") level = Level::DEBUG;
+    else if(name == "INFO") level = Level::INFO;
+    else if(name == "WARN") level = Level::WARN;
+    else if(name == "ERROR") level = Level::ERROR;
+    else if(name == "OFF") level = Level::OFF;
     else return false;
 
     return true;
 }
 
-std::string levelColor(LogLevel lvl) {
+std::string levelColor(Level lvl) {
     switch(lvl) {
-    case LogLevel::DEBUG : return lms::extra::COLOR_GREEN;
-    case LogLevel::INFO : return lms::extra::COLOR_BLUE;
-    case LogLevel::WARN : return lms::extra::COLOR_YELLOW;
-    case LogLevel::ERROR : return lms::extra::COLOR_RED;
+    case Level::DEBUG : return lms::extra::COLOR_GREEN;
+    case Level::INFO : return lms::extra::COLOR_BLUE;
+    case Level::WARN : return lms::extra::COLOR_YELLOW;
+    case Level::ERROR : return lms::extra::COLOR_RED;
     default: return lms::extra::COLOR_WHITE; // ALL, OFF
     }
 }

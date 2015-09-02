@@ -4,7 +4,7 @@
 
 namespace lms {
 
-Profiler::Profiler(logging::Logger &rootLogger) : logger("Profiler", &rootLogger),
+Profiler::Profiler() : logger("lms::Profiler"),
     m_profMeasurements() {}
 
 const Profiler::ProfMeasurements& Profiler::getProfMeasurements() const {
@@ -75,16 +75,16 @@ void Profiler::printStats() {
 
 
         // print results
-        logging::LogLevel logLevel = logging::LogLevel::INFO;
+        logging::Level logLevel = logging::Level::INFO;
 
         if(expectedRuntime != extra::PrecisionTime::ZERO) {
             float ratio = float(runtime.micros()) / float(expectedRuntime.micros());
             float growthPercentage = (ratio - 1) * 100;
 
             if(growthPercentage >= 100) {
-                logLevel = logging::LogLevel::ERROR;
+                logLevel = logging::Level::ERROR;
             } else if(growthPercentage >= 20) {
-                logLevel = logging::LogLevel::WARN;
+                logLevel = logging::Level::WARN;
             }
         }
 
