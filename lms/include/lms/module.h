@@ -154,7 +154,7 @@ protected:
      * @brief A logger instance. Can be used in initialize, cycle
      * and deinitialize to log debugging information.
      */
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     /**
      * @brief Returns a pointer to the default module-private

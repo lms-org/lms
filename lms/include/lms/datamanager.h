@@ -34,7 +34,7 @@ friend class ConfigurationLoader;
 friend class ExecutionManager;
 friend class Framework;
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
     ExecutionManager &execMgr;
 
     class PointerWrapper {

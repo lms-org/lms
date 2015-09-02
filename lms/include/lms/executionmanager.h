@@ -125,7 +125,7 @@ public:
      */
     int cycleCounter();
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     int m_numThreads;
     bool m_multithreading;

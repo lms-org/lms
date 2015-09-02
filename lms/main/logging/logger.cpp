@@ -7,6 +7,12 @@
 namespace lms {
 namespace logging {
 
+Logger::Logger(Context *context, const std::string &name, Level threshold)
+        : context(context), name(name), threshold(threshold) {}
+
+Logger::Logger(const std::string &name, Level threshold)
+        : context(& Context::getDefault()), name(name), threshold(threshold) {}
+
 std::unique_ptr<Event> Logger::debug(const std::string& tag) {
     return log(Level::DEBUG, tag);
 }
@@ -53,7 +59,7 @@ void Logger::time(const std::string &timerName) {
     debug(timerName) << "started";
 
     // at LAST: save the current time in our cache
-    timestampCache[timerName] = extra::PrecisionTime::now();
+    m_timestampCache[timerName] = extra::PrecisionTime::now();
 }
 
 void Logger::timeEnd(const std::string &timerName) {
@@ -61,9 +67,9 @@ void Logger::timeEnd(const std::string &timerName) {
     extra::PrecisionTime endTime = extra::PrecisionTime::now();
 
     // check if time() was called with the same timer name.
-    auto it = timestampCache.find(timerName);
+    auto it = m_timestampCache.find(timerName);
 
-    if(it == timestampCache.end()) {
+    if(it == m_timestampCache.end()) {
         // if not found: trigger bad debug message
         debug(timerName) << "timeEnd() was called without time()";
     } else {
@@ -74,7 +80,32 @@ void Logger::timeEnd(const std::string &timerName) {
         debug(timerName) << deltaTime;
 
         // remove timestamp from our cache
-        timestampCache.erase(it);
+        m_timestampCache.erase(it);
+    }
+}
+
+std::unique_ptr<Event> Logger::log(Level lvl, const std::string& tag) {
+    if(context == nullptr) {
+        std::cerr << "LOGGER " << name << " HAS NO VALID CONTEXT" << std::endl;
+        return nullptr;
+    }
+
+    Filter *filter = context->filter();
+
+    std::string newTag;
+
+    if(tag.empty()) {
+        // if no tag was given, just use the logger's name
+        newTag = name;
+    } else {
+        // otherwise concatenate with the given tag
+        newTag = name + "." + tag;
+    }
+
+    if(lvl >= threshold && (filter == nullptr || filter->decide(lvl, newTag))) {
+        return std::unique_ptr<Event>(new Event(*context, lvl, newTag));
+    } else {
+        return nullptr;
     }
 }
 

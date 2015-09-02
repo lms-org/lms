@@ -38,7 +38,7 @@ public:
      */
     static std::string getModulePath(const std::string &libname);
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     /**
      * @brief checkModule checks if the module could be loaded

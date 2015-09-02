@@ -89,7 +89,7 @@ public:
     bool enabled() const;
 
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     bool m_enabled;
     ProfMeasurements m_profMeasurements;

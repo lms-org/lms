@@ -8,7 +8,6 @@
 #include <lms/logging/sink.h>
 #include <lms/logging/filter.h>
 #include <lms/logging/context.h>
-#include <lms/logging/child_logger.h>
 #include <lms/logging/console_sink.h>
 #include <lms/logging/file_sink.h>
 #include <lms/logging/threshold_filter.h>

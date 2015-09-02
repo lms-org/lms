@@ -59,7 +59,7 @@ public:
      */
     void beforeLoopIteration();
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     // configuration
     extra::PrecisionTime loopTime;

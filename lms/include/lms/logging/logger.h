@@ -12,6 +12,7 @@ namespace lms {
 namespace logging {
 
 class Event;
+class Context;
 
 /**
  * @brief A logger is able to receive logging messages
@@ -26,6 +27,20 @@ class Event;
  */
 class Logger {
 public:
+    /**
+     * @brief Create a new child logger with the given name and parent.
+     *
+     * NOTE: if the parent logger gets deleted before the child logger
+     * is deleted then that will cause undefined behavior. So make
+     * sure you delete all childs first.
+     *
+     * @param name logger's name, will be prepended to the tag
+     * @param parent all logging messages will be delegated to this parent
+     */
+    Logger(Context *context, const std::string &name, Level threshold = Level::ALL);
+
+    explicit Logger(const std::string &name, Level threshold = Level::ALL);
+
     /**
      * @brief Virtual destructor.
      */
@@ -100,14 +115,24 @@ public:
      * @param tag logging tag
      * @return an appendable logging message that will be automatically flushed
      */
-    virtual std::unique_ptr<Event> log(Level lvl, const std::string& tag) = 0;
-protected:
+    std::unique_ptr<Event> log(Level lvl, const std::string& tag = "");
+
     /**
-     * @brief Logger is abstract.
+     * @brief Delegate all logging outputs to this parent logger.
      */
-    Logger() {}
+    Context *context;
+
+    /**
+     * @brief Name of the child logger
+     */
+    std::string name;
+
+    /**
+     * Minimum logging level.
+     */
+    Level threshold;
 private:
-    std::map<std::string, extra::PrecisionTime> timestampCache;
+    std::map<std::string, extra::PrecisionTime> m_timestampCache;
 };
 
 } // namespace logging

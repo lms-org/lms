@@ -18,8 +18,8 @@ namespace lms{
         m_executionManager = execManager;
         m_wrapper = wrapper;
 
-        logger.name(wrapper->name);
-        logger.threshold(minLogLevel);
+        logger.name = wrapper->name;
+        logger.threshold = minLogLevel;
 
         return true;
     }

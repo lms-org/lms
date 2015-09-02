@@ -56,7 +56,7 @@ public:
     };
 
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;
