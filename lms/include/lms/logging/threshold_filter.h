@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include "lms/logger.h"
 
 namespace lms {
 namespace logging {
