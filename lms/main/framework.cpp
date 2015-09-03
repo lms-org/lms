@@ -27,8 +27,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     logging::Context &ctx = logging::Context::getDefault();
 
-    ctx.filter(new logging::ThresholdFilter(arguments.argLoggingMinLevel));
-
     if(! arguments.argQuiet) {
         ctx.appendSink(new logging::ConsoleSink(std::cout));
     }
@@ -93,6 +91,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argRunLevel >= RunLevel::CYCLE) {
+        logger.info() << "Start running modules";
+
+        ctx.filter(new logging::ThresholdFilter(arguments.argLoggingMinLevel));
+
         //Execution
         running = true;
 
@@ -157,6 +159,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 logger.info("loadConfig") << "STOP";
             }
         }
+
+        ctx.filter(nullptr);
+        logger.info() << "Stopped";
     }
 }
 /*
