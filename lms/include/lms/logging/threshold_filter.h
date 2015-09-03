@@ -12,8 +12,9 @@ namespace logging {
  * @brief Simple filter implementation that filters
  * for minimal logging levels and tag prefixes.
  *
- * If no prefixes are given then only the minimum
- * logging level will be filtered.
+ * Usually the default threshold will be used.
+ * If the tag starts with one of the installed prefixes,
+ * the given threshold is used.
  *
  * @author Hans Kirchner
  */

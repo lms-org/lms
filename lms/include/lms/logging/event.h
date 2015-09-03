@@ -52,10 +52,10 @@ public:
     const Level level;
 
     /**
-     * @brief A reference to a sink instance.
+     * @brief A reference to the logging context.
      *
-     * This log message will be flushed to
-     * that sink in the destructor.
+     * This log event will be forwarded to this
+     * context when it is destroyed
      */
     Context &ctx;
 

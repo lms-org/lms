@@ -72,6 +72,10 @@ public:
      */
     void filter(Filter *filter);
 
+    /**
+     * @brief Return the installed logging filter.
+     * @return installed logging filter, or nullptr if none is installed
+     */
     Filter* filter() const;
 
     /**
@@ -81,6 +85,10 @@ public:
      */
     bool hasFilter();
 
+    /**
+     * @brief Forward the logging event to all installed sinks.
+     * @param message logging event
+     */
     void processMessage(const Event &message);
 private:
     std::vector<std::unique_ptr<Sink>> m_sinks;

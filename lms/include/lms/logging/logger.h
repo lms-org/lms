@@ -28,23 +28,20 @@ class Context;
 class Logger {
 public:
     /**
-     * @brief Create a new child logger with the given name and parent.
-     *
-     * NOTE: if the parent logger gets deleted before the child logger
-     * is deleted then that will cause undefined behavior. So make
-     * sure you delete all childs first.
+     * @brief Create a new logger with the given name and context.
      *
      * @param name logger's name, will be prepended to the tag
-     * @param parent all logging messages will be delegated to this parent
+     * @param parent all logging messages will be delegated to the context
+     * @threshold minimum logging level
      */
     Logger(Context *context, const std::string &name, Level threshold = Level::ALL);
 
-    explicit Logger(const std::string &name, Level threshold = Level::ALL);
-
     /**
-     * @brief Virtual destructor.
+     * @brief Create a new logger with the default context and the given name.
+     * @param name logger's name, will be prepended to the tag
+     * @param threshold minimum logging level
      */
-    virtual ~Logger() {}
+    explicit Logger(const std::string &name, Level threshold = Level::ALL);
 
     /**
      * @brief Log a debug message.
@@ -118,7 +115,7 @@ public:
     std::unique_ptr<Event> log(Level lvl, const std::string& tag = "");
 
     /**
-     * @brief Delegate all logging outputs to this parent logger.
+     * @brief Delegate all logging outputs to the logging context.
      */
     Context *context;
 

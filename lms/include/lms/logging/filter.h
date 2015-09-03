@@ -19,6 +19,9 @@ namespace logging {
  */
 class Filter {
 public:
+    /**
+     * @brief Virtual destructor
+     */
     virtual ~Filter() {}
 
     /**
