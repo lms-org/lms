@@ -74,9 +74,6 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> loggingMinLevelArg("", "logging-threshold",
         "Filter logging by minimum logging level",
         false, "ALL", &debugConstraint, cmd);
-    TCLAP::MultiArg<std::string> loggingPrefixArg("", "logging-prefix",
-        "Filter logging by prefix of logging tags",
-        false, "string", cmd);
     TCLAP::ValueArg<std::string> userArg("", "user",
         "Set the username, used for config loading, defaults to " USER_ENV,
         false, lms::extra::username(), "string", cmd);
@@ -107,7 +104,6 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argLoadConfiguration = configArg.getValue();
     logging::levelFromName(loggingMinLevelArg.getValue(), argLoggingThreshold);
     argDefinedLoggingThreshold = loggingMinLevelArg.isSet();
-    argLoggingPrefixes = loggingPrefixArg.getValue();
     argUser = userArg.getValue();
     argLogFile = logFileArg.getValue();
     argQuiet = quietSwitch.getValue();
