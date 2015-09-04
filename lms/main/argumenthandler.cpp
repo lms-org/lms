@@ -41,7 +41,8 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 
 ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argRunLevel(RunLevel::CYCLE),
-    argLoggingMinLevel(logging::Level::ALL), argQuiet(false), argUser(""),
+    argLoggingThreshold(logging::Level::ALL), argDefinedLoggingThreshold(false),
+    argQuiet(false), argUser(""),
     argProfiling(false), argConfigMonitor(false), argMultithreaded(false),
     argThreadsAuto(false), argThreads(1) {
 
@@ -104,7 +105,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     cmd.parse(argc, argv);
 
     argLoadConfiguration = configArg.getValue();
-    logging::levelFromName(loggingMinLevelArg.getValue(), argLoggingMinLevel);
+    logging::levelFromName(loggingMinLevelArg.getValue(), argLoggingThreshold);
+    argDefinedLoggingThreshold = loggingMinLevelArg.isSet();
     argLoggingPrefixes = loggingPrefixArg.getValue();
     argUser = userArg.getValue();
     argLogFile = logFileArg.getValue();

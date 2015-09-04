@@ -95,6 +95,12 @@ struct ModuleToLoad {
 void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
                           std::vector<ModuleToLoad>> &modulesToLoadLists);
 
+/**
+ * @brief Parse the given XML node as <logging>
+ * @return filter instance
+ */
+logging::ThresholdFilter* parseLogging(pugi::xml_node node);
+
 }  // namespace lms
 
 #endif /* LMS_XML_PARSER_H */

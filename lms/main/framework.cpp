@@ -23,7 +23,7 @@ std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("lms.Framework"), argumentHandler(arguments), executionManager(),
-    configMonitorEnabled(false) {
+    filter(nullptr), configMonitorEnabled(false) {
 
     logging::Context &ctx = logging::Context::getDefault();
 
@@ -93,7 +93,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
     if(arguments.argRunLevel >= RunLevel::CYCLE) {
         logger.info() << "Start running modules";
 
-        ctx.filter(new logging::ThresholdFilter(arguments.argLoggingMinLevel));
+        if(! filter) { // check if filter == nullptr
+            filter.reset(new logging::ThresholdFilter(arguments.argLoggingThreshold));
+        }
+        if(arguments.argDefinedLoggingThreshold) {
+            filter->defaultThreshold(arguments.argLoggingThreshold);
+        }
+        ctx.filter(filter.release());
 
         //Execution
         running = true;
@@ -199,6 +205,11 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
             if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
                 // parse <execution> tag (or deprecated <executionManager>)
                 parseExecution(rootNode);
+
+                pugi::xml_node loggingNode = rootNode.child("logging");
+                if(loggingNode) {
+                    filter.reset(parseLogging(loggingNode));
+                }
             }
 
             // parse <moduleToEnable> tag

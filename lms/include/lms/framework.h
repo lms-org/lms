@@ -61,6 +61,8 @@ private:
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;
 
+    std::unique_ptr<logging::ThresholdFilter> filter;
+
     Clock clock;
 
     /**
