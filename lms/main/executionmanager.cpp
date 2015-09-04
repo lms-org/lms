@@ -16,7 +16,7 @@
 namespace lms {
 
 ExecutionManager::ExecutionManager()
-    : logger("lms::ExecutionManager"), m_numThreads(1),
+    : logger("lms.ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
       valid(false), dataManager(*this),
       m_messaging(), m_cycleCounter(-1), running(true) {

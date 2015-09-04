@@ -4,7 +4,7 @@
 
 namespace lms {
 
-Profiler::Profiler() : logger("lms::Profiler"),
+Profiler::Profiler() : logger("lms.Profiler"),
     m_profMeasurements() {}
 
 const Profiler::ProfMeasurements& Profiler::getProfMeasurements() const {

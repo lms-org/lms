@@ -22,7 +22,7 @@ std::string Framework::externalDirectory = EXTERNAL_DIR;
 std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    logger("lms::Framework"), argumentHandler(arguments), executionManager(),
+    logger("lms.Framework"), argumentHandler(arguments), executionManager(),
     configMonitorEnabled(false) {
 
     logging::Context &ctx = logging::Context::getDefault();

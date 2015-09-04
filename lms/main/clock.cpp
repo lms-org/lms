@@ -3,7 +3,7 @@
 namespace lms {
 
 Clock::Clock()
-    : logger("lms::Clock"), loopTime(extra::PrecisionTime::ZERO),
+    : logger("lms.Clock"), loopTime(extra::PrecisionTime::ZERO),
       m_enabled(false), firstIteration(true),
       overflowTime(extra::PrecisionTime::ZERO) {
 }
