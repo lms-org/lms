@@ -95,16 +95,16 @@ TEST(string, safeGetline) {
 
     safeGetline(iss, line);
     ASSERT_EQ(std::string("linux line"), line);
-    ASSERT_TRUE(iss);
+    ASSERT_TRUE(!!iss);
 
     safeGetline(iss, line);
     ASSERT_EQ(std::string("windows line"), line);
-    ASSERT_TRUE(iss);
+    ASSERT_TRUE(!!iss);
 
     safeGetline(iss, line);
     ASSERT_EQ(std::string(""), line);
-    ASSERT_TRUE(iss);
+    ASSERT_TRUE(!!iss);
 
     safeGetline(iss, line);
-    ASSERT_FALSE(iss);
+    ASSERT_FALSE(!!iss);
 }
