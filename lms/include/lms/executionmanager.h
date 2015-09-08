@@ -26,7 +26,7 @@ class Loader;
 class ExecutionManager {
 public:
 
-    ExecutionManager(logging::Logger &rootLogger);
+    ExecutionManager();
     ~ExecutionManager();
 
     /**cycle modules */
@@ -48,8 +48,8 @@ public:
      * @param name name of the module that should be enabled
      * @param minLogLevel minimum logging level
      */
-    void enableModule(const std::string &name, logging::LogLevel minLogLevel
-                      = logging::LogLevel::ALL);
+    void enableModule(const std::string &name, logging::Level minLogLevel
+                      = logging::Level::ALL);
 
     /**
      * @brief Disable module with the given name, remove it from the
@@ -125,8 +125,7 @@ public:
      */
     int cycleCounter();
 private:
-    logging::Logger &rootLogger;
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     int m_numThreads;
     bool m_multithreading;

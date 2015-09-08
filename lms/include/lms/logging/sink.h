@@ -4,7 +4,7 @@
 namespace lms {
 namespace logging {
 
-class LogMessage;
+class Event;
 
 /**
  * @brief A logging sink is the abstract concept
@@ -27,7 +27,7 @@ public:
      * @brief Write or append the given log message to an output.
      * @param message a log message to write
      */
-    virtual void sink(const LogMessage &message) = 0;
+    virtual void sink(const Event &message) = 0;
 };
 
 } // namespace logging

@@ -22,28 +22,18 @@ std::string Framework::externalDirectory = EXTERNAL_DIR;
 std::string Framework::configsDirectory = CONFIGS_DIR;
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    logger("FRAMEWORK", &rootLogger), argumentHandler(arguments), executionManager(rootLogger),
-    clock(rootLogger), configMonitor(), configMonitorEnabled(false) {
+    logger("lms.Framework"), argumentHandler(arguments), executionManager(),
+    filter(nullptr), configMonitorEnabled(false) {
 
-    rootLogger.filter(std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(
-        arguments.argLoggingMinLevel, arguments.argLoggingPrefixes)));
+    logging::Context &ctx = logging::Context::getDefault();
 
-    std::unique_ptr<logging::Sink> loggingSink;
-
-    if(!arguments.argLogFile.empty() && arguments.argQuiet) {
-        loggingSink.reset(new logging::FileSink(arguments.argLogFile));
-    } else if(! arguments.argQuiet && arguments.argLogFile.empty()) {
-        loggingSink.reset(new logging::ConsoleSink(std::cout));
-    } else if(! arguments.argLogFile.empty() && ! arguments.argQuiet) {
-        logging::MultiSink *sink = new logging::MultiSink();
-        sink->add(new logging::FileSink(arguments.argLogFile));
-        sink->add(new logging::ConsoleSink(std::cout));
-        loggingSink.reset(sink);
-    } else {
-        loggingSink.reset(new logging::MultiSink());
+    if(! arguments.argQuiet) {
+        ctx.appendSink(new logging::ConsoleSink(std::cout));
     }
 
-    rootLogger.sink(std::move(loggingSink));
+    if(! arguments.argLogFile.empty()) {
+        ctx.appendSink(new logging::FileSink(arguments.argLogFile));
+    }
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)
@@ -101,6 +91,16 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argRunLevel >= RunLevel::CYCLE) {
+        logger.info() << "Start running modules";
+
+        if(! filter) { // check if filter == nullptr
+            filter.reset(new logging::ThresholdFilter(arguments.argLoggingThreshold));
+        }
+        if(arguments.argDefinedLoggingThreshold) {
+            filter->defaultThreshold(arguments.argLoggingThreshold);
+        }
+        ctx.filter(filter.release());
+
         //Execution
         running = true;
 
@@ -165,6 +165,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 logger.info("loadConfig") << "STOP";
             }
         }
+
+        ctx.filter(nullptr);
+        logger.info() << "Stopped";
     }
 }
 /*
@@ -202,6 +205,11 @@ void Framework::parseFile(const std::string &file, LoadConfigFlag flag) {
             if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
                 // parse <execution> tag (or deprecated <executionManager>)
                 parseExecution(rootNode);
+
+                pugi::xml_node loggingNode = rootNode.child("logging");
+                if(loggingNode) {
+                    filter.reset(parseLogging(loggingNode));
+                }
             }
 
             // parse <moduleToEnable> tag

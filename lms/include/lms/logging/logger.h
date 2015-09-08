@@ -5,13 +5,14 @@
 #include <memory>
 #include <map>
 
-#include "log_level.h"
+#include "level.h"
 #include "lms/extra/time.h"
 
 namespace lms {
 namespace logging {
 
-class LogMessage;
+class Event;
+class Context;
 
 /**
  * @brief A logger is able to receive logging messages
@@ -27,33 +28,44 @@ class LogMessage;
 class Logger {
 public:
     /**
-     * @brief Virtual destructor.
+     * @brief Create a new logger with the given name and context.
+     *
+     * @param name logger's name, will be prepended to the tag
+     * @param parent all logging messages will be delegated to the context
+     * @threshold minimum logging level
      */
-    virtual ~Logger() {}
+    Logger(Context *context, const std::string &name, Level threshold = Level::ALL);
+
+    /**
+     * @brief Create a new logger with the default context and the given name.
+     * @param name logger's name, will be prepended to the tag
+     * @param threshold minimum logging level
+     */
+    explicit Logger(const std::string &name, Level threshold = Level::ALL);
 
     /**
      * @brief Log a debug message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> debug(const std::string& tag = "");
+    std::unique_ptr<Event> debug(const std::string& tag = "");
 
     /**
      * @brief Log an info message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> info(const std::string& tag = "");
+    std::unique_ptr<Event> info(const std::string& tag = "");
 
     /**
      * @brief Log a warning message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> warn(const std::string& tag = "");
+    std::unique_ptr<Event> warn(const std::string& tag = "");
 
     /**
      * @brief Log an error message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<LogMessage> error(const std::string& tag = "");
+    std::unique_ptr<Event> error(const std::string& tag = "");
 
     /**
      * @brief Start a timer with the specified name.
@@ -89,7 +101,7 @@ public:
      *
      * Useful for linux api calls and calls to standard c functions.
      */
-    std::unique_ptr<LogMessage> perror(const std::string &tag = "");
+    std::unique_ptr<Event> perror(const std::string &tag = "");
 
     /**
      * @brief Log a message with the given level and tag.
@@ -100,14 +112,24 @@ public:
      * @param tag logging tag
      * @return an appendable logging message that will be automatically flushed
      */
-    virtual std::unique_ptr<LogMessage> log(LogLevel lvl, const std::string& tag) = 0;
-protected:
+    std::unique_ptr<Event> log(Level lvl, const std::string& tag = "");
+
     /**
-     * @brief Logger is abstract.
+     * @brief Delegate all logging outputs to the logging context.
      */
-    Logger() {}
+    Context *context;
+
+    /**
+     * @brief Name of the child logger
+     */
+    std::string name;
+
+    /**
+     * Minimum logging level.
+     */
+    Level threshold;
 private:
-    std::map<std::string, extra::PrecisionTime> timestampCache;
+    std::map<std::string, extra::PrecisionTime> m_timestampCache;
 };
 
 } // namespace logging

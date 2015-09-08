@@ -4,7 +4,7 @@
 
 namespace lms {
 
-Loader::Loader(logging::Logger &rootLogger) : logger("LOADER", &rootLogger) {
+Loader::Loader() : logger("lms.Loader") {
 }
 
 }  // namespace lms

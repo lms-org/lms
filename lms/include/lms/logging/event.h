@@ -1,15 +1,16 @@
-#ifndef LMS_LOGGING_LOG_MESSAGE_H
-#define LMS_LOGGING_LOG_MESSAGE_H
+#ifndef LMS_LOGGING_EVENT_H
+#define LMS_LOGGING_EVENT_H
 
 #include <string>
 #include <sstream>
 
-#include "log_level.h"
+#include "level.h"
 
 namespace lms {
 namespace logging {
 
 class Sink;
+class Context;
 
 /**
  * @brief A log message is not more than a struct consisting
@@ -18,11 +19,9 @@ class Sink;
  * A log message is appendable in the following way:
  * message << "Log message No. " << 1;
  *
- * TODO: the sink should not be a usual pointer
- *
  * @author Hans Kirchner
  */
-class LogMessage {
+class Event {
 public:
     /**
      * @brief Create a new log message with the given values.
@@ -30,8 +29,8 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    LogMessage(Sink &sink, LogLevel level, const std::string& tag)
-        : tag(tag), level(level), sink(sink) {}
+    Event(Context &ctx, Level level, const std::string& tag)
+        : tag(tag), level(level), ctx(ctx) {}
 
     /**
      * @brief The destructor will flush the log message to the
@@ -40,7 +39,7 @@ public:
      * If the log message is wrapped in a unique pointer,
      * this will happen automatically.
      */
-    ~LogMessage();
+    ~Event();
 
     /**
      * @brief The tag of this log message
@@ -50,17 +49,15 @@ public:
     /**
      * @brief The log level (severity) of this log message.
      */
-    const LogLevel level;
+    const Level level;
 
     /**
-     * @brief A reference to a sink instance.
+     * @brief A reference to the logging context.
      *
-     * This log message will be flushed to
-     * that sink in the destructor.
-     *
-     * TODO is in conflict with RootLogger's Sink unique_ptr
+     * This log event will be forwarded to this
+     * context when it is destroyed
      */
-    Sink &sink;
+    Context &ctx;
 
     /**
      * @brief The logging message.
@@ -78,20 +75,17 @@ public:
 };
 
 /**
- * @brief Make the LogMessage appendable.
+ * @brief Make the Event appendable.
  */
-std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message,
+std::unique_ptr<Event> operator << (std::unique_ptr<Event> message,
                                          std::ostream& (*pf) (std::ostream&));
 
 /**
- * @brief Make the LogMessage appendable.
+ * @brief Make the Event appendable.
  */
 template <typename T>
-std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T const& value) {
-    if(! message) {
-        // TODO if filter returned false this message will point to NULL
-        // std::cerr << "LOG MESSAGE IS NULL" << std::endl;
-    } else {
+std::unique_ptr<Event> operator << (std::unique_ptr<Event> message, T const& value) {
+    if(message) {
         message->messageStream << value;
     }
 
@@ -101,5 +95,5 @@ std::unique_ptr<LogMessage> operator << (std::unique_ptr<LogMessage> message, T 
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_LOG_MESSAGE_H */
+#endif /* LMS_LOGGING_EVENT_H */
 

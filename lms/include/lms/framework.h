@@ -56,12 +56,12 @@ public:
     };
 
 private:
-
-    logging::RootLogger rootLogger;
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     ArgumentHandler argumentHandler;
     ExecutionManager executionManager;
+
+    std::unique_ptr<logging::ThresholdFilter> filter;
 
     Clock clock;
 

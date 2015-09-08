@@ -15,12 +15,11 @@
 
 namespace lms {
 
-ExecutionManager::ExecutionManager(logging::Logger &rootLogger)
-    : rootLogger(rootLogger), logger("EXECMGR", &rootLogger), m_numThreads(1),
+ExecutionManager::ExecutionManager()
+    : logger("lms.ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
-      valid(false), loader(rootLogger), dataManager(rootLogger, *this),
-      m_messaging(), m_cycleCounter(-1), running(true),
-      m_profiler(rootLogger) {
+      valid(false), dataManager(*this),
+      m_messaging(), m_cycleCounter(-1), running(true) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -143,7 +142,7 @@ void ExecutionManager::loop() {
 
     // TODO load or unload modules or do anything else
     for(const std::string &message : messaging().receive("enableModule")) {
-        enableModule(message, logging::LogLevel::WARN);
+        enableModule(message, logging::Level::WARN);
     }
 
     for(const std::string &message : messaging().receive("disableModule")) {
@@ -152,7 +151,7 @@ void ExecutionManager::loop() {
 
     for(const std::string &message : messaging().receive("reloadModule")) {
         disableModule(message);
-        enableModule(message, logging::LogLevel::WARN);
+        enableModule(message, logging::Level::WARN);
     }
 }
 
@@ -284,7 +283,7 @@ void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
     available.push_back(mod);
 }
 
-void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLevel minLogLevel){
+void ExecutionManager::enableModule(const std::string &name, lms::logging::Level minLogLevel){
     //Check if module is already enabled
     for(auto it:enabledModules){
         if(it->name == name){
@@ -296,7 +295,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::LogLe
         if(it->name == name){
             loader.load(it.get());
             Module *module = it->moduleInstance;
-            module->initializeBase(&dataManager, &m_messaging, this, it, &rootLogger, minLogLevel);
+            module->initializeBase(&dataManager, &m_messaging, this, it, minLogLevel);
 
             if(module->initialize()){
                 enabledModules.push_back(it);

@@ -84,7 +84,7 @@ void parseModuleConfig(pugi::xml_node node,  type::ModuleConfig &config,
  */
 struct ModuleToLoad {
     std::string name;
-    logging::LogLevel logLevel;
+    logging::Level logLevel;
 };
 
 /**
@@ -94,6 +94,12 @@ struct ModuleToLoad {
  */
 void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
                           std::vector<ModuleToLoad>> &modulesToLoadLists);
+
+/**
+ * @brief Parse the given XML node as <logging>
+ * @return filter instance
+ */
+logging::ThresholdFilter* parseLogging(pugi::xml_node node);
 
 }  // namespace lms
 

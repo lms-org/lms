@@ -43,7 +43,7 @@ public:
     typedef std::vector<ModuleMeasurement> ProfMeasurements;
     typedef std::map<std::string, ModuleProfiling> ProfilingMap;
 
-    Profiler(logging::Logger &rootLogger);
+    Profiler();
 
     /**
      * @brief Return module measurement data of the last cycle.
@@ -89,7 +89,7 @@ public:
     bool enabled() const;
 
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
 
     bool m_enabled;
     ProfMeasurements m_profMeasurements;

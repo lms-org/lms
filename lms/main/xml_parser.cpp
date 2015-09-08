@@ -132,7 +132,7 @@ void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
         name = nameAttr.as_string();
     }
 
-    lms::logging::LogLevel defaultModuleLevel = lms::logging::LogLevel::ALL;
+    lms::logging::Level defaultModuleLevel = lms::logging::Level::ALL;
 
     // get attribute "logLevel" of node <modulesToLoad>
     // its value will be the default for logLevel of <module>
@@ -156,6 +156,30 @@ void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
 
         modulesToLoadLists[name].push_back(mod);
     }
+}
+
+logging::ThresholdFilter* parseLogging(pugi::xml_node node) {
+    logging::Level defaultThreshold = logging::Level::ALL;
+
+    pugi::xml_attribute levelAttr = node.attribute("logLevel");
+    logging::levelFromName(levelAttr.as_string("ALL"), defaultThreshold);
+
+    logging::ThresholdFilter *filter = new logging::ThresholdFilter(defaultThreshold);
+
+    for(pugi::xml_node filterNode : node.children("filter")) {
+        pugi::xml_attribute tagPrefixAttr = filterNode.attribute("tagPrefix");
+        pugi::xml_attribute logLevelAttr = filterNode.attribute("logLevel");
+
+        if(tagPrefixAttr && logLevelAttr) {
+            logging::Level level;
+            logging::levelFromName(logLevelAttr.as_string(), level);
+            filter->addPrefix(tagPrefixAttr.as_string(), level);
+        } else {
+            // TODO output error
+        }
+    }
+
+    return filter;
 }
 
 }  // namespace lms

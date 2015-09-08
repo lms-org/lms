@@ -10,19 +10,16 @@
 namespace lms{
     bool Module::initializeBase(DataManager* datamanager, Messaging *messaging,
                                 ExecutionManager *execManager,
-        std::shared_ptr<ModuleWrapper> wrapper, logging::Logger *rootLogger,
-        logging::LogLevel minLogLevel) {
+        std::shared_ptr<ModuleWrapper> wrapper,
+        logging::Level minLogLevel) {
 
         m_datamanager = datamanager;
         m_messaging = messaging;
         m_executionManager = execManager;
         m_wrapper = wrapper;
 
-        // delete uninitialized child logger
-        logger.~ChildLogger();
-        // C++11 placement new
-        new (&logger) logging::ChildLogger(wrapper->name, rootLogger,
-            std::unique_ptr<logging::LoggingFilter>(new logging::PrefixAndLevelFilter(minLogLevel)));
+        logger.name = wrapper->name;
+        logger.threshold = minLogLevel;
 
         return true;
     }

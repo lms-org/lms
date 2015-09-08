@@ -41,7 +41,8 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 
 ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argRunLevel(RunLevel::CYCLE),
-    argLoggingMinLevel(logging::LogLevel::ALL), argQuiet(false), argUser(""),
+    argLoggingThreshold(logging::Level::ALL), argDefinedLoggingThreshold(false),
+    argQuiet(false), argUser(""),
     argProfiling(false), argConfigMonitor(false), argMultithreaded(false),
     argThreadsAuto(false), argThreads(1) {
 
@@ -56,7 +57,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
 #else
 #define USER_ENV "$LOGNAME on Unix"
 #endif
-    std::vector<std::string> debugLevels = {"DEBUG", "INFO", "WARN", "ERROR"};
+    std::vector<std::string> debugLevels = {"ALL", "DEBUG", "INFO", "WARN",
+                                            "ERROR", "OFF"};
     TCLAP::ValuesConstraint<std::string> debugConstraint(debugLevels);
 
     std::vector<std::string> runLevels = {"0", "1", "2", "CONFIG", "ENABLE",
@@ -69,12 +71,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> runLevelArg("r", "run-level",
         "Execute until a certain run level",
         false, "CYCLE", &runLevelsConstraint, cmd);
-    TCLAP::ValueArg<std::string> loggingMinLevelArg("", "logging-min-level",
+    TCLAP::ValueArg<std::string> loggingMinLevelArg("", "logging-threshold",
         "Filter logging by minimum logging level",
-        false, "DEBUG", &debugConstraint, cmd);
-    TCLAP::MultiArg<std::string> loggingPrefixArg("", "logging-prefix",
-        "Filter logging by prefix of logging tags",
-        false, "string", cmd);
+        false, "ALL", &debugConstraint, cmd);
     TCLAP::ValueArg<std::string> userArg("", "user",
         "Set the username, used for config loading, defaults to " USER_ENV,
         false, lms::extra::username(), "string", cmd);
@@ -103,8 +102,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     cmd.parse(argc, argv);
 
     argLoadConfiguration = configArg.getValue();
-    logging::levelFromName(loggingMinLevelArg.getValue(), argLoggingMinLevel);
-    argLoggingPrefixes = loggingPrefixArg.getValue();
+    logging::levelFromName(loggingMinLevelArg.getValue(), argLoggingThreshold);
+    argDefinedLoggingThreshold = loggingMinLevelArg.isSet();
     argUser = userArg.getValue();
     argLogFile = logFileArg.getValue();
     argQuiet = quietSwitch.getValue();

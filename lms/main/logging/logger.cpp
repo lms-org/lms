@@ -7,23 +7,29 @@
 namespace lms {
 namespace logging {
 
-std::unique_ptr<LogMessage> Logger::debug(const std::string& tag) {
-    return log(LogLevel::DEBUG, tag);
+Logger::Logger(Context *context, const std::string &name, Level threshold)
+        : context(context), name(name), threshold(threshold) {}
+
+Logger::Logger(const std::string &name, Level threshold)
+        : context(& Context::getDefault()), name(name), threshold(threshold) {}
+
+std::unique_ptr<Event> Logger::debug(const std::string& tag) {
+    return log(Level::DEBUG, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::info(const std::string& tag) {
-    return log(LogLevel::INFO, tag);
+std::unique_ptr<Event> Logger::info(const std::string& tag) {
+    return log(Level::INFO, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::warn(const std::string& tag) {
-    return log(LogLevel::WARN, tag);
+std::unique_ptr<Event> Logger::warn(const std::string& tag) {
+    return log(Level::WARN, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::error(const std::string& tag) {
-    return log(LogLevel::ERROR, tag);
+std::unique_ptr<Event> Logger::error(const std::string& tag) {
+    return log(Level::ERROR, tag);
 }
 
-std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
+std::unique_ptr<Event> Logger::perror(const std::string &tag) {
     // http://stackoverflow.com/a/901316
     // http://linux.die.net/man/3/strerror
     char msg[64];
@@ -45,7 +51,7 @@ std::unique_ptr<LogMessage> Logger::perror(const std::string &tag) {
     msgPtr = strerror_r(errno, msg, sizeof msg);
     #endif
 
-    return log(LogLevel::ERROR, tag) << msgPtr << " - ";
+    return log(Level::ERROR, tag) << msgPtr << " - ";
 }
 
 void Logger::time(const std::string &timerName) {
@@ -53,7 +59,7 @@ void Logger::time(const std::string &timerName) {
     debug(timerName) << "started";
 
     // at LAST: save the current time in our cache
-    timestampCache[timerName] = extra::PrecisionTime::now();
+    m_timestampCache[timerName] = extra::PrecisionTime::now();
 }
 
 void Logger::timeEnd(const std::string &timerName) {
@@ -61,9 +67,9 @@ void Logger::timeEnd(const std::string &timerName) {
     extra::PrecisionTime endTime = extra::PrecisionTime::now();
 
     // check if time() was called with the same timer name.
-    auto it = timestampCache.find(timerName);
+    auto it = m_timestampCache.find(timerName);
 
-    if(it == timestampCache.end()) {
+    if(it == m_timestampCache.end()) {
         // if not found: trigger bad debug message
         debug(timerName) << "timeEnd() was called without time()";
     } else {
@@ -74,7 +80,32 @@ void Logger::timeEnd(const std::string &timerName) {
         debug(timerName) << deltaTime;
 
         // remove timestamp from our cache
-        timestampCache.erase(it);
+        m_timestampCache.erase(it);
+    }
+}
+
+std::unique_ptr<Event> Logger::log(Level lvl, const std::string& tag) {
+    if(context == nullptr) {
+        std::cerr << "LOGGER " << name << " HAS NO VALID CONTEXT" << std::endl;
+        return nullptr;
+    }
+
+    Filter *filter = context->filter();
+
+    std::string newTag;
+
+    if(tag.empty()) {
+        // if no tag was given, just use the logger's name
+        newTag = name;
+    } else {
+        // otherwise concatenate with the given tag
+        newTag = name + "." + tag;
+    }
+
+    if(lvl >= threshold && (filter == nullptr || filter->decide(lvl, newTag))) {
+        return std::unique_ptr<Event>(new Event(*context, lvl, newTag));
+    } else {
+        return nullptr;
     }
 }
 

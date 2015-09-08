@@ -9,7 +9,7 @@
 namespace lms {
 namespace logging {
 
-class LogMessage;
+class Event;
 
 /**
  * @brief A console sink is a sink implementation that
@@ -47,7 +47,7 @@ public:
      *
      * @param message a log message instance
      */
-    void sink(const LogMessage &message) override;
+    void sink(const Event &message) override;
 
     /**
      * @brief Set to true if the time should be logged.

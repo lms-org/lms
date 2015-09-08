@@ -34,7 +34,7 @@ friend class ConfigurationLoader;
 friend class ExecutionManager;
 friend class Framework;
 private:
-    logging::ChildLogger logger;
+    logging::Logger logger;
     ExecutionManager &execMgr;
 
     class PointerWrapper {
@@ -68,7 +68,7 @@ private:
 private:
     std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
 public:
-    DataManager(logging::Logger &rootLogger, ExecutionManager &execMgr);
+    DataManager(ExecutionManager &execMgr);
     ~DataManager();
 
     /**

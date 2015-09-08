@@ -1,9 +1,9 @@
-#ifndef LMS_LOGGING_LOGGING_FILTER_H
-#define LMS_LOGGING_LOGGING_FILTER_H
+#ifndef LMS_LOGGING_FILTER_H
+#define LMS_LOGGING_FILTER_H
 
 #include <string>
 
-#include "log_level.h"
+#include "level.h"
 
 namespace lms {
 namespace logging {
@@ -17,9 +17,12 @@ namespace logging {
  *
  * @author Hans Kirchner
  */
-class LoggingFilter {
+class Filter {
 public:
-    virtual ~LoggingFilter() {}
+    /**
+     * @brief Virtual destructor
+     */
+    virtual ~Filter() {}
 
     /**
      * @brief This method will be called for every log message before being sent to a sink.
@@ -28,11 +31,11 @@ public:
      * @return true if the log message should be sinked, false if the log message
      * should be ignored.
      */
-    virtual bool filter(LogLevel level, const std::string &tag) = 0;
+    virtual bool decide(Level level, const std::string &tag) = 0;
 };
 
 } // namespace logging
 } // namespace lms
 
-#endif /* LMS_LOGGING_LOGGING_FILTER_H */
+#endif /* LMS_LOGGING_FILTER_H */
 
