@@ -1,7 +1,5 @@
 project(LightWeightModularSystem)
 
-message("Compile core")
-
 if(APPLE)
     # /bin suffix is needed on OS X
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -14,79 +12,80 @@ include_directories(include)
 include_directories(xml/pugixml-1.5/src)
 include_directories(tclap-1.2.1/include)
 
-#TODO Rename, not public
-set (PUBLIC_HEADERS
-        "include/lms/framework.h"
-        "include/lms/signalhandler.h"
-        "include/lms/extra/colors.h"
-        "include/lms/datamanager.h"
-        "include/lms/argumenthandler.h"
-        "include/lms/logger.h"
-        "include/lms/executionmanager.h"
-        "include/lms/module.h"
-        "include/lms/loader.h"
-        "include/lms/lms_exports.h"
-        "include/lms/messaging.h"
-        "include/lms/serializable.h"
-        "include/lms/clock.h"
-        "include/lms/deprecated.h"
-        "include/lms/xml_parser.h"
-        "include/lms/config_observer.h"
-        "include/lms/module_wrapper.h"
-        "include/lms/profiler.h"
+set (HEADERS
+    "include/lms/framework.h"
+    "include/lms/signalhandler.h"
+    "include/lms/extra/colors.h"
+    "include/lms/datamanager.h"
+    "include/lms/argumenthandler.h"
+    "include/lms/logger.h"
+    "include/lms/executionmanager.h"
+    "include/lms/module.h"
+    "include/lms/loader.h"
+    "include/lms/lms_exports.h"
+    "include/lms/messaging.h"
+    "include/lms/serializable.h"
+    "include/lms/clock.h"
+    "include/lms/deprecated.h"
+    "include/lms/xml_parser.h"
+    "include/lms/config_observer.h"
+    "include/lms/module_wrapper.h"
+    "include/lms/profiler.h"
 
-        "include/lms/type/module_config.h"
+    "include/lms/type/module_config.h"
 
-        "include/lms/logging/level.h"
-        "include/lms/logging/logger.h"
-        "include/lms/logging/event.h"
-        "include/lms/logging/sink.h"
-        "include/lms/logging/filter.h"
-        "include/lms/logging/context.h"
-        "include/lms/logging/console_sink.h"
-        "include/lms/logging/file_sink.h"
-        "include/lms/logging/threshold_filter.h"
+    "include/lms/logging/level.h"
+    "include/lms/logging/logger.h"
+    "include/lms/logging/event.h"
+    "include/lms/logging/sink.h"
+    "include/lms/logging/filter.h"
+    "include/lms/logging/context.h"
+    "include/lms/logging/console_sink.h"
+    "include/lms/logging/file_sink.h"
+    "include/lms/logging/threshold_filter.h"
 
-        "include/lms/extra/type.h"
-        "include/lms/extra/string.h"
-        "include/lms/extra/time.h"
-        "include/lms/extra/file_monitor.h"
-        "include/lms/extra/backtrace_formatter.h"
-        "include/lms/extra/os.h"
+    "include/lms/extra/type.h"
+    "include/lms/extra/string.h"
+    "include/lms/extra/time.h"
+    "include/lms/extra/file_monitor.h"
+    "include/lms/extra/backtrace_formatter.h"
+    "include/lms/extra/os.h"
 )
 
 set (SOURCE
-        "main/loader.cpp"
-        "main/module.cpp"
-        "main/datamanager.cpp"
-        "main/executionmanager.cpp"
-        "main/framework.cpp"
-        "main/signalhandler.cpp"
-        "main/argumenthandler.cpp"
-        "main/type/module_config.cpp"
-        "main/profiler.cpp"
-        "main/messaging.cpp"
-        "main/clock.cpp"
-        "main/xml_parser.cpp"
-        "main/config_observer.cpp"
+    "main/loader.cpp"
+    "main/module.cpp"
+    "main/datamanager.cpp"
+    "main/executionmanager.cpp"
+    "main/framework.cpp"
+    "main/signalhandler.cpp"
+    "main/argumenthandler.cpp"
+    "main/profiler.cpp"
+    "main/messaging.cpp"
+    "main/clock.cpp"
+    "main/xml_parser.cpp"
+    "main/config_observer.cpp"
 
-        "main/logging/level.cpp"
-        "main/logging/logger.cpp"
-        "main/logging/context.cpp"
-        "main/logging/event.cpp"
-        "main/logging/console_sink.cpp"
-        "main/logging/file_sink.cpp"
-        "main/logging/threshold_filter.cpp"
+    "main/type/module_config.cpp"
 
-        "main/extra/type.cpp"
-        "main/extra/string.cpp"
-        "main/extra/time.cpp"
-        "main/extra/file_monitor.cpp"
-        "main/extra/os.cpp"
+    "main/logging/level.cpp"
+    "main/logging/logger.cpp"
+    "main/logging/context.cpp"
+    "main/logging/event.cpp"
+    "main/logging/console_sink.cpp"
+    "main/logging/file_sink.cpp"
+    "main/logging/threshold_filter.cpp"
+
+    "main/extra/type.cpp"
+    "main/extra/string.cpp"
+    "main/extra/time.cpp"
+    "main/extra/file_monitor.cpp"
+    "main/extra/os.cpp"
 )
-#Add system-specific source
+
+# Add system-specific source
 if(UNIX)
-    message("OS is UNIX!")
+    message(STATUS "Use Unix specific sources")
     set (SOURCE ${SOURCE}
         "main/loader_unix.cpp"
         "main/framework_unix.cpp"
@@ -95,7 +94,7 @@ if(UNIX)
         "main/extra/file_monitor_unix.cpp"
     )
 elseif(WIN32)
-    message("OS is WIN32!")
+    message(STATUS "Use Win32 specific sources")
     set (SOURCE ${SOURCE}
         "main/loader_win.cpp"
         "main/framework_win.cpp"
@@ -104,43 +103,32 @@ elseif(WIN32)
         "main/extra/file_monitor_win.cpp"
     )
 else()
-    message("NO OS found!")
+    message(FATAL_ERROR "OS is probably not supported")
 endif()
 
+# LMS core library
 add_library (lmscore SHARED
-        ${PUBLIC_HEADERS}
-        ${SOURCE}
+    ${HEADERS}
+    ${SOURCE}
 )
 
-#Compile xml-parser pugixml
+# Compile xml-parser pugixml
 add_library(pugixml STATIC         
-	"xml/pugixml-1.5/src/pugixml.cpp"
-	"xml/pugixml-1.5/src/pugixml.hpp"
-	"xml/pugixml-1.5/src/pugiconfig.hpp"
+    "xml/pugixml-1.5/src/pugixml.cpp"
+    "xml/pugixml-1.5/src/pugixml.hpp"
+    "xml/pugixml-1.5/src/pugiconfig.hpp"
 )
 set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE 1)
 target_link_libraries(lmscore PRIVATE pugixml)
 
-#System specific source
-#http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
+# System specific link
+# http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
 if(UNIX)
     target_link_libraries(lmscore PRIVATE dl pthread)
-elseif(WIN32)
-else()
-    message("NO OS found!")
 endif()
 
-
-#link libraries
+# LMS executable
 add_executable(lms
     main/main.cpp
 )
 target_link_libraries(lms PRIVATE lmscore)
-
-#Adds copy commands for configs to the core (core compiled is called lms)
-foreach(ConfigFile ${ConfigFiles})
-    add_custom_command(TARGET lms PRE_BUILD
-                        COMMAND ${CMAKE_COMMAND} -E
-                            copy "${CMAKE_SOURCE_DIR}/${ConfigFile}" "$<TARGET_FILE_DIR:lms>/../${ConfigFile}"
-    )
-endforeach()

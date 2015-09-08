@@ -7,7 +7,7 @@ set(TESTS
 )
 
 if(USE_GOOGLETEST)
-    message("Compile lmstest testing executable")
+    message(STATUS "Compile lmstest testing executable")
     add_executable(lmstest ${TESTS})
     target_link_libraries(lmstest PRIVATE lmscore gtest gtest_main)
     add_test(LMS lmstest)
