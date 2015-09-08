@@ -190,7 +190,13 @@ void DataManager::writeDAG(std::ostream &os) {
     DotExporter dot(os);
     dot.startDigraph("dag");
 
+    std::string CONFIG("CONFIG");
+
     for(const auto &ch : channels) {
+        if(ch.first.compare(0, CONFIG.size(), CONFIG) == 0) {
+            continue;
+        }
+
         dot.shape(DotExporter::ShapeType::BOX);
         dot.label(ch.first + "\\n" + ch.second.dataTypeName);
         dot.node(ch.first);
