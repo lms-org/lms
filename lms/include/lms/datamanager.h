@@ -303,6 +303,8 @@ private:
      */
     void printMapping();
 
+    void writeDAG(std::ostream &os);
+
     /**
      * @brief Set the content of a data channel. This will NOT reset the
      * channel, instead it just sets the data with the assignment operator.

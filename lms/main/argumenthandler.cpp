@@ -98,6 +98,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> threadsArg("", "threads",
         "Enable multithreading, number of threads or auto",
         false, "", &threadsConstraint, cmd);
+    TCLAP::ValueArg<std::string> dotFileArg("", "dot-file",
+        "Dump the dependency graph as a dot file",
+        false, "", "path", cmd);
 
     cmd.parse(argc, argv);
 
@@ -119,6 +122,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
             argThreads = atoi(threadsArg.getValue().c_str());
         }
     }
+    argDotFile = dotFileArg.getValue();
 #undef USER_ENV
 }
 
