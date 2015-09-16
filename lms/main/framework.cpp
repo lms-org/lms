@@ -88,15 +88,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
             executionManager.validate();
             executionManager.printCycleList();
         }
-
-        if(! arguments.argDotFile.empty()) {
-            std::ofstream ofs(arguments.argDotFile);
-            executionManager.getDataManager().writeDAG(ofs);
-            ofs.close();
-            logger.info() << "Written dot file: " << arguments.argDotFile;
-            logger.info() << "Execute the following line to create a PNG:";
-            logger.info() << "dot -Tpng " << arguments.argDotFile << " > output.png";
-        }
     }
 
     if(arguments.argRunLevel >= RunLevel::CYCLE) {
@@ -177,6 +168,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
         ctx.filter(nullptr);
         logger.info() << "Stopped";
+    }
+
+    if(! arguments.argDotFile.empty()) {
+        std::ofstream ofs(arguments.argDotFile);
+        executionManager.getDataManager().writeDAG(ofs);
+        ofs.close();
+        logger.info() << "Written dot file: " << arguments.argDotFile;
+        logger.info() << "Execute the following line to create a PNG:";
+        logger.info() << "dot -Tpng " << arguments.argDotFile << " > output.png";
     }
 }
 /*
