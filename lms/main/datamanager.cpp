@@ -197,7 +197,7 @@ void DataManager::writeDAG(std::ostream &os) {
             continue;
         }
 
-        dot.shape(DotExporter::ShapeType::BOX);
+        dot.shape(DotExporter::Shape::BOX);
         dot.label(ch.first + "\\n" + ch.second.dataTypeName);
         dot.node(ch.first);
         dot.reset();
