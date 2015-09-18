@@ -184,7 +184,7 @@ void DataManager::printMapping()  {
     }
 }
 
-void DataManager::writeDAG(std::ostream &os) {
+bool DataManager::writeDAG(std::ostream &os) {
     using extra::DotExporter;
 
     DotExporter dot(os);
@@ -210,6 +210,13 @@ void DataManager::writeDAG(std::ostream &os) {
     }
 
     dot.endDigraph();
+
+    bool success = dot.lastError() == DotExporter::Error::OK;
+    if(! success) {
+        logger.error() << "Dot export failed: " << dot.lastError();
+    }
+
+    return success;
 }
 
 bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {

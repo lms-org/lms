@@ -303,7 +303,7 @@ private:
      */
     void printMapping();
 
-    void writeDAG(std::ostream &os);
+    bool writeDAG(std::ostream &os);
 
     /**
      * @brief Set the content of a data channel. This will NOT reset the
