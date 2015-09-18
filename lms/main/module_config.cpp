@@ -3,11 +3,10 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <lms/type/module_config.h>
+#include <lms/module_config.h>
 #include <lms/extra/string.h>
 
 namespace lms {
-namespace type {
 
 template<>
 bool parse<std::string>(const std::string &src,
@@ -88,5 +87,4 @@ void ModuleConfig::set<std::string>(const std::string &key, const std::string &v
     properties[key] = value;
 }
 
-} // namespace type
 } // namespace lms

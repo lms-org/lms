@@ -1,8 +1,8 @@
 set(TESTS
     xml_parser.cpp
+    module_config.cpp
     extra/string.cpp
     extra/time.cpp
-    type/module_config.cpp
     logging/threshold_filter.cpp
 )
 

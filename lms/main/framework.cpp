@@ -11,7 +11,7 @@
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/extra/time.h"
-#include "lms/type/module_config.h"
+#include "lms/module_config.h"
 #include "lms/extra/string.h"
 #include "lms/xml_parser.h"
 #include "lms/extra/colors.h"
@@ -314,7 +314,7 @@ void Framework::parseModules(pugi::xml_node rootNode,
     for (pugi::xml_node moduleNode : rootNode.children("module")) {
 
         std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>();
-        std::map<std::string, type::ModuleConfig> configMap;
+        std::map<std::string, ModuleConfig> configMap;
 
         module->name = moduleNode.child("name").child_value();
 
@@ -440,9 +440,9 @@ void Framework::parseModules(pugi::xml_node rootNode,
             }
         }
 
-        for(std::pair<std::string, type::ModuleConfig> pair : configMap) {
+        for(std::pair<std::string, ModuleConfig> pair : configMap) {
             executionManager.getDataManager()
-                .setChannel<type::ModuleConfig>(
+                .setChannel<ModuleConfig>(
                 "CONFIG_" + module->name + "_" + pair.first, pair.second);
         }
 

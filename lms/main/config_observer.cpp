@@ -1,5 +1,5 @@
 #include "lms/config_observer.h"
-#include "lms/type/module_config.h"
+#include "lms/module_config.h"
 
 namespace lms {
 
@@ -7,7 +7,7 @@ void ConfigObserver::listener(ValueChangedListener l) {
     m_valueChangedListener = l;
 }
 
-void ConfigObserver::init(const type::ModuleConfig *config) {
+void ConfigObserver::init(const ModuleConfig *config) {
     m_cachedConfig = *config; // copy the config into the cache
     m_currentConfig = config;
 }

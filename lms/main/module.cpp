@@ -4,7 +4,7 @@
 #include <lms/module.h>
 #include <lms/lms_exports.h>
 #include <lms/datamanager.h>
-#include "lms/type/module_config.h"
+#include "lms/module_config.h"
 #include "lms/executionmanager.h"
 
 namespace lms{
@@ -50,8 +50,8 @@ namespace lms{
         }
     }
 
-    lms_EXPORT const type::ModuleConfig* Module::getConfig(const std::string &name){
-        return datamanager()->readChannel<type::ModuleConfig>(this, "CONFIG_" + getName() + "_" + name);
+    lms_EXPORT const ModuleConfig* Module::getConfig(const std::string &name){
+        return datamanager()->readChannel<ModuleConfig>(this, "CONFIG_" + getName() + "_" + name);
     }
     lms_EXPORT bool Module::hasConfig(const std::string &name){
         return datamanager()->hasChannel(this, "CONFIG_" + getName() + "_" + name);

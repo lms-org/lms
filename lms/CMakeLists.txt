@@ -31,6 +31,7 @@ set (HEADERS
     "include/lms/config_observer.h"
     "include/lms/module_wrapper.h"
     "include/lms/profiler.h"
+    "include/lms/module_config.h"
 
     "include/lms/type/module_config.h"
 
@@ -65,8 +66,7 @@ set (SOURCE
     "main/clock.cpp"
     "main/xml_parser.cpp"
     "main/config_observer.cpp"
-
-    "main/type/module_config.cpp"
+    "main/module_config.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"

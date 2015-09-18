@@ -101,7 +101,7 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
     }
 }
 
-void parseModuleConfig(pugi::xml_node node, type::ModuleConfig &config,
+void parseModuleConfig(pugi::xml_node node, ModuleConfig &config,
                        const std::string &key) {
     // if node has no children
     if(node.type() == pugi::node_pcdata) {

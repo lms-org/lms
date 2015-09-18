@@ -7,7 +7,7 @@
 #include <map>
 
 #include <lms/loader.h>
-#include <lms/type/module_config.h>
+#include <lms/module_config.h>
 #include <lms/messaging.h>
 
 namespace lms {
@@ -160,7 +160,7 @@ protected:
      * @brief Returns a pointer to the default module-private
      * configuration.
      */
-    const type::ModuleConfig* getConfig(const std::string &name = "default");
+    const ModuleConfig* getConfig(const std::string &name = "default");
     bool hasConfig(const std::string &name = "default");
 private:
     std::shared_ptr<ModuleWrapper> m_wrapper;
