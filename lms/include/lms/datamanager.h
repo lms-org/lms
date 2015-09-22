@@ -279,29 +279,6 @@ public:
      * @return true if channel is existing
      */
     bool hasChannel(Module *module, const std::string &name) const;
-private:
-    /**
-     * @brief Return the internal data channel mapping. THIS IS NOT
-     * INTENDED TO BE USED IN MODULES.
-     *
-     * @return datachannel map
-     */
-    const std::map<std::string,DataChannel>& getChannels() const;
-
-    /**
-     * @brief Release all channels
-     *
-     * This should be called in lms::Module::deinitialize.
-     *
-     * @param module the module to look for
-     */
-    void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Print all channels with their corresponding readers
-     * and writers to stdout.
-     */
-    void printMapping();
 
     /**
      * @brief Set the content of a data channel. This will NOT reset the
@@ -339,6 +316,29 @@ private:
 //        channel.readers.clear();
 //        channel.writers.clear();
     }
+private:
+    /**
+     * @brief Return the internal data channel mapping. THIS IS NOT
+     * INTENDED TO BE USED IN MODULES.
+     *
+     * @return datachannel map
+     */
+    const std::map<std::string,DataChannel>& getChannels() const;
+
+    /**
+     * @brief Release all channels
+     *
+     * This should be called in lms::Module::deinitialize.
+     *
+     * @param module the module to look for
+     */
+    void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
+
+    /**
+     * @brief Print all channels with their corresponding readers
+     * and writers to stdout.
+     */
+    void printMapping();
 
     /**
      * @brief Check if requested channel data type T is the same as the data type

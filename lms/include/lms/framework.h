@@ -9,7 +9,6 @@
 #include "lms/clock.h"
 #include "pugixml.hpp"
 #include "lms/extra/file_monitor.h"
-#include "lms/xml_parser.h"
 
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
@@ -50,27 +49,20 @@ public:
      */
     ~Framework();
 
-    enum class LoadConfigFlag {
-        LOAD_EVERYTHING,
-        ONLY_MODULE_CONFIG
-    };
-
+    ExecutionManager& executionManager();
+    Clock & clock();
 private:
     logging::Logger logger;
 
     ArgumentHandler argumentHandler;
-    ExecutionManager executionManager;
+    ExecutionManager m_executionManager;
 
-    std::unique_ptr<logging::ThresholdFilter> filter;
-
-    Clock clock;
+    Clock m_clock;
 
     /**
      * @brief running just for main-while-loop if it's set to false, the programm will terminate
      */
     bool running;
-
-    std::map<std::string, std::vector<ModuleToLoad>> modulesToLoadLists;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;
@@ -80,17 +72,6 @@ private:
      * @param s
      */
     void signal(int s);
-    /**
-     * @brief parseConfig parses the framework-config
-     */
-    void parseConfig(LoadConfigFlag flag);
-    void parseFile(const std::string &file, LoadConfigFlag flag);
-    void parseExecution(pugi::xml_node rootNode);
-    void parseAllModulesToEnable(pugi::xml_node rootNode);
-    void parseModules(pugi::xml_node rootNode, const std::string &currentFile,
-                      LoadConfigFlag flag);
-    void parseIncludes(pugi::xml_node rootNode, const std::string &currentFile,
-                       LoadConfigFlag flag);
 };
 
 }  // namespace lms

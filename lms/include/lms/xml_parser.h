@@ -3,10 +3,13 @@
 
 #include <vector>
 #include <string>
+#include <exception>
 
 #include "pugixml.hpp"
 #include "lms/module_config.h"
 #include "lms/logger.h"
+#include "lms/clock.h"
+#include "lms/framework.h"
 
 namespace lms {
 
@@ -78,28 +81,87 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags);
 void parseModuleConfig(pugi::xml_node node,  ModuleConfig &config,
                        const std::string &key = "");
 
-/**
- * @brief This struct is instantiated for each module that shall be enabled
- * but is not yet available.
- */
-struct ModuleToLoad {
-    std::string name;
-    logging::Level logLevel;
+class XmlParser {
+public:
+    XmlParser(Framework &framework, ArgumentHandler const& args);
+
+    enum class LoadConfigFlag {
+        LOAD_EVERYTHING,
+        ONLY_MODULE_CONFIG
+    };
+
+    std::vector<std::string> const& errors() const;
+    std::vector<std::string> const& files() const;
+
+    /**
+     * @brief Parse the given XML node as <modulesToEnable>
+     * @param node node to parse
+     * @param modulesToLoadLists parsed enable modules will be put into this map
+     */
+    void parseModulesToEnable(pugi::xml_node node);
+
+    /**
+     * @brief Parse the given XML node as <logging>
+     * @return filter instance
+     */
+    logging::ThresholdFilter* parseLogging(pugi::xml_node node);
+
+    /**
+     * @brief Parse the given XML node as <execution>
+     * @param rootNode
+     * @param clock
+     */
+    void parseExecution(pugi::xml_node node, lms::Clock &clock);
+
+    void parseInclude(pugi::xml_node node, const std::string &currentFile,
+                       LoadConfigFlag flag);
+
+    void parseModules(pugi::xml_node node, const std::string &currentFile,
+                      LoadConfigFlag flag);
+
+    void parseFile(const std::string &file, LoadConfigFlag flag);
+
+    /**
+     * @brief parseConfig parses the framework-config
+     */
+    void parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig);
+
+    std::unique_ptr<logging::ThresholdFilter> filter();
+private:
+    Framework & m_framework;
+    ArgumentHandler const& m_args;
+
+    std::unique_ptr<logging::ThresholdFilter> m_filter;
+    std::vector<std::string> m_errors;
+    std::vector<std::string> m_files;
+
+    /**
+     * @brief Add parse error: An xml node misses a required attribute.
+     * @param node
+     * @param attr
+     */
+    void errorMissingAttr(pugi::xml_node node, pugi::xml_attribute attr);
+
+    /**
+     * @brief Add parse error: An xml node has an invalid attribute value.
+     * @param node
+     * @param attrName
+     * @param attrValue
+     * @param expectedValue
+     */
+    void errorInvalidAttr(pugi::xml_node node,
+                          pugi::xml_attribute attr,
+                          const std::string &expectedValue);
+
+    void errorInvalidNodeContent(pugi::xml_node, const std::string &expected);
+
+    void errorFile(const std::string &file);
+
+    void errorPugiParseResult(const std::string &file,
+                              const pugi::xml_parse_result &result);
+
+    void errorUnknownNode(pugi::xml_node node);
 };
-
-/**
- * @brief Parse the given XML node as <modulesToEnable>
- * @param node node to parse
- * @param modulesToLoadLists parsed enable modules will be put into this map
- */
-void parseModulesToEnable(pugi::xml_node node, std::map<std::string,
-                          std::vector<ModuleToLoad>> &modulesToLoadLists);
-
-/**
- * @brief Parse the given XML node as <logging>
- * @return filter instance
- */
-logging::ThresholdFilter* parseLogging(pugi::xml_node node);
 
 }  // namespace lms
 

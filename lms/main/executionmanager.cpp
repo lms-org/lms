@@ -467,4 +467,14 @@ int ExecutionManager::cycleCounter() {
     return m_cycleCounter;
 }
 
+ExecutionManager::EnableConfig& ExecutionManager::config(std::string const& name) {
+    return m_configs[name];
+}
+
+void ExecutionManager::useConfig(std::string const& name) {
+    for(ModuleToEnable const& mod : m_configs[name]) {
+        enableModule(mod.first, mod.second);
+    }
+}
+
 }  // namespace lms

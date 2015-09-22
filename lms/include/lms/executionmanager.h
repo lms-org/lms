@@ -124,6 +124,13 @@ public:
      * incremented before each cycle, starting with 0.
      */
     int cycleCounter();
+
+    typedef std::pair<std::string, logging::Level> ModuleToEnable;
+    typedef std::vector<ModuleToEnable> EnableConfig;
+
+    EnableConfig& config(std::string const& name);
+
+    void useConfig(std::string const& name);
 private:
     logging::Logger logger;
 
@@ -168,6 +175,8 @@ private:
      * @brief available contains all Modules which can be loaded
      */
     ModuleList available;
+
+    std::map<std::string, EnableConfig> m_configs;
 
     /**
      * @brief Call this method for sorting the cycleList.
