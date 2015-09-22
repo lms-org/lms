@@ -2,6 +2,7 @@
 #include "lms/extra/string.h"
 #include "lms/clock.h"
 #include "lms/framework.h"
+#include "lms/definitions.h"
 
 #include <algorithm>
 #include <iostream>
@@ -108,7 +109,7 @@ XmlParser::XmlParser(Framework &framework, const ArgumentHandler &args) :
 
 void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig){
 
-    std::string configPath = Framework::configsDirectory + "/";
+    std::string configPath = std::string(LMS_CONFIGS "/");
     if(argLoadConfig.empty()) {
         configPath += "framework_conf.xml";
     } else {
@@ -260,7 +261,7 @@ void XmlParser::parseInclude(pugi::xml_node node,
         std::string includePath = srcAttr.value();
         if(extra::isAbsolute(includePath)) {
             // if absolute then start from configs dir
-            includePath = Framework::configsDirectory + includePath;
+            includePath = LMS_CONFIGS + includePath;
         } else {
             // otherwise go from current file's directory
             includePath = extra::dirname(currentFile) + "/" + includePath;
@@ -282,7 +283,7 @@ void XmlParser::parseModules(pugi::xml_node node,
     pugi::xml_node realNameNode = node.child("realName");
 
     if(realNameNode) {
-        module->libpath = Framework::externalDirectory + "/modules/" +
+        module->libpath = std::string(LMS_MODULES "/") +
                 realNameNode.child_value() + "/" +
                 Loader::getModulePath(realNameNode.child_value());
     } else {
@@ -298,10 +299,10 @@ void XmlParser::parseModules(pugi::xml_node node,
 
         if(libpathNode) {
             // TODO better relative path here
-            module->libpath = Framework::externalDirectory + "/modules/" +
+            module->libpath = std::string(LMS_MODULES "/") +
                     libpathNode.child_value() + "/" + libname;
         } else {
-            module->libpath = Framework::externalDirectory + "/modules/" + module->name
+            module->libpath = std::string(LMS_MODULES "/") + module->name
                     + "/" + libname;
         }
     }
@@ -382,7 +383,7 @@ void XmlParser::parseModules(pugi::xml_node node,
             std::string lconfPath = srcAttr.value();
 
             if(extra::isAbsolute(lconfPath)) {
-                lconfPath = Framework::configsDirectory + lconfPath;
+                lconfPath = LMS_CONFIGS + lconfPath;
             } else {
                 lconfPath = extra::dirname(currentFile) + "/" + lconfPath;
             }

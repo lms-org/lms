@@ -15,11 +15,12 @@
 #include "lms/extra/string.h"
 #include "lms/xml_parser.h"
 #include "lms/extra/colors.h"
+#include "lms/definitions.h"
 
 namespace lms{
 
-std::string Framework::externalDirectory = EXTERNAL_DIR;
-std::string Framework::configsDirectory = CONFIGS_DIR;
+std::string Framework::externalDirectory = LMS_EXTERNAL;
+std::string Framework::configsDirectory = LMS_CONFIGS;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("lms.Framework"), argumentHandler(arguments), m_executionManager(),
@@ -75,8 +76,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     //parse framework config
     if(arguments.argRunLevel >= RunLevel::CONFIG) {
-        logger.info() << "EXTERNAL: " << externalDirectory;
-        logger.info() << "CONFIGS: " << configsDirectory;
+        logger.info() << "MODULES: " << LMS_MODULES;
+        logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
         XmlParser parser(*this, arguments);
         parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);

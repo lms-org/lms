@@ -4,6 +4,7 @@
 #include "lms/argumenthandler.h"
 #include "lms/extra/os.h"
 #include "lms/extra/string.h"
+#include "lms/definitions.h"
 
 #include "tclap/CmdLine.h"
 
@@ -67,7 +68,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
 
     ThreadsConstraint threadsConstraint;
 
-    TCLAP::CmdLine cmd("LMS - Lightweight Modular System", ' ', "1.0");
+    TCLAP::CmdLine cmd("LMS - Lightweight Modular System", ' ', LMS_VERSION_STRING);
     TCLAP::ValueArg<std::string> runLevelArg("r", "run-level",
         "Execute until a certain run level",
         false, "CYCLE", &runLevelsConstraint, cmd);

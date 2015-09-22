@@ -9,6 +9,7 @@
 #include "lms/clock.h"
 #include "pugixml.hpp"
 #include "lms/extra/file_monitor.h"
+#include "lms/deprecated.h"
 
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
@@ -25,16 +26,16 @@ public:
     /**
      * @brief executionPath absolute path to running framework (folder that contains core and external)
      */
-    static std::string programDirectory();
+    DEPRECATED static std::string programDirectory();
 
     /**
      * @brief Framework::externalDirectory absolute path to the external directory
      */
-    static std::string externalDirectory;
+    DEPRECATED static std::string externalDirectory;
     /**
      * @brief Framework::configsDirectory absolute path to the configs directory
      */
-    static std::string configsDirectory;
+    DEPRECATED static std::string configsDirectory;
 
     /**
      * @brief Instantiate the framework, initiate datamanager and

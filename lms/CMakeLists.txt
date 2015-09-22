@@ -7,6 +7,12 @@ else()
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
 
+include(CMakeData.txt)
+
+configure_file(include/lms/definitions.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lms/definitions.h
+    ESCAPE_QUOTES)
+
 #include pugixml headers (hpp-files)
 include_directories(include)
 include_directories(xml/pugixml-1.5/src)
@@ -32,6 +38,8 @@ set (HEADERS
     "include/lms/module_wrapper.h"
     "include/lms/profiler.h"
     "include/lms/module_config.h"
+
+    "include/lms/definitions.h"
 
     "include/lms/type/module_config.h"
 

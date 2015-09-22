@@ -22,3 +22,4 @@ lms/external/libraries/*
 !lms/external/libraries/CMakeLists.txt
 lms/external/modules/*
 !lms/external/modules/CMakeLists.txt
+lms/include/lms/definitions.h
