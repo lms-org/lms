@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.8)
 project(LightWeightModularSystem)
 
 if(APPLE)
@@ -9,16 +10,37 @@ endif()
 
 include(CMakeData.txt)
 
+if(NOT DEFINED LMS_STANDALONE)
+    # LMS is standalone by default.
+    # LMS_STANDALONE is set to FALSE in config repos.
+    set(LMS_STANDALONE TRUE)
+endif()
+
+if(LMS_STANDALONE)
+    set(LMS_DIR_CONFIGS "/etc/lms")
+    set(LMS_DIR_MODULES "/usr/local/lib/lms/modules")
+    set(LMS_DIR_EXTERNAL "/usr/local/lib/lms")
+
+    if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"))
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic")
+    endif()
+endif()
+
+file(MAKE_DIRECTORY "include")
+file(MAKE_DIRECTORY "include/lms")
 configure_file(include/lms/definitions.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lms/definitions.h
+    include/lms/definitions.h
     ESCAPE_QUOTES)
 
 #include pugixml headers (hpp-files)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(include)
 include_directories(xml/pugixml-1.5/src)
 include_directories(tclap-1.2.1/include)
 
 set (HEADERS
+    "${CMAKE_CURRENT_BINARY_DIR}/include/lms/definitions.h"
+
     "include/lms/framework.h"
     "include/lms/signalhandler.h"
     "include/lms/extra/colors.h"
@@ -38,8 +60,6 @@ set (HEADERS
     "include/lms/module_wrapper.h"
     "include/lms/profiler.h"
     "include/lms/module_config.h"
-
-    "include/lms/definitions.h"
 
     "include/lms/type/module_config.h"
 
