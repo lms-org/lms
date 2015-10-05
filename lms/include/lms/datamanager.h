@@ -316,6 +316,41 @@ public:
 //        channel.readers.clear();
 //        channel.writers.clear();
     }
+    /**
+     * @brief Return a data channel without creating it
+     * Used for hacky casting, for example:
+     * A exends B,
+     * module Ma aquired channel with A, module Mb only takes channels with type of B -> init module Ma first and you can use this method.
+     * //TODO we could check the subtype in checkType()
+     * NOTE: This function does not use transparent channel mapping.
+     *
+     * @param name data channel name
+     * @return NULL, if the datachannel was not yet initialized
+     * otherwise the data channel object
+     */
+    template<typename T>
+    T* getChannel(const std::string &name, bool ignoreType) {
+        DataChannel &channel = channels[name];
+
+        if(channel.dataWrapper == nullptr || (!ignoreType && !checkType<T>(channel, name))) {
+            return nullptr;
+        }
+
+        return static_cast<T*>(channel.dataWrapper->get());
+    }
+    /**
+     * @brief Return a data channel without creating it
+     *
+     * NOTE: This function does not use transparent channel mapping.
+     *
+     * @param name data channel name
+     * @return NULL, if the datachannel was not yet initialized
+     * otherwise the data channel object
+     */
+    template<typename T>
+    T* getChannel(const std::string &name) {
+        return getChannel<T>(name, false);
+    }
 private:
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
@@ -388,26 +423,6 @@ private:
         channel.serializable = std::is_base_of<Serializable, T>::value;
 
         channel.exclusiveWrite = false;
-    }
-
-    /**
-     * @brief Return a data channel without creating it
-     *
-     * NOTE: This function does not use transparent channel mapping.
-     *
-     * @param name data channel name
-     * @return NULL, if the datachannel was not yet initialized
-     * otherwise the data channel object
-     */
-    template<typename T>
-    T* getChannel(const std::string &name) {
-        DataChannel &channel = channels[name];
-
-        if(channel.dataWrapper == nullptr || ! checkType<T>(channel, name)) {
-            return nullptr;
-        }
-
-        return static_cast<T*>(channel.dataWrapper->get());
     }
 
     /**
