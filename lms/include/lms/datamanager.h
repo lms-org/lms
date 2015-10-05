@@ -330,6 +330,10 @@ public:
      */
     template<typename T>
     T* getChannel(const std::string &name, bool ignoreType) {
+        if(channels.find(name) == channels.end()){
+            logger.warn("getChannel")<<"channel doesn't exist: "<<name;
+            return nullptr;
+        }
         DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr || (!ignoreType && !checkType<T>(channel, name))) {
