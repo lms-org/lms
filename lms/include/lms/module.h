@@ -132,6 +132,8 @@ public:
      */
     std::string getChannelMapping(const std::string &mapFrom);
 
+    int getChannelPriority(const std::string &name) const;
+
     int cycleCounter();
 
 protected:
