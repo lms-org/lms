@@ -28,10 +28,6 @@ namespace lms{
         return m_wrapper->name;
     }
 
-    lms_EXPORT int Module::getPriority() const{
-        return m_wrapper->writePriority;
-    }
-
     lms_EXPORT extra::PrecisionTime Module::getExpectedRuntime() const {
         return m_wrapper->expectedRuntime;
     }
