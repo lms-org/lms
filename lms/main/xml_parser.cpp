@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <utility>
 
 namespace lms {
 
@@ -344,6 +345,7 @@ void XmlParser::parseModules(pugi::xml_node node,
     for(pugi::xml_node mappingNode : node.children("channelMapping")) {
         pugi::xml_attribute fromAttr = mappingNode.attribute("from");
         pugi::xml_attribute toAttr = mappingNode.attribute("to");
+        pugi::xml_attribute priorityAttr = mappingNode.attribute("priority");
 
         if(! fromAttr) {
             errorMissingAttr(mappingNode, fromAttr);
@@ -355,6 +357,10 @@ void XmlParser::parseModules(pugi::xml_node node,
 
         if(fromAttr && toAttr) {
             module->channelMapping[fromAttr.value()] = toAttr.value();
+
+            if(priorityAttr) {
+                module->channelPriorities[toAttr.value()] = priorityAttr.as_int();
+            }
         }
     }
 

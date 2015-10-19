@@ -16,7 +16,7 @@ class Module;
  * used to store available modules
  */
 struct ModuleWrapper {
-    ModuleWrapper() : writePriority(0), enabled(false), moduleInstance(nullptr)
+    ModuleWrapper() : enabled(false), moduleInstance(nullptr)
     {}
 
     /**
@@ -42,7 +42,17 @@ struct ModuleWrapper {
      *
      * Modules with higher priority will be executed earlier.
      */
-    int writePriority;
+    std::map<std::string, int> channelPriorities;
+
+    int getChannelPriority(const std::string &name) const {
+        std::map<std::string, int>::const_iterator it = channelPriorities.find(name);
+
+        if(it != channelPriorities.end()) {
+            return it->second;
+        } else {
+            return 0;
+        }
+    }
 
     enum ExecutionType {
         ONLY_MAIN_THREAD, NEVER_MAIN_THREAD

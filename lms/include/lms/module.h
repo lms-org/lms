@@ -54,7 +54,6 @@ public:
         std::shared_ptr<ModuleWrapper> loaderEntry,
                         logging::Level minLogLevel);
 
-    int getPriority() const;
     extra::PrecisionTime getExpectedRuntime() const;
     ModuleWrapper::ExecutionType getExecutionType() const;
 
