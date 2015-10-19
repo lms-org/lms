@@ -80,6 +80,7 @@ set (HEADERS
     "include/lms/extra/file_monitor.h"
     "include/lms/extra/backtrace_formatter.h"
     "include/lms/extra/os.h"
+    "include/lms/extra/dot_exporter.h"
 )
 
 set (SOURCE
@@ -110,6 +111,7 @@ set (SOURCE
     "main/extra/time.cpp"
     "main/extra/file_monitor.cpp"
     "main/extra/os.cpp"
+    "main/extra/dot_exporter.cpp"
 )
 
 # Add system-specific source

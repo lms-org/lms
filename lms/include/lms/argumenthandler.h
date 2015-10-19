@@ -83,6 +83,7 @@ class ArgumentHandler {
     bool argMultithreaded;
     bool argThreadsAuto;
     int argThreads;
+    std::string argDotFile;
 };
 
 }  // namespace lms

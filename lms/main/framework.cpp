@@ -157,6 +157,23 @@ Framework::Framework(const ArgumentHandler &arguments) :
         ctx.filter(nullptr);
         logger.info() << "Stopped";
     }
+
+    if(! arguments.argDotFile.empty()) {
+        std::ofstream ofs(arguments.argDotFile);
+
+        if(! ofs) {
+            logger.error() << "Failed to open file: " << arguments.argDotFile;
+        } else {
+            bool success = executionManager.getDataManager().writeDAG(ofs);
+            ofs.close();
+
+            if(success) {
+                logger.info() << "Written dot file: " << arguments.argDotFile;
+                logger.info() << "Execute the following line to create a PNG:";
+                logger.info() << "dot -Tpng " << arguments.argDotFile << " > output.png";
+            }
+        }
+    }
 }
 
 ExecutionManager& Framework::executionManager() {

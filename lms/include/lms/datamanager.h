@@ -280,6 +280,8 @@ public:
      */
     bool hasChannel(Module *module, const std::string &name) const;
 
+    bool writeDAG(std::ostream &os);
+
     /**
      * @brief Set the content of a data channel. This will NOT reset the
      * channel, instead it just sets the data with the assignment operator.

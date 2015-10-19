@@ -7,6 +7,7 @@
 #include <lms/module.h>
 #include <lms/datamanager.h>
 #include <lms/executionmanager.h>
+#include <lms/extra/dot_exporter.h>
 
 namespace lms {
 
@@ -181,6 +182,41 @@ void DataManager::printMapping()  {
             logger.debug("mapping") << writerLine;
         }
     }
+}
+
+bool DataManager::writeDAG(std::ostream &os) {
+    using extra::DotExporter;
+
+    DotExporter dot(os);
+    dot.startDigraph("dag");
+
+    std::string CONFIG("CONFIG");
+
+    for(const auto &ch : channels) {
+        if(ch.first.compare(0, CONFIG.size(), CONFIG) == 0) {
+            continue;
+        }
+
+        dot.shape(DotExporter::Shape::BOX);
+        dot.label(ch.first + "\\n" + ch.second.dataTypeName);
+        dot.node(ch.first);
+        dot.reset();
+        for(auto writer : ch.second.writers) {
+            dot.edge(writer->name, ch.first);
+        }
+        for(auto reader : ch.second.readers) {
+            dot.edge(ch.first, reader->name);
+        }
+    }
+
+    dot.endDigraph();
+
+    bool success = dot.lastError() == DotExporter::Error::OK;
+    if(! success) {
+        logger.error() << "Dot export failed: " << dot.lastError();
+    }
+
+    return success;
 }
 
 bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {
