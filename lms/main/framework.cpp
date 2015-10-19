@@ -164,7 +164,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
         if(! ofs) {
             logger.error() << "Failed to open file: " << arguments.argDotFile;
         } else {
-            bool success = executionManager.getDataManager().writeDAG(ofs);
+            bool success = executionManager().getDataManager().writeDAG(ofs);
             ofs.close();
 
             if(success) {
