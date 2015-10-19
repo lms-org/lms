@@ -418,27 +418,32 @@ void ExecutionManager::sortNew(){
             all.push_back(w1);
         }
 
-        for(std::shared_ptr<ModuleWrapper> mw1 : all){
-            for(std::shared_ptr<ModuleWrapper> mw2 : all){
+        //don't do size -1!
+        for(int i = 0; i < all.size(); i++){
+            std::shared_ptr<ModuleWrapper> mw1 = all[i];
+            for(int k = i+1;k < all.size(); k++){
+                std::shared_ptr<ModuleWrapper> mw2 = all[k];
                 //
-                //if(mw1.priority() < mw2.priority()){
-                addModuleDependency(mw1,mw2);
-                //else if(mw1 == mw2)
-                //check if it's reader vs writer
-                bool mw1Write = false;
-                bool mw2Write = false;
-
-                for(std::shared_ptr<ModuleWrapper> r1 : pair.second.writers){
-                    if(r1->name == mw1->name){
-                        mw1Write = true;
-                    }else if(r1->name == mw2->name){
-                        mw2Write = true;
-                    }
-                }
-                if(mw1Write && !mw2Write){
-                    addModuleDependency(mw2,mw1);
-                }else if(!mw1Write && mw2Write){
+                if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
                     addModuleDependency(mw1,mw2);
+                }
+                else if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
+                    //check if it's reader vs writer
+                    bool mw1Write = false;
+                    bool mw2Write = false;
+
+                    for(std::shared_ptr<ModuleWrapper> r1 : pair.second.writers){
+                        if(r1->name == mw1->name){
+                            mw1Write = true;
+                        }else if(r1->name == mw2->name){
+                            mw2Write = true;
+                        }
+                    }
+                    if(mw1Write && !mw2Write){
+                        addModuleDependency(mw2,mw1);
+                    }else if(!mw1Write && mw2Write){
+                        addModuleDependency(mw1,mw2);
+                    }
                 }
             }
         }
@@ -488,9 +493,10 @@ void ExecutionManager::sortByPriorityOld(){
                     //yes it is contained
                     for(std::shared_ptr<ModuleWrapper> writer2 : pair.second.writers){
                         //add all writers(2) with a higher priority to the list
-                        if(writer2->writePriority > insert->getPriority()){
-                            list.push_back(writer2->moduleInstance);
-                        }
+                        //TODO
+                        //if(writer2->writePriority > insert->getPriority()){
+                        //    list.push_back(writer2->moduleInstance);
+                        //}
                     }
                 }
             }
