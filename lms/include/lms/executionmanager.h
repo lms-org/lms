@@ -195,7 +195,10 @@ private:
      * readability. If you have to call this method often you might have to
      * improve it.
      */
-    void sortByDataChannel();
+    void sortByDataChannelOld();
+
+    void sortNew();
+    void addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent);
 
     /**
      * @brief Sorts loadedModules into cycleList
@@ -204,7 +207,7 @@ private:
      * readability. If you have to call this method often you might have to
      * improve it.
      */
-    void sortByPriority();
+    void sortByPriorityOld();
 
 };
 

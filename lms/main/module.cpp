@@ -36,7 +36,7 @@ namespace lms{
         return m_wrapper->executionType;
     }
 
-    lms_EXPORT std::string Module::getChannelMapping(const std::string &mapFrom) {
+    lms_EXPORT std::string Module::getChannelMapping(const std::string &mapFrom) const{
         auto it = m_wrapper->channelMapping.find(mapFrom);
 
         if(it != m_wrapper->channelMapping.end()) {

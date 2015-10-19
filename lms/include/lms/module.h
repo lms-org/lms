@@ -130,7 +130,7 @@ public:
      * @return the mapping for the given key or the key itself if it has no
      * mapping for it
      */
-    std::string getChannelMapping(const std::string &mapFrom);
+    std::string getChannelMapping(const std::string &mapFrom) const;
 
     int getChannelPriority(const std::string &name) const;
 
