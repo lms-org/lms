@@ -427,7 +427,7 @@ void ExecutionManager::sortNew(){
                 if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
                     addModuleDependency(mw1,mw2);
                 }
-                else if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
+                else if(mw1->getChannelPriority(pair.first) == mw2->getChannelPriority(pair.first)){
                     //check if it's reader vs writer
                     bool mw1Write = false;
                     bool mw2Write = false;
