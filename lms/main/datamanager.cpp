@@ -202,10 +202,20 @@ bool DataManager::writeDAG(std::ostream &os) {
         dot.node(ch.first);
         dot.reset();
         for(auto writer : ch.second.writers) {
+            int prio = writer->getChannelPriority(ch.first);
+            if(prio != 0) {
+                dot.label(std::to_string(prio));
+            }
             dot.edge(writer->name, ch.first);
+            dot.reset();
         }
         for(auto reader : ch.second.readers) {
+            int prio = reader->getChannelPriority(ch.first);
+            if(prio != 0) {
+                dot.label(std::to_string(prio));
+            }
             dot.edge(ch.first, reader->name);
+            dot.reset();
         }
     }
 
