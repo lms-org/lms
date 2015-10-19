@@ -218,7 +218,7 @@ void ExecutionManager::threadFunction(int threadNum) {
             }
 
             logger.info() << "Thread " << threadNum << " executed "
-                             << executableModule->getName();
+                          << executableModule->getName();
 
             // now we should delete the executed module from
             // the dependencies of other modules
@@ -275,7 +275,7 @@ void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
     for(std::shared_ptr<ModuleWrapper> modEntry : available) {
         if(modEntry->name == mod->name) {
             logger.error("addAvailableModule") << "Tried to add available "
-                << "module " << mod->name << " but was already available.";
+                                               << "module " << mod->name << " but was already available.";
             return;
         }
     }
@@ -398,11 +398,65 @@ void ExecutionManager::sort(){
         tmp.push_back(it->moduleInstance);
         cycleList.push_back(tmp);
     }
-    sortByDataChannel();
-    sortByPriority();
+
+    sortNew();
+
+    //old
+    //sortByDataChannelOld();
+    //sortByPriorityOld();
 }
 
-void ExecutionManager::sortByDataChannel(){
+void ExecutionManager::sortNew(){
+    //find modules that use the same data-channel
+    for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
+        //create one list
+        std::vector<std::shared_ptr<ModuleWrapper>> all;
+        for(std::shared_ptr<ModuleWrapper> r1 : pair.second.readers){
+            all.push_back(r1);
+        }
+        for(std::shared_ptr<ModuleWrapper> w1 : pair.second.writers){
+            all.push_back(w1);
+        }
+
+        for(std::shared_ptr<ModuleWrapper> mw1 : all){
+            for(std::shared_ptr<ModuleWrapper> mw2 : all){
+                //
+                //if(mw1.priority() < mw2.priority()){
+                addModuleDependency(mw1,mw2);
+                //else if(mw1 == mw2)
+                //check if it's reader vs writer
+                bool mw1Write = false;
+                bool mw2Write = false;
+
+                for(std::shared_ptr<ModuleWrapper> r1 : pair.second.writers){
+                    if(r1->name == mw1->name){
+                        mw1Write = true;
+                    }else if(r1->name == mw2->name){
+                        mw2Write = true;
+                    }
+                }
+                if(mw1Write && !mw2Write){
+                    addModuleDependency(mw2,mw1);
+                }else if(!mw1Write && mw2Write){
+                    addModuleDependency(mw1,mw2);
+                }
+            }
+        }
+    }
+}
+
+
+void ExecutionManager::addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent){
+    for(std::vector<Module*> &list: cycleList){
+        Module *toAdd = list[0];
+        //add it to the list
+        if(toAdd->getName() == dependent->name){
+            list.push_back(independent->moduleInstance);
+        }
+    }
+}
+
+void ExecutionManager::sortByDataChannelOld(){
     // getChannels() returns const& -> you must use a const& here as well
     for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
         // Module* here is ok, you will make a copy of the pointer
@@ -421,7 +475,7 @@ void ExecutionManager::sortByDataChannel(){
     }
 }
 
-void ExecutionManager::sortByPriority(){
+void ExecutionManager::sortByPriorityOld(){
     // const& here again
     for(const std::pair<std::string, DataManager::DataChannel>& pair : dataManager.getChannels()){
         //sort writer-order read-order isn't needed as readers don't change the dataChannel
