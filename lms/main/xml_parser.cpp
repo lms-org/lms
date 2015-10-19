@@ -308,14 +308,6 @@ void XmlParser::parseModules(pugi::xml_node node,
         }
     }
 
-    pugi::xml_node writePrioNode = node.child("writePriority");
-
-    if(writePrioNode) {
-        module->writePriority = atoi(writePrioNode.child_value());
-    } else {
-        module->writePriority = 0;
-    }
-
     pugi::xml_node executionTypeNode = node.child("executionType");
 
     if(executionTypeNode) {
