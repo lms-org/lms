@@ -440,7 +440,8 @@ void ExecutionManager::sortNew(){
                     for(std::shared_ptr<ModuleWrapper> r1 : pair.second.writers){
                         if(r1->name == mw1->name){
                             mw1Write = true;
-                        } else if(r1->name == mw2->name){
+                        }
+                        if(r1->name == mw2->name){
                             mw2Write = true;
                         }
                     }
