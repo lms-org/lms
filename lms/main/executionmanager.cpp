@@ -12,6 +12,7 @@
 #include "lms/datamanager.h"
 #include "lms/profiler.h"
 #include "lms/logger.h"
+#include <lms/extra/dot_exporter.h>
 
 namespace lms {
 
@@ -535,6 +536,30 @@ void ExecutionManager::useConfig(std::string const& name) {
     for(ModuleToEnable const& mod : m_configs[name]) {
         enableModule(mod.first, mod.second);
     }
+}
+
+bool ExecutionManager::writeDAG(std::ostream &os) {
+    using extra::DotExporter;
+
+    DotExporter dot(os);
+    dot.startDigraph("dag");
+
+    for(const auto &list : cycleList) {
+        std::string from = list[0]->getName();
+
+        for(size_t i = 1; i < list.size(); i++) {
+            dot.edge(list[i]->getName(), from);
+        }
+    }
+
+    dot.endDigraph();
+
+    bool success = dot.lastError() == DotExporter::Error::OK;
+    if(! success) {
+        logger.error() << "Dot export failed: " << dot.lastError();
+    }
+
+    return success;
 }
 
 }  // namespace lms

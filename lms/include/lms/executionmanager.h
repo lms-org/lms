@@ -131,6 +131,8 @@ public:
     EnableConfig& config(std::string const& name);
 
     void useConfig(std::string const& name);
+
+    bool writeDAG(std::ostream &os);
 private:
     logging::Logger logger;
 
@@ -208,7 +210,6 @@ private:
      * improve it.
      */
     void sortByPriorityOld();
-
 };
 
 }  // namespace lms
