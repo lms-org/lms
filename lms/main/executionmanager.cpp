@@ -12,6 +12,7 @@
 #include "lms/datamanager.h"
 #include "lms/profiler.h"
 #include "lms/logger.h"
+#include <lms/extra/dot_exporter.h>
 
 namespace lms {
 
@@ -414,15 +415,19 @@ void ExecutionManager::sortModules(){
         }
 
         //don't do size -1!
-        for(int i = 0; i < all.size(); i++){
+        for(size_t i = 0; i < all.size(); i++) {
             std::shared_ptr<ModuleWrapper> mw1 = all[i];
-            for(int k = i+1;k < all.size(); k++){
+            int prio1 = mw1->getChannelPriority(pair.first);
+
+            for(size_t k = i+1; k < all.size(); k++) {
                 std::shared_ptr<ModuleWrapper> mw2 = all[k];
-                //
-                if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
+                int prio2 = mw2->getChannelPriority(pair.first);
+
+                if(prio1 < prio2) {
                     addModuleDependency(mw1,mw2);
-                }
-                else if(mw1->getChannelPriority(pair.first) == mw2->getChannelPriority(pair.first)){
+                } else if(prio2 < prio1) {
+                    addModuleDependency(mw2,mw1);
+                } else if(prio1 == prio2) {
                     //check if it's reader vs writer
                     bool mw1Write = false;
                     bool mw2Write = false;
@@ -487,6 +492,37 @@ void ExecutionManager::useConfig(std::string const& name) {
     for(ModuleToEnable const& mod : m_configs[name]) {
         enableModule(mod.first, mod.second);
     }
+}
+
+bool ExecutionManager::writeDAG(std::ostream &os) {
+    using extra::DotExporter;
+
+    DotExporter dot(os);
+    dot.startDigraph("dag");
+
+    for(const auto &list : cycleList) {
+        dot.label(list[0]->getName());
+        dot.node(list[0]->getName());
+    }
+
+    dot.reset();
+
+    for(const auto &list : cycleList) {
+        std::string from = list[0]->getName();
+
+        for(size_t i = 1; i < list.size(); i++) {
+            dot.edge(list[i]->getName(), from);
+        }
+    }
+
+    dot.endDigraph();
+
+    bool success = dot.lastError() == DotExporter::Error::OK;
+    if(! success) {
+        logger.error() << "Dot export failed: " << dot.lastError();
+    }
+
+    return success;
 }
 
 }  // namespace lms

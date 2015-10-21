@@ -131,6 +131,8 @@ public:
     EnableConfig& config(std::string const& name);
 
     void useConfig(std::string const& name);
+
+    bool writeDAG(std::ostream &os);
 private:
     logging::Logger logger;
 
@@ -188,7 +190,6 @@ private:
     void sort();
     void sortModules();
     void addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent);
-
 };
 
 }  // namespace lms

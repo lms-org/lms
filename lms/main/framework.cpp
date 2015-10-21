@@ -159,18 +159,29 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(! arguments.argDotFile.empty()) {
-        std::ofstream ofs(arguments.argDotFile);
+        std::string dataFile(arguments.argDotFile + ".data.gv");
+        std::string execFile(arguments.argDotFile + ".exec.gv");
 
-        if(! ofs) {
-            logger.error() << "Failed to open file: " << arguments.argDotFile;
+        std::ofstream dataGraphFile(dataFile);
+        std::ofstream execGraphFile(execFile);
+
+        if(! dataGraphFile) {
+            logger.error() << "Failed to open file: " << dataFile;
+        } else if(! execGraphFile) {
+            logger.error() << "Failed to open file: " << execFile;
         } else {
-            bool success = executionManager().getDataManager().writeDAG(ofs);
-            ofs.close();
+            logger.info() << "Write dot files...";
 
-            if(success) {
-                logger.info() << "Written dot file: " << arguments.argDotFile;
+            bool success1 = executionManager().getDataManager().writeDAG(dataGraphFile);
+            dataGraphFile.close();
+
+            bool success2 = executionManager().writeDAG(execGraphFile);
+            execGraphFile.close();
+
+            if(success1 && success2) {
                 logger.info() << "Execute the following line to create a PNG:";
-                logger.info() << "dot -Tpng " << arguments.argDotFile << " > output.png";
+                logger.info() << "dot -Tpng " << dataFile << " > output.png";
+                logger.info() << "xdg-open output.png";
             }
         }
     }
