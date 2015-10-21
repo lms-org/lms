@@ -420,9 +420,9 @@ void ExecutionManager::sortNew(){
         }
 
         //don't do size -1!
-        for(int i = 0; i < all.size(); i++){
+        for(size_t i = 0; i < all.size(); i++){
             std::shared_ptr<ModuleWrapper> mw1 = all[i];
-            for(int k = i+1;k < all.size(); k++){
+            for(size_t k = i+1; k < all.size(); k++){
                 std::shared_ptr<ModuleWrapper> mw2 = all[k];
                 //
                 if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
@@ -543,6 +543,13 @@ bool ExecutionManager::writeDAG(std::ostream &os) {
 
     DotExporter dot(os);
     dot.startDigraph("dag");
+
+    for(const auto &list : cycleList) {
+        dot.label(list[0]->getName());
+        dot.node(list[0]->getName());
+    }
+
+    dot.reset();
 
     for(const auto &list : cycleList) {
         std::string from = list[0]->getName();
