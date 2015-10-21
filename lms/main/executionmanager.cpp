@@ -420,15 +420,19 @@ void ExecutionManager::sortNew(){
         }
 
         //don't do size -1!
-        for(size_t i = 0; i < all.size(); i++){
+        for(size_t i = 0; i < all.size(); i++) {
             std::shared_ptr<ModuleWrapper> mw1 = all[i];
-            for(size_t k = i+1; k < all.size(); k++){
+            int prio1 = mw1->getChannelPriority(pair.first);
+
+            for(size_t k = i+1; k < all.size(); k++) {
                 std::shared_ptr<ModuleWrapper> mw2 = all[k];
-                //
-                if(mw1->getChannelPriority(pair.first) < mw2->getChannelPriority(pair.first)){
+                int prio2 = mw2->getChannelPriority(pair.first);
+
+                if(prio1 < prio2) {
                     addModuleDependency(mw1,mw2);
-                }
-                else if(mw1->getChannelPriority(pair.first) == mw2->getChannelPriority(pair.first)){
+                } else if(prio2 < prio1) {
+                    addModuleDependency(mw2,mw1);
+                } else if(prio1 == prio2) {
                     //check if it's reader vs writer
                     bool mw1Write = false;
                     bool mw2Write = false;
@@ -436,7 +440,7 @@ void ExecutionManager::sortNew(){
                     for(std::shared_ptr<ModuleWrapper> r1 : pair.second.writers){
                         if(r1->name == mw1->name){
                             mw1Write = true;
-                        }else if(r1->name == mw2->name){
+                        } else if(r1->name == mw2->name){
                             mw2Write = true;
                         }
                     }
