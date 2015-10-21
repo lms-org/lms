@@ -398,15 +398,10 @@ void ExecutionManager::sort(){
         tmp.push_back(it->moduleInstance);
         cycleList.push_back(tmp);
     }
-
-    sortNew();
-
-    //old
-    //sortByDataChannelOld();
-    //sortByPriorityOld();
+    sortModules();
 }
 
-void ExecutionManager::sortNew(){
+void ExecutionManager::sortModules(){
     //find modules that use the same data-channel
     for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
         //create one list
@@ -457,49 +452,6 @@ void ExecutionManager::addModuleDependency(std::shared_ptr<ModuleWrapper> depend
         //add it to the list
         if(toAdd->getName() == dependent->name){
             list.push_back(independent->moduleInstance);
-        }
-    }
-}
-
-void ExecutionManager::sortByDataChannelOld(){
-    // getChannels() returns const& -> you must use a const& here as well
-    for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
-        // Module* here is ok, you will make a copy of the pointer
-        for(std::shared_ptr<ModuleWrapper> reader : pair.second.readers){
-            // usual & here
-            for(std::vector<Module*> &list: cycleList){
-                Module *toAdd = list[0];
-                //add all writers to the reader
-                if(toAdd->getName() == reader->name){
-                    for(std::shared_ptr<ModuleWrapper> writer : pair.second.writers){
-                        list.push_back(writer->moduleInstance);
-                    }
-                }
-            }
-        }
-    }
-}
-
-void ExecutionManager::sortByPriorityOld(){
-    // const& here again
-    for(const std::pair<std::string, DataManager::DataChannel>& pair : dataManager.getChannels()){
-        //sort writer-order read-order isn't needed as readers don't change the dataChannel
-        //check insert is in the writers-list BEGIN
-        for(std::shared_ptr<ModuleWrapper> writer1 : pair.second.writers){
-            for(std::vector<Module*> &list: cycleList){
-                Module* insert = list[0];
-                //check insert is in the writers-list END
-                if(insert->getName() == writer1->name){
-                    //yes it is contained
-                    for(std::shared_ptr<ModuleWrapper> writer2 : pair.second.writers){
-                        //add all writers(2) with a higher priority to the list
-                        //TODO
-                        //if(writer2->writePriority > insert->getPriority()){
-                        //    list.push_back(writer2->moduleInstance);
-                        //}
-                    }
-                }
-            }
         }
     }
 }

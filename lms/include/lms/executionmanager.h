@@ -186,28 +186,8 @@ private:
      * improve it.
      */
     void sort();
-
-    /**
-     * @brief sortByDataChannel Sorts enableModules into cycleList. Call this
-     * method before sortByPriority().
-     *
-     * As this method isn't called often I won't care about performance but
-     * readability. If you have to call this method often you might have to
-     * improve it.
-     */
-    void sortByDataChannelOld();
-
-    void sortNew();
+    void sortModules();
     void addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent);
-
-    /**
-     * @brief Sorts loadedModules into cycleList
-     *
-     * As this method isn't called often I won't care about performance but
-     * readability. If you have to call this method often you might have to
-     * improve it.
-     */
-    void sortByPriorityOld();
 
 };
 
