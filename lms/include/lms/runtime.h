@@ -26,6 +26,8 @@ public:
      */
     void stopAsync();
 
+    void join();
+
     /**
      * @brief Synchronously execute a single cycle of this runtime.
      */
@@ -52,6 +54,8 @@ private:
      * @brief running just for main-while-loop if it's set to false, the programm will terminate
      */
     std::atomic_bool running;
+
+    std::thread m_thread;
 };
 
 }

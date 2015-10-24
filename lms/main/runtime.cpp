@@ -52,14 +52,17 @@ void Runtime::stopAsync() {
 }
 
 void Runtime::startAsync() {
-    std::thread([this] () {
-        //Execution
-        running = true;
+    running = true;
 
+    m_thread = std::thread([this] () {
         while(running.load()) {
             cycle();
         }
     });
+}
+
+void Runtime::join() {
+    m_thread.join();
 }
 
 void Runtime::cycle() {

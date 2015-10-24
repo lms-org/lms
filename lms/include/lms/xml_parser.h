@@ -121,6 +121,9 @@ public:
 
     void parseFile(const std::string &file, LoadConfigFlag flag);
 
+    void parseRuntime(pugi::xml_node node, const std::string &currentFile,
+                                 LoadConfigFlag flag);
+
     /**
      * @brief parseConfig parses the framework-config
      */

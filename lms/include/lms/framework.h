@@ -54,6 +54,8 @@ public:
     void registerRuntime(std::string const& name, Runtime *runtime);
 
     Runtime* getRuntimeByName(std::string const& name);
+
+    ArgumentHandler const& getArgumentHandler();
 private:
     logging::Logger logger;
 

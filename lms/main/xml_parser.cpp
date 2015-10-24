@@ -273,6 +273,33 @@ void XmlParser::parseInclude(pugi::xml_node node,
     }
 }
 
+void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile,
+                             LoadConfigFlag flag) {
+    pugi::xml_attribute srcAttr = node.attribute("src");
+    pugi::xml_attribute nameAttr = node.attribute("name");
+
+    if(srcAttr && nameAttr) {
+        std::string includePath = srcAttr.value();
+        if(extra::isAbsolute(includePath)) {
+            // if absolute then start from configs dir
+            includePath = LMS_CONFIGS + includePath;
+        } else {
+            // otherwise go from current file's directory
+            includePath = extra::dirname(currentFile) + "/" + includePath;
+        }
+
+        Runtime *temp = m_runtime;
+        m_runtime = new Runtime(m_framework.getArgumentHandler());
+        m_framework.registerRuntime(nameAttr.value(), m_runtime);
+        parseFile(includePath, flag);
+        m_runtime = temp;
+    } else if(! srcAttr) {
+        errorMissingAttr(node, srcAttr);
+    } else if(! nameAttr) {
+        errorMissingAttr(node, nameAttr);
+    }
+}
+
 void XmlParser::parseModules(pugi::xml_node node,
                              const std::string &currentFile,
                              LoadConfigFlag flag) {
@@ -440,6 +467,8 @@ void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
             parseModules(node, file, flag);
         } else if(std::string("include") == node.name()) {
             parseInclude(node, file, flag);
+        } else if(std::string("runtime") == node.name()) {
+            parseRuntime(node, file, flag);
         } else {
             errorUnknownNode(node);
         }

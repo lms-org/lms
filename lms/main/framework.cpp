@@ -64,9 +64,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
         Runtime* rt = new Runtime(arguments);
+        registerRuntime("default", rt);
 
         XmlParser parser(*this, rt, arguments);
         parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);
+
+        for(const auto& rt : runtimes) {
+            logger.info("registerRuntime") << rt.first;
+        }
+
         filter = parser.filter();
 
         for(auto error : parser.errors()) {
@@ -101,6 +107,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
         for(auto& runtime : runtimes) {
             runtime.second->startAsync();
+        }
+
+        for(auto& rt : runtimes) {
+            rt.second->join();
         }
 
         ctx.filter(nullptr);
@@ -153,6 +163,10 @@ void Framework::registerRuntime(std::string const& name, Runtime *runtime) {
 
 Runtime* Framework::getRuntimeByName(std::string const& name) {
     return runtimes[name].get();
+}
+
+ArgumentHandler const& Framework::getArgumentHandler() {
+    return argumentHandler;
 }
 
 }
