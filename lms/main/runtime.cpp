@@ -4,8 +4,8 @@
 
 namespace lms {
 
-Runtime::Runtime(const ArgumentHandler &args) :
-    logger("Runtime"), m_argumentHandler(args),
+Runtime::Runtime(const std::string &name, const ArgumentHandler &args) :
+    m_name(name), logger(name), m_argumentHandler(args),
     m_executionManager(m_profiler), running(false) {
 
     m_profiler.enabled(m_argumentHandler.argProfiling);
@@ -45,6 +45,10 @@ DataManager& Runtime::dataManager() {
 
 Clock& Runtime::clock() {
     return m_clock;
+}
+
+std::string Runtime::name() {
+    return m_name;
 }
 
 void Runtime::stopAsync() {
@@ -101,36 +105,6 @@ void Runtime::enableModules() {
         m_executionManager.getDataManager().printMapping();
         m_executionManager.validate();
         m_executionManager.printCycleList();
-    }
-}
-
-void Runtime::exportGraphs() {
-    if(! m_argumentHandler.argDotFile.empty()) {
-        std::string dataFile(m_argumentHandler.argDotFile + ".data.gv");
-        std::string execFile(m_argumentHandler.argDotFile + ".exec.gv");
-
-        std::ofstream dataGraphFile(dataFile);
-        std::ofstream execGraphFile(execFile);
-
-        if(! dataGraphFile) {
-            logger.error() << "Failed to open file: " << dataFile;
-        } else if(! execGraphFile) {
-            logger.error() << "Failed to open file: " << execFile;
-        } else {
-            logger.info() << "Write dot files...";
-
-            bool success1 = executionManager().getDataManager().writeDAG(dataGraphFile);
-            dataGraphFile.close();
-
-            bool success2 = executionManager().writeDAG(execGraphFile);
-            execGraphFile.close();
-
-            if(success1 && success2) {
-                logger.info() << "Execute the following line to create a PNG:";
-                logger.info() << "dot -Tpng " << dataFile << " > output.png";
-                logger.info() << "xdg-open output.png";
-            }
-        }
     }
 }
 

@@ -132,7 +132,7 @@ public:
 
     void useConfig(std::string const& name);
 
-    bool writeDAG(std::ostream &os);
+    void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 private:
     logging::Logger logger;
 

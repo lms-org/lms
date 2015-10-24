@@ -184,11 +184,8 @@ void DataManager::printMapping()  {
     }
 }
 
-bool DataManager::writeDAG(std::ostream &os) {
-    using extra::DotExporter;
-
-    DotExporter dot(os);
-    dot.startDigraph("dag");
+bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &prefix) {
+    using lms::extra::DotExporter;
 
     std::string CONFIG("CONFIG");
 
@@ -199,14 +196,14 @@ bool DataManager::writeDAG(std::ostream &os) {
 
         dot.shape(DotExporter::Shape::BOX);
         dot.label(ch.first + "\\n" + ch.second.dataTypeName);
-        dot.node(ch.first);
+        dot.node(prefix + "_" + ch.first);
         dot.reset();
         for(auto writer : ch.second.writers) {
             int prio = writer->getChannelPriority(ch.first);
             if(prio != 0) {
                 dot.label(std::to_string(prio));
             }
-            dot.edge(writer->name, ch.first);
+            dot.edge(prefix + "_" + writer->name, prefix + "_" + ch.first);
             dot.reset();
         }
         for(auto reader : ch.second.readers) {
@@ -214,12 +211,10 @@ bool DataManager::writeDAG(std::ostream &os) {
             if(prio != 0) {
                 dot.label(std::to_string(prio));
             }
-            dot.edge(ch.first, reader->name);
+            dot.edge(prefix + "_" + ch.first, prefix + "_" + reader->name);
             dot.reset();
         }
     }
-
-    dot.endDigraph();
 
     bool success = dot.lastError() == DotExporter::Error::OK;
     if(! success) {

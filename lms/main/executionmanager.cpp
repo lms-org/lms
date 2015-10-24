@@ -495,15 +495,12 @@ void ExecutionManager::useConfig(std::string const& name) {
     }
 }
 
-bool ExecutionManager::writeDAG(std::ostream &os) {
+void ExecutionManager::writeDAG(extra::DotExporter &dot, const std::string &prefix) {
     using extra::DotExporter;
-
-    DotExporter dot(os);
-    dot.startDigraph("dag");
 
     for(const auto &list : cycleList) {
         dot.label(list[0]->getName());
-        dot.node(list[0]->getName());
+        dot.node(prefix + "_" + list[0]->getName());
     }
 
     dot.reset();
@@ -512,18 +509,9 @@ bool ExecutionManager::writeDAG(std::ostream &os) {
         std::string from = list[0]->getName();
 
         for(size_t i = 1; i < list.size(); i++) {
-            dot.edge(list[i]->getName(), from);
+            dot.edge(prefix + "_" + list[i]->getName(), prefix + "_" + from);
         }
     }
-
-    dot.endDigraph();
-
-    bool success = dot.lastError() == DotExporter::Error::OK;
-    if(! success) {
-        logger.error() << "Dot export failed: " << dot.lastError();
-    }
-
-    return success;
 }
 
 }  // namespace lms

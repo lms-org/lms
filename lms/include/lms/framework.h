@@ -51,11 +51,13 @@ public:
      */
     ~Framework();
 
-    void registerRuntime(std::string const& name, Runtime *runtime);
+    void registerRuntime(Runtime *runtime);
 
     Runtime* getRuntimeByName(std::string const& name);
 
     ArgumentHandler const& getArgumentHandler();
+
+    void exportGraphs();
 private:
     logging::Logger logger;
 

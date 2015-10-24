@@ -16,6 +16,7 @@
 #include "lms/xml_parser.h"
 #include "lms/extra/colors.h"
 #include "lms/definitions.h"
+#include "lms/runtime.h"
 
 namespace lms{
 
@@ -63,8 +64,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "MODULES: " << LMS_MODULES;
         logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
-        Runtime* rt = new Runtime(arguments);
-        registerRuntime("default", rt);
+        Runtime* rt = new Runtime("default", arguments);
+        registerRuntime(rt);
 
         XmlParser parser(*this, rt, arguments);
         parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);
@@ -117,9 +118,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Stopped";
     }
 
-    for(auto& runtime : runtimes) {
-        runtime.second->exportGraphs();
-    }
+    exportGraphs();
 }
 
 Framework::~Framework() {
@@ -157,8 +156,62 @@ void Framework::signal(int s) {
     }
 }
 
-void Framework::registerRuntime(std::string const& name, Runtime *runtime) {
-    runtimes.insert(std::make_pair(name, std::unique_ptr<Runtime>(runtime)));
+void Framework::exportGraphs() {
+    if(! argumentHandler.argDotFile.empty()) {
+        std::string dataFile(argumentHandler.argDotFile + ".data.gv");
+        std::string execFile(argumentHandler.argDotFile + ".exec.gv");
+
+        std::ofstream dataGraphFile(dataFile);
+        std::ofstream execGraphFile(execFile);
+
+        if(! dataGraphFile) {
+            logger.error() << "Failed to open file: " << dataFile;
+        } else if(! execGraphFile) {
+            logger.error() << "Failed to open file: " << execFile;
+        } else {
+            logger.info() << "Write dot files...";
+
+            lms::extra::DotExporter dotExec(execGraphFile);
+            dotExec.startDigraph("exec");
+            for(auto& rt : runtimes) {
+                dotExec.startSubgraph(rt.first);
+                rt.second->executionManager().writeDAG(dotExec, rt.first);
+                dotExec.endSubgraph();
+            }
+            dotExec.endDigraph();
+            execGraphFile.close();
+
+            bool successExec = dotExec.lastError() == lms::extra::DotExporter::Error::OK;
+            if(! successExec) {
+                logger.error() << "Dot export failed: " << dotExec.lastError();
+            }
+
+            lms::extra::DotExporter dotData(dataGraphFile);
+            dotData.startDigraph("data");
+            for(auto& rt : runtimes) {
+                dotData.startSubgraph(rt.first);
+                rt.second->dataManager().writeDAG(dotData, rt.first);
+                dotData.endSubgraph();
+            }
+            dotData.endDigraph();
+            dataGraphFile.close();
+
+            bool successData = dotData.lastError() == lms::extra::DotExporter::Error::OK;
+            if(! successData) {
+                logger.error() << "Dot export failed: " << dotData.lastError();
+            }
+
+            if(successExec && successData) {
+                logger.info() << "Execute the following line to create a PNG:";
+                logger.info() << "dot -Tpng " << dataFile << " > output.png";
+                logger.info() << "xdg-open output.png";
+            }
+        }
+    }
+}
+
+void Framework::registerRuntime(Runtime *runtime) {
+    runtimes.insert(std::make_pair(runtime->name(), std::unique_ptr<Runtime>(runtime)));
 }
 
 Runtime* Framework::getRuntimeByName(std::string const& name) {
