@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <unordered_set>
 
 #include <lms/module.h>
 #include <lms/datamanager.h>
@@ -189,6 +190,8 @@ bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
 
     std::string CONFIG("CONFIG");
 
+    std::unordered_set<std::string> modules;
+
     for(const auto &ch : channels) {
         if(ch.first.compare(0, CONFIG.size(), CONFIG) == 0) {
             continue;
@@ -205,6 +208,8 @@ bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
             }
             dot.edge(prefix + "_" + writer->name, prefix + "_" + ch.first);
             dot.reset();
+
+            modules.insert(writer->name);
         }
         for(auto reader : ch.second.readers) {
             int prio = reader->getChannelPriority(ch.first);
@@ -213,7 +218,15 @@ bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
             }
             dot.edge(prefix + "_" + ch.first, prefix + "_" + reader->name);
             dot.reset();
+
+            modules.insert(reader->name);
         }
+    }
+
+    for(const auto& mod : modules) {
+        dot.label(mod);
+        dot.node(prefix + "_" + mod);
+        dot.reset();
     }
 
     bool success = dot.lastError() == DotExporter::Error::OK;
