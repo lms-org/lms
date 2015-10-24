@@ -23,7 +23,7 @@ std::string Framework::externalDirectory = LMS_EXTERNAL;
 std::string Framework::configsDirectory = LMS_CONFIGS;
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    logger("lms.Framework"), argumentHandler(arguments), m_executionManager(),
+    logger("lms.Framework"), argumentHandler(arguments),
     configMonitorEnabled(false) {
 
     logging::Context &ctx = logging::Context::getDefault();
@@ -40,8 +40,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    m_executionManager.profiler().enabled(argumentHandler.argProfiling);
-
     if(argumentHandler.argProfiling) {
         logger.info() << "Enable profiling";
     } else {
@@ -56,20 +54,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Disable config monitor";
     }
 
-    m_executionManager.enabledMultithreading(argumentHandler.argMultithreaded);
-
-    if(argumentHandler.argMultithreaded) {
-        if(argumentHandler.argThreadsAuto) {
-            m_executionManager.numThreadsAuto();
-            logger.info() << "Multithreaded with " << m_executionManager.numThreads() << " threads (auto)";
-        } else {
-            m_executionManager.numThreads(argumentHandler.argThreads);
-            logger.info() << "Multithreaded with " << m_executionManager.numThreads() << " threads";
-        }
-    } else {
-        logger.info() << "Single threaded";
-    }
-
     logger.info() << "RunLevel " <<  arguments.argRunLevel;
 
     std::unique_ptr<logging::ThresholdFilter> filter;
@@ -79,7 +63,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "MODULES: " << LMS_MODULES;
         logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
-        XmlParser parser(*this, arguments);
+        Runtime* rt = new Runtime(arguments);
+
+        XmlParser parser(*this, rt, arguments);
         parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);
         filter = parser.filter();
 
@@ -91,23 +77,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
             logger.debug("file") << file;
             configMonitor.watch(file);
         }
-
-        if(m_clock.enabled()) {
-            logger.info() << "Enabled clock with " << m_clock.cycleTime();
-        } else {
-            logger.info() << "Disabled clock";
-        }
     }
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
-        m_executionManager.useConfig("default");
 
-        if(arguments.argRunLevel == RunLevel::ENABLE) {
-            m_executionManager.getDataManager().printMapping();
-            m_executionManager.validate();
-            m_executionManager.printCycleList();
+        for(auto& runtime : runtimes) {
+            runtime.second->enableModules();
         }
     }
 
@@ -122,77 +99,17 @@ Framework::Framework(const ArgumentHandler &arguments) :
         }
         ctx.filter(filter.release());
 
-        //Execution
-        running = true;
-
-        while(running) {
-            m_clock.beforeLoopIteration();
-            if(m_executionManager.profiler().enabled()){
-                logger.time("totalTime");
-            }
-            m_executionManager.loop();
-            if(m_executionManager.profiler().enabled()){
-                logger.timeEnd("totalTime");
-            }
-
-            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
-                    && configMonitor.hasChangedFiles()) {
-                configMonitor.unwatchAll();
-                XmlParser parser(*this, arguments);
-                parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,
-                                   arguments.argLoadConfiguration);
-
-                for(auto error : parser.errors()) {
-                    logger.error() << error;
-                }
-
-                for(auto file : parser.files()) {
-                    configMonitor.watch(file);
-                }
-
-                m_executionManager.fireConfigsChangedEvent();
-            }
+        for(auto& runtime : runtimes) {
+            runtime.second->startAsync();
         }
 
         ctx.filter(nullptr);
         logger.info() << "Stopped";
     }
 
-    if(! arguments.argDotFile.empty()) {
-        std::string dataFile(arguments.argDotFile + ".data.gv");
-        std::string execFile(arguments.argDotFile + ".exec.gv");
-
-        std::ofstream dataGraphFile(dataFile);
-        std::ofstream execGraphFile(execFile);
-
-        if(! dataGraphFile) {
-            logger.error() << "Failed to open file: " << dataFile;
-        } else if(! execGraphFile) {
-            logger.error() << "Failed to open file: " << execFile;
-        } else {
-            logger.info() << "Write dot files...";
-
-            bool success1 = executionManager().getDataManager().writeDAG(dataGraphFile);
-            dataGraphFile.close();
-
-            bool success2 = executionManager().writeDAG(execGraphFile);
-            execGraphFile.close();
-
-            if(success1 && success2) {
-                logger.info() << "Execute the following line to create a PNG:";
-                logger.info() << "dot -Tpng " << dataFile << " > output.png";
-                logger.info() << "xdg-open output.png";
-            }
-        }
+    for(auto& runtime : runtimes) {
+        runtime.second->exportGraphs();
     }
-}
-
-ExecutionManager& Framework::executionManager() {
-    return m_executionManager;
-}
-
-Clock& Framework::clock() {
-    return m_clock;
 }
 
 Framework::~Framework() {
@@ -204,7 +121,9 @@ Framework::~Framework() {
 void Framework::signal(int s) {
     switch (s) {
     case SIGINT:
-        running = false;
+        for(auto& runtime : runtimes) {
+            runtime.second->stopAsync();
+        }
 
         SignalHandler::getInstance().removeListener(SIGINT, this);
 
@@ -227,4 +146,13 @@ void Framework::signal(int s) {
         break;
     }
 }
+
+void Framework::registerRuntime(std::string const& name, Runtime *runtime) {
+    runtimes.insert(std::make_pair(name, std::unique_ptr<Runtime>(runtime)));
+}
+
+Runtime* Framework::getRuntimeByName(std::string const& name) {
+    return runtimes[name].get();
+}
+
 }

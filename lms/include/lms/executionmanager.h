@@ -26,7 +26,7 @@ class Loader;
 class ExecutionManager {
 public:
 
-    ExecutionManager();
+    ExecutionManager(Profiler &m_profiler);
     ~ExecutionManager();
 
     /**cycle modules */
@@ -157,7 +157,7 @@ private:
     void threadFunction(int threadNum);
     void stopRunning();
 
-    Profiler m_profiler;
+    Profiler& m_profiler;
 
     /**
      * @brief enabledModules contains all loaded Modules

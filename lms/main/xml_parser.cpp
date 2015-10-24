@@ -105,8 +105,8 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
     }
 }
 
-XmlParser::XmlParser(Framework &framework, const ArgumentHandler &args) :
-    m_framework(framework), m_args(args) {}
+XmlParser::XmlParser(Framework &framework, Runtime* runtime, const ArgumentHandler &args) :
+    m_framework(framework), m_runtime(runtime), m_args(args) {}
 
 void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig){
 
@@ -149,7 +149,7 @@ void XmlParser::parseModulesToEnable(pugi::xml_node node) {
         name = nameAttr.as_string();
     }
 
-    ExecutionManager::EnableConfig &config = m_framework.executionManager().config(name);
+    ExecutionManager::EnableConfig &config = m_runtime->executionManager().config(name);
 
     lms::logging::Level defaultModuleLevel = lms::logging::Level::ALL;
 
@@ -399,13 +399,13 @@ void XmlParser::parseModules(pugi::xml_node node,
     }
 
     for(std::pair<std::string, ModuleConfig> pair : configMap) {
-        m_framework.executionManager().getDataManager()
+        m_runtime->executionManager().getDataManager()
             .setChannel<ModuleConfig>(
             "CONFIG_" + module->name + "_" + pair.first, pair.second);
     }
 
     if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
-        m_framework.executionManager().addAvailableModule(module);
+        m_runtime->executionManager().addAvailableModule(module);
     }
 }
 
@@ -431,7 +431,7 @@ void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
 
     for(pugi::xml_node node : rootNode.children()) {
         if(std::string("execution") == node.name()) {
-            parseExecution(node, m_framework.clock());
+            parseExecution(node, m_runtime->clock());
         } else if(std::string("logging") == node.name()) {
             m_filter.reset(parseLogging(node));
         } else if(std::string("modulesToEnable") == node.name()) {

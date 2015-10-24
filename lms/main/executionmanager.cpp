@@ -16,11 +16,12 @@
 
 namespace lms {
 
-ExecutionManager::ExecutionManager()
+ExecutionManager::ExecutionManager(Profiler &m_profiler)
     : logger("lms.ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
       valid(false), dataManager(*this),
-      m_messaging(), m_cycleCounter(-1), running(true) {
+      m_messaging(), m_cycleCounter(-1), running(true),
+      m_profiler(m_profiler) {
 }
 
 ExecutionManager::~ExecutionManager () {

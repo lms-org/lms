@@ -61,6 +61,7 @@ set (HEADERS
     "include/lms/profiler.h"
     "include/lms/module_config.h"
     "include/lms/data_channel.h"
+    "include/lms/runtime.h"
 
     "include/lms/type/module_config.h"
 
@@ -97,6 +98,7 @@ set (SOURCE
     "main/xml_parser.cpp"
     "main/config_observer.cpp"
     "main/module_config.cpp"
+    "main/runtime.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"

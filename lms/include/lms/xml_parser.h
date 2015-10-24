@@ -83,7 +83,7 @@ void parseModuleConfig(pugi::xml_node node,  ModuleConfig &config,
 
 class XmlParser {
 public:
-    XmlParser(Framework &framework, ArgumentHandler const& args);
+    XmlParser(Framework &framework, Runtime* runtime, ArgumentHandler const& args);
 
     enum class LoadConfigFlag {
         LOAD_EVERYTHING,
@@ -129,6 +129,7 @@ public:
     std::unique_ptr<logging::ThresholdFilter> filter();
 private:
     Framework & m_framework;
+    Runtime* m_runtime;
     ArgumentHandler const& m_args;
 
     std::unique_ptr<logging::ThresholdFilter> m_filter;

@@ -10,6 +10,7 @@
 #include "pugixml.hpp"
 #include "lms/extra/file_monitor.h"
 #include "lms/deprecated.h"
+#include "lms/runtime.h"
 
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
@@ -50,23 +51,18 @@ public:
      */
     ~Framework();
 
-    ExecutionManager& executionManager();
-    Clock & clock();
+    void registerRuntime(std::string const& name, Runtime *runtime);
+
+    Runtime* getRuntimeByName(std::string const& name);
 private:
     logging::Logger logger;
 
     ArgumentHandler argumentHandler;
-    ExecutionManager m_executionManager;
-
-    Clock m_clock;
-
-    /**
-     * @brief running just for main-while-loop if it's set to false, the programm will terminate
-     */
-    bool running;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;
+
+    std::map<std::string, std::unique_ptr<Runtime>> runtimes;
 
     /**
      * @brief signal called by the system (Segfaults etc)

@@ -357,6 +357,12 @@ public:
     T* getChannel(const std::string &name) {
         return getChannel<T>(name, false);
     }
+
+    /**
+     * @brief Print all channels with their corresponding readers
+     * and writers to stdout.
+     */
+    void printMapping();
 private:
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
@@ -374,12 +380,6 @@ private:
      * @param module the module to look for
      */
     void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Print all channels with their corresponding readers
-     * and writers to stdout.
-     */
-    void printMapping();
 
     /**
      * @brief Check if requested channel data type T is the same as the data type
