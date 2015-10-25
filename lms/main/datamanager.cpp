@@ -229,11 +229,6 @@ bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
         dot.reset();
     }
 
-    bool success = dot.lastError() == DotExporter::Error::OK;
-    if(! success) {
-        logger.error() << "Dot export failed: " << dot.lastError();
-    }
-
     return success;
 }
 
