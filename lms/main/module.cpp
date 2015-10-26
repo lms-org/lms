@@ -32,7 +32,7 @@ namespace lms{
         return m_wrapper->expectedRuntime;
     }
 
-    lms_EXPORT ModuleWrapper::ExecutionType Module::getExecutionType() const {
+    lms_EXPORT ExecutionType Module::getExecutionType() const {
         return m_wrapper->executionType;
     }
 

@@ -111,7 +111,7 @@ public:
      * @param rootNode
      * @param clock
      */
-    void parseExecution(pugi::xml_node node, lms::Clock &clock);
+    void parseExecution(pugi::xml_node node, Runtime *runtime);
 
     void parseInclude(pugi::xml_node node, const std::string &currentFile,
                        LoadConfigFlag flag);

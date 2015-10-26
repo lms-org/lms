@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "lms/extra/time.h"
+#include "lms/execution_type.h"
 
 namespace lms {
 
@@ -53,10 +54,6 @@ struct ModuleWrapper {
             return 0;
         }
     }
-
-    enum ExecutionType {
-        ONLY_MAIN_THREAD, NEVER_MAIN_THREAD
-    };
 
     /**
      * @brief The module can only be executed on the specified thread.

@@ -66,6 +66,8 @@ private:
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;
 
+    bool m_running;
+
     std::map<std::string, std::unique_ptr<Runtime>> runtimes;
 
     /**

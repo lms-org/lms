@@ -281,7 +281,7 @@ public:
      */
     bool hasChannel(Module *module, const std::string &name) const;
 
-    bool writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
+    void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 
     /**
      * @brief Set the content of a data channel. This will NOT reset the

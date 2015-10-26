@@ -185,7 +185,7 @@ void DataManager::printMapping()  {
     }
 }
 
-bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &prefix) {
+void DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &prefix) {
     using lms::extra::DotExporter;
 
     std::string CONFIG("CONFIG");
@@ -228,8 +228,6 @@ bool DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
         dot.node(prefix + "_" + mod);
         dot.reset();
     }
-
-    return success;
 }
 
 bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {

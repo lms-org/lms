@@ -183,9 +183,9 @@ void ExecutionManager::threadFunction(int threadNum) {
         for(size_t i = 0; i < cycleListTmp.size();i++){
             std::vector<Module*>& moduleV = cycleListTmp[i];
             if(moduleV.size() == 1) {
-                ModuleWrapper::ExecutionType execType = moduleV[0]->getExecutionType();
-                if((execType == ModuleWrapper::ONLY_MAIN_THREAD && threadNum == 0) ||
-                        (execType == ModuleWrapper::NEVER_MAIN_THREAD && threadNum != 0)) {
+                ExecutionType execType = moduleV[0]->getExecutionType();
+                if((execType == ExecutionType::ONLY_MAIN_THREAD && threadNum == 0) ||
+                        (execType == ExecutionType::NEVER_MAIN_THREAD && threadNum != 0)) {
                     executableModuleIndex = i;
                     executableModule = moduleV[0];
                     break;
@@ -249,10 +249,10 @@ bool ExecutionManager::hasExecutableModules(int thread) {
     for(size_t i = 0; i < cycleListTmp.size();i++){
         std::vector<Module*>& moduleV = cycleListTmp[i];
         if(moduleV.size() == 1) {
-            ModuleWrapper::ExecutionType execType = moduleV[0]->getExecutionType();
-            if(execType == ModuleWrapper::ONLY_MAIN_THREAD && thread == 0) {
+            ExecutionType execType = moduleV[0]->getExecutionType();
+            if(execType == ExecutionType::ONLY_MAIN_THREAD && thread == 0) {
                 return true;
-            } else if(execType == ModuleWrapper::NEVER_MAIN_THREAD && thread != 0) {
+            } else if(execType == ExecutionType::NEVER_MAIN_THREAD && thread != 0) {
                 return true;
             }
         }

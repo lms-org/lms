@@ -62,6 +62,7 @@ set (HEADERS
     "include/lms/module_config.h"
     "include/lms/data_channel.h"
     "include/lms/runtime.h"
+    "include/lms/execution_type.h"
 
     "include/lms/type/module_config.h"
 
@@ -99,6 +100,7 @@ set (SOURCE
     "main/config_observer.cpp"
     "main/module_config.cpp"
     "main/runtime.cpp"
+    "main/execution_type.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"

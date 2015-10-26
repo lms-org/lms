@@ -55,7 +55,7 @@ public:
                         logging::Level minLogLevel);
 
     extra::PrecisionTime getExpectedRuntime() const;
-    ModuleWrapper::ExecutionType getExecutionType() const;
+    ExecutionType getExecutionType() const;
 
     /**
      * @brief Informs a module of the start of its

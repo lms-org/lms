@@ -6,7 +6,7 @@ namespace lms {
 
 Runtime::Runtime(const std::string &name, const ArgumentHandler &args) :
     m_name(name), logger(name), m_argumentHandler(args),
-    m_executionManager(m_profiler), running(false) {
+    m_executionManager(m_profiler), m_running(false) {
 
     m_profiler.enabled(m_argumentHandler.argProfiling);
 
@@ -47,19 +47,27 @@ Clock& Runtime::clock() {
     return m_clock;
 }
 
-std::string Runtime::name() {
+std::string Runtime::name() const {
     return m_name;
 }
 
+ExecutionType Runtime::executionType() const {
+    return m_executionType;
+}
+
+void Runtime::executionType(ExecutionType type) {
+    m_executionType = type;
+}
+
 void Runtime::stopAsync() {
-    running.store(false);
+    m_running = false;
 }
 
 void Runtime::startAsync() {
-    running = true;
+    m_running = true;
 
     m_thread = std::thread([this] () {
-        while(running.load()) {
+        while(m_running) {
             cycle();
         }
     });

@@ -25,7 +25,7 @@ std::string Framework::configsDirectory = LMS_CONFIGS;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("lms.Framework"), argumentHandler(arguments),
-    configMonitorEnabled(false) {
+    configMonitorEnabled(false), m_running(false) {
 
     logging::Context &ctx = logging::Context::getDefault();
 
@@ -71,7 +71,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
         parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);
 
         for(const auto& rt : runtimes) {
-            logger.info("registerRuntime") << rt.first;
+            logger.info("registerRuntime") << rt.first << " " <<
+                lms::executionTypeName(rt.second->executionType());
         }
 
         filter = parser.filter();
@@ -106,12 +107,29 @@ Framework::Framework(const ArgumentHandler &arguments) :
         }
         ctx.filter(filter.release());
 
+        // start threaded runtimes
         for(auto& runtime : runtimes) {
-            runtime.second->startAsync();
+            if(runtime.second->executionType() == ExecutionType::NEVER_MAIN_THREAD) {
+                runtime.second->startAsync();
+            }
         }
 
+        // run main thread runtimes
+        m_running = true;
+
+        while(m_running) {
+            for(auto& runtime : runtimes) {
+                if(runtime.second->executionType() == ExecutionType::ONLY_MAIN_THREAD) {
+                    runtime.second->cycle();
+                }
+            }
+        }
+
+        // wait for threaded runtimes to stop
         for(auto& rt : runtimes) {
-            rt.second->join();
+            if(rt.second->executionType() == ExecutionType::NEVER_MAIN_THREAD) {
+                rt.second->join();
+            }
         }
 
         ctx.filter(nullptr);
@@ -133,6 +151,7 @@ void Framework::signal(int s) {
         for(auto& runtime : runtimes) {
             runtime.second->stopAsync();
         }
+        m_running = false;
 
         SignalHandler::getInstance().removeListener(SIGINT, this);
 
