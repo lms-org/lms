@@ -118,10 +118,19 @@ Framework::Framework(const ArgumentHandler &arguments) :
         m_running = true;
 
         while(m_running) {
+            bool anyCycle = false;
+
             for(auto& runtime : runtimes) {
                 if(runtime.second->executionType() == ExecutionType::ONLY_MAIN_THREAD) {
                     runtime.second->cycle();
+                    anyCycle = true;
                 }
+            }
+
+            // wait some time if there are no main thread runtimes
+            // TODO this should wait for SIGINT instead
+            if(! anyCycle) {
+                lms::extra::PrecisionTime::fromMillis(100).sleep();
             }
         }
 
