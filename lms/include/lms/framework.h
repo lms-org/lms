@@ -30,12 +30,17 @@ public:
 
     /**
      * @brief Framework::externalDirectory absolute path to the external directory
+     *
+     * This attribute is deprecated.
      */
-    DEPRECATED static std::string externalDirectory;
+
+    static std::string externalDirectory;
     /**
      * @brief Framework::configsDirectory absolute path to the configs directory
+     *
+     * This attribute is deprecated.
      */
-    DEPRECATED static std::string configsDirectory;
+    static std::string configsDirectory;
 
     /**
      * @brief Instantiate the framework, initiate datamanager and
