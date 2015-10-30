@@ -52,7 +52,8 @@ public:
     bool initializeBase(DataManager* datamanager, Messaging *messaging,
                         ExecutionManager* execManager,
         std::shared_ptr<ModuleWrapper> loaderEntry,
-                        logging::Level minLogLevel);
+                        logging::Level minLogLevel,
+                        const std::string &runtimeName);
 
     extra::PrecisionTime getExpectedRuntime() const;
     ExecutionType getExecutionType() const;

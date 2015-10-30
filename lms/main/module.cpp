@@ -11,14 +11,14 @@ namespace lms{
     bool Module::initializeBase(DataManager* datamanager, Messaging *messaging,
                                 ExecutionManager *execManager,
         std::shared_ptr<ModuleWrapper> wrapper,
-        logging::Level minLogLevel) {
+        logging::Level minLogLevel, const std::string &runtimeName) {
 
         m_datamanager = datamanager;
         m_messaging = messaging;
         m_executionManager = execManager;
         m_wrapper = wrapper;
 
-        logger.name = wrapper->name;
+        logger.name = runtimeName + "." + wrapper->name;
         logger.threshold = minLogLevel;
 
         return true;

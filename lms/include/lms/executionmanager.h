@@ -26,7 +26,7 @@ class Loader;
 class ExecutionManager {
 public:
 
-    ExecutionManager(Profiler &m_profiler);
+    ExecutionManager(Profiler &m_profiler, const std::string &runtimeName);
     ~ExecutionManager();
 
     /**cycle modules */
@@ -134,6 +134,7 @@ public:
 
     void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 private:
+    std::string m_runtimeName;
     logging::Logger logger;
 
     int m_numThreads;

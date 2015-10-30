@@ -6,7 +6,7 @@ namespace lms {
 
 Runtime::Runtime(const std::string &name, const ArgumentHandler &args) :
     m_name(name), logger(name), m_argumentHandler(args),
-    m_executionManager(m_profiler), m_running(false) {
+    m_executionManager(m_profiler, name), m_running(false) {
 
     m_profiler.enabled(m_argumentHandler.argProfiling);
 

@@ -16,8 +16,9 @@
 
 namespace lms {
 
-ExecutionManager::ExecutionManager(Profiler &m_profiler)
-    : logger("lms.ExecutionManager"), m_numThreads(1),
+ExecutionManager::ExecutionManager(Profiler &m_profiler, const std::string &runtimeName)
+    : m_runtimeName(runtimeName),
+      logger(runtimeName + ".ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
       valid(false), dataManager(*this),
       m_messaging(), m_cycleCounter(-1), running(true),
@@ -297,7 +298,8 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
         if(it->name == name){
             loader.load(it.get());
             Module *module = it->moduleInstance;
-            module->initializeBase(&dataManager, &m_messaging, this, it, minLogLevel);
+            module->initializeBase(&dataManager, &m_messaging, this, it,
+                                   minLogLevel, m_runtimeName);
 
             if(module->initialize()){
                 enabledModules.push_back(it);
