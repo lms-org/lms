@@ -33,10 +33,7 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
-        if(! (*it)->moduleInstance->deinitialize()) {
-            logger.error("disableModule")
-                    << "Deinitialize failed for module " << (*it)->name;
-        }
+        (*it)->moduleInstance->deinitialize();
     }
 
     for(ModuleList::reverse_iterator it = available.rbegin();
