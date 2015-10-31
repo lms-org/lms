@@ -60,12 +60,7 @@ void ExecutionManager::loop() {
     // Remove all messages from the message queue
     m_messaging.resetQueue();
 
-    if(m_profiler.enabled()) {
-        m_profiler.printStats();
-    }
-
     m_cycleCounter ++;
-    m_profiler.resetProfMeasurements();
 
     //validate the ExecutionManager
     validate();
@@ -74,28 +69,17 @@ void ExecutionManager::loop() {
         //copy cycleList so it can be modified
         cycleListTmp = cycleList;
 
-        Profiler::ModuleMeasurement measurement;
-
         //simple single list
         while(cycleListTmp.size() > 0){
             //Iter over all module-vectors and check if they can be executed
             for(size_t i = 0; i < cycleListTmp.size();i++){
                 std::vector<Module*>& moduleV = cycleListTmp[i];
-                if(moduleV.size() == 1){
-
-                    if(m_profiler.enabled()) {
-                        measurement.thread = 0;
-                        measurement.module = moduleV[0]->getName();
-                        measurement.begin = lms::extra::PrecisionTime::now();
-                        measurement.expected = moduleV[0]->getExpectedRuntime();
-                    }
+                if(moduleV.size() == 1) {
+                    profiler().markBegin(m_runtimeName + "." + moduleV[0]->getName());
 
                     moduleV[0]->cycle();
 
-                    if(m_profiler.enabled()) {
-                        measurement.end = lms::extra::PrecisionTime::now();
-                        m_profiler.addProfMeasurement(measurement);
-                    }
+                    profiler().markEnd(m_runtimeName + "." + moduleV[0]->getName());
 
                     //remove module from others
                     for(std::vector<Module*>& moduleV2:cycleListTmp){
@@ -202,23 +186,12 @@ void ExecutionManager::threadFunction(int threadNum) {
             logger.info() << "Thread " << threadNum << " executes "
                           << executableModule->getName();
 
-            // Profiling stuff
-            Profiler::ModuleMeasurement measurement;
-            if(m_profiler.enabled()) {
-                measurement.thread = threadNum;
-                measurement.module = executableModule->getName();
-            }
-
             // now we can execute it
             lck.unlock();
-            measurement.begin = lms::extra::PrecisionTime::now();
+            profiler().markBegin(m_runtimeName + "." + executableModule->getName());
             executableModule->cycle();
-            measurement.end = lms::extra::PrecisionTime::now();
+            profiler().markEnd(m_runtimeName + "." + executableModule->getName());
             lck.lock();
-
-            if(m_profiler.enabled()) {
-                m_profiler.addProfMeasurement(measurement);
-            }
 
             logger.info() << "Thread " << threadNum << " executed "
                           << executableModule->getName();

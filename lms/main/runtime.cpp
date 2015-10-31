@@ -4,11 +4,11 @@
 
 namespace lms {
 
-Runtime::Runtime(const std::string &name, const ArgumentHandler &args) :
+Runtime::Runtime(const std::string &name, const ArgumentHandler &args,
+                 Profiler &profiler) :
     m_name(name), logger(name), m_argumentHandler(args),
+    m_profiler(profiler),
     m_executionManager(m_profiler, name), m_running(false) {
-
-    m_profiler.enabled(m_argumentHandler.argProfiling);
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
 
@@ -79,13 +79,9 @@ void Runtime::join() {
 
 void Runtime::cycle() {
     m_clock.beforeLoopIteration();
-    if(m_executionManager.profiler().enabled()){
-        logger.time("totalTime");
-    }
+    m_profiler.markBegin(m_name);
     m_executionManager.loop();
-    if(m_executionManager.profiler().enabled()){
-        logger.timeEnd("totalTime");
-    }
+    m_profiler.markEnd(m_name);
 
     /*if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
             && configMonitor.hasChangedFiles()) {

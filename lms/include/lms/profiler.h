@@ -1,99 +1,68 @@
 #ifndef LMS_PROFILER_H
 #define LMS_PROFILER_H
 
-#include <vector>
-#include <map>
+#include <string>
+#include <mutex>
+#include <fstream>
+
 #include <lms/extra/time.h>
-#include "lms/logger.h"
 
 namespace lms {
 
 /**
- * @brief Measures module execution time and logs current, min, max and average
- * times in a summary.
+ * @brief Collect profiling data and write it to a file.
+ *
+ * After creating and enabling a profiler instance you are usually doing this:
+ *
+ * ~~~
+ * profiler.markBegin("MyProcess");
+ * doProcess(); // execute process
+ * profiler.markEnd("MyProcess");
+ * ~~~
  */
 class Profiler {
 public:
-    struct ModuleMeasurement {
-        int thread;
-        std::string module;
-        lms::extra::PrecisionTime begin;
-        lms::extra::PrecisionTime end;
-        lms::extra::PrecisionTime expected;
-    };
-
-    // how many runtime values should be considered for the MA computation (buffer size)
-    const static int MOVING_AVERAGE_SIZE = 20;
-
-    // how often are values for the MA computation sampled
-    // e.g. 10 = take every 10th value
-    const static int MOVING_AVERAGE_FREQUENCY = 10;
-
-    struct ModuleProfiling {
-        lms::extra::PrecisionTime current = extra::PrecisionTime::ZERO;
-        lms::extra::PrecisionTime min = extra::PrecisionTime::ZERO;
-        lms::extra::PrecisionTime max = extra::PrecisionTime::ZERO;
-        lms::extra::PrecisionTime sum = extra::PrecisionTime::ZERO;
-        int measurements = 0;
-        lms::extra::PrecisionTime movingAverage = extra::PrecisionTime::ZERO;
-        lms::extra::PrecisionTime movingAverageBuffer[MOVING_AVERAGE_SIZE];
-        int bufferIndex = 0;
-    };
-
-    typedef std::vector<ModuleMeasurement> ProfMeasurements;
-    typedef std::map<std::string, ModuleProfiling> ProfilingMap;
-
+    /**
+     * @brief Create a disabled profiler.
+     *
+     * markBegin/markEnd are a no-op in diabled mode.
+     * Enable the profiler with the enable() method.
+     */
     Profiler();
 
     /**
-     * @brief Return module measurement data of the last cycle.
+     * @brief Close the internal file descriptor if previously enabled.
      */
-    const ProfMeasurements &getProfMeasurements() const;
+    ~Profiler();
 
     /**
-     * @brief Return profiling map
+     * @brief Enables this profiler and write marks to the given file.
+     * @param file path to a file
      */
-    const ProfilingMap &getProfilingMap();
+    void enable(const std::string &file);
 
     /**
-     * @brief Return profiling struct of specific module. Create module profiling
-     * object if necessary
-     * @param module name
+     * @brief Mark the begin of a process identified by a label.
+     * @param label the same label should be used in markEnd()
      */
-    ModuleProfiling &getProfiling(const std::string &module);
+    void markBegin(const std::string &label);
 
     /**
-     * @brief Delete all measurement data.
+     * @brief Mark the end of a process identified by a label.
+     * @param label the same label that was used in markBegin()
      */
-    void resetProfMeasurements();
-
-    /**
-     * @brief Add measurement data of a single module.
-     * @param profiling module's profiling
-     */
-    void addProfMeasurement(const ModuleMeasurement &measurement);
-
-    /**
-     * @brief Print profiling statistics on the logger
-     */
-    void printStats();
-
-    /**
-     * @brief Enable or disable the profiler.
-     */
-    void enabled(bool flag);
-
-    /**
-     * @brief Returns true if enabled, otherwise false.
-     */
-    bool enabled() const;
-
+    void markEnd(const std::string &label);
 private:
-    logging::Logger logger;
+    enum Type {
+        BEGIN = 0, END
+    };
+
+    void mark(Type type, const std::string& label);
 
     bool m_enabled;
-    ProfMeasurements m_profMeasurements;
-    ProfilingMap m_profilingMap;
+    lms::extra::PrecisionTime m_lastTimestamp;
+    std::mutex m_mutex;
+    std::ofstream m_stream;
 };
 
 }  // namespace lms

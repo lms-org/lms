@@ -41,8 +41,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    if(argumentHandler.argProfiling) {
+    if(! argumentHandler.argProfilingFile.empty()) {
         logger.info() << "Enable profiling";
+        m_profiler.enable(arguments.argProfilingFile);
     } else {
         logger.info() << "Disable profiling";
     }
@@ -64,7 +65,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "MODULES: " << LMS_MODULES;
         logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
-        Runtime* rt = new Runtime("default", arguments);
+        Runtime* rt = new Runtime("default", arguments, m_profiler);
         registerRuntime(rt);
 
         XmlParser parser(*this, rt, arguments);
@@ -248,6 +249,10 @@ Runtime* Framework::getRuntimeByName(std::string const& name) {
 
 ArgumentHandler const& Framework::getArgumentHandler() {
     return argumentHandler;
+}
+
+Profiler& Framework::profiler() {
+    return m_profiler;
 }
 
 }

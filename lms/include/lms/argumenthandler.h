@@ -78,7 +78,7 @@ class ArgumentHandler {
     std::string argLogFile;
     std::string argUser;
     std::vector<std::string> argFlags;
-    bool argProfiling;
+    std::string argProfilingFile;
     bool argConfigMonitor;
     bool argMultithreaded;
     bool argThreadsAuto;

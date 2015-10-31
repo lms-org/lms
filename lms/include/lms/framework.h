@@ -58,10 +58,13 @@ public:
     ArgumentHandler const& getArgumentHandler();
 
     void exportGraphs();
+
+    Profiler& profiler();
 private:
     logging::Logger logger;
 
     ArgumentHandler argumentHandler;
+    Profiler m_profiler;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;

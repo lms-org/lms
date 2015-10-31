@@ -13,7 +13,8 @@ namespace lms {
 
 class Runtime {
 public:
-    Runtime(const std::string& name, const ArgumentHandler &args);
+    Runtime(const std::string& name, const ArgumentHandler &args,
+            Profiler &profiler);
 
     /**
      * @brief Start an infinite cycle loop asynchronously.
@@ -47,7 +48,7 @@ private:
 
     const ArgumentHandler &m_argumentHandler;
 
-    Profiler m_profiler;
+    Profiler &m_profiler;
     ExecutionManager m_executionManager;
     Clock m_clock;
 
