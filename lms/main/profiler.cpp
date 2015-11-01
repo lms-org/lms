@@ -25,16 +25,31 @@ void Profiler::mark(Type type, const std::string &label) {
     if(m_enabled) {
         lms::extra::PrecisionTime now = lms::extra::PrecisionTime::now();
 
+        // lock after checking enabled flag and saving the current time
         std::unique_lock<std::mutex> lock(m_mutex);
 
         lms::extra::PrecisionTime diff = now - m_lastTimestamp;
+        m_lastTimestamp = now;
 
-        if(m_stream.is_open()) {
-            m_stream << static_cast<int>(type) << "," << diff.micros() << "," <<
-                label << "\n";
+        MappingType::iterator it = m_stringMapping.find(label);
+        size_t id;
+
+        if(it == m_stringMapping.end()) {
+            // id is an ascending value starting with 0
+            id = m_stringMapping.size();
+            // insert new string mapping
+            m_stringMapping[label] = id;
+
+            // write string mapping to file (for later parsing)
+            m_stream << static_cast<int>(MAPPING) << "," << id << ","
+                << label << "\n";
+        } else {
+            // otherwise just take the stored id
+            id = it->second;
         }
 
-        m_lastTimestamp = now;
+        m_stream << static_cast<int>(type) << "," << id << "," <<
+            diff.micros() << "\n";
     }
 }
 

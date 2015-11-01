@@ -4,6 +4,7 @@
 #include <string>
 #include <mutex>
 #include <fstream>
+#include <map>
 
 #include <lms/extra/time.h>
 
@@ -54,7 +55,7 @@ public:
     void markEnd(const std::string &label);
 private:
     enum Type {
-        BEGIN = 0, END
+        BEGIN = 0, END, MAPPING
     };
 
     void mark(Type type, const std::string& label);
@@ -63,6 +64,9 @@ private:
     lms::extra::PrecisionTime m_lastTimestamp;
     std::mutex m_mutex;
     std::ofstream m_stream;
+
+    typedef std::map<std::string, size_t> MappingType;
+    MappingType m_stringMapping;
 };
 
 }  // namespace lms
