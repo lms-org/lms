@@ -363,15 +363,6 @@ void XmlParser::parseModules(pugi::xml_node node,
         }
     }
 
-    pugi::xml_node expectedRuntimeNode = node.child("expectedRuntime");
-
-    if(expectedRuntimeNode) {
-        module->expectedRuntime = extra::PrecisionTime::fromMicros(
-                    atoi(expectedRuntimeNode.child_value()));
-    } else {
-        module->expectedRuntime = extra::PrecisionTime::ZERO;
-    }
-
     // parse all channel mappings
     for(pugi::xml_node mappingNode : node.children("channelMapping")) {
         pugi::xml_attribute fromAttr = mappingNode.attribute("from");

@@ -28,10 +28,6 @@ namespace lms{
         return m_wrapper->name;
     }
 
-    lms_EXPORT extra::PrecisionTime Module::getExpectedRuntime() const {
-        return m_wrapper->expectedRuntime;
-    }
-
     lms_EXPORT ExecutionType Module::getExecutionType() const {
         return m_wrapper->executionType;
     }

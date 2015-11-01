@@ -78,7 +78,6 @@
           <xs:element name="libpath" type="xs:string" minOccurs="0" />
         </xs:sequence>
       </xs:choice>
-      <xs:element name="expectedRuntime" type="xs:positiveInteger" minOccurs="0" />
       <xs:element name="executionType" type="executionType" minOccurs="0" />
       <xs:element name="channelMapping" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>

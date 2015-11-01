@@ -55,7 +55,6 @@ public:
                         logging::Level minLogLevel,
                         const std::string &runtimeName);
 
-    extra::PrecisionTime getExpectedRuntime() const;
     ExecutionType getExecutionType() const;
 
     /**
