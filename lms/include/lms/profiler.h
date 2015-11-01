@@ -4,7 +4,7 @@
 #include <string>
 #include <mutex>
 #include <fstream>
-#include <map>
+#include <unordered_map>
 
 #include <lms/extra/time.h>
 
@@ -65,7 +65,7 @@ private:
     std::mutex m_mutex;
     std::ofstream m_stream;
 
-    typedef std::map<std::string, size_t> MappingType;
+    typedef std::unordered_map<std::string, size_t> MappingType;
     MappingType m_stringMapping;
 };
 
