@@ -2,6 +2,71 @@
 #define LMS_DATA_CHANNEL
 #include <cstring>
 namespace lms {
+/*Thoughts:
+
+class DataChannel<T>{
+T* is a shared-pointer
+
+T* main;//is created by the framework if buffered() returns false
+
+//buffer für jede runtime
+vector<T*>* buffer;
+
+vector<DataChannel<T>> getBuffer(){
+//Übergibt alle verfügbaren T*
+}
+
+
+
+//called after each cycle of the runtime for each dataChannel
+
+bufferCycle(){
+    if(buffered()){
+        //clears the buffer
+    }else if(sharesData()){
+        //kopiert T* zu der anderen Runtime
+        // Man buffert den DatenKanal in der runtime und fügt ihn beim nächsten Zyklus in den buffer des DataChannels ein
+
+        //muss den runtimeBuffer mutexen
+    }
+}
+
+operator -> {
+if(buffered()){
+    return last element of the buffer
+}else{
+    return T*
+}
+}
+
+
+//################Utils-methods
+int getCycle()
+bool hasReader()
+bool hasWriter()
+bool sharesData(){
+returns true if the data is accessed by another runtime
+}
+bool buffered(){
+receives data from another runtime (hasWriters returns false!)
+}
+
+//################Utils-methods-END
+
+
+
+};//end class
+
+cycle(){
+
+...
+
+if(dataChannel.sharesData()){
+    dataChannel.bufferData()
+}
+
+}
+*/
 
 template<typename T> class DataChannel{
 
