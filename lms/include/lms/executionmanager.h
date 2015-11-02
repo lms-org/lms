@@ -26,7 +26,7 @@ class Loader;
 class ExecutionManager {
 public:
 
-    ExecutionManager();
+    ExecutionManager(Profiler &m_profiler, const std::string &runtimeName);
     ~ExecutionManager();
 
     /**cycle modules */
@@ -132,8 +132,9 @@ public:
 
     void useConfig(std::string const& name);
 
-    bool writeDAG(std::ostream &os);
+    void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 private:
+    std::string m_runtimeName;
     logging::Logger logger;
 
     int m_numThreads;
@@ -157,7 +158,7 @@ private:
     void threadFunction(int threadNum);
     void stopRunning();
 
-    Profiler m_profiler;
+    Profiler& m_profiler;
 
     /**
      * @brief enabledModules contains all loaded Modules

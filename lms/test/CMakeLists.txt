@@ -1,6 +1,7 @@
 set(TESTS
     xml_parser.cpp
     module_config.cpp
+    buffered_datamanager.cpp
     extra/string.cpp
     extra/time.cpp
     logging/threshold_filter.cpp

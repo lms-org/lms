@@ -9,6 +9,7 @@
 #include <lms/loader.h>
 #include <lms/module_config.h>
 #include <lms/messaging.h>
+#include <lms/buffered_datamanager.h>
 
 namespace lms {
 
@@ -49,13 +50,10 @@ public:
      *
      * Do not call this inside a module!
      */
-    bool initializeBase(DataManager* datamanager, Messaging *messaging,
-                        ExecutionManager* execManager,
-        std::shared_ptr<ModuleWrapper> loaderEntry,
+    bool initializeBase(std::shared_ptr<ModuleWrapper> loaderEntry,
                         logging::Level minLogLevel);
 
-    extra::PrecisionTime getExpectedRuntime() const;
-    ModuleWrapper::ExecutionType getExecutionType() const;
+    ExecutionType getExecutionType() const;
 
     /**
      * @brief Informs a module of the start of its
@@ -135,7 +133,6 @@ public:
     int getChannelPriority(const std::string &name) const;
 
     int cycleCounter();
-
 protected:
     /**
      * @brief Returns the data manager. This is usually
@@ -150,6 +147,8 @@ protected:
      * and the core framework.
      */
     Messaging* messaging() const { return m_messaging; }
+
+    BufferedDataManager* bufferedDatamanager();
 
     /**
      * @brief A logger instance. Can be used in initialize, cycle

@@ -6,18 +6,22 @@
 #include <memory>
 
 #include "lms/extra/time.h"
+#include "lms/execution_type.h"
 
 namespace lms {
 
 class Module;
+class Runtime;
 
 /**
  * @brief The module_entry struct
  * used to store available modules
  */
 struct ModuleWrapper {
-    ModuleWrapper() : enabled(false), moduleInstance(nullptr)
-    {}
+    ModuleWrapper(Runtime *runtime) : runtime(runtime), enabled(false),
+        moduleInstance(nullptr) {}
+
+    Runtime *runtime;
 
     /**
      * @brief Name of the module
@@ -54,10 +58,6 @@ struct ModuleWrapper {
         }
     }
 
-    enum ExecutionType {
-        ONLY_MAIN_THREAD, NEVER_MAIN_THREAD
-    };
-
     /**
      * @brief The module can only be executed on the specified thread.
      *
@@ -76,13 +76,6 @@ struct ModuleWrapper {
      * equals to nullptr
      */
     Module *moduleInstance;
-
-    /**
-     * @brief Expected time needed to execute this module.
-     *
-     * Set to zero if unknown.
-     */
-    extra::PrecisionTime expectedRuntime;
 
 #ifdef _WIN32
     // TODO pointer to open shared library or something similar

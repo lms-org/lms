@@ -70,6 +70,17 @@ public:
     void endGraph();
 
     /**
+     * @brief Start a subgraph.
+     * @param name subgraph name
+     */
+    void startSubgraph(const std::string &name);
+
+    /**
+     * @brief End a subgraph
+     */
+    void endSubgraph();
+
+    /**
      * @brief Make an edge between the two nodes. In undirected graphs, the
      * from and to parameter can be changed without making a difference.
      *
@@ -119,7 +130,7 @@ private:
     void indent();
 
     enum class StackType {
-        GRAPH, DIGRAPH
+        GRAPH, DIGRAPH, SUBGRAPH
     };
 
     std::ostream &m_os;

@@ -16,6 +16,7 @@
 #include "lms/xml_parser.h"
 #include "lms/extra/colors.h"
 #include "lms/definitions.h"
+#include "lms/runtime.h"
 
 namespace lms{
 
@@ -23,8 +24,8 @@ std::string Framework::externalDirectory = LMS_EXTERNAL;
 std::string Framework::configsDirectory = LMS_CONFIGS;
 
 Framework::Framework(const ArgumentHandler &arguments) :
-    logger("lms.Framework"), argumentHandler(arguments), m_executionManager(),
-    configMonitorEnabled(false) {
+    logger("lms.Framework"), argumentHandler(arguments),
+    configMonitorEnabled(false), m_running(false) {
 
     logging::Context &ctx = logging::Context::getDefault();
 
@@ -40,10 +41,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
-    m_executionManager.profiler().enabled(argumentHandler.argProfiling);
-
-    if(argumentHandler.argProfiling) {
+    if(! argumentHandler.argProfilingFile.empty()) {
         logger.info() << "Enable profiling";
+        m_profiler.enable(arguments.argProfilingFile);
     } else {
         logger.info() << "Disable profiling";
     }
@@ -56,20 +56,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Disable config monitor";
     }
 
-    m_executionManager.enabledMultithreading(argumentHandler.argMultithreaded);
-
-    if(argumentHandler.argMultithreaded) {
-        if(argumentHandler.argThreadsAuto) {
-            m_executionManager.numThreadsAuto();
-            logger.info() << "Multithreaded with " << m_executionManager.numThreads() << " threads (auto)";
-        } else {
-            m_executionManager.numThreads(argumentHandler.argThreads);
-            logger.info() << "Multithreaded with " << m_executionManager.numThreads() << " threads";
-        }
-    } else {
-        logger.info() << "Single threaded";
-    }
-
     logger.info() << "RunLevel " <<  arguments.argRunLevel;
 
     std::unique_ptr<logging::ThresholdFilter> filter;
@@ -79,8 +65,17 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "MODULES: " << LMS_MODULES;
         logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
-        XmlParser parser(*this, arguments);
+        Runtime* rt = new Runtime("default", *this);
+        registerRuntime(rt);
+
+        XmlParser parser(*this, rt, arguments);
         parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);
+
+        for(const auto& rt : runtimes) {
+            logger.info("registerRuntime") << rt.first << " " <<
+                lms::executionTypeName(rt.second->executionType());
+        }
+
         filter = parser.filter();
 
         for(auto error : parser.errors()) {
@@ -91,23 +86,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
             logger.debug("file") << file;
             configMonitor.watch(file);
         }
-
-        if(m_clock.enabled()) {
-            logger.info() << "Enabled clock with " << m_clock.cycleTime();
-        } else {
-            logger.info() << "Disabled clock";
-        }
     }
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
-        m_executionManager.useConfig("default");
 
-        if(arguments.argRunLevel == RunLevel::ENABLE) {
-            m_executionManager.getDataManager().printMapping();
-            m_executionManager.validate();
-            m_executionManager.printCycleList();
+        for(auto& runtime : runtimes) {
+            runtime.second->enableModules();
         }
     }
 
@@ -122,35 +108,37 @@ Framework::Framework(const ArgumentHandler &arguments) :
         }
         ctx.filter(filter.release());
 
-        //Execution
-        running = true;
-
-        while(running) {
-            m_clock.beforeLoopIteration();
-            if(m_executionManager.profiler().enabled()){
-                logger.time("totalTime");
+        // start threaded runtimes
+        for(auto& runtime : runtimes) {
+            if(runtime.second->executionType() == ExecutionType::NEVER_MAIN_THREAD) {
+                runtime.second->startAsync();
             }
-            m_executionManager.loop();
-            if(m_executionManager.profiler().enabled()){
-                logger.timeEnd("totalTime");
+        }
+
+        // run main thread runtimes
+        m_running = true;
+
+        while(m_running) {
+            bool anyCycle = false;
+
+            for(auto& runtime : runtimes) {
+                if(runtime.second->executionType() == ExecutionType::ONLY_MAIN_THREAD) {
+                    runtime.second->cycle();
+                    anyCycle = true;
+                }
             }
 
-            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
-                    && configMonitor.hasChangedFiles()) {
-                configMonitor.unwatchAll();
-                XmlParser parser(*this, arguments);
-                parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,
-                                   arguments.argLoadConfiguration);
+            // wait some time if there are no main thread runtimes
+            // TODO this should wait for SIGINT instead
+            if(! anyCycle) {
+                lms::extra::PrecisionTime::fromMillis(100).sleep();
+            }
+        }
 
-                for(auto error : parser.errors()) {
-                    logger.error() << error;
-                }
-
-                for(auto file : parser.files()) {
-                    configMonitor.watch(file);
-                }
-
-                m_executionManager.fireConfigsChangedEvent();
+        // wait for threaded runtimes to stop
+        for(auto& rt : runtimes) {
+            if(rt.second->executionType() == ExecutionType::NEVER_MAIN_THREAD) {
+                rt.second->join();
             }
         }
 
@@ -158,41 +146,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Stopped";
     }
 
-    if(! arguments.argDotFile.empty()) {
-        std::string dataFile(arguments.argDotFile + ".data.gv");
-        std::string execFile(arguments.argDotFile + ".exec.gv");
-
-        std::ofstream dataGraphFile(dataFile);
-        std::ofstream execGraphFile(execFile);
-
-        if(! dataGraphFile) {
-            logger.error() << "Failed to open file: " << dataFile;
-        } else if(! execGraphFile) {
-            logger.error() << "Failed to open file: " << execFile;
-        } else {
-            logger.info() << "Write dot files...";
-
-            bool success1 = executionManager().getDataManager().writeDAG(dataGraphFile);
-            dataGraphFile.close();
-
-            bool success2 = executionManager().writeDAG(execGraphFile);
-            execGraphFile.close();
-
-            if(success1 && success2) {
-                logger.info() << "Execute the following line to create a PNG:";
-                logger.info() << "dot -Tpng " << dataFile << " > output.png";
-                logger.info() << "xdg-open output.png";
-            }
-        }
-    }
-}
-
-ExecutionManager& Framework::executionManager() {
-    return m_executionManager;
-}
-
-Clock& Framework::clock() {
-    return m_clock;
+    exportGraphs();
 }
 
 Framework::~Framework() {
@@ -204,7 +158,10 @@ Framework::~Framework() {
 void Framework::signal(int s) {
     switch (s) {
     case SIGINT:
-        running = false;
+        for(auto& runtime : runtimes) {
+            runtime.second->stopAsync();
+        }
+        m_running = false;
 
         SignalHandler::getInstance().removeListener(SIGINT, this);
 
@@ -227,4 +184,79 @@ void Framework::signal(int s) {
         break;
     }
 }
+
+void Framework::exportGraphs() {
+    if(! argumentHandler.argDotFile.empty()) {
+        std::string dataFile(argumentHandler.argDotFile + ".data.gv");
+        std::string execFile(argumentHandler.argDotFile + ".exec.gv");
+
+        std::ofstream dataGraphFile(dataFile);
+        std::ofstream execGraphFile(execFile);
+
+        if(! dataGraphFile) {
+            logger.error() << "Failed to open file: " << dataFile;
+        } else if(! execGraphFile) {
+            logger.error() << "Failed to open file: " << execFile;
+        } else {
+            logger.info() << "Write dot files...";
+
+            lms::extra::DotExporter dotExec(execGraphFile);
+            dotExec.startDigraph("exec");
+            for(auto& rt : runtimes) {
+                dotExec.startSubgraph(rt.first);
+                rt.second->executionManager().writeDAG(dotExec, rt.first);
+                dotExec.endSubgraph();
+            }
+            dotExec.endDigraph();
+            execGraphFile.close();
+
+            bool successExec = dotExec.lastError() == lms::extra::DotExporter::Error::OK;
+            if(! successExec) {
+                logger.error() << "Dot export failed: " << dotExec.lastError();
+            }
+
+            lms::extra::DotExporter dotData(dataGraphFile);
+            dotData.startDigraph("data");
+            for(auto& rt : runtimes) {
+                dotData.startSubgraph(rt.first);
+                rt.second->dataManager().writeDAG(dotData, rt.first);
+                dotData.endSubgraph();
+            }
+            dotData.endDigraph();
+            dataGraphFile.close();
+
+            bool successData = dotData.lastError() == lms::extra::DotExporter::Error::OK;
+            if(! successData) {
+                logger.error() << "Dot export failed: " << dotData.lastError();
+            }
+
+            if(successExec && successData) {
+                logger.info() << "Execute the following line to create a PNG:";
+                logger.info() << "dot -Tpng " << dataFile << " > output.png";
+                logger.info() << "xdg-open output.png";
+            }
+        }
+    }
+}
+
+void Framework::registerRuntime(Runtime *runtime) {
+    runtimes.insert(std::make_pair(runtime->name(), std::unique_ptr<Runtime>(runtime)));
+}
+
+Runtime* Framework::getRuntimeByName(std::string const& name) {
+    return runtimes[name].get();
+}
+
+ArgumentHandler const& Framework::getArgumentHandler() {
+    return argumentHandler;
+}
+
+Profiler& Framework::profiler() {
+    return m_profiler;
+}
+
+BufferedDataManager& Framework::bufferedDataManager() {
+    return m_bufferedDataManager;
+}
+
 }
