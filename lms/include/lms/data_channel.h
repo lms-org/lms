@@ -67,8 +67,79 @@ if(dataChannel.sharesData()){
 
 }
 */
+#include <vector>
+#include <cstring>
+#include <memory>
 
-template<typename T> class DataChannel{
+class DataChannelBase{
+private:
+    int m_cycle; //TODO not sure where/how to set it // -> (not const) sets current cycle-count + returns const ->
+    std::vector<std::string> readers;
+    std::vector<std::string> writers;
+
+public:
+    /**
+     * @brief getCycle
+     * @return cycle in which the object was created
+     */
+    int getCycle(){
+        return m_cycle;
+    }
+
+    bool hasReader(){
+        return readers.size() > 0;
+    }
+    /**
+     * @brief hasWriter
+     * @return
+     */
+    bool hasWriter(){
+        return writers.size() > 0;
+    }
+
+    /**
+     * @brief sharesData
+     * @return true if the data is accessed by another runtime
+     */
+    bool sharesData(){
+        return false; //TODO
+    }
+
+    /**
+     * @brief buffered
+     * @return true if it receives data from another runtime (hasWriters returns false!)
+     */
+    bool buffered(){
+        return false; //TODO
+    }
+};
+
+template<typename T> class DataChannel: public DataChannelBase{
+
+    std::shared_ptr<T*> main;
+    std::vector<DataChannel<T>> m_buffer;
+
+
+    std::vector<DataChannel<T>> &buffer(){
+    //Übergibt alle verfügbaren T*
+        return m_buffer;
+    }
+
+
+
+    //called after each cycle of the runtime for each dataChannel
+
+    void bufferCycle(){
+        if(buffered()){
+            //clears the buffer
+        }else if(sharesData()){
+            //kopiert T* zu der anderen Runtime
+            // Man buffert den DatenKanal in der runtime und fügt ihn beim nächsten Zyklus in den buffer des DataChannels ein
+
+            //muss den runtimeBuffer mutexen
+        }
+    }
+
 
 
     class PointerWrapper {
@@ -110,7 +181,7 @@ template<typename T> class DataChannel{
         // check for hash code of data types
         if(info.dataHashCode != typeid(L).hash_code()) {
             logger.error() << "Requested wrong data type for channel " << name << std::endl
-                << "Channel type is " << channel.dataTypeName << ", requested was " << extra::typeName<T>();
+                           << "Channel type is " << channel.dataTypeName << ", requested was " << extra::typeName<T>();
             return -1;
         }
 
@@ -118,7 +189,7 @@ template<typename T> class DataChannel{
         // TODO this is not longer necessary
         if(info.dataSize != sizeof(T)) {
             logger.error() << "Wrong data size for channel " << name << "!" << std::endl
-                << "Requested " << sizeof(T) << " but is " << channel.dataSize;
+                           << "Requested " << sizeof(T) << " but is " << channel.dataSize;
             return -1;
         }
 
@@ -126,4 +197,30 @@ template<typename T> class DataChannel{
     }
 
 };
-}
+
+
+template<typename T> class ReadDataChannel: public DataChannel<T>{
+
+    T* operator ->(){
+        if(buffered()){
+            if(buffer.size() > 0)
+                return buffer[buffer.size() -1];
+            else
+                return nullptr;
+        }else{
+            return main;
+        }
+    }
+
+};
+template<typename T> class WriteDataChannel: public DataChannel<T>{
+
+    T* operator ->(){
+        //TODO set the cycle-count
+        return main;
+    }
+};
+
+
+}//namespace
+
