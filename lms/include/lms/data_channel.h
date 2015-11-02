@@ -72,10 +72,24 @@ if(dataChannel.sharesData()){
 #include <memory>
 
 class DataChannelBase{
-private:
+public:
+    virtual ~DataChannelBase;
+
+    struct DataChannelInformation {
+        DataChannelInformation() : dataSize(0), exclusiveWrite(false) {}
+        size_t dataSize; // currently only for idiot checks
+        std::string dataTypeName;
+        size_t dataHashCode;
+        bool serializable;
+        bool exclusiveWrite;
+    };
+
+protected:
+    std::shared_ptr<DataChannelInformation> info;
     int m_cycle; //TODO not sure where/how to set it // -> (not const) sets current cycle-count + returns const ->
     std::vector<std::string> readers;
     std::vector<std::string> writers;
+
 
 public:
     /**
@@ -115,14 +129,15 @@ public:
 };
 
 template<typename T> class DataChannel: public DataChannelBase{
-
+private:
     std::shared_ptr<T*> main;
-    std::vector<DataChannel<T>> m_buffer;
+    std::shared_ptr<std::vector<DataChannel<T>>> m_buffer;
 
+public:
 
     std::vector<DataChannel<T>> &buffer(){
     //Übergibt alle verfügbaren T*
-        return m_buffer;
+        return m_buffer.get();
     }
 
 
@@ -139,37 +154,6 @@ template<typename T> class DataChannel: public DataChannelBase{
             //muss den runtimeBuffer mutexen
         }
     }
-
-
-
-    class PointerWrapper {
-    public:
-        virtual ~PointerWrapper() {}
-        virtual void* get() = 0;
-    };
-
-    template<typename T>
-    class PointerWrapperImpl : public PointerWrapper {
-    public:
-        PointerWrapperImpl() {}
-        PointerWrapperImpl(const T &data) : data(data) {}
-        void* get() { return &data; }
-        void set(const T &data) { this->data = data; }
-        T data;
-    };
-
-    struct DataChannelInformation {
-        DataChannelInformation() : dataWrapper(nullptr), dataSize(0), exclusiveWrite(false) {}
-
-        PointerWrapper *dataWrapper; // TODO hier auch unique_ptr möglich
-        size_t dataSize; // currently only for idiot checks
-        std::string dataTypeName;
-        size_t dataHashCode;
-        bool serializable;
-        bool exclusiveWrite;
-        //ModuleList readers;
-        //ModuleList writers;
-    } info;
 
     /**
      * @brief TODO
