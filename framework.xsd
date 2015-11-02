@@ -20,6 +20,7 @@
           <xs:attribute name="value" type="xs:positiveInteger" use="required" />
         </xs:complexType>
       </xs:element>
+      <xs:element name="executionType" type="executionType" minOccurs="0" />
     </xs:sequence>
   </xs:complexType>
 
@@ -31,6 +32,13 @@
       <xs:enumeration value="WARN" />
       <xs:enumeration value="ERROR" />
       <xs:enumeration value="OFF" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="executionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ONLY_MAIN_THREAD" />
+      <xs:enumeration value="NEVER_MAIN_THREAD" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -54,6 +62,12 @@
     <xs:attribute name="src" type="xs:string" use="required" />
   </xs:complexType>
 
+  <xs:complexType name="runtime">
+    <xs:sequence />
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="src" type="xs:string" use="required" />
+  </xs:complexType>
+
   <xs:complexType name="module">
     <xs:sequence>
       <xs:element name="name" type="xs:string" />
@@ -64,15 +78,7 @@
           <xs:element name="libpath" type="xs:string" minOccurs="0" />
         </xs:sequence>
       </xs:choice>
-      <xs:element name="expectedRuntime" type="xs:positiveInteger" minOccurs="0" />
-      <xs:element name="executionType" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="ONLY_MAIN_THREAD" />
-            <xs:enumeration value="NEVER_MAIN_THREAD" />
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
+      <xs:element name="executionType" type="executionType" minOccurs="0" />
       <xs:element name="channelMapping" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:attribute name="from" type="xs:string" use="required" />
@@ -112,6 +118,7 @@
       <xs:choice maxOccurs="unbounded">
         <xs:element name="module" type="module" />
         <xs:element name="include" type="include" />
+        <xs:element name="runtime" type="runtime" />
         <xs:element name="execution" type="execution" />
         <xs:element name="modulesToEnable" type="modulesToEnable" />
         <xs:element name="logging" type="logging" />

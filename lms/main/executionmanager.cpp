@@ -16,11 +16,13 @@
 
 namespace lms {
 
-ExecutionManager::ExecutionManager()
-    : logger("lms.ExecutionManager"), m_numThreads(1),
+ExecutionManager::ExecutionManager(Profiler &m_profiler, const std::string &runtimeName)
+    : m_runtimeName(runtimeName),
+      logger(runtimeName + ".ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
       valid(false), dataManager(*this),
-      m_messaging(), m_cycleCounter(-1), running(true) {
+      m_messaging(), m_cycleCounter(-1), running(true),
+      m_profiler(m_profiler) {
 }
 
 ExecutionManager::~ExecutionManager () {
@@ -55,12 +57,7 @@ void ExecutionManager::loop() {
     // Remove all messages from the message queue
     m_messaging.resetQueue();
 
-    if(m_profiler.enabled()) {
-        m_profiler.printStats();
-    }
-
     m_cycleCounter ++;
-    m_profiler.resetProfMeasurements();
 
     //validate the ExecutionManager
     validate();
@@ -69,28 +66,17 @@ void ExecutionManager::loop() {
         //copy cycleList so it can be modified
         cycleListTmp = cycleList;
 
-        Profiler::ModuleMeasurement measurement;
-
         //simple single list
         while(cycleListTmp.size() > 0){
             //Iter over all module-vectors and check if they can be executed
             for(size_t i = 0; i < cycleListTmp.size();i++){
                 std::vector<Module*>& moduleV = cycleListTmp[i];
-                if(moduleV.size() == 1){
-
-                    if(m_profiler.enabled()) {
-                        measurement.thread = 0;
-                        measurement.module = moduleV[0]->getName();
-                        measurement.begin = lms::extra::PrecisionTime::now();
-                        measurement.expected = moduleV[0]->getExpectedRuntime();
-                    }
+                if(moduleV.size() == 1) {
+                    profiler().markBegin(m_runtimeName + "." + moduleV[0]->getName());
 
                     moduleV[0]->cycle();
 
-                    if(m_profiler.enabled()) {
-                        measurement.end = lms::extra::PrecisionTime::now();
-                        m_profiler.addProfMeasurement(measurement);
-                    }
+                    profiler().markEnd(m_runtimeName + "." + moduleV[0]->getName());
 
                     //remove module from others
                     for(std::vector<Module*>& moduleV2:cycleListTmp){
@@ -179,9 +165,9 @@ void ExecutionManager::threadFunction(int threadNum) {
         for(size_t i = 0; i < cycleListTmp.size();i++){
             std::vector<Module*>& moduleV = cycleListTmp[i];
             if(moduleV.size() == 1) {
-                ModuleWrapper::ExecutionType execType = moduleV[0]->getExecutionType();
-                if((execType == ModuleWrapper::ONLY_MAIN_THREAD && threadNum == 0) ||
-                        (execType == ModuleWrapper::NEVER_MAIN_THREAD && threadNum != 0)) {
+                ExecutionType execType = moduleV[0]->getExecutionType();
+                if((execType == ExecutionType::ONLY_MAIN_THREAD && threadNum == 0) ||
+                        (execType == ExecutionType::NEVER_MAIN_THREAD && threadNum != 0)) {
                     executableModuleIndex = i;
                     executableModule = moduleV[0];
                     break;
@@ -197,23 +183,12 @@ void ExecutionManager::threadFunction(int threadNum) {
             logger.info() << "Thread " << threadNum << " executes "
                           << executableModule->getName();
 
-            // Profiling stuff
-            Profiler::ModuleMeasurement measurement;
-            if(m_profiler.enabled()) {
-                measurement.thread = threadNum;
-                measurement.module = executableModule->getName();
-            }
-
             // now we can execute it
             lck.unlock();
-            measurement.begin = lms::extra::PrecisionTime::now();
+            profiler().markBegin(m_runtimeName + "." + executableModule->getName());
             executableModule->cycle();
-            measurement.end = lms::extra::PrecisionTime::now();
+            profiler().markEnd(m_runtimeName + "." + executableModule->getName());
             lck.lock();
-
-            if(m_profiler.enabled()) {
-                m_profiler.addProfMeasurement(measurement);
-            }
 
             logger.info() << "Thread " << threadNum << " executed "
                           << executableModule->getName();
@@ -245,10 +220,10 @@ bool ExecutionManager::hasExecutableModules(int thread) {
     for(size_t i = 0; i < cycleListTmp.size();i++){
         std::vector<Module*>& moduleV = cycleListTmp[i];
         if(moduleV.size() == 1) {
-            ModuleWrapper::ExecutionType execType = moduleV[0]->getExecutionType();
-            if(execType == ModuleWrapper::ONLY_MAIN_THREAD && thread == 0) {
+            ExecutionType execType = moduleV[0]->getExecutionType();
+            if(execType == ExecutionType::ONLY_MAIN_THREAD && thread == 0) {
                 return true;
-            } else if(execType == ModuleWrapper::NEVER_MAIN_THREAD && thread != 0) {
+            } else if(execType == ExecutionType::NEVER_MAIN_THREAD && thread != 0) {
                 return true;
             }
         }
@@ -293,7 +268,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
         if(it->name == name){
             loader.load(it.get());
             Module *module = it->moduleInstance;
-            module->initializeBase(&dataManager, &m_messaging, this, it, minLogLevel);
+            module->initializeBase(it,minLogLevel);
 
             if(module->initialize()){
                 enabledModules.push_back(it);
@@ -491,15 +466,12 @@ void ExecutionManager::useConfig(std::string const& name) {
     }
 }
 
-bool ExecutionManager::writeDAG(std::ostream &os) {
+void ExecutionManager::writeDAG(extra::DotExporter &dot, const std::string &prefix) {
     using extra::DotExporter;
-
-    DotExporter dot(os);
-    dot.startDigraph("dag");
 
     for(const auto &list : cycleList) {
         dot.label(list[0]->getName());
-        dot.node(list[0]->getName());
+        dot.node(prefix + "_" + list[0]->getName());
     }
 
     dot.reset();
@@ -508,18 +480,9 @@ bool ExecutionManager::writeDAG(std::ostream &os) {
         std::string from = list[0]->getName();
 
         for(size_t i = 1; i < list.size(); i++) {
-            dot.edge(list[i]->getName(), from);
+            dot.edge(prefix + "_" + list[i]->getName(), prefix + "_" + from);
         }
     }
-
-    dot.endDigraph();
-
-    bool success = dot.lastError() == DotExporter::Error::OK;
-    if(! success) {
-        logger.error() << "Dot export failed: " << dot.lastError();
-    }
-
-    return success;
 }
 
 }  // namespace lms

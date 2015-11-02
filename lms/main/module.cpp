@@ -5,20 +5,20 @@
 #include <lms/lms_exports.h>
 #include <lms/datamanager.h>
 #include "lms/module_config.h"
+#include "lms/runtime.h"
 #include "lms/executionmanager.h"
+#include "lms/framework.h"
 
 namespace lms{
-    bool Module::initializeBase(DataManager* datamanager, Messaging *messaging,
-                                ExecutionManager *execManager,
-        std::shared_ptr<ModuleWrapper> wrapper,
+    bool Module::initializeBase(std::shared_ptr<ModuleWrapper> wrapper,
         logging::Level minLogLevel) {
 
-        m_datamanager = datamanager;
-        m_messaging = messaging;
-        m_executionManager = execManager;
+        m_datamanager = &wrapper->runtime->dataManager();
+        m_executionManager = &wrapper->runtime->executionManager();
+        m_messaging = &m_executionManager->messaging();
         m_wrapper = wrapper;
 
-        logger.name = wrapper->name;
+        logger.name = wrapper->runtime->name() + "." + wrapper->name;
         logger.threshold = minLogLevel;
 
         return true;
@@ -28,11 +28,7 @@ namespace lms{
         return m_wrapper->name;
     }
 
-    lms_EXPORT extra::PrecisionTime Module::getExpectedRuntime() const {
-        return m_wrapper->expectedRuntime;
-    }
-
-    lms_EXPORT ModuleWrapper::ExecutionType Module::getExecutionType() const {
+    lms_EXPORT ExecutionType Module::getExecutionType() const {
         return m_wrapper->executionType;
     }
 
@@ -59,5 +55,9 @@ namespace lms{
 
     int Module::cycleCounter() {
         return m_executionManager->cycleCounter();
+    }
+
+    BufferedDataManager* Module::bufferedDatamanager() {
+        return &m_wrapper->runtime->framework().bufferedDataManager();
     }
 }

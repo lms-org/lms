@@ -41,6 +41,31 @@ void DotExporter::endGraph() {
     m_os << "}\n";
 }
 
+void DotExporter::startSubgraph(const std::string &name) {
+    indent();
+    m_os << "subgraph cluster_" << name << " {\n";
+
+    m_stack.push(StackType::SUBGRAPH);
+
+    indent();
+    m_os << "label = \"" << name << "\";\n";
+}
+
+void DotExporter::endSubgraph() {
+    if(m_stack.empty()) {
+        m_error = Error::STACK_EMPTY;
+        return;
+    }
+
+    if(m_stack.top() != StackType::SUBGRAPH) {
+        m_error = Error::UNEXPECTED_STACK_TOP;
+        return;
+    }
+
+    m_stack.pop();
+    m_os << "}\n";
+}
+
 void DotExporter::edge(const std::string &from, const std::string &to) {
     if(m_stack.empty()) {
         m_error = Error::STACK_EMPTY;

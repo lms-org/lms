@@ -43,9 +43,8 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argRunLevel(RunLevel::CYCLE),
     argLoggingThreshold(logging::Level::ALL), argDefinedLoggingThreshold(false),
-    argQuiet(false), argUser(""),
-    argProfiling(false), argConfigMonitor(false), argMultithreaded(false),
-    argThreadsAuto(false), argThreads(1) {
+    argQuiet(false), argUser(""), argConfigMonitor(false),
+    argMultithreaded(false), argThreadsAuto(false), argThreads(1) {
 
     argUser = lms::extra::username();
 }
@@ -90,9 +89,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> flagsArg("", "flags",
         "Config flags, can be used in <if> tags",
         false, "", "string-list", cmd);
-    TCLAP::SwitchArg profilingSwitch("", "profiling",
-        "Measure execution time of all modules",
-        cmd, false);
+    TCLAP::ValueArg<std::string> profilingArg("", "profiling",
+        "Measure execution time of all modules and dump to a file",
+        false, "", "path", cmd);
     TCLAP::SwitchArg configMonitorSwitch("", "config-monitor",
         "Enable live config monitoring",
         cmd, false);
@@ -112,7 +111,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argLogFile = logFileArg.getValue();
     argQuiet = quietSwitch.getValue();
     argFlags = lms::extra::split(flagsArg.getValue(), ',');
-    argProfiling = profilingSwitch.getValue();
+    argProfilingFile = profilingArg.getValue();
     argConfigMonitor = configMonitorSwitch.getValue();
     runLevelByName(runLevelArg.getValue(), argRunLevel);
     if(threadsArg.isSet()) {

@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <unordered_set>
 
 #include <lms/module.h>
 #include <lms/datamanager.h>
@@ -184,13 +185,12 @@ void DataManager::printMapping()  {
     }
 }
 
-bool DataManager::writeDAG(std::ostream &os) {
-    using extra::DotExporter;
-
-    DotExporter dot(os);
-    dot.startDigraph("dag");
+void DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &prefix) {
+    using lms::extra::DotExporter;
 
     std::string CONFIG("CONFIG");
+
+    std::unordered_set<std::string> modules;
 
     for(const auto &ch : channels) {
         if(ch.first.compare(0, CONFIG.size(), CONFIG) == 0) {
@@ -199,34 +199,35 @@ bool DataManager::writeDAG(std::ostream &os) {
 
         dot.shape(DotExporter::Shape::BOX);
         dot.label(ch.first + "\\n" + ch.second.dataTypeName);
-        dot.node(ch.first);
+        dot.node(prefix + "_" + ch.first);
         dot.reset();
         for(auto writer : ch.second.writers) {
             int prio = writer->getChannelPriority(ch.first);
             if(prio != 0) {
                 dot.label(std::to_string(prio));
             }
-            dot.edge(writer->name, ch.first);
+            dot.edge(prefix + "_" + writer->name, prefix + "_" + ch.first);
             dot.reset();
+
+            modules.insert(writer->name);
         }
         for(auto reader : ch.second.readers) {
             int prio = reader->getChannelPriority(ch.first);
             if(prio != 0) {
                 dot.label(std::to_string(prio));
             }
-            dot.edge(ch.first, reader->name);
+            dot.edge(prefix + "_" + ch.first, prefix + "_" + reader->name);
             dot.reset();
+
+            modules.insert(reader->name);
         }
     }
 
-    dot.endDigraph();
-
-    bool success = dot.lastError() == DotExporter::Error::OK;
-    if(! success) {
-        logger.error() << "Dot export failed: " << dot.lastError();
+    for(const auto& mod : modules) {
+        dot.label(mod);
+        dot.node(prefix + "_" + mod);
+        dot.reset();
     }
-
-    return success;
 }
 
 bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {

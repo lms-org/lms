@@ -14,6 +14,7 @@
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
 #include "lms/module_wrapper.h"
+#include "lms/extra/dot_exporter.h"
 
 namespace lms {
 
@@ -280,7 +281,7 @@ public:
      */
     bool hasChannel(Module *module, const std::string &name) const;
 
-    bool writeDAG(std::ostream &os);
+    void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 
     /**
      * @brief Set the content of a data channel. This will NOT reset the
@@ -357,6 +358,12 @@ public:
     T* getChannel(const std::string &name) {
         return getChannel<T>(name, false);
     }
+
+    /**
+     * @brief Print all channels with their corresponding readers
+     * and writers to stdout.
+     */
+    void printMapping();
 private:
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
@@ -374,12 +381,6 @@ private:
      * @param module the module to look for
      */
     void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Print all channels with their corresponding readers
-     * and writers to stdout.
-     */
-    void printMapping();
 
     /**
      * @brief Check if requested channel data type T is the same as the data type

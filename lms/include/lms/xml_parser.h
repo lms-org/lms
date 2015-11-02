@@ -83,7 +83,7 @@ void parseModuleConfig(pugi::xml_node node,  ModuleConfig &config,
 
 class XmlParser {
 public:
-    XmlParser(Framework &framework, ArgumentHandler const& args);
+    XmlParser(Framework &framework, Runtime* runtime, ArgumentHandler const& args);
 
     enum class LoadConfigFlag {
         LOAD_EVERYTHING,
@@ -111,7 +111,7 @@ public:
      * @param rootNode
      * @param clock
      */
-    void parseExecution(pugi::xml_node node, lms::Clock &clock);
+    void parseExecution(pugi::xml_node node, Runtime *runtime);
 
     void parseInclude(pugi::xml_node node, const std::string &currentFile,
                        LoadConfigFlag flag);
@@ -121,6 +121,9 @@ public:
 
     void parseFile(const std::string &file, LoadConfigFlag flag);
 
+    void parseRuntime(pugi::xml_node node, const std::string &currentFile,
+                                 LoadConfigFlag flag);
+
     /**
      * @brief parseConfig parses the framework-config
      */
@@ -129,6 +132,7 @@ public:
     std::unique_ptr<logging::ThresholdFilter> filter();
 private:
     Framework & m_framework;
+    Runtime* m_runtime;
     ArgumentHandler const& m_args;
 
     std::unique_ptr<logging::ThresholdFilter> m_filter;

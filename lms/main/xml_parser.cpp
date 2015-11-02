@@ -105,8 +105,8 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
     }
 }
 
-XmlParser::XmlParser(Framework &framework, const ArgumentHandler &args) :
-    m_framework(framework), m_args(args) {}
+XmlParser::XmlParser(Framework &framework, Runtime* runtime, const ArgumentHandler &args) :
+    m_framework(framework), m_runtime(runtime), m_args(args) {}
 
 void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig){
 
@@ -149,7 +149,7 @@ void XmlParser::parseModulesToEnable(pugi::xml_node node) {
         name = nameAttr.as_string();
     }
 
-    ExecutionManager::EnableConfig &config = m_framework.executionManager().config(name);
+    ExecutionManager::EnableConfig &config = m_runtime->executionManager().config(name);
 
     lms::logging::Level defaultModuleLevel = lms::logging::Level::ALL;
 
@@ -205,8 +205,11 @@ logging::ThresholdFilter* XmlParser::parseLogging(pugi::xml_node node) {
     return filter;
 }
 
-void XmlParser::parseExecution(pugi::xml_node node, lms::Clock &clock) {
+void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
     pugi::xml_node clockNode = node.child("clock");
+    pugi::xml_node executionTypeNode = node.child("executionType");
+
+    Clock& clock = runtime->clock();
 
     if(clockNode) {
         std::string clockUnit;
@@ -234,7 +237,7 @@ void XmlParser::parseExecution(pugi::xml_node node, lms::Clock &clock) {
         if(unitAttr) {
             clockUnit = unitAttr.value();
         } else {
-            clock.enabled(false);
+            runtime->clock().enabled(false);
             errorMissingAttr(clockNode, unitAttr);
         }
 
@@ -251,6 +254,19 @@ void XmlParser::parseExecution(pugi::xml_node node, lms::Clock &clock) {
             }
         }
     }
+
+    ExecutionType type = ExecutionType::NEVER_MAIN_THREAD;
+
+    if(executionTypeNode) {
+        std::string executionType = executionTypeNode.child_value();
+
+        if(! lms::executionTypeByName(executionType, type)) {
+            errorInvalidNodeContent(executionTypeNode, "ONLY_MAIN_THREAD|NEVER_MAIN_THREAD");
+        }
+    }
+
+    std::cout << lms::executionTypeName(type) << std::endl;
+    runtime->executionType(type);
 }
 
 void XmlParser::parseInclude(pugi::xml_node node,
@@ -273,10 +289,37 @@ void XmlParser::parseInclude(pugi::xml_node node,
     }
 }
 
+void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile,
+                             LoadConfigFlag flag) {
+    pugi::xml_attribute srcAttr = node.attribute("src");
+    pugi::xml_attribute nameAttr = node.attribute("name");
+
+    if(srcAttr && nameAttr) {
+        std::string includePath = srcAttr.value();
+        if(extra::isAbsolute(includePath)) {
+            // if absolute then start from configs dir
+            includePath = LMS_CONFIGS + includePath;
+        } else {
+            // otherwise go from current file's directory
+            includePath = extra::dirname(currentFile) + "/" + includePath;
+        }
+
+        Runtime *temp = m_runtime;
+        m_runtime = new Runtime(nameAttr.value(), m_framework);
+        m_framework.registerRuntime(m_runtime);
+        parseFile(includePath, flag);
+        m_runtime = temp;
+    } else if(! srcAttr) {
+        errorMissingAttr(node, srcAttr);
+    } else if(! nameAttr) {
+        errorMissingAttr(node, nameAttr);
+    }
+}
+
 void XmlParser::parseModules(pugi::xml_node node,
                              const std::string &currentFile,
                              LoadConfigFlag flag) {
-    std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>();
+    std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>(m_runtime);
     std::map<std::string, ModuleConfig> configMap;
 
     module->name = node.child("name").child_value();
@@ -310,27 +353,14 @@ void XmlParser::parseModules(pugi::xml_node node,
 
     pugi::xml_node executionTypeNode = node.child("executionType");
 
+    module->executionType = ExecutionType::NEVER_MAIN_THREAD;
+
     if(executionTypeNode) {
         std::string executionType = executionTypeNode.child_value();
 
-        if(executionType == "ONLY_MAIN_THREAD") {
-            module->executionType = ModuleWrapper::ONLY_MAIN_THREAD;
-        } else if(executionType == "NEVER_MAIN_THREAD") {
-            module->executionType = ModuleWrapper::NEVER_MAIN_THREAD;
-        } else {
+        if(! lms::executionTypeByName(executionType, module->executionType)) {
             errorInvalidNodeContent(executionTypeNode, "ONLY_MAIN_THREAD|NEVER_MAIN_THREAD");
         }
-    } else {
-        module->executionType = ModuleWrapper::NEVER_MAIN_THREAD;
-    }
-
-    pugi::xml_node expectedRuntimeNode = node.child("expectedRuntime");
-
-    if(expectedRuntimeNode) {
-        module->expectedRuntime = extra::PrecisionTime::fromMicros(
-                    atoi(expectedRuntimeNode.child_value()));
-    } else {
-        module->expectedRuntime = extra::PrecisionTime::ZERO;
     }
 
     // parse all channel mappings
@@ -399,13 +429,13 @@ void XmlParser::parseModules(pugi::xml_node node,
     }
 
     for(std::pair<std::string, ModuleConfig> pair : configMap) {
-        m_framework.executionManager().getDataManager()
+        m_runtime->executionManager().getDataManager()
             .setChannel<ModuleConfig>(
             "CONFIG_" + module->name + "_" + pair.first, pair.second);
     }
 
     if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
-        m_framework.executionManager().addAvailableModule(module);
+        m_runtime->executionManager().addAvailableModule(module);
     }
 }
 
@@ -431,7 +461,7 @@ void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
 
     for(pugi::xml_node node : rootNode.children()) {
         if(std::string("execution") == node.name()) {
-            parseExecution(node, m_framework.clock());
+            parseExecution(node, m_runtime);
         } else if(std::string("logging") == node.name()) {
             m_filter.reset(parseLogging(node));
         } else if(std::string("modulesToEnable") == node.name()) {
@@ -440,6 +470,8 @@ void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
             parseModules(node, file, flag);
         } else if(std::string("include") == node.name()) {
             parseInclude(node, file, flag);
+        } else if(std::string("runtime") == node.name()) {
+            parseRuntime(node, file, flag);
         } else {
             errorUnknownNode(node);
         }
