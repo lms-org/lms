@@ -271,8 +271,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
         if(it->name == name){
             loader.load(it.get());
             Module *module = it->moduleInstance;
-            module->initializeBase(&dataManager, &m_messaging, this, it,
-                                   minLogLevel, m_runtimeName);
+            module->initializeBase(it,minLogLevel);
 
             if(module->initialize()){
                 enabledModules.push_back(it);

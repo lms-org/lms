@@ -5,20 +5,19 @@
 #include <lms/lms_exports.h>
 #include <lms/datamanager.h>
 #include "lms/module_config.h"
+#include "lms/runtime.h"
 #include "lms/executionmanager.h"
 
 namespace lms{
-    bool Module::initializeBase(DataManager* datamanager, Messaging *messaging,
-                                ExecutionManager *execManager,
-        std::shared_ptr<ModuleWrapper> wrapper,
-        logging::Level minLogLevel, const std::string &runtimeName) {
+    bool Module::initializeBase(std::shared_ptr<ModuleWrapper> wrapper,
+        logging::Level minLogLevel) {
 
-        m_datamanager = datamanager;
-        m_messaging = messaging;
-        m_executionManager = execManager;
+        m_datamanager = &wrapper->runtime->dataManager();
+        m_executionManager = &wrapper->runtime->executionManager();
+        m_messaging = &m_executionManager->messaging();
         m_wrapper = wrapper;
 
-        logger.name = runtimeName + "." + wrapper->name;
+        logger.name = wrapper->runtime->name() + "." + wrapper->name;
         logger.threshold = minLogLevel;
 
         return true;

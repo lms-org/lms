@@ -11,14 +11,17 @@
 namespace lms {
 
 class Module;
+class Runtime;
 
 /**
  * @brief The module_entry struct
  * used to store available modules
  */
 struct ModuleWrapper {
-    ModuleWrapper() : enabled(false), moduleInstance(nullptr)
-    {}
+    ModuleWrapper(Runtime *runtime) : runtime(runtime), enabled(false),
+        moduleInstance(nullptr) {}
+
+    Runtime *runtime;
 
     /**
      * @brief Name of the module

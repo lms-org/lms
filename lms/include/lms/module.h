@@ -49,11 +49,8 @@ public:
      *
      * Do not call this inside a module!
      */
-    bool initializeBase(DataManager* datamanager, Messaging *messaging,
-                        ExecutionManager* execManager,
-        std::shared_ptr<ModuleWrapper> loaderEntry,
-                        logging::Level minLogLevel,
-                        const std::string &runtimeName);
+    bool initializeBase(std::shared_ptr<ModuleWrapper> loaderEntry,
+                        logging::Level minLogLevel);
 
     ExecutionType getExecutionType() const;
 
@@ -135,6 +132,8 @@ public:
     int getChannelPriority(const std::string &name) const;
 
     int cycleCounter();
+
+    void pushBuffer();
 
 protected:
     /**

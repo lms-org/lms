@@ -319,7 +319,7 @@ void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile
 void XmlParser::parseModules(pugi::xml_node node,
                              const std::string &currentFile,
                              LoadConfigFlag flag) {
-    std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>();
+    std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>(m_runtime);
     std::map<std::string, ModuleConfig> configMap;
 
     module->name = node.child("name").child_value();
