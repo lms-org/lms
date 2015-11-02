@@ -1,13 +1,14 @@
 #include <thread>
 
 #include "lms/runtime.h"
+#include "lms/framework.h"
 
 namespace lms {
 
-Runtime::Runtime(const std::string &name, const ArgumentHandler &args,
-                 Profiler &profiler) :
-    m_name(name), logger(name), m_argumentHandler(args),
-    m_profiler(profiler),
+Runtime::Runtime(const std::string &name, Framework& framework) :
+    m_name(name), logger(name), m_framework(framework),
+    m_argumentHandler(framework.getArgumentHandler()),
+    m_profiler(framework.profiler()),
     m_executionManager(m_profiler, name), m_running(false) {
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
@@ -45,6 +46,10 @@ DataManager& Runtime::dataManager() {
 
 Clock& Runtime::clock() {
     return m_clock;
+}
+
+Framework& Runtime::framework() {
+    return m_framework;
 }
 
 std::string Runtime::name() const {

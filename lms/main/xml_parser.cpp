@@ -305,7 +305,7 @@ void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile
         }
 
         Runtime *temp = m_runtime;
-        m_runtime = new Runtime(nameAttr.value(), m_framework.getArgumentHandler(), m_framework.profiler());
+        m_runtime = new Runtime(nameAttr.value(), m_framework);
         m_framework.registerRuntime(m_runtime);
         parseFile(includePath, flag);
         m_runtime = temp;

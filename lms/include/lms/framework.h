@@ -11,6 +11,7 @@
 #include "lms/extra/file_monitor.h"
 #include "lms/deprecated.h"
 #include "lms/runtime.h"
+#include "lms/buffered_datamanager.h"
 
 /**
  *TODO: Framework config that contains max threads for executionManager etc.
@@ -60,11 +61,14 @@ public:
     void exportGraphs();
 
     Profiler& profiler();
+
+    BufferedDataManager& bufferedDataManager();
 private:
     logging::Logger logger;
 
     ArgumentHandler argumentHandler;
     Profiler m_profiler;
+    BufferedDataManager m_bufferedDataManager;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;

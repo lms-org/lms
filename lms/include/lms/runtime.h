@@ -8,13 +8,15 @@
 #include "lms/argumenthandler.h"
 #include "lms/clock.h"
 #include "lms/execution_type.h"
+#include "lms/buffered_datamanager.h"
 
 namespace lms {
 
+class Framework;
+
 class Runtime {
 public:
-    Runtime(const std::string& name, const ArgumentHandler &args,
-            Profiler &profiler);
+    Runtime(const std::string& name, Framework &framework);
 
     /**
      * @brief Start an infinite cycle loop asynchronously.
@@ -39,6 +41,7 @@ public:
     ExecutionManager& executionManager();
     DataManager& dataManager();
     Clock& clock();
+    Framework& framework();
     std::string name() const;
     ExecutionType executionType() const;
     void executionType(ExecutionType type);
@@ -46,6 +49,7 @@ private:
     std::string m_name;
     lms::logging::Logger logger;
 
+    Framework &m_framework;
     const ArgumentHandler &m_argumentHandler;
 
     Profiler &m_profiler;

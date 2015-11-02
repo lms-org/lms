@@ -7,6 +7,7 @@
 #include "lms/module_config.h"
 #include "lms/runtime.h"
 #include "lms/executionmanager.h"
+#include "lms/framework.h"
 
 namespace lms{
     bool Module::initializeBase(std::shared_ptr<ModuleWrapper> wrapper,
@@ -54,5 +55,9 @@ namespace lms{
 
     int Module::cycleCounter() {
         return m_executionManager->cycleCounter();
+    }
+
+    BufferedDataManager* Module::bufferedDatamanager() {
+        return &m_wrapper->runtime->framework().bufferedDataManager();
     }
 }

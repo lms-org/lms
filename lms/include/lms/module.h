@@ -9,6 +9,7 @@
 #include <lms/loader.h>
 #include <lms/module_config.h>
 #include <lms/messaging.h>
+#include <lms/buffered_datamanager.h>
 
 namespace lms {
 
@@ -132,9 +133,6 @@ public:
     int getChannelPriority(const std::string &name) const;
 
     int cycleCounter();
-
-    void pushBuffer();
-
 protected:
     /**
      * @brief Returns the data manager. This is usually
@@ -149,6 +147,8 @@ protected:
      * and the core framework.
      */
     Messaging* messaging() const { return m_messaging; }
+
+    BufferedDataManager* bufferedDatamanager();
 
     /**
      * @brief A logger instance. Can be used in initialize, cycle

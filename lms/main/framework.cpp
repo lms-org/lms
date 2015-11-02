@@ -65,7 +65,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "MODULES: " << LMS_MODULES;
         logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
-        Runtime* rt = new Runtime("default", arguments, m_profiler);
+        Runtime* rt = new Runtime("default", *this);
         registerRuntime(rt);
 
         XmlParser parser(*this, rt, arguments);
@@ -253,6 +253,10 @@ ArgumentHandler const& Framework::getArgumentHandler() {
 
 Profiler& Framework::profiler() {
     return m_profiler;
+}
+
+BufferedDataManager& Framework::bufferedDataManager() {
+    return m_bufferedDataManager;
 }
 
 }
