@@ -15,6 +15,7 @@
 #include <lms/serializable.h>
 #include "lms/module_wrapper.h"
 #include "lms/extra/dot_exporter.h"
+#include "lms/data_channel.h"
 
 namespace lms {
 
