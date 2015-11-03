@@ -1,75 +1,10 @@
 #ifndef LMS_DATA_CHANNEL
 #define LMS_DATA_CHANNEL
 #include <cstring>
-namespace lms {
-/*Thoughts:
-
-class DataChannel<T>{
-T* is a shared-pointer
-
-T* main;//is created by the framework if buffered() returns false
-
-//buffer für jede runtime
-vector<T*>* buffer;
-
-vector<DataChannel<T>> getBuffer(){
-//Übergibt alle verfügbaren T*
-}
-
-
-
-//called after each cycle of the runtime for each dataChannel
-
-bufferCycle(){
-    if(buffered()){
-        //clears the buffer
-    }else if(sharesData()){
-        //kopiert T* zu der anderen Runtime
-        // Man buffert den DatenKanal in der runtime und fügt ihn beim nächsten Zyklus in den buffer des DataChannels ein
-
-        //muss den runtimeBuffer mutexen
-    }
-}
-
-operator -> {
-if(buffered()){
-    return last element of the buffer
-}else{
-    return T*
-}
-}
-
-
-//################Utils-methods
-int getCycle()
-bool hasReader()
-bool hasWriter()
-bool sharesData(){
-returns true if the data is accessed by another runtime
-}
-bool buffered(){
-receives data from another runtime (hasWriters returns false!)
-}
-
-//################Utils-methods-END
-
-
-
-};//end class
-
-cycle(){
-
-...
-
-if(dataChannel.sharesData()){
-    dataChannel.bufferData()
-}
-
-}
-*/
 #include <vector>
-#include <cstring>
 #include <memory>
+#include "lms/runtime.h"
+namespace lms {
 
 class DataChannelBase{
 public:
@@ -86,9 +21,36 @@ public:
 
 protected:
     std::shared_ptr<DataChannelInformation> info;
+    /**
+     * @brief runtimes which need the dataChannel
+     */
+    std::vector<std::shared_ptr<Runtime>> runtimes;
+    /**
+     * @brief dataHost runtime that provides the data
+     */
+    std::shared_ptr<Runtime> dataHost;
     int m_cycle; //TODO not sure where/how to set it // -> (not const) sets current cycle-count + returns const ->
+    /**
+     * @brief readers reading modules
+     */
     std::vector<std::string> readers;
+    /**
+     * @brief writers writing modules
+     */
     std::vector<std::string> writers;
+    /**
+     * @brief addRuntime adds Runtime that wants the data
+     * @param runtime
+     */
+    void addRuntime(std::shared_ptr<Runtime> runtime){
+        runtimes.push_back(runtime);
+    }
+    /**
+     * @brief clearRuntimes clears the list of depending runtimes
+     */
+    void clearRuntimes(){
+        runtimes.clear();
+    }
 
 
 public:
@@ -116,7 +78,7 @@ public:
      * @return true if the data is accessed by another runtime
      */
     bool sharesData(){
-        return false; //TODO
+        return runtimes > 0;
     }
 
     /**
@@ -124,7 +86,7 @@ public:
      * @return true if it receives data from another runtime (hasWriters returns false!)
      */
     bool buffered(){
-        return false; //TODO
+        return dataHost.get() != nullptr;//TODO not sure if this works
     }
 };
 
