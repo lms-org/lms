@@ -3,7 +3,7 @@
 #include <cstring>
 #include <vector>
 #include <memory>
-//#include "lms/runtime.h"
+#include <algorithm>
 #include "lms/logger.h"
 namespace lms {
 class Runtime; //circle dependency
@@ -14,7 +14,7 @@ public:
     virtual ~DataChannelBase();
 
     struct DataChannelInformation {
-        DataChannelInformation() : dataSize(0), exclusiveWrite(false) {}
+        DataChannelInformation() : dataSize(0), serializable(false),exclusiveWrite(false) {}
         size_t dataSize; // currently only for idiot checks
         std::string dataTypeName;
         size_t dataHashCode;
@@ -62,6 +62,20 @@ protected:
         runtimes.clear();
     }
 
+    bool isReader(const std::string moduleName) const{
+        return std::find(readers.begin(),readers.end(),moduleName) != readers.end();
+    }
+
+    bool isWriter(const std::string moduleName) const{
+        return std::find(writers.begin(),writers.end(),moduleName) != writers.end();
+    }
+
+    bool isReaderOrWriter(const std::string moduleName) const{
+        return isReader(moduleName) || isWriter(moduleName);
+    }
+
+
+
 
 public:
     /**
@@ -107,6 +121,7 @@ protected:
     std::shared_ptr<std::vector<DataChannel<T>>> m_buffer;
 
 public:
+
     const std::vector<DataChannel<T>> &buffer() const{
                                 //Übergibt alle verfügbaren T*
                                 return m_buffer.get();
@@ -125,6 +140,7 @@ public:
             }
         }
     }
+
 
 
     /**
@@ -151,6 +167,8 @@ public:
 
         return 0;
     }
+
+
 
 };
 

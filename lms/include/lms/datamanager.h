@@ -39,6 +39,7 @@ private:
     logging::Logger logger;
     ExecutionManager &execMgr;
 
+
     class PointerWrapper {
     public:
         virtual ~PointerWrapper() {}
