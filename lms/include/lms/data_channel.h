@@ -8,29 +8,32 @@
 namespace lms {
 class Runtime; //circle dependency
 
-class DataChannelBase{
+// BACKEND
+
+class DataChannelInternalBase{
 
 public:
-    virtual ~DataChannelBase();
+    virtual ~DataChannelInternalBase() {}
 
     struct DataChannelInformation {
-        DataChannelInformation() : dataSize(0), serializable(false),exclusiveWrite(false) {}
-        size_t dataSize; // currently only for idiot checks
+        DataChannelInformation() : serializable(false),exclusiveWrite(false) {}
         std::string dataTypeName;
         size_t dataHashCode;
         bool serializable;
         bool exclusiveWrite;
+        std::shared_ptr<Runtime> maintainer;
     };
 
-protected:
     /**
      * @brief info DataChannelInformation
      */
-    std::shared_ptr<DataChannelInformation> info;
+    DataChannelInformation info;
+
+protected:
     /**
      * @brief maintainer Runtime that holds the dataChannel
      */
-    std::shared_ptr<const Runtime> maintainer;
+    Runtime *maintainer;
     /**
      * @brief runtimes which need the dataChannel
      */
@@ -79,6 +82,15 @@ protected:
 
 public:
     /**
+    * TODO -1 if the type is invalid, 0 if the type of the DataChannel is
+    * subtype of the given one, 1 if the given type is the same or subtype of
+    * the DataChannel-type
+    */
+    bool checkType(size_t hashCode) {
+        return info.dataHashCode == hashCode;
+    }
+
+    /**
      * @brief getCycle
      * @return cycle in which the object was created
      */
@@ -114,17 +126,30 @@ public:
     }
 };
 
-template<typename T> class DataChannel: public DataChannelBase{
+template<typename T>
+class ReadDataChannel;
+
+template<typename T>
+class DataChannelInternal: public DataChannelInternalBase{
     friend class DataManager; //To call protected methods
 protected:
-    std::shared_ptr<T*> main;
-    std::shared_ptr<std::vector<DataChannel<T>>> m_buffer;
-
+    std::shared_ptr<std::vector<DataChannelInternal<T>>> m_preBuffer;
 public:
+    DataChannelInternal() {
+        // used for checkType and better error messages
+        info.dataTypeName = extra::typeName<T>();
+        info.dataHashCode = typeid(T).hash_code();
+        info.serializable = std::is_base_of<Serializable, T>::value;
 
-    const std::vector<DataChannel<T>> &buffer() const{
-                                //Übergibt alle verfügbaren T*
-                                return m_buffer.get();
+        info.exclusiveWrite = false;
+    }
+
+    std::shared_ptr<T*> main;
+    std::shared_ptr<std::vector<ReadDataChannel<T>>> m_buffer;
+
+    const std::vector<ReadDataChannel<T>> &buffer() const{
+        //Übergibt alle verfügbaren T*
+        return m_buffer.get();
     }
                                 //called after each cycle of the runtime for each dataChannel
 
@@ -140,63 +165,43 @@ public:
             }
         }
     }
-
-
-
-    /**
-    * @brief TODO
-    * @param name data channel name
-    * @return -1 if the type is invalid, 0 if the type of the DataChannel is subtype of the given one, 1 if the given type is the same or subtype of the DataChannel-type
-    */
-    template<typename L>
-    int checkType(const std::string &name, logging::Logger &logger) {
-        // check for hash code of data types
-        if(info->dataHashCode != typeid(L).hash_code()) {
-            logger.error() << "Requested wrong data type for channel " << name << std::endl
-                           << "Channel type is " << info->dataTypeName << ", requested was " << extra::typeName<T>();
-            return -1;
-        }
-
-        // check for size of data types
-        // TODO this is not longer necessary
-        if(info->dataSize != sizeof(T)) {
-            logger.error() << "Wrong data size for channel " << name << "!" << std::endl
-                           << "Requested " << sizeof(T) << " but is " << info->dataSize;
-            return -1;
-        }
-
-        return 0;
-    }
-
-
-
 };
 
+// FRONTEND
 
-template<typename T> class ReadDataChannel: public DataChannel<T>{
-    public:
+template<typename T>
+class DataChannel {
+protected:
+    std::shared_ptr<DataChannelInternal<T>> m_internal;
+public:
+};
 
+template<typename T>
+class ReadDataChannel : public DataChannel<T> {
+private:
+
+public:
     const T* operator ->(){
-        if(this->buffered()){
-            if(this->m_buffer.size() > 0)
-                return this->m_buffer[this->m_buffer.size() -1];
+        if(m_internal->buffered()){
+            if(m_internal->m_buffer.size() > 0)
+                return m_internal->m_buffer[m_internal->m_buffer.size() -1];
             else
                 return nullptr;
         }else{
-            return this->main.get();
+            return m_internal->main.get();
         }
     }
-
 };
 
-template<typename T> class WriteDataChannel: public DataChannel<T>{
-    public:
-
+template<typename T>
+class WriteDataChannel : public DataChannel<T> {
+public:
     T* operator ->(){
         //m_cycle = maintainer->cycleCount();
-        return this->main.get();
+        return m_internal->main.get();
     }
 };
 
-}//namespace
+}  //namespace lms
+
 #endif //LMS_DATA_CHANNEL_H

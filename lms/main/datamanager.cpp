@@ -12,8 +12,8 @@
 
 namespace lms {
 
-DataManager::DataManager(ExecutionManager &execMgr)
-    : logger("lms.DataManager"), execMgr(execMgr) {}
+DataManager::DataManager(Runtime &runtime, ExecutionManager &execMgr)
+    : m_runtime(runtime), logger("lms.DataManager"), execMgr(execMgr) {}
 
 DataManager::~DataManager() {
     // TODO destruct all dataPointers
@@ -228,22 +228,6 @@ void DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
         dot.node(prefix + "_" + mod);
         dot.reset();
     }
-}
-
-bool DataManager::checkIfReaderOrWriter(const DataChannel &channel, Module *module) {
-    for(std::shared_ptr<ModuleWrapper> mod : channel.readers) {
-        if(mod->moduleInstance == module) {
-            return true;
-        }
-    }
-
-    for(std::shared_ptr<ModuleWrapper> mod : channel.writers) {
-        if(mod->moduleInstance == module) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 void DataManager::invalidateExecutionManager() {

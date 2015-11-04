@@ -1,7 +1,7 @@
 #ifndef LMS_DATAMANAGER_H
 #define LMS_DATAMANAGER_H
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -32,46 +32,15 @@ class ExecutionManager;
  * @author Hans Kirchner
  */
 class DataManager {
-friend class ConfigurationLoader;
 friend class ExecutionManager;
 friend class Framework;
 private:
     logging::Logger logger;
     ExecutionManager &execMgr;
-
-
-    class PointerWrapper {
-    public:
-        virtual ~PointerWrapper() {}
-        virtual void* get() = 0;
-    };
-
-    template<typename T>
-    class PointerWrapperImpl : public PointerWrapper {
-    public:
-        PointerWrapperImpl() {}
-        PointerWrapperImpl(const T &data) : data(data) {}
-        void* get() { return &data; }
-        void set(const T &data) { this->data = data; }
-        T data;
-    };
-
-    struct DataChannel {
-        DataChannel() : dataWrapper(nullptr), dataSize(0), exclusiveWrite(false) {}
-
-        PointerWrapper *dataWrapper; // TODO hier auch unique_ptr möglich
-        size_t dataSize; // currently only for idiot checks
-        std::string dataTypeName;
-        size_t dataHashCode;
-        bool serializable;
-        bool exclusiveWrite;
-        ModuleList readers;
-        ModuleList writers;
-    };
 private:
-    std::map<std::string,DataChannel> channels; // TODO check if unordered_map is faster here
+    std::unordered_map<std::string,std::shared_ptr<DataChannelInternalBase>> channels;
 public:
-    DataManager(ExecutionManager &execMgr);
+    DataManager(Runtime &runtime, ExecutionManager &execMgr);
     ~DataManager();
 
     /**
@@ -93,13 +62,13 @@ public:
      * @return const data channel (only reading)
      */
     template<typename T>
-    const T*  readChannel(Module *module, const std::string &reqName) {
+    ReadDataChannel<T> readChannel(Module *module, const std::string &reqName) {
         std::string name = module->getChannelMapping(reqName);
-        DataChannel &channel = channels[name];
+        std::shared_ptr<DataChannelInternalBase> &channel = channels[name];
 
-        if(channel.dataWrapper == nullptr) {
-            initChannel<T>(channel);
-        } else if(! checkType<T>(channel, name)) {
+        initChannelIfNeeded<T>(channel);
+
+        if(! channel->checkType(typeid(T).hash_code())) {
             return nullptr;
         }
 
@@ -367,6 +336,8 @@ public:
      */
     void printMapping();
 private:
+    Runtime &m_runtime;
+
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
      * INTENDED TO BE USED IN MODULES.
@@ -421,28 +392,14 @@ private:
      * @param channel the data channel to initialize
      */
     template<typename T>
-    void initChannel(DataChannel &channel) {
-        // allocate memory for type T and call its constructor
-        channel.dataWrapper = new PointerWrapperImpl<T>();
+    void initChannelIfNeeded(std::shared_ptr<DataChannelInternalBase>& channel) {
+        if(channel) {
+            return;
+        }
 
-        // used for checkType and better error messages
-        channel.dataSize = sizeof(T);
-        channel.dataTypeName = extra::typeName<T>();
-        channel.dataHashCode = typeid(T).hash_code();
-        channel.serializable = std::is_base_of<Serializable, T>::value;
-
-        channel.exclusiveWrite = false;
+        channel = std::make_shared<DataChannelInternal<T>>();
+        channel->maintainer = &m_runtime;
     }
-
-    /**
-     * @brief Check if the given module (or a module with the same name) is
-     * reading or writing into the given datachannel.
-     *
-     * @param channel channel to check
-     * @param module module to look for
-     * @return true if the module is reader or writer, false otherwise
-     */
-    bool checkIfReaderOrWriter(const DataChannel &channel, Module *module);
 
     /**
      * @brief Invoke invalidate() on the execution manager instance.
