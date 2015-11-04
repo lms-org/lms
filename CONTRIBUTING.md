@@ -65,6 +65,6 @@ A couple of guidelines:
 
 - Pull requests for the master repository will be checked before inclusion.
 - Push only compilable, working code on the *master* branch.
-- Create branches for features and issues, not for perons.
+- Create branches for features and issues, not for persons.
 - Merge feature branches with master if they work and are well tested.
 - Create branches of branches if you implement a sub feature.
