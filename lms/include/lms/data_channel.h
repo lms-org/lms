@@ -11,6 +11,16 @@ class ModuleWrapper;
 
 // BACKEND
 
+struct Void {
+    void operator* () {
+        throw std::runtime_error("Fick nicht mit dem Ficker.");
+    }
+
+    void* operator-> () {
+        throw new std::runtime_error("Du bist nicht Robin Hood");
+    }
+};
+
 struct ObjectBase {
     virtual ~ObjectBase() {}
     virtual void* get();
@@ -172,23 +182,49 @@ public:
 protected:
     std::shared_ptr<DataChannelInternal> m_internal;
 public:
+    bool serialize(std::ostream &os) {
+        // if we would use dynamic_cast here, we could remove the serializable
+        // flag of data channels, but that is not necessarily faster or better
+
+        if(m_internal->main && m_internal->main->serializable()) {
+            const Serializable *data = static_cast<Serializable*>(m_internal->main->get());
+            data->lmsSerialize(os);
+            return true;
+        } else {
+            return false;
+        }
+    }
 };
 
 template<typename T>
 class ReadDataChannel : public DataChannel<T> {
 public:
+    ReadDataChannel() : DataChannel<T>(nullptr) {}
+
     ReadDataChannel(std::shared_ptr<DataChannelInternal> internal) :
         DataChannel<T>(internal) {}
 
-    const T* operator ->() {
-        if(this->m_internal->buffered()){
+    const T* get() {
+
+        return static_cast<const T*>(this->m_internal->main->get());
+
+        // TODO buffer
+        /*if(this->m_internal->buffered()){
             if(this->m_internal->m_buffer.size() > 0)
                 return this->m_internal->m_buffer[this->m_internal->m_buffer.size() -1];
             else
                 return nullptr;
         }else{
-            return this->m_internal->main.get();
-        }
+
+        }*/
+    }
+
+    const T* operator ->() {
+        return get();
+    }
+
+    const T& operator *() {
+        return *get();
     }
 };
 
@@ -198,9 +234,29 @@ public:
     WriteDataChannel(std::shared_ptr<DataChannelInternal> internal) :
         DataChannel<T>(internal) {}
 
+    WriteDataChannel() : DataChannel<T>(nullptr) {}
+
+    T* get() {
+        return static_cast<T*>(this->m_internal->main->get());
+    }
+
     T* operator ->(){
         //m_cycle = maintainer->cycleCount();
-        return this->m_internal->main.get();
+        return get();
+    }
+
+    T& operator *() {
+        return *get();
+    }
+
+    bool deserialize(std::istream &is) {
+        if(this->m_internal->main && this->m_internal->main->serializable()) {
+            Serializable *data = static_cast<Serializable*>(this->m_internal->main->get());
+            data->lmsDeserialize(is);
+            return true;
+        } else {
+            return false;
+        }
     }
 };
 

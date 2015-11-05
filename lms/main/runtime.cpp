@@ -9,7 +9,7 @@ Runtime::Runtime(const std::string &name, Framework& framework) :
     m_name(name), logger(name), m_framework(framework),
     m_argumentHandler(framework.getArgumentHandler()),
     m_profiler(framework.profiler()),
-    m_executionManager(m_profiler, name), m_running(false) {
+    m_executionManager(m_profiler, *this), m_running(false) {
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
 

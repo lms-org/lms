@@ -35,12 +35,11 @@ class ExecutionManager;
 class DataManager {
 friend class ExecutionManager;
 friend class Framework;
+public:
+    typedef std::unordered_map<std::string,std::shared_ptr<DataChannelInternal>> ChannelMap;
 private:
     logging::Logger logger;
     ExecutionManager &execMgr;
-private:
-    typedef std::unordered_map<std::string,std::shared_ptr<DataChannelInternal>> ChannelMap;
-
     ChannelMap channels;
 public:
     DataManager(Runtime &runtime, ExecutionManager &execMgr);
@@ -101,7 +100,7 @@ public:
      * @return data channel (reading and writing)
      */
     template<typename T>
-    T* writeChannel(Module *module, const std::string &reqName) {
+    WriteDataChannel<T> writeChannel(Module *module, const std::string &reqName) {
         return accessChannel<T, WriteDataChannel<T>, true>(module, reqName);
     }
 
@@ -112,6 +111,7 @@ public:
      * @param module requesting module
      * @param name data channel name
      */
+    DEPRECATED
     void getWriteAccess(Module *module, const std::string &name);
 
     /**
@@ -121,6 +121,7 @@ public:
      * @param module requesting module
      * @param name data channel name
      */
+    DEPRECATED
     void getReadAccess(Module *module, const std::string &name);
 
     /**
@@ -138,6 +139,7 @@ public:
      * @return false if the data channel was not initialized or if it
      * is not serializable or if no read or write access, otherwise true
      */
+    DEPRECATED
     bool serializeChannel(Module *module, const std::string &name, std::ostream &os);
 
     /**
@@ -155,6 +157,7 @@ public:
      * @return false if the data channel was not initialized
      * or if it is not serializable or if no write access, otherwise true
      */
+    DEPRECATED
     bool deserializeChannel(Module *module, const std::string &name, std::istream &is);
 
     /**
