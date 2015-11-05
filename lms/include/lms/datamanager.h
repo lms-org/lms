@@ -62,7 +62,7 @@ public:
 
         initChannelIfNeeded<T>(channel);
 
-        if(! channel->checkType(typeid(T).hash_code())) {
+        if(channel->main->checkType<T>() == TypeResult::INVALID) {
             return DataChannelClass(nullptr); // TODO better error handling
         }
 
@@ -302,12 +302,18 @@ private:
      */
     template<typename T>
     void initChannelIfNeeded(std::shared_ptr<DataChannelInternal>& channel) {
-        if(channel) {
-            return;
+        if(! channel) {
+            channel = std::make_shared<DataChannelInternal>();
+            channel->maintainer = &m_runtime;
         }
 
-        channel = std::make_shared<DataChannelInternal>();
-        channel->maintainer = &m_runtime;
+        if(! channel->main) {
+            channel->main = std::make_shared<Object<T>>();
+        } else {
+            if(channel->main->isVoid()) {
+
+            }
+        }
     }
 
     /**

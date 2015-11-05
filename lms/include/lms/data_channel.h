@@ -21,12 +21,46 @@ struct Void {
     }
 };
 
+/**
+* TODO -1 if the type is invalid, 0 if the type of the DataChannel is
+* subtype of the given one, 1 if the given type is the same or subtype of
+* the DataChannel-type
+*/
+enum class TypeResult {
+    INVALID, SUBTYPE, SUPERTYPE, SAME
+};
+
+#define REGISTER_TYPE(T) std::cout << #T;
+
 struct ObjectBase {
     virtual ~ObjectBase() {}
     virtual void* get();
     virtual std::string typeName() const;
     virtual size_t hashCode() const;
-    virtual bool serializable() const;
+    virtual bool isSerializable() const;
+    virtual bool isVoid() const;
+
+    template<typename T>
+    TypeResult checkType() {
+        REGISTER_TYPE(T);
+
+        if(hashCode() == typeid(T).hash_code()) {
+            return TypeResult::SAME;
+        }
+
+        if(isVoid()) {
+            return TypeResult::SUBTYPE;
+        }
+
+        return TypeResult::INVALID;
+
+        // TODO polymorphic data channel types
+        /*if(dynamic_cast<T*>(get()) != nullptr) {
+            return TypeResult::SUBTYPE;
+        }*/
+
+        //if(dynamic_cast<>(new T()))
+    }
 };
 
 template<typename T>
@@ -45,8 +79,12 @@ struct Object : public ObjectBase {
         return typeid(T).hash_code();
     }
 
-    bool serializable() const override {
+    bool isSerializable() const override {
         return std::is_base_of<Serializable, T>::value;
+    }
+
+    bool isVoid() const override {
+        return std::is_same<T, Void>::value;
     }
 };
 
@@ -108,14 +146,6 @@ public:
 
 
 public:
-    /**
-    * TODO -1 if the type is invalid, 0 if the type of the DataChannel is
-    * subtype of the given one, 1 if the given type is the same or subtype of
-    * the DataChannel-type
-    */
-    bool checkType(size_t hashCode) {
-        return this->main->hashCode() == hashCode;
-    }
 
     /**
      * @brief getCycle
@@ -186,7 +216,7 @@ public:
         // if we would use dynamic_cast here, we could remove the serializable
         // flag of data channels, but that is not necessarily faster or better
 
-        if(m_internal->main && m_internal->main->serializable()) {
+        if(m_internal->main && m_internal->main->isSerializable()) {
             const Serializable *data = static_cast<Serializable*>(m_internal->main->get());
             data->lmsSerialize(os);
             return true;
@@ -250,7 +280,7 @@ public:
     }
 
     bool deserialize(std::istream &is) {
-        if(this->m_internal->main && this->m_internal->main->serializable()) {
+        if(this->m_internal->main && this->m_internal->main->isSerializable()) {
             Serializable *data = static_cast<Serializable*>(this->m_internal->main->get());
             data->lmsDeserialize(is);
             return true;
