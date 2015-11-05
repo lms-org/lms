@@ -7,7 +7,7 @@
 #include "lms/logger.h"
 namespace lms {
 class Runtime; //circle dependency
-class ModuleWrapper;
+struct ModuleWrapper;
 
 // BACKEND
 
@@ -30,20 +30,16 @@ enum class TypeResult {
     INVALID, SUBTYPE, SUPERTYPE, SAME
 };
 
-#define REGISTER_TYPE(T) std::cout << #T;
-
 struct ObjectBase {
     virtual ~ObjectBase() {}
-    virtual void* get();
-    virtual std::string typeName() const;
-    virtual size_t hashCode() const;
-    virtual bool isSerializable() const;
-    virtual bool isVoid() const;
+    virtual void* get() =0;
+    virtual std::string typeName() const =0;
+    virtual size_t hashCode() const =0;
+    virtual bool isSerializable() const =0;
+    virtual bool isVoid() const =0;
 
     template<typename T>
     TypeResult checkType() {
-        REGISTER_TYPE(T);
-
         if(hashCode() == typeid(T).hash_code()) {
             return TypeResult::SAME;
         }
