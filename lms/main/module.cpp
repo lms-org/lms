@@ -47,10 +47,15 @@ namespace lms{
     }
 
     lms_EXPORT const ModuleConfig* Module::getConfig(const std::string &name){
-        return datamanager()->readChannel<ModuleConfig>(this, "CONFIG_" + getName() + "_" + name);
+        return &config(name);
     }
+
+    lms_EXPORT const ModuleConfig& Module::config(const std::string &name){
+        return m_wrapper->configs[name];
+    }
+
     lms_EXPORT bool Module::hasConfig(const std::string &name){
-        return datamanager()->hasChannel(this, "CONFIG_" + getName() + "_" + name);
+        return m_wrapper->configs.find(name) != m_wrapper->configs.end();
     }
 
     int Module::cycleCounter() {

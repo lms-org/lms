@@ -7,29 +7,46 @@
 #include "lms/logger.h"
 namespace lms {
 class Runtime; //circle dependency
+class ModuleWrapper;
 
 // BACKEND
 
-class DataChannelInternalBase{
+struct ObjectBase {
+    virtual ~ObjectBase() {}
+    virtual void* get();
+    virtual std::string typeName() const;
+    virtual size_t hashCode() const;
+    virtual bool serializable() const;
+};
 
+template<typename T>
+struct Object : public ObjectBase {
+    T value;
+
+    void* get() override {
+        return &value;
+    }
+
+    std::string typeName() const override {
+        return extra::typeName<T>();
+    }
+
+    size_t hashCode() const override {
+        return typeid(T).hash_code();
+    }
+
+    bool serializable() const override {
+        return std::is_base_of<Serializable, T>::value;
+    }
+};
+
+template<typename T>
+class ReadDataChannel;
+
+class DataChannelInternal {
 public:
-    virtual ~DataChannelInternalBase() {}
+    virtual ~DataChannelInternal() {}
 
-    struct DataChannelInformation {
-        DataChannelInformation() : serializable(false),exclusiveWrite(false) {}
-        std::string dataTypeName;
-        size_t dataHashCode;
-        bool serializable;
-        bool exclusiveWrite;
-        std::shared_ptr<Runtime> maintainer;
-    };
-
-    /**
-     * @brief info DataChannelInformation
-     */
-    DataChannelInformation info;
-
-protected:
     /**
      * @brief maintainer Runtime that holds the dataChannel
      */
@@ -37,25 +54,25 @@ protected:
     /**
      * @brief runtimes which need the dataChannel
      */
-    std::vector<std::shared_ptr<const Runtime>> runtimes;
+    std::vector<Runtime*> runtimes;
     /**
      * @brief dataHost runtime that provides the data
      */
-    std::shared_ptr<const Runtime> dataHost;
+    const Runtime *dataHost;
     int m_cycle; //TODO not sure where/how to set it // -> (not const) sets current cycle-count + returns const ->
     /**
      * @brief readers reading modules
      */
-    std::vector<std::string> readers;
+    std::vector<std::shared_ptr<ModuleWrapper>> readers;
     /**
      * @brief writers writing modules
      */
-    std::vector<std::string> writers;
+    std::vector<std::shared_ptr<ModuleWrapper>> writers;
     /**
      * @brief addRuntime adds Runtime that wants the data
      * @param runtime
      */
-    void addRuntime(std::shared_ptr<const Runtime> runtime){
+    void addRuntime(Runtime *runtime){
         runtimes.push_back(runtime);
     }
     /**
@@ -65,16 +82,16 @@ protected:
         runtimes.clear();
     }
 
-    bool isReader(const std::string moduleName) const{
-        return std::find(readers.begin(),readers.end(),moduleName) != readers.end();
+    bool isReader(std::shared_ptr<ModuleWrapper> module) const{
+        return std::find(readers.begin(),readers.end(),module) != readers.end();
     }
 
-    bool isWriter(const std::string moduleName) const{
-        return std::find(writers.begin(),writers.end(),moduleName) != writers.end();
+    bool isWriter(std::shared_ptr<ModuleWrapper> module) const{
+        return std::find(writers.begin(),writers.end(),module) != writers.end();
     }
 
-    bool isReaderOrWriter(const std::string moduleName) const{
-        return isReader(moduleName) || isWriter(moduleName);
+    bool isReaderOrWriter(std::shared_ptr<ModuleWrapper> module) const{
+        return isReader(module) || isWriter(module);
     }
 
 
@@ -87,7 +104,7 @@ public:
     * the DataChannel-type
     */
     bool checkType(size_t hashCode) {
-        return info.dataHashCode == hashCode;
+        return this->main->hashCode() == hashCode;
     }
 
     /**
@@ -122,44 +139,22 @@ public:
      * @return true if it receives data from another runtime (hasWriters returns false!)
      */
     bool buffered() const {
-        return dataHost.get() != nullptr;//TODO not sure if this works
+        return dataHost != nullptr;//TODO not sure if this works
     }
-};
-
-template<typename T>
-class ReadDataChannel;
-
-template<typename T>
-class DataChannelInternal: public DataChannelInternalBase{
-    friend class DataManager; //To call protected methods
-protected:
-    std::shared_ptr<std::vector<DataChannelInternal<T>>> m_preBuffer;
 public:
-    DataChannelInternal() {
-        // used for checkType and better error messages
-        info.dataTypeName = extra::typeName<T>();
-        info.dataHashCode = typeid(T).hash_code();
-        info.serializable = std::is_base_of<Serializable, T>::value;
+    std::shared_ptr<ObjectBase> main;
 
-        info.exclusiveWrite = false;
-    }
+    std::vector<DataChannelInternal> m_preBuffer;
+    std::vector<DataChannelInternal> m_buffer;
 
-    std::shared_ptr<T*> main;
-    std::shared_ptr<std::vector<ReadDataChannel<T>>> m_buffer;
-
-    const std::vector<ReadDataChannel<T>> &buffer() const{
-        //Übergibt alle verfügbaren T*
-        return m_buffer.get();
-    }
-                                //called after each cycle of the runtime for each dataChannel
-
+    //called after each cycle of the runtime for each dataChannel
     void bufferCycle(){
         if(buffered()){
         //clears the buffer
-        m_buffer.get()->clear();
+        m_buffer.clear();
         }else if(sharesData()){
         //add data to other runtime
-        for(std::shared_ptr<Runtime> &runtime : runtimes){
+        for(Runtime *runtime : runtimes){
             //TODO
             //runtime.addData(this);
             }
@@ -171,24 +166,28 @@ public:
 
 template<typename T>
 class DataChannel {
+public:
+    DataChannel(std::shared_ptr<DataChannelInternal> internal) :
+        m_internal(internal) {}
 protected:
-    std::shared_ptr<DataChannelInternal<T>> m_internal;
+    std::shared_ptr<DataChannelInternal> m_internal;
 public:
 };
 
 template<typename T>
 class ReadDataChannel : public DataChannel<T> {
-private:
-
 public:
-    const T* operator ->(){
-        if(m_internal->buffered()){
-            if(m_internal->m_buffer.size() > 0)
-                return m_internal->m_buffer[m_internal->m_buffer.size() -1];
+    ReadDataChannel(std::shared_ptr<DataChannelInternal> internal) :
+        DataChannel<T>(internal) {}
+
+    const T* operator ->() {
+        if(this->m_internal->buffered()){
+            if(this->m_internal->m_buffer.size() > 0)
+                return this->m_internal->m_buffer[this->m_internal->m_buffer.size() -1];
             else
                 return nullptr;
         }else{
-            return m_internal->main.get();
+            return this->m_internal->main.get();
         }
     }
 };
@@ -196,9 +195,12 @@ public:
 template<typename T>
 class WriteDataChannel : public DataChannel<T> {
 public:
+    WriteDataChannel(std::shared_ptr<DataChannelInternal> internal) :
+        DataChannel<T>(internal) {}
+
     T* operator ->(){
         //m_cycle = maintainer->cycleCount();
-        return m_internal->main.get();
+        return this->m_internal->main.get();
     }
 };
 

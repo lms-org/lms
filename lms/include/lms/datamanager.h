@@ -16,6 +16,7 @@
 #include "lms/module_wrapper.h"
 #include "lms/extra/dot_exporter.h"
 #include "lms/data_channel.h"
+#include "lms/deprecated.h"
 
 namespace lms {
 
@@ -38,7 +39,9 @@ private:
     logging::Logger logger;
     ExecutionManager &execMgr;
 private:
-    std::unordered_map<std::string,std::shared_ptr<DataChannelInternalBase>> channels;
+    typedef std::unordered_map<std::string,std::shared_ptr<DataChannelInternal>> ChannelMap;
+
+    ChannelMap channels;
 public:
     DataManager(Runtime &runtime, ExecutionManager &execMgr);
     ~DataManager();
@@ -53,6 +56,29 @@ public:
      */
     DataManager& operator= (const DataManager&) = delete;
 
+    template<typename T, typename DataChannelClass, bool isWriter>
+    DataChannelClass accessChannel(Module *module, const std::string &reqName) {
+        std::string name = module->getChannelMapping(reqName);
+        std::shared_ptr<DataChannelInternal> &channel = channels[name];
+
+        initChannelIfNeeded<T>(channel);
+
+        if(! channel->checkType(typeid(T).hash_code())) {
+            return DataChannelClass(nullptr); // TODO better error handling
+        }
+
+        if(! channel->isReaderOrWriter(module->wrapper())) {
+            if(isWriter) {
+                channel->writers.push_back(module->wrapper());
+            } else {
+                channel->readers.push_back(module->wrapper());
+            }
+            invalidateExecutionManager();
+        }
+
+        return DataChannelClass(channel);
+    }
+
     /**
      * @brief Return the data channel with the given name with read permissions
      * or create one if needed.
@@ -63,25 +89,7 @@ public:
      */
     template<typename T>
     ReadDataChannel<T> readChannel(Module *module, const std::string &reqName) {
-        std::string name = module->getChannelMapping(reqName);
-        std::shared_ptr<DataChannelInternalBase> &channel = channels[name];
-
-        initChannelIfNeeded<T>(channel);
-
-        if(! channel->checkType(typeid(T).hash_code())) {
-            return nullptr;
-        }
-
-        if(checkIfReaderOrWriter(channel, module)) {
-//            logger.error("readChannel") << "Module " << module->getName() <<
-//                                        " is already reader or writer of channel "
-//                                        << name;
-        } else {
-            channel.readers.push_back(module->wrapper());
-            invalidateExecutionManager();
-        }
-
-        return static_cast<const T*>(channel.dataWrapper->get());
+        return accessChannel<T, ReadDataChannel<T>, false>(module, reqName);
     }
 
     /**
@@ -94,78 +102,7 @@ public:
      */
     template<typename T>
     T* writeChannel(Module *module, const std::string &reqName) {
-        std::string name = module->getChannelMapping(reqName);
-        DataChannel &channel = channels[name];
-
-        if(channel.exclusiveWrite) {
-            logger.error() << "Module " << module->getName() << " requested channel " << name << std::endl
-                << " with write access, but the channel is already exclusive.";
-            return nullptr;
-        }
-
-        // if dataPointer is null, then the channel did not exist yet
-        if(channel.dataWrapper == nullptr) {
-            initChannel<T>(channel);
-        } else if(! checkType<T>(channel, name)) {
-            return nullptr;
-        }
-
-        if(checkIfReaderOrWriter(channel, module)) {
-            logger.error("writeChannel") << "Module " << module->getName() <<
-                                        " is already reader or writer of channel "
-                                        << name;
-        } else {
-            channel.writers.push_back(module->wrapper());
-            invalidateExecutionManager();
-        }
-
-        return static_cast<T*>(channel.dataWrapper->get());
-    }
-
-    /**
-     * @brief Return the data channel with the given name with write permissions
-     * or create one if needed.
-     *
-     * NOTE: Only module can have the exclusive write permission. If there
-     * is atleast one usual writer the there cannot be an exclusive writer.
-     *
-     * @param module requesting module
-     * @param name data channel name
-     * @return data channel (reading + writing)
-     */
-    template<typename T>
-    T* exclusiveWriteChannel(Module *module, const std::string &reqName) {
-        std::string name = module->getChannelMapping(reqName);
-        DataChannel &channel = channels[name];
-
-        if(channel.exclusiveWrite) {
-            logger.error() << "Module " << module->getName() << "requested channel " << name << std::endl
-                << " with exclusive write access, but the channel is already exclusive.";
-            return nullptr;
-        }
-
-        if(channel.dataWrapper == nullptr) {
-            // create channel if not yet there
-            initChannel<T>(channel);
-            channel.exclusiveWrite = true;
-        } else if(! checkType<T>(channel, name)) {
-            // check if requested type is the same as in the datachannel
-            return nullptr;
-        } else if(! channel.writers.empty()) {
-            logger.error() << "Channel " << name << " has already writers!";
-            return nullptr;
-        }
-
-        if(checkIfReaderOrWriter(channel, module)) {
-            logger.error("exclusiveWriteChannel") << "Module " << module->getName() <<
-                                        " is already reader or writer of channel "
-                                        << name;
-        } else {
-            channel.writers.push_back(module->wrapper());
-            invalidateExecutionManager();
-        }
-
-        return static_cast<T*>(channel.dataWrapper->get());
+        return accessChannel<T, WriteDataChannel<T>, true>(module, reqName);
     }
 
     /**
@@ -176,15 +113,6 @@ public:
      * @param name data channel name
      */
     void getWriteAccess(Module *module, const std::string &name);
-
-    /**
-     * @brief Register the given module to have exclusive write access
-     * on a data channel. This will not create the data channel.
-     *
-     * @param module requesting module
-     * @param name data channel name
-     */
-    void getExclusiveWriteAccess(Module *module, const std::string &name);
 
     /**
      * @brief Register the given module to have read access
@@ -264,8 +192,11 @@ public:
      * @param data initial content
      */
     template<typename T>
+    DEPRECATED
     void setChannel(const std::string &name, const T &data) {
-        DataChannel &channel = channels[name];
+        // TODO move module configs to ModuleWrapper (not used anywhere else)
+
+        /*DataChannel &channel = channels[name];
 
         if(channel.dataWrapper == nullptr) {
             // initialize channel
@@ -282,7 +213,7 @@ public:
 
             PointerWrapperImpl<T> *wrapper = static_cast<PointerWrapperImpl<T>*>(channel.dataWrapper);
             wrapper->set(data);
-        }
+        }*/
 
         // Reset channel
         // TODO create a resetChannel method for this code:
@@ -303,8 +234,11 @@ public:
      * otherwise the data channel object
      */
     template<typename T>
+    DEPRECATED
     T* getChannel(const std::string &name, bool ignoreType) {
-        if(channels.find(name) == channels.end()){
+        // TODO look for usages
+
+        /*if(channels.find(name) == channels.end()){
             logger.warn("getChannel")<<"channel doesn't exist: "<<name;
             return nullptr;
         }
@@ -314,7 +248,8 @@ public:
             return nullptr;
         }
 
-        return static_cast<T*>(channel.dataWrapper->get());
+        return static_cast<T*>(channel.dataWrapper->get());*/
+        return nullptr;
     }
     /**
      * @brief Return a data channel without creating it
@@ -326,6 +261,7 @@ public:
      * otherwise the data channel object
      */
     template<typename T>
+    DEPRECATED
     T* getChannel(const std::string &name) {
         return getChannel<T>(name, false);
     }
@@ -344,7 +280,7 @@ private:
      *
      * @return datachannel map
      */
-    const std::map<std::string,DataChannel>& getChannels() const;
+    const ChannelMap& getChannels() const;
 
     /**
      * @brief Release all channels
@@ -356,48 +292,18 @@ private:
     void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
 
     /**
-     * @brief Check if requested channel data type T is the same as the data type
-     * that is saved in the channel.
-     *
-     * NOTE: This function does not use transparent channel mapping.
-     *
-     * @param channel the current state of the datachannel
-     * @param name data channel name
-     * @return true if types are the same, false otherwise
-     */
-    template<typename T>
-    bool checkType(const DataChannel &channel, const std::string &name) {
-        // check for hash code of data types
-        if(channel.dataHashCode != typeid(T).hash_code()) {
-            logger.error() << "Requested wrong data type for channel " << name << std::endl
-                << "Channel type is " << channel.dataTypeName << ", requested was " << extra::typeName<T>();
-            return false;
-        }
-
-        // check for size of data types
-        // TODO this is not longer necessary
-        if(channel.dataSize != sizeof(T)) {
-            logger.error() << "Wrong data size for channel " << name << "!" << std::endl
-                << "Requested " << sizeof(T) << " but is " << channel.dataSize;
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @brief Initialize a data channel for usage.
      * The type is implicitly given by the type parameter T.
      *
      * @param channel the data channel to initialize
      */
     template<typename T>
-    void initChannelIfNeeded(std::shared_ptr<DataChannelInternalBase>& channel) {
+    void initChannelIfNeeded(std::shared_ptr<DataChannelInternal>& channel) {
         if(channel) {
             return;
         }
 
-        channel = std::make_shared<DataChannelInternal<T>>();
+        channel = std::make_shared<DataChannelInternal>();
         channel->maintainer = &m_runtime;
     }
 

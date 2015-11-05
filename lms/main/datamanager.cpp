@@ -24,10 +24,7 @@ DataManager::~DataManager() {
     // - doch handle
     // - oder: releaseChannel in deinitialize aufrufen
 
-    for(auto it = channels.begin(); it != channels.end(); it++) {
-        delete it->second.dataWrapper;
-        it->second.dataWrapper = nullptr;
-    }
+    // TODO delete everything
 }
 
 void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
@@ -45,26 +42,6 @@ void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
                                     << name;
     } else {
         execMgr.invalidate();
-        channel.writers.push_back(module->wrapper());
-    }
-}
-
-void DataManager::getExclusiveWriteAccess(Module *module, const std::string &reqName) {
-    std::string name = module->getChannelMapping(reqName);
-    DataChannel &channel = channels[name];
-
-    if(channel.exclusiveWrite) {
-        logger.error() << "Module " << module->getName() << " requested channel " << name << std::endl
-            << " with exclusive write access, but the channel is already exclusive.";
-    }
-
-    if(checkIfReaderOrWriter(channel, module)) {
-        logger.error("getExclusiveWriteAccess") << "Module " << module->getName() <<
-                                    " is already reader or writer of channel "
-                                    << name;
-    } else {
-        execMgr.invalidate();
-        channel.exclusiveWrite = true;
         channel.writers.push_back(module->wrapper());
     }
 }
@@ -127,7 +104,7 @@ bool DataManager::deserializeChannel(Module *module, const std::string &reqName,
     }
 }
 
-const std::map<std::string,DataManager::DataChannel>& DataManager::getChannels() const {
+const DataManager::ChannelMap &DataManager::getChannels() const {
     return channels;
 }
 
