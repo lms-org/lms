@@ -320,7 +320,6 @@ void XmlParser::parseModules(pugi::xml_node node,
                              const std::string &currentFile,
                              LoadConfigFlag flag) {
     std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>(m_runtime);
-    std::map<std::string, ModuleConfig> configMap;
 
     module->name = node.child("name").child_value();
 
@@ -416,7 +415,7 @@ void XmlParser::parseModules(pugi::xml_node node,
                 lconfPath = extra::dirname(currentFile) + "/" + lconfPath;
             }
 
-            bool loadResult = configMap[name].loadFromFile(lconfPath);
+            bool loadResult = module->configs[name].loadFromFile(lconfPath);
             if(!loadResult) {
                 errorFile(lconfPath);
             } else {
@@ -424,14 +423,8 @@ void XmlParser::parseModules(pugi::xml_node node,
             }
         } else {
             // if there was no src attribut then parse the tag's content
-            parseModuleConfig(configNode, configMap[name], "");
+            parseModuleConfig(configNode, module->configs[name], "");
         }
-    }
-
-    for(std::pair<std::string, ModuleConfig> pair : configMap) {
-        m_runtime->executionManager().getDataManager()
-            .setChannel<ModuleConfig>(
-            "CONFIG_" + module->name + "_" + pair.first, pair.second);
     }
 
     if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
