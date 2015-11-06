@@ -5,6 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include "lms/logger.h"
+#include "lms/serializable.h"
 namespace lms {
 class Runtime; //circle dependency
 struct ModuleWrapper;
