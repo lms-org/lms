@@ -61,6 +61,8 @@ set (HEADERS
     "include/lms/profiler.h"
     "include/lms/module_config.h"
     "include/lms/data_channel.h"
+    "include/lms/inheritance.h"
+    "include/lms/data_channel_internal.h"
     "include/lms/runtime.h"
     "include/lms/execution_type.h"
     "include/lms/buffered_datamanager.h"
