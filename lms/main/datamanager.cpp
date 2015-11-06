@@ -13,7 +13,7 @@
 namespace lms {
 
 DataManager::DataManager(Runtime &runtime, ExecutionManager &execMgr)
-    : m_runtime(runtime), logger("lms.DataManager"), execMgr(execMgr) {}
+    : logger("lms.DataManager"), execMgr(execMgr), m_runtime(runtime) {}
 
 DataManager::~DataManager() {
     // TODO destruct all dataPointers
