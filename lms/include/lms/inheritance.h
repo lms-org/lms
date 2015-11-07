@@ -12,6 +12,7 @@ public:
      * @return true if the object is a subtype of the class given by it's hashcode
      */
     virtual bool isSubType(size_t hashcode) = 0;
+    virtual ~InheritanceBase(){}
 };
 
 template <typename... Args>
@@ -23,8 +24,9 @@ struct Impl<>
     static bool isSubType(size_t hashcode){
         (void)hashcode;
         return false;
-
   }
+
+    virtual ~Impl(){}
 };
 
 template <typename First, typename... Args>
@@ -43,6 +45,7 @@ struct Impl<First, Args...>
         if(std::is_base_of<InheritanceBase,First>::value){
             InheritanceBase *inh = (InheritanceBase*)(new First());
             sub = inh->isSubType(hashcode);
+            delete inh; //TODO
             if(sub)
                 return true;
 
@@ -60,6 +63,13 @@ struct Impl<First, Args...>
  */
 class Inheritance:public InheritanceBase{
 public:
+
+    /**
+     * @brief isSubType
+     * @param hashcode of the given class
+     * @return true if the object is a subtype of the class given by it's hashcode
+     */
+    virtual bool isSubType(size_t hashcode) override= 0;
     /**
      * @brief isSubType
      * @param hashcode of the given class
@@ -69,6 +79,8 @@ public:
     bool isSubType(size_t hashcode){
         return Impl<REST...>::isSubType(hashcode);
     }
+
+    virtual ~Inheritance(){}
 };
 
 

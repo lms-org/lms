@@ -41,39 +41,42 @@ struct ObjectBase {
     virtual bool isVoid() const =0;
     virtual bool supportsInheritance() const = 0;
 
+    /**
+     *
+     * return returns SUBTYPE if the current object is a subtype of the given one (hashcode)
+     */
     template<typename T>
     TypeResult checkType() {
+        //Check if they are the same
         if(hashCode() == typeid(T).hash_code()) {
             return TypeResult::SAME;
         }
-
-        if(isVoid()) {
+        //check if the asked object is void
+        if(std::is_same<T, Void>::value){
             return TypeResult::SUBTYPE;
+        }
+
+        //if the current object is void
+        if(isVoid()) {
+            return TypeResult::SUPERTYPE;
         }
         //check if the current object supports Inheritance
         if(supportsInheritance()){
             Inheritance *inh = static_cast<Inheritance*>(get());
             if(inh->isSubType(typeid(T).hash_code())){
-                return TypeResult::SUPERTYPE;
+                return TypeResult::SUBTYPE;
             }
         }
         //check if the new type supports Inheritance
         if(std::is_base_of<Inheritance,T>::value){
-            void* t = new T();
+            Inheritance* t = (Inheritance*)new T();
             if(static_cast<Inheritance*>(t)->isSubType(hashCode())){
-                return TypeResult::SUBTYPE;
+                return TypeResult::SUPERTYPE;
             }
-            delete static_cast<T*>(t); //TODO
+            delete t;
         }
 
         return TypeResult::INVALID;
-
-        // TODO polymorphic data channel types
-        /*if(dynamic_cast<T*>(get()) != nullptr) {
-            return TypeResult::SUBTYPE;
-        }*/
-
-        //if(dynamic_cast<>(new T()))
     }
 };
 
@@ -213,6 +216,7 @@ public:
         }else if(sharesData()){
         //add data to other runtime
         for(Runtime *runtime : runtimes){
+            (void)runtime;
             //TODO
             //runtime.addData(this);
             }

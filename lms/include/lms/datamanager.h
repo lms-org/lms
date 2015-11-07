@@ -60,10 +60,30 @@ public:
         std::string name = module->getChannelMapping(reqName);
         std::shared_ptr<DataChannelInternal> &channel = channels[name];
 
-        initChannelIfNeeded<T>(channel);
-
-        if(channel->main->checkType<T>() == TypeResult::INVALID) {
-            return DataChannelClass(nullptr); // TODO better error handling
+        //initChannelIfNeeded<T>(channel);
+        //create object
+        if(!channel) {
+            logger.debug("accessChannel")<<"creating new dataChannel"<<reqName;
+            channel = std::make_shared<DataChannelInternal>();
+            channel->maintainer = &m_runtime;
+            if(! channel->main) {
+                channel->main = std::make_shared<Object<T>>();
+            }
+        }else{
+            if(! channel->main) {
+                channel->main = std::make_shared<Object<T>>();
+                logger.error("accessChannel")<<"INVALID STATE, channel != null && channel->main == null";
+            }else{
+                TypeResult typeRes = channel->main->checkType<T>() ;
+                if(typeRes == TypeResult::INVALID) {
+                    logger.error("accessChannel")<< "INVALID TYPES GIVEN FOR CHANNEL "<<name << " tryed to access it with type: "<<typeid(T).name();
+                    return DataChannelClass(nullptr);
+                }else if(typeRes == TypeResult::SUPERTYPE){
+                    //we can "upgrade" the current channel
+                    logger.info("accessChannel")<<"upgrading channel "<<name << " to "<< typeid(T).name();
+                    channel->main = std::make_shared<Object<T>>();
+                }
+            }
         }
 
         if(! channel->isReaderOrWriter(module->wrapper())) {
