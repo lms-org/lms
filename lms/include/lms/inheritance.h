@@ -65,13 +65,13 @@ class Inheritance:public InheritanceBase{
 public:
 
     /**
-     * @brief isSubType
+     * @brief isSubType call the template isSubType function
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
     virtual bool isSubType(size_t hashcode) override= 0;
     /**
-     * @brief isSubType
+     * @brief isSubType call this method with all your supertypes in isSubType
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
