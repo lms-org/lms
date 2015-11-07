@@ -10,6 +10,7 @@
 #include <lms/module_config.h>
 #include <lms/messaging.h>
 #include <lms/buffered_datamanager.h>
+#include "lms/data_channel.h"
 #include "lms/deprecated.h"
 
 namespace lms {
