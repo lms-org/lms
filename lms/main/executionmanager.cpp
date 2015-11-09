@@ -13,17 +13,17 @@
 #include "lms/profiler.h"
 #include "lms/logger.h"
 #include <lms/extra/dot_exporter.h>
+#include "lms/runtime.h"
 
 namespace lms {
 
-ExecutionManager::ExecutionManager(Profiler &m_profiler, const std::string &runtimeName)
-    : m_runtimeName(runtimeName),
-      logger(runtimeName + ".ExecutionManager"), m_numThreads(1),
+ExecutionManager::ExecutionManager(Profiler &profiler, Runtime &runtime)
+    : m_runtimeName(runtime.name()),
+      logger(runtime.name() + ".ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
-      valid(false), dataManager(*this),
+      valid(false), dataManager(runtime, *this),
       m_messaging(), m_cycleCounter(-1), running(true),
-      m_profiler(m_profiler) {
-}
+      m_profiler(profiler) {}
 
 ExecutionManager::~ExecutionManager () {
     stopRunning();
@@ -376,13 +376,13 @@ void ExecutionManager::sort(){
 
 void ExecutionManager::sortModules(){
     //find modules that use the same data-channel
-    for(const std::pair<std::string, DataManager::DataChannel> &pair : dataManager.getChannels()){
+    for(const std::pair<std::string,std::shared_ptr<DataChannelInternal>> &pair : dataManager.getChannels()){
         //create one list
         std::vector<std::shared_ptr<ModuleWrapper>> all;
-        for(std::shared_ptr<ModuleWrapper> r1 : pair.second.readers){
+        for(std::shared_ptr<ModuleWrapper> r1 : pair.second->readers){
             all.push_back(r1);
         }
-        for(std::shared_ptr<ModuleWrapper> w1 : pair.second.writers){
+        for(std::shared_ptr<ModuleWrapper> w1 : pair.second->writers){
             all.push_back(w1);
         }
 
@@ -404,7 +404,7 @@ void ExecutionManager::sortModules(){
                     bool mw1Write = false;
                     bool mw2Write = false;
 
-                    for(std::shared_ptr<ModuleWrapper> r1 : pair.second.writers){
+                    for(std::shared_ptr<ModuleWrapper> r1 : pair.second->writers){
                         if(r1->name == mw1->name){
                             mw1Write = true;
                         }else if(r1->name == mw2->name){

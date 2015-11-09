@@ -26,7 +26,7 @@ class Loader;
 class ExecutionManager {
 public:
 
-    ExecutionManager(Profiler &m_profiler, const std::string &runtimeName);
+    ExecutionManager(Profiler &profiler, Runtime &runtime);
     ~ExecutionManager();
 
     /**cycle modules */

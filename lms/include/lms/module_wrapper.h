@@ -7,6 +7,7 @@
 
 #include "lms/extra/time.h"
 #include "lms/execution_type.h"
+#include "lms/module_config.h"
 
 namespace lms {
 
@@ -77,6 +78,7 @@ struct ModuleWrapper {
      */
     Module *moduleInstance;
 
+    std::map<std::string, ModuleConfig> configs;
 #ifdef _WIN32
     // TODO pointer to open shared library or something similar
 #else
