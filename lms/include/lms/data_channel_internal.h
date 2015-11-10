@@ -62,7 +62,9 @@ struct ObjectBase {
         if(isVoid()) {
             return TypeResult::SUPERTYPE;
         }
+
         //check if the current object supports Inheritance
+       // std::cout << "checkType check old type for Inheritance"<<std::endl;
         if(supportsInheritance()){
             Inheritance *inh = static_cast<Inheritance*>(get());
             if(inh->isSubType(typeid(T).hash_code())){
@@ -70,6 +72,7 @@ struct ObjectBase {
             }
         }
         //check if the new type supports Inheritance
+       // std::cout << "checkType check asked type for Inheritance"<<std::endl;
         if(std::is_base_of<Inheritance,T>::value){
             Inheritance* t = (Inheritance*)new T();
             if(static_cast<Inheritance*>(t)->isSubType(hashCode())){
