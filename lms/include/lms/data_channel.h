@@ -20,6 +20,22 @@ public:
 protected:
     std::shared_ptr<DataChannelInternal> m_internal;
 public:
+
+    std::string name() const{
+        return m_internal->name;
+    }
+
+
+    /**
+     * return returns SUBTYPE if the current object is a subtype of the given one
+     */
+    template<typename L> TypeResult checkType(){
+        return m_internal->main->checkType<L>();
+    }
+    template<typename L> bool castableTo(){
+        TypeResult r = checkType<L>();
+        return r == TypeResult::SAME || r == TypeResult::SUBTYPE;
+    }
     bool serialize(std::ostream &os) {
         // if we would use dynamic_cast here, we could remove the serializable
         // flag of data channels, but that is not necessarily faster or better
@@ -32,6 +48,23 @@ public:
             return false;
         }
     }
+    /**
+     * @brief getVoid used if you initialised the DataChannel with lms::Void
+     * @return void* of the contained object
+     */
+    void* getVoid(){
+        return m_internal->main->get();
+    }
+    /**
+     * @brief get returns the contained object, if you have a lms::Void type, use getVoid()
+     * @return
+     */
+    virtual T* get() {
+        if(std::is_same<T, Any>::value){
+            return nullptr;
+        }
+        return static_cast<T*>(this->m_internal->main->get());
+    }
 };
 
 template<typename T>
@@ -41,28 +74,35 @@ public:
 
     ReadDataChannel(std::shared_ptr<DataChannelInternal> internal) :
         DataChannel<T>(internal) {}
-
+    /**
+     * @brief get returns the contained object, if you have a lms::Void type, use getVoid()
+     * @return
+     */
+    /*
     const T* get() {
-
+        //Handle lms::Void pointer
+        if(std::is_same<T, Void>::value){
+            return nullptr;
+        }
         return static_cast<const T*>(this->m_internal->main->get());
 
         // TODO buffer
-        /*if(this->m_internal->buffered()){
+        if(this->m_internal->buffered()){
             if(this->m_internal->m_buffer.size() > 0)
                 return this->m_internal->m_buffer[this->m_internal->m_buffer.size() -1];
             else
                 return nullptr;
         }else{
 
-        }*/
+        }
     }
-
+    */
     const T* operator ->() {
-        return get();
+        return this->get();
     }
 
     const T& operator *() {
-        return *get();
+        return *this->get();
     }
 };
 
@@ -74,17 +114,13 @@ public:
 
     WriteDataChannel() : DataChannel<T>(nullptr) {}
 
-    T* get() {
-        return static_cast<T*>(this->m_internal->main->get());
-    }
-
     T* operator ->(){
         //m_cycle = maintainer->cycleCount();
-        return get();
+        return this->get();
     }
 
     T& operator *() {
-        return *get();
+        return *this->get();
     }
 
     bool deserialize(std::istream &is) {

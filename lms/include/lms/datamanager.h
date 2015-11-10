@@ -95,6 +95,8 @@ public:
             invalidateExecutionManager();
         }
 
+        //TODO lazy
+        channel->name = name;
         return DataChannelClass(channel);
     }
 

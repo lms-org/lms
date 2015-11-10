@@ -11,18 +11,20 @@ namespace lms {
 class Runtime; //circle dependency
 struct ModuleWrapper;
 
-// BACKEND
-
-struct Void {
+/**
+ * @brief The Any struct used to access dataChannels for which you don't know the type
+ */
+struct Any {
     void operator* () {
-        throw std::runtime_error("Fick nicht mit dem Ficker.");
+        throw std::runtime_error("Any is afraid of stars");
     }
 
     void* operator-> () {
-        throw new std::runtime_error("Du bist nicht Robin Hood");
+        throw new std::runtime_error("Robin Hood won't give you his arrow");
     }
 };
 
+// BACKEND
 /**
 * TODO -1 if the type is invalid, 0 if the type of the DataChannel is
 * subtype of the given one, 1 if the given type is the same or subtype of
@@ -52,7 +54,7 @@ struct ObjectBase {
             return TypeResult::SAME;
         }
         //check if the asked object is void
-        if(std::is_same<T, Void>::value){
+        if(std::is_same<T, Any>::value){
             return TypeResult::SUBTYPE;
         }
 
@@ -105,9 +107,10 @@ struct Object : public ObjectBase {
     }
 
     bool isVoid() const override {
-        return std::is_same<T, Void>::value;
+        return std::is_same<T, Any>::value;
     }
 };
+
 
 template<typename T>
 class ReadDataChannel;
@@ -115,6 +118,8 @@ class ReadDataChannel;
 class DataChannelInternal {
 public:
     virtual ~DataChannelInternal() {}
+
+    std::string name;
 
     /**
      * @brief maintainer Runtime that holds the dataChannel

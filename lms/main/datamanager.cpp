@@ -28,19 +28,19 @@ DataManager::~DataManager() {
 }
 
 void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
-    writeChannel<Void>(module, reqName);
+    writeChannel<Any>(module, reqName);
 }
 
 void DataManager::getReadAccess(Module *module, const std::string &reqName) {
-    readChannel<Void>(module, reqName);
+    readChannel<Any>(module, reqName);
 }
 
 bool DataManager::serializeChannel(Module *module, const std::string &reqName, std::ostream &os) {
-    return readChannel<Void>(module, reqName).serialize(os);
+    return readChannel<Any>(module, reqName).serialize(os);
 }
 
 bool DataManager::deserializeChannel(Module *module, const std::string &reqName, std::istream &is) {
-    return writeChannel<Void>(module, reqName).deserialize(is);
+    return writeChannel<Any>(module, reqName).deserialize(is);
 }
 
 const DataManager::ChannelMap &DataManager::getChannels() const {
