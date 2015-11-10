@@ -21,36 +21,49 @@ struct Impl;
 template <>
 struct Impl<>
 {
-    static bool isSubType(size_t hashcode){
+    static bool isSubType(size_t hashcode,const void* obj){
         (void)hashcode;
+        (void)obj;
         return false;
   }
 
     virtual ~Impl(){}
 };
 
+template <typename T, bool HasBase>
+struct InheritanceCaller;
+
+template <typename T>
+struct InheritanceCaller<T, true> {
+    static bool call (T* obj,size_t hashcode) {
+        return obj->T::isSubType(hashcode);
+    }
+};
+
+template <typename T>
+struct InheritanceCaller<T, false> {
+    static bool call (T* obj,size_t hashcode) {
+        (void)hashcode;
+        (void)obj;
+        return false;
+    }
+};
+
 template <typename First, typename... Args>
 struct Impl<First, Args...>
 {
-    static bool isSubType(size_t hashcode){
+    static bool isSubType(size_t hashcode,const void* obj){
         if(hashcode == typeid(First).hash_code()){
             //is subtype
             return true;
         }
         //enroll others
-        bool sub = Impl<Args...>::isSubType(hashcode);
+        bool sub = Impl<Args...>::isSubType(hashcode,obj);
         if(sub)
             return true;
         //go deeper in the tree
-        if(std::is_base_of<InheritanceBase,First>::value){
-            InheritanceBase *inh = (InheritanceBase*)(new First());
-            sub = inh->isSubType(hashcode);
-            delete inh; //TODO
-            if(sub)
-                return true;
-
-        }
-        return false;
+        sub = InheritanceCaller<First,std::is_base_of<InheritanceBase,First>::value>::call((First*)(obj),hashcode);
+        return sub;
   }
 };
 
@@ -69,15 +82,16 @@ public:
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
-    virtual bool isSubType(size_t hashcode) override= 0;
+    virtual bool isSubType(size_t hashcode) override= 0; //TODO not sure if we should/need to handle const
     /**
+     * TODO: doesn't support abstract classes yet! use hashcode == typeid(EnvironmentObject).hash_code() instead
      * @brief isSubType call this method with all your supertypes in isSubType
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
     template<typename... REST>
-    bool isSubType(size_t hashcode){
-        return Impl<REST...>::isSubType(hashcode);
+    bool isSubType(size_t hashcode) const{ //TODO not sure if we should/need to handle const
+        return Impl<REST...>::isSubType(hashcode,this);
     }
 
     virtual ~Inheritance(){}
