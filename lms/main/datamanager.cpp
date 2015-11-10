@@ -103,15 +103,9 @@ void DataManager::printMapping()  {
 void DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &prefix) {
     using lms::extra::DotExporter;
 
-    std::string CONFIG("CONFIG");
-
     std::unordered_set<std::string> modules;
 
     for(const auto &ch : channels) {
-        if(ch.first.compare(0, CONFIG.size(), CONFIG) == 0) {
-            continue;
-        }
-
         dot.shape(DotExporter::Shape::BOX);
         dot.label(ch.first + "\\n" + ch.second->main->typeName());
         dot.node(prefix + "_" + ch.first);

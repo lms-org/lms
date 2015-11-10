@@ -185,57 +185,55 @@ void Framework::signal(int s) {
     }
 }
 
+bool Framework::exportGraphsHelper(std::string const& path, bool isExecOrData) {
+    std::string gvPath = path;
+    std::string outPath = path;
+    if(isExecOrData) {
+        gvPath += ".exec.gv";
+        outPath += ".exec.png";
+    } else {
+        gvPath += ".data.gv";
+        outPath += ".data.png";
+    }
+
+    std::ofstream file(gvPath);
+
+    if(! file) {
+        logger.error() << "Failed to open file: " << gvPath;
+        return false;
+    }
+
+    lms::extra::DotExporter dot(file);
+    dot.startDigraph("exec");
+    for(auto& rt : runtimes) {
+        dot.startSubgraph(rt.first);
+        if(isExecOrData) {
+            rt.second->executionManager().writeDAG(dot, rt.first);
+        } else {
+            rt.second->dataManager().writeDAG(dot, rt.first);
+        }
+        dot.endSubgraph();
+    }
+    dot.endDigraph();
+    file.close();
+
+    if(dot.lastError() != lms::extra::DotExporter::Error::OK) {
+        logger.error() << "Dot export failed: " << dot.lastError();
+        return false;
+    }
+
+    logger.info() << "dot -Tpng " << gvPath << " > " << outPath;
+    logger.info() << "xdg-open " << outPath;
+
+    return true;
+}
+
 void Framework::exportGraphs() {
     if(! argumentHandler.argDotFile.empty()) {
-        std::string dataFile(argumentHandler.argDotFile + ".data.gv");
-        std::string execFile(argumentHandler.argDotFile + ".exec.gv");
+        logger.info() << "Write dot files...";
 
-        std::ofstream dataGraphFile(dataFile);
-        std::ofstream execGraphFile(execFile);
-
-        if(! dataGraphFile) {
-            logger.error() << "Failed to open file: " << dataFile;
-        } else if(! execGraphFile) {
-            logger.error() << "Failed to open file: " << execFile;
-        } else {
-            logger.info() << "Write dot files...";
-
-            lms::extra::DotExporter dotExec(execGraphFile);
-            dotExec.startDigraph("exec");
-            for(auto& rt : runtimes) {
-                dotExec.startSubgraph(rt.first);
-                rt.second->executionManager().writeDAG(dotExec, rt.first);
-                dotExec.endSubgraph();
-            }
-            dotExec.endDigraph();
-            execGraphFile.close();
-
-            bool successExec = dotExec.lastError() == lms::extra::DotExporter::Error::OK;
-            if(! successExec) {
-                logger.error() << "Dot export failed: " << dotExec.lastError();
-            }
-
-            lms::extra::DotExporter dotData(dataGraphFile);
-            dotData.startDigraph("data");
-            for(auto& rt : runtimes) {
-                dotData.startSubgraph(rt.first);
-                rt.second->dataManager().writeDAG(dotData, rt.first);
-                dotData.endSubgraph();
-            }
-            dotData.endDigraph();
-            dataGraphFile.close();
-
-            bool successData = dotData.lastError() == lms::extra::DotExporter::Error::OK;
-            if(! successData) {
-                logger.error() << "Dot export failed: " << dotData.lastError();
-            }
-
-            if(successExec && successData) {
-                logger.info() << "Execute the following line to create a PNG:";
-                logger.info() << "dot -Tpng " << dataFile << " > output.png";
-                logger.info() << "xdg-open output.png";
-            }
-        }
+        exportGraphsHelper(argumentHandler.argDotFile, true);
+        exportGraphsHelper(argumentHandler.argDotFile, false);
     }
 }
 

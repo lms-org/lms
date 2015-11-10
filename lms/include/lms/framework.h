@@ -69,6 +69,8 @@ public:
 
     BufferedDataManager& bufferedDataManager();
 private:
+    bool exportGraphsHelper(std::string const& path, bool isExecOrData);
+
     logging::Logger logger;
 
     ArgumentHandler argumentHandler;
