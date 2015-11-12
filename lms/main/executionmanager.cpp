@@ -271,9 +271,7 @@ void ExecutionManager::updateOrInstall() {
                 found = true;
 
                 // update relevant attributes
-                modEntry->configs = std::move(mod->configs);
-                modEntry->channelMapping = std::move(mod->channelMapping);
-                modEntry->channelPriorities = std::move(mod->channelPriorities);
+                modEntry->update(std::move(*mod.get()));
             }
         }
 

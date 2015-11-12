@@ -265,7 +265,6 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         }
     }
 
-    std::cout << lms::executionTypeName(type) << std::endl;
     runtime->executionType(type);
 }
 
@@ -312,7 +311,7 @@ void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile
             // reload configs && runtime is installed
             m_runtime = m_framework.getRuntimeByName(nameAttr.value());
         } else {
-            //TODO print error
+            std::cout << "Runtime is not available: " << nameAttr.value() << std::endl;
         }
         parseFile(includePath, flag);
         m_runtime = temp;

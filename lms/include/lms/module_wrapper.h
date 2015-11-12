@@ -49,15 +49,7 @@ struct ModuleWrapper {
      */
     std::map<std::string, int> channelPriorities;
 
-    int getChannelPriority(const std::string &name) const {
-        std::map<std::string, int>::const_iterator it = channelPriorities.find(name);
-
-        if(it != channelPriorities.end()) {
-            return it->second;
-        } else {
-            return 0;
-        }
-    }
+    int getChannelPriority(const std::string &name) const;
 
     /**
      * @brief The module can only be executed on the specified thread.
@@ -79,6 +71,9 @@ struct ModuleWrapper {
     Module *moduleInstance;
 
     std::map<std::string, ModuleConfig> configs;
+
+    void update(ModuleWrapper && other);
+
 #ifdef _WIN32
     // TODO pointer to open shared library or something similar
 #else

@@ -105,6 +105,7 @@ set (SOURCE
     "main/runtime.cpp"
     "main/execution_type.cpp"
     "main/buffered_datamanager.cpp"
+    "main/module_wrapper.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"
