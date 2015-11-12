@@ -305,8 +305,15 @@ void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile
         }
 
         Runtime *temp = m_runtime;
-        m_runtime = new Runtime(nameAttr.value(), m_framework);
-        m_framework.registerRuntime(m_runtime);
+        if(flag == LoadConfigFlag::LOAD_EVERYTHING) {
+            m_runtime = new Runtime(nameAttr.value(), m_framework);
+            m_framework.registerRuntime(m_runtime);
+        } else if (m_framework.hasRuntime(nameAttr.value())) {
+            // reload configs && runtime is installed
+            m_runtime = m_framework.getRuntimeByName(nameAttr.value());
+        } else {
+            //TODO print error
+        }
         parseFile(includePath, flag);
         m_runtime = temp;
     } else if(! srcAttr) {
@@ -428,7 +435,9 @@ void XmlParser::parseModules(pugi::xml_node node,
     }
 
     if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
-        m_runtime->executionManager().addAvailableModule(module);
+        m_runtime->executionManager().installModule(module);
+    } else {
+        m_runtime->executionManager().bufferModule(module);
     }
 }
 

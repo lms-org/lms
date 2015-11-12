@@ -88,23 +88,8 @@ void Runtime::cycle() {
     m_executionManager.loop();
     m_profiler.markEnd(m_name);
 
-    /*if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
-            && configMonitor.hasChangedFiles()) {
-        configMonitor.unwatchAll();
-        XmlParser parser(*this, arguments);
-        parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,
-                           arguments.argLoadConfiguration);
-
-        for(auto error : parser.errors()) {
-            logger.error() << error;
-        }
-
-        for(auto file : parser.files()) {
-            configMonitor.watch(file);
-        }
-
-        m_executionManager.fireConfigsChangedEvent();
-    }*/
+    // Config monitor
+    m_executionManager.updateOrInstall();
 }
 
 void Runtime::enableModules() {

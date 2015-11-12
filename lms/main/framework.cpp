@@ -133,6 +133,23 @@ Framework::Framework(const ArgumentHandler &arguments) :
             if(! anyCycle) {
                 lms::extra::PrecisionTime::fromMillis(100).sleep();
             }
+
+            // config monitor stuff
+            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
+                    && configMonitor.hasChangedFiles()) {
+                configMonitor.unwatchAll();
+                XmlParser parser(*this, getRuntimeByName("default"), arguments);
+                parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,
+                                   arguments.argLoadConfiguration);
+
+                for(auto error : parser.errors()) {
+                    logger.error() << error;
+                }
+
+                for(auto file : parser.files()) {
+                    configMonitor.watch(file);
+                }
+            }
         }
 
         // wait for threaded runtimes to stop
@@ -243,6 +260,10 @@ void Framework::registerRuntime(Runtime *runtime) {
 
 Runtime* Framework::getRuntimeByName(std::string const& name) {
     return runtimes[name].get();
+}
+
+bool Framework::hasRuntime(std::string const& name) {
+    return runtimes.find(name) != runtimes.end();
 }
 
 ArgumentHandler const& Framework::getArgumentHandler() {

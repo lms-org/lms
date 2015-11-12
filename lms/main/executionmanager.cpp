@@ -244,7 +244,7 @@ void ExecutionManager::stopRunning() {
     }
 }
 
-void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
+void ExecutionManager::installModule(std::shared_ptr<ModuleWrapper> mod){
     for(std::shared_ptr<ModuleWrapper> modEntry : available) {
         if(modEntry->name == mod->name) {
             logger.error("addAvailableModule") << "Tried to add available "
@@ -254,6 +254,41 @@ void ExecutionManager::addAvailableModule(std::shared_ptr<ModuleWrapper> mod){
     }
 
     available.push_back(mod);
+}
+
+void ExecutionManager::bufferModule(std::shared_ptr<ModuleWrapper> mod) {
+    std::unique_lock<std::mutex> lock(updateMutex);
+    update.push_back(mod);
+}
+
+void ExecutionManager::updateOrInstall() {
+    std::unique_lock<std::mutex> lock(updateMutex);
+    for(std::shared_ptr<ModuleWrapper> mod : update) {
+        bool found = false;
+
+        for(std::shared_ptr<ModuleWrapper> modEntry : available) {
+            if(modEntry->name == mod->name) {
+                found = true;
+
+                // update relevant attributes
+                modEntry->configs = std::move(mod->configs);
+                modEntry->channelMapping = std::move(mod->channelMapping);
+                modEntry->channelPriorities = std::move(mod->channelPriorities);
+            }
+        }
+
+        // module was not installed yet
+        if(! found) {
+            available.push_back(mod);
+        }
+    }
+
+    if(! update.empty()) {
+        fireConfigsChangedEvent();
+    }
+
+    // all buffered modules were processed...
+    update.clear();
 }
 
 void ExecutionManager::enableModule(const std::string &name, lms::logging::Level minLogLevel){

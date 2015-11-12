@@ -35,7 +35,23 @@ public:
     /**
      * @brief Add a new module to the list of available modules.
      */
-    void addAvailableModule(std::shared_ptr<ModuleWrapper> mod);
+    void installModule(std::shared_ptr<ModuleWrapper> mod);
+
+    /**
+     * @brief Append the given module to a list of new modules. After the
+     * next cycle the module will be added to the available list or an existing
+     * module may be updated. Use updateOrInstall() for this.
+     *
+     * This method is thread-safe.
+     *
+     * @param mod module to install or update
+     */
+    void bufferModule(std::shared_ptr<ModuleWrapper> mod);
+
+    /**
+     * @brief Update or install previously buffered modules.
+     */
+    void updateOrInstall();
 
     /**
      * @brief Disable all modules that are currently enabled.
@@ -180,6 +196,9 @@ private:
     ModuleList available;
 
     std::map<std::string, EnableConfig> m_configs;
+
+    std::mutex updateMutex;
+    ModuleList update;
 
     /**
      * @brief Call this method for sorting the cycleList.

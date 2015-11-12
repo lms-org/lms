@@ -61,6 +61,8 @@ public:
 
     Runtime* getRuntimeByName(std::string const& name);
 
+    bool hasRuntime(std::string const& name);
+
     ArgumentHandler const& getArgumentHandler();
 
     void exportGraphs();
