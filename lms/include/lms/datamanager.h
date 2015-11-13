@@ -67,7 +67,12 @@ public:
             channel = std::make_shared<DataChannelInternal>();
             channel->maintainer = &m_runtime;
             if(! channel->main) {
-                channel->main = std::make_shared<Object<T>>();
+                //check if T is abstract
+                if(std::is_abstract<T>::value){
+                    channel->main = std::make_shared<FakeObject<T>>();
+                }else{
+                    channel->main = std::make_shared<Object<T>>();
+                }
             }
         }else{
             if(! channel->main) {

@@ -86,11 +86,10 @@ struct ObjectBase {
 };
 
 template<typename T>
-struct Object : public ObjectBase {
-    T value;
-
-    void* get() override {
-        return &value;
+struct FakeObject: public ObjectBase{
+    virtual void* get() override {
+        //TODO error-handling
+        return nullptr;
     }
 
     std::string typeName() const override {
@@ -111,6 +110,15 @@ struct Object : public ObjectBase {
 
     bool isVoid() const override {
         return std::is_same<T, Any>::value;
+    }
+};
+
+template<typename T>
+struct Object : public FakeObject {
+    T value;
+
+    void* get() override {
+        return &value;
     }
 };
 
