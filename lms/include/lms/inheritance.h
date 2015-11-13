@@ -11,7 +11,7 @@ public:
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
-    virtual bool isSubType(size_t hashcode) = 0;
+    virtual bool isSubType(size_t hashcode) const = 0;
     virtual ~InheritanceBase(){}
 };
 
@@ -82,15 +82,15 @@ public:
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
-    virtual bool isSubType(size_t hashcode) override= 0; //TODO not sure if we should/need to handle const
+    virtual bool isSubType(size_t hashcode) const override= 0; //TODO not sure if we should/need to handle const
     /**
      * TODO: doesn't support abstract classes yet! use hashcode == typeid(EnvironmentObject).hash_code() instead
-     * @brief isSubType call this method with all your supertypes in isSubType
+     * @brief validTypes call this method with all your supertypes in isSubType
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
     template<typename... REST>
-    bool isSubType(size_t hashcode) const{ //TODO not sure if we should/need to handle const
+    bool validTypes(size_t hashcode) const{ //TODO not sure if we should/need to handle const
         return Impl<REST...>::isSubType(hashcode,this);
     }
 

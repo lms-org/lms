@@ -17,7 +17,7 @@ class DataChannel {
 public:
     DataChannel(std::shared_ptr<DataChannelInternal> internal) :
         m_internal(internal) {}
-protected:
+public: //TODO
     std::shared_ptr<DataChannelInternal> m_internal;
 public:
 

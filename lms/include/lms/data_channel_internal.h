@@ -63,19 +63,26 @@ struct ObjectBase {
             return TypeResult::SUPERTYPE;
         }
 
+
+        std::cout << "current Object supports inheritance: "<<supportsInheritance() <<std::endl;
+        std::cout << "new Object supports inheritance: "<<std::is_base_of<Inheritance,T>::value <<std::endl;
+
+
         //check if the current object supports Inheritance
        // std::cout << "checkType check old type for Inheritance"<<std::endl;
         if(supportsInheritance()){
             Inheritance *inh = static_cast<Inheritance*>(get());
+            std::cout << "DAVOR isSubType "<<typeName() <<std::endl;
+            //TEST
             if(inh->isSubType(typeid(T).hash_code())){
                 return TypeResult::SUBTYPE;
             }
         }
-        //check if the new type supports Inheritance
+      //check if the new type supports Inheritance
        // std::cout << "checkType check asked type for Inheritance"<<std::endl;
         if(std::is_base_of<Inheritance,T>::value){
             Inheritance* t = (Inheritance*)new T();
-            if(static_cast<Inheritance*>(t)->isSubType(hashCode())){
+            if(t->isSubType(hashCode())){
                 return TypeResult::SUPERTYPE;
             }
             delete t;
@@ -111,10 +118,12 @@ struct FakeObject: public ObjectBase{
     bool isVoid() const override {
         return std::is_same<T, Any>::value;
     }
+
+    virtual ~FakeObject(){}
 };
 
 template<typename T>
-struct Object : public FakeObject {
+struct Object : public FakeObject<T> {
     T value;
 
     void* get() override {
@@ -128,6 +137,12 @@ class ReadDataChannel;
 
 class DataChannelInternal {
 public:
+
+
+    std::unique_ptr<ObjectBase> main;
+    std::vector<DataChannelInternal> m_preBuffer;
+    std::vector<DataChannelInternal> m_buffer;
+
     virtual ~DataChannelInternal() {}
 
     std::string name;
@@ -179,11 +194,6 @@ public:
         return isReader(module) || isWriter(module);
     }
 
-
-
-
-public:
-
     /**
      * @brief getCycle
      * @return cycle in which the object was created
@@ -218,11 +228,6 @@ public:
     bool buffered() const {
         return dataHost != nullptr;//TODO not sure if this works
     }
-public:
-    std::shared_ptr<ObjectBase> main;
-
-    std::vector<DataChannelInternal> m_preBuffer;
-    std::vector<DataChannelInternal> m_buffer;
 
     //called after each cycle of the runtime for each dataChannel
     void bufferCycle(){

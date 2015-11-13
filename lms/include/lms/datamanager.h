@@ -63,30 +63,32 @@ public:
         //initChannelIfNeeded<T>(channel);
         //create object
         if(!channel) {
-            logger.debug("accessChannel")<<"creating new dataChannel"<<reqName;
+            logger.debug("accessChannel")<<"creating new dataChannel"<<name<<" to "<< typeid(T).name();
             channel = std::make_shared<DataChannelInternal>();
             channel->maintainer = &m_runtime;
-            if(! channel->main) {
-                //check if T is abstract
-                if(std::is_abstract<T>::value){
-                    channel->main = std::make_shared<FakeObject<T>>();
-                }else{
-                    channel->main = std::make_shared<Object<T>>();
-                }
+
+            //check if T is abstract
+            if(std::is_abstract<T>::value){
+                channel->main.reset(new FakeObject<T>());
+            }else{
+                channel->main.reset(new Object<T>());
+
             }
         }else{
-            if(! channel->main) {
-                channel->main = std::make_shared<Object<T>>();
+            if(!channel->main) {
+                channel->main.reset(new Object<T>());
                 logger.error("accessChannel")<<"INVALID STATE, channel != null && channel->main == null";
             }else{
                 TypeResult typeRes = channel->main->checkType<T>() ;
                 if(typeRes == TypeResult::INVALID) {
-                    logger.error("accessChannel")<< "INVALID TYPES GIVEN FOR CHANNEL "<<name << " tryed to access it with type: "<<typeid(T).name();
+                    logger.error("accessChannel")<< "INVALID TYPES GIVEN FOR CHANNEL "<<name <<" currentType "<< channel->main->typeName()<< " tryed to access it with type: "<<extra::typeName<T>();
                     return DataChannelClass(nullptr);
                 }else if(typeRes == TypeResult::SUPERTYPE){
                     //we can "upgrade" the current channel
                     logger.info("accessChannel")<<"upgrading channel "<<name << " to "<< typeid(T).name();
-                    channel->main = std::make_shared<Object<T>>();
+                    //delete old object
+                    //create new one
+                    channel->main.reset(new Object<T>());
                 }
             }
         }
