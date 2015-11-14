@@ -81,7 +81,7 @@ public:
             }else{
                 TypeResult typeRes = channel->main->checkType<T>() ;
                 if(typeRes == TypeResult::INVALID) {
-                    logger.error("accessChannel")<< "INVALID TYPES GIVEN FOR CHANNEL "<<name <<" currentType "<< channel->main->typeName()<< " tryed to access it with type: "<<extra::typeName<T>();
+                    logger.error("accessChannel")<< "INVALID TYPES GIVEN FOR CHANNEL "<<name <<" currentType "<< channel->main->typeName()<< " tried to access it with type: "<<extra::typeName<T>();
                     return DataChannelClass(nullptr);
                 }else if(typeRes == TypeResult::SUPERTYPE){
                     //we can "upgrade" the current channel

@@ -37,6 +37,11 @@ enum class TypeResult {
 struct ObjectBase {
     virtual ~ObjectBase() {}
     virtual void* get() =0;
+    /**
+     * @brief getInheritance we can't cast to void* if we want inheritance <3
+     * @return inhertiance*
+     */
+    virtual Inheritance* getInheritance() = 0;
     virtual std::string typeName() const =0;
     virtual size_t hashCode() const =0;
     virtual bool isSerializable() const =0;
@@ -64,14 +69,14 @@ struct ObjectBase {
         }
 
 
-        std::cout << "current Object supports inheritance: "<<supportsInheritance() <<std::endl;
-        std::cout << "new Object supports inheritance: "<<std::is_base_of<Inheritance,T>::value <<std::endl;
+        //std::cout << "current Object supports inheritance: "<<supportsInheritance() <<std::endl;
+        //std::cout << "new Object supports inheritance: "<<std::is_base_of<Inheritance,T>::value <<std::endl;
 
 
         //check if the current object supports Inheritance
        // std::cout << "checkType check old type for Inheritance"<<std::endl;
         if(supportsInheritance()){
-            Inheritance *inh = static_cast<Inheritance*>(get());
+            Inheritance *inh = getInheritance();
             std::cout << "DAVOR isSubType "<<typeName() <<std::endl;
             //TEST
             if(inh->isSubType(typeid(T).hash_code())){
@@ -96,6 +101,9 @@ template<typename T>
 struct FakeObject: public ObjectBase{
     virtual void* get() override {
         //TODO error-handling
+        return nullptr;
+    }
+    Inheritance* getInheritance(){
         return nullptr;
     }
 
@@ -126,15 +134,37 @@ template<typename T>
 struct Object : public FakeObject<T> {
     T value;
 
+    template <typename A, bool suppInher>
+    struct InheritanceCallerGet;
+
+    template <typename A>
+    struct InheritanceCallerGet<A, false> {
+        static Inheritance* call(Object<A> *obj) {
+            (void)obj;
+            return nullptr;
+        }
+    };
+
+    template <typename A>
+    struct InheritanceCallerGet<A, true> {
+        static Inheritance* call (Object<A> *obj) {
+            return static_cast<Inheritance*>(&obj->value);
+        }
+    };
+
     void* get() override {
         return &value;
     }
+
+    Inheritance *getInheritance() override{
+        return InheritanceCallerGet<T,std::is_base_of<Inheritance,T>::value>::call(this);
+    }
 };
 
-
+/*
 template<typename T>
 class ReadDataChannel;
-
+*/
 class DataChannelInternal {
 public:
 

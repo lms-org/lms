@@ -3,16 +3,16 @@
 #include <memory>
 namespace lms{
 
-class InheritanceBase{
+class Inheritance{
 
 public:
     /**
-     * @brief isSubType
+     * @brief isSubType, if you override this method, you can use use Impl<SUPERCLASSES...>::isSubType(hashcode,obj) as return
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
     virtual bool isSubType(size_t hashcode) const = 0;
-    virtual ~InheritanceBase(){}
+    virtual ~Inheritance(){}
 };
 
 template <typename... Args>
@@ -48,7 +48,7 @@ struct InheritanceCaller<T, false> {
         return false;
     }
 };
-
+//TODO rename impl
 template <typename First, typename... Args>
 struct Impl<First, Args...>
 {
@@ -62,40 +62,11 @@ struct Impl<First, Args...>
         if(sub)
             return true;
         //go deeper in the tree
-        sub = InheritanceCaller<First,std::is_base_of<InheritanceBase,First>::value>::call((First*)(obj),hashcode);
+        sub = InheritanceCaller<First,std::is_base_of<Inheritance,First>::value>::call((First*)(obj),hashcode);
         return sub;
   }
 };
 
-/**
- * @brief The Inheritance class
- * extend this class to provide dataChannel type-casting and [insert word]*
- * As I don't know the word for here is a small Example
- * A: B{}
- * -> one module accesses A, one accesses B, the dataChannel of type B will be created, module 1 will get dataChannel with type A but the object will be type B.
- */
-class Inheritance:public InheritanceBase{
-public:
-
-    /**
-     * @brief isSubType call the template isSubType function
-     * @param hashcode of the given class
-     * @return true if the object is a subtype of the class given by it's hashcode
-     */
-    virtual bool isSubType(size_t hashcode) const override= 0; //TODO not sure if we should/need to handle const
-    /**
-     * TODO: doesn't support abstract classes yet! use hashcode == typeid(EnvironmentObject).hash_code() instead
-     * @brief validTypes call this method with all your supertypes in isSubType
-     * @param hashcode of the given class
-     * @return true if the object is a subtype of the class given by it's hashcode
-     */
-    template<typename... REST>
-    bool validTypes(size_t hashcode) const{ //TODO not sure if we should/need to handle const
-        return Impl<REST...>::isSubType(hashcode,this);
-    }
-
-    virtual ~Inheritance(){}
-};
 
 
 

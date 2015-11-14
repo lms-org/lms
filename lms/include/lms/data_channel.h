@@ -55,6 +55,24 @@ public:
     void* getVoid(){
         return m_internal->main->get();
     }
+    //Util-method
+    template <typename A, bool suppInher>
+    struct InheritanceCallerGet;
+
+    template <typename A>
+    struct InheritanceCallerGet<A, false> {
+        static T* call(DataChannel<A> *obj) {
+            return static_cast<T*>(obj->m_internal->main->get());
+        }
+    };
+
+    template <typename A>
+    struct InheritanceCallerGet<A, true> {
+        static T* call (DataChannel<A> *obj) {
+            return static_cast<T*>(obj->m_internal->main->getInheritance());
+        }
+    };
+
     /**
      * @brief get returns the contained object, if you have a lms::Void type, use getVoid()
      * @return
@@ -63,7 +81,8 @@ public:
         if(std::is_same<T, Any>::value){
             return nullptr;
         }
-        return static_cast<T*>(this->m_internal->main->get());
+        return InheritanceCallerGet<T,std::is_base_of<Inheritance,T>::value>::call(this);
+
     }
 };
 
