@@ -17,7 +17,7 @@ class DataChannel {
 public:
     DataChannel(std::shared_ptr<DataChannelInternal> internal) :
         m_internal(internal) {}
-public: //TODO
+protected:
     std::shared_ptr<DataChannelInternal> m_internal;
 public:
 
@@ -48,13 +48,18 @@ public:
             return false;
         }
     }
+
     /**
-     * @brief getVoid used if you initialised the DataChannel with lms::Void
-     * @return void* of the contained object
+     * @brier getWithType, used to avoid void* casting
+     * returns the object if cast is possible, returns nullptr if the casting if not
      */
-    void* getVoid(){
-        return m_internal->main->get();
+    template <typename A> A* getWithType(){
+        if(castableTo<A>()){
+            return (A*)(get());
+        }
+        return nullptr;
     }
+
     //Util-method
     template <typename A, bool suppInher>
     struct InheritanceCallerGet;
