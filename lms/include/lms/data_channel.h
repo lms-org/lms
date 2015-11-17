@@ -14,10 +14,13 @@ struct ModuleWrapper;
 
 template<typename T>
 class DataChannel {
+    //TODO doesn't work friends <3
+    //template<typename,typename> friend struct InheritanceCallerGet;
+
 public:
     DataChannel(std::shared_ptr<DataChannelInternal> internal) :
         m_internal(internal) {}
-protected:
+public: //TODO
     std::shared_ptr<DataChannelInternal> m_internal;
 public:
 
@@ -37,7 +40,7 @@ public:
         return r == TypeResult::SAME || r == TypeResult::SUBTYPE;
     }
     bool serialize(std::ostream &os) {
-        // if we would use dynamic_cast here, we could remove the serializable
+        // if we would use dynamic_cast here, we hcould remove the serializable
         // flag of data channels, but that is not necessarily faster or better
 
         if(m_internal->main && m_internal->main->isSerializable()) {
@@ -49,37 +52,38 @@ public:
         }
     }
 
-    /**
-     * @brier getWithType, used to avoid void* casting
-     * returns the object if cast is possible, returns nullptr if the casting if not
-     */
-    template <typename A> A* getWithType(){
-        if(castableTo<A>()){
-            return (A*)(get());
-        }
-        return nullptr;
-    }
-
     //Util-method
     template <typename A, bool suppInher>
     struct InheritanceCallerGet;
 
     template <typename A>
     struct InheritanceCallerGet<A, false> {
-        static T* call(DataChannel<A> *obj) {
-            return static_cast<T*>(obj->m_internal->main->get());
+        static A* call(DataChannel<T> *obj) {
+            return (A*)(obj->m_internal->main->get()); //cast to void
         }
     };
 
     template <typename A>
     struct InheritanceCallerGet<A, true> {
-        static T* call (DataChannel<A> *obj) {
-            return static_cast<T*>(obj->m_internal->main->getInheritance());
+        static A* call (DataChannel<T> *obj) {
+            return (A*)(obj->m_internal->main->getInheritance());//avoid casting to void*
         }
     };
 
+
     /**
-     * @brief get returns the contained object, if you have a lms::Void type, use getVoid()
+     * @brier getWithType, used to avoid void* casting
+     * returns the object if cast is possible, returns nullptr if the casting if not
+     */
+    template <typename A> A* getWithType(){
+        if(castableTo<A>()){
+            return InheritanceCallerGet<A,std::is_base_of<Inheritance,A>::value>::call(this);
+        }
+        return nullptr;
+    }
+
+    /**
+     * @brief get returns the contained object, if you have a lms::Void type, use getWithType()
      * @return
      */
     virtual T* get() {

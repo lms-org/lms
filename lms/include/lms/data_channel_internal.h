@@ -77,8 +77,6 @@ struct ObjectBase {
        // std::cout << "checkType check old type for Inheritance"<<std::endl;
         if(supportsInheritance()){
             Inheritance *inh = getInheritance();
-            std::cout << "DAVOR isSubType "<<typeName() <<std::endl;
-            //TEST
             if(inh->isSubType(typeid(T).hash_code())){
                 return TypeResult::SUBTYPE;
             }
