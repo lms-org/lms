@@ -89,6 +89,12 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
+#ifdef __unix__
+        m_loader.addModulePath("/usr/lib/lms");
+        m_loader.addModulePath("/usr/local/lib/lms");
+#endif
+        m_loader.addModulePath(LMS_MODULES, 1);
+
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
 
@@ -276,6 +282,10 @@ Profiler& Framework::profiler() {
 
 BufferedDataManager& Framework::bufferedDataManager() {
     return m_bufferedDataManager;
+}
+
+Loader& Framework::loader() {
+    return m_loader;
 }
 
 }

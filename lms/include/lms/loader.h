@@ -37,6 +37,8 @@ public:
      * @return the ABSOLUTE path of the shared library file (.so)
      */
     static std::string getModulePath(const std::string &libname);
+
+    void addModulePath(std::string const& path, int recursion = 0);
 private:
     logging::Logger logger;
 
@@ -46,6 +48,8 @@ private:
      * @return true if module is fine
      */
     bool checkSharedLibrary(const std::string &libpath);
+
+    std::map<std::string, std::string> m_pathMapping;
 };
 
 }  // namespace lms

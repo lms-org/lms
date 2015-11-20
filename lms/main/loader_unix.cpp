@@ -42,8 +42,15 @@ void Loader::load(ModuleWrapper *entry) {
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
+    std::string libpath = m_pathMapping[entry->libname];
+
+    if(libpath.empty()) {
+        logger.error("load") << "Module cannot be found: " << entry->name;
+        return;
+    }
+
     // open dynamic library (*.so file)
-    void *lib = dlopen(entry->libpath.c_str(),RTLD_NOW);
+    void *lib = dlopen(libpath.c_str(),RTLD_NOW);
 
     // check for errors while opening
     if(lib == NULL) {
@@ -113,4 +120,4 @@ void Loader::unload(ModuleWrapper *entry) {
     }
 }
 
-}
+}  // namespace lms

@@ -14,6 +14,7 @@
 #include "lms/logger.h"
 #include <lms/extra/dot_exporter.h>
 #include "lms/runtime.h"
+#include "lms/framework.h"
 
 namespace lms {
 
@@ -23,7 +24,7 @@ ExecutionManager::ExecutionManager(Profiler &profiler, Runtime &runtime)
       m_multithreading(false),
       valid(false), dataManager(runtime, *this),
       m_messaging(), m_cycleCounter(-1), running(true),
-      m_profiler(profiler) {}
+      m_profiler(profiler), m_runtime(runtime) {}
 
 ExecutionManager::~ExecutionManager () {
     stopRunning();
@@ -41,7 +42,7 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
         dataManager.releaseChannelsOf(*it);
-        loader.unload(it->get());
+        m_runtime.framework().loader().unload(it->get());
     }
 
     enabledModules.clear();
@@ -299,7 +300,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
     }
     for(std::shared_ptr<ModuleWrapper> it:available){
         if(it->name == name){
-            loader.load(it.get());
+            m_runtime.framework().loader().load(it.get());
             Module *module = it->moduleInstance;
             module->initializeBase(it,minLogLevel);
 
@@ -328,7 +329,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
 
             for(std::shared_ptr<ModuleWrapper> entry : available) {
                 if(entry->name == name) {
-                    loader.unload(entry.get());
+                    m_runtime.framework().loader().unload(entry.get());
                     break;
                 }
             }

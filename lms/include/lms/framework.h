@@ -70,6 +70,8 @@ public:
     Profiler& profiler();
 
     BufferedDataManager& bufferedDataManager();
+
+    Loader& loader();
 private:
     bool exportGraphsHelper(std::string const& path, bool isExecOrData);
 
@@ -78,6 +80,7 @@ private:
     ArgumentHandler argumentHandler;
     Profiler m_profiler;
     BufferedDataManager m_bufferedDataManager;
+    Loader m_loader;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;

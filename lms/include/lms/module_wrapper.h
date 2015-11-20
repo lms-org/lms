@@ -30,10 +30,9 @@ struct ModuleWrapper {
     std::string name;
 
     /**
-     * @brief full, absolute name of the shared library that shall be loaded
-     * if the module is enabled
+     * @brief name of the shared library that will be loaded
      */
-    std::string libpath;
+    std::string libname;
 
     /**
      * @brief Used for transparent datachannel mapping. Maps requested

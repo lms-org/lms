@@ -332,28 +332,9 @@ void XmlParser::parseModules(pugi::xml_node node,
     pugi::xml_node realNameNode = node.child("realName");
 
     if(realNameNode) {
-        module->libpath = std::string(LMS_MODULES "/") +
-                realNameNode.child_value() + "/" +
-                Loader::getModulePath(realNameNode.child_value());
+        module->libname = Loader::getModulePath(realNameNode.child_value());
     } else {
-        pugi::xml_node libpathNode = node.child("libpath");
-        pugi::xml_node libnameNode = node.child("libname");
-
-        std::string libname;
-        if(libnameNode) {
-            libname = Loader::getModulePath(libnameNode.child_value());
-        } else {
-            libname = Loader::getModulePath(module->name);
-        }
-
-        if(libpathNode) {
-            // TODO better relative path here
-            module->libpath = std::string(LMS_MODULES "/") +
-                    libpathNode.child_value() + "/" + libname;
-        } else {
-            module->libpath = std::string(LMS_MODULES "/") + module->name
-                    + "/" + libname;
-        }
+        module->libname = Loader::getModulePath(module->name);
     }
 
     pugi::xml_node executionTypeNode = node.child("executionType");

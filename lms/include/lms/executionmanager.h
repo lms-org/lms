@@ -158,7 +158,6 @@ private:
 
     bool valid;
 
-    Loader loader;
     DataManager dataManager;
     Messaging m_messaging;
 
@@ -175,6 +174,7 @@ private:
     void stopRunning();
 
     Profiler& m_profiler;
+    Runtime & m_runtime;
 
     /**
      * @brief enabledModules contains all loaded Modules
