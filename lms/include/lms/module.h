@@ -12,11 +12,16 @@
 #include <lms/buffered_datamanager.h>
 #include "lms/data_channel.h"
 #include "lms/deprecated.h"
+#include "lms/definitions.h"
 
 namespace lms {
 
 class DataManager;
 class ExecutionManager;
+
+#define LMS_MODULE_VERSION uint32_t getLmsVersion() { \
+    return LMS_VERSION_CODE; \
+}
 
 /**
  * @brief Abstract super class for dynamic loadable modules

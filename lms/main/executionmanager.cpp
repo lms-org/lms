@@ -300,16 +300,17 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
     }
     for(std::shared_ptr<ModuleWrapper> it:available){
         if(it->name == name){
-            m_runtime.framework().loader().load(it.get());
-            Module *module = it->moduleInstance;
-            module->initializeBase(it,minLogLevel);
+            if(m_runtime.framework().loader().load(it.get())) {
+                Module *module = it->moduleInstance;
+                module->initializeBase(it,minLogLevel);
 
-            if(module->initialize()){
-                enabledModules.push_back(it);
-            }else{
-                logger.error("enable Module") <<"Enabling Module "<< name << " failed";
+                if(module->initialize()){
+                    enabledModules.push_back(it);
+                }else{
+                    logger.error("enable Module") <<"Enabling Module "<< name << " failed";
+                }
+                invalidate();
             }
-            invalidate();
             return;
         }
     }

@@ -38,7 +38,7 @@ bool Loader::checkSharedLibrary(const std::string &libpath) {
     return valid;
 }
 
-void Loader::load(ModuleWrapper *entry) {
+bool Loader::load(ModuleWrapper *entry) {
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
@@ -46,7 +46,7 @@ void Loader::load(ModuleWrapper *entry) {
 
     if(libpath.empty()) {
         logger.error("load") << "Module cannot be found: " << entry->name;
-        return;
+        return false;
     }
 
     // open dynamic library (*.so file)
@@ -56,6 +56,26 @@ void Loader::load(ModuleWrapper *entry) {
     if(lib == NULL) {
         logger.error("load") << "Could not open dynamic lib: " << entry->name
             << std::endl << "Message: " << dlerror();
+        return false;
+    }
+
+    // clear error code
+    dlerror();
+
+    converter <uint32_t (*) ()> getLmsVersion;
+    getLmsVersion.src = dlsym(lib, "getLmsVersion");
+    char *err;
+    if((err = dlerror()) != NULL) {
+        logger.warn("load") << "Module " << entry->name << " does not provide getLmsVersion()";
+    } else {
+        uint32_t moduleVersion = getLmsVersion.target();
+
+        if((moduleVersion & LMS_VERSION_MASK) != (LMS_VERSION_CODE & LMS_VERSION_MASK)) {
+            logger.error("load") << "Module " << entry->name << " has bad version. "
+                << "LMS Version " << LMS_VERSION_STRING << ", Module was compiled for "
+                << lms::extra::versionCodeToString(moduleVersion);
+            return false;
+        }
     }
 
     // clear error code
@@ -66,10 +86,10 @@ void Loader::load(ModuleWrapper *entry) {
     void* func = dlsym(lib, "getInstance");
 
     // check for errors while calling dlsym
-    char *err;
     if ((err = dlerror()) != NULL) {
         logger.error("load") << "Could not get symbol 'getInstance' of module " << entry->name
             << std::endl << "Message: " << err;
+        return false;
     }
 
     entry->dlHandle = lib;
@@ -99,6 +119,7 @@ void Loader::load(ModuleWrapper *entry) {
 
     */
     //return reinterpret_cast<Module*(*)()>( func )();
+    return true;
 }
 
 void Loader::unload(ModuleWrapper *entry) {

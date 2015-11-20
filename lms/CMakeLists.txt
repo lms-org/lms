@@ -26,8 +26,8 @@ if(LMS_STANDALONE)
     endif()
 endif()
 
-file(MAKE_DIRECTORY "include")
-file(MAKE_DIRECTORY "include/lms")
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/lms")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/CMakeSharedHeaders.txt" "")
 configure_file(include/lms/definitions.h.in
     include/lms/definitions.h
     ESCAPE_QUOTES)

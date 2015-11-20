@@ -89,5 +89,14 @@ bool endsWith(std::string const& str, std::string const& suffix) {
     return std::equal(suffix.rbegin(), suffix.rend(), str.rbegin());
 }
 
+std::string versionCodeToString(uint32_t versionCode) {
+    uint8_t major = (versionCode >> 16) & 0xff;
+    uint8_t minor = (versionCode >> 8) & 0xff;
+    uint8_t patch = versionCode & 0xff;
+
+    return std::to_string(major) + "." + std::to_string(minor) + "." +
+            std::to_string(patch);
+}
+
 } // namespace extra
 } // namespace lms

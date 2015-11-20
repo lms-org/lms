@@ -26,7 +26,7 @@ public:
      * @brief load
      * @return the instance of the module
      */
-    void load (ModuleWrapper *);
+    bool load (ModuleWrapper *);
     //Doesnt needed at all
     void unload(ModuleWrapper *entry);
 

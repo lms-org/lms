@@ -74,6 +74,8 @@ bool startsWith(std::string const& str, std::string const& prefix);
  */
 bool endsWith(std::string const& str, std::string const& suffix);
 
+std::string versionCodeToString(uint32_t versionCode);
+
 } // namespace extra
 } // namespace lms
 
