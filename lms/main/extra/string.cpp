@@ -80,5 +80,14 @@ std::istream& safeGetline(std::istream& is, std::string& str) {
     return is;
 }
 
+bool startsWith(std::string const& str, std::string const& prefix) {
+    return str.compare(0, prefix.size(), prefix) == 0;
+}
+
+bool endsWith(std::string const& str, std::string const& suffix) {
+    if (suffix.size() > str.size()) return false;
+    return std::equal(suffix.rbegin(), suffix.rend(), str.rbegin());
+}
+
 } // namespace extra
 } // namespace lms

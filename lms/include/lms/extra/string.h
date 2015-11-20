@@ -58,6 +58,22 @@ bool isAbsolute(const std::string &path);
  */
 std::istream& safeGetline(std::istream& is, std::string& str);
 
+/**
+ * @brief Check if a string starts with another string.
+ * @param str string to investigate
+ * @param prefix prefix to look for
+ * @return true if str starts with prefix
+ */
+bool startsWith(std::string const& str, std::string const& prefix);
+
+/**
+ * @brief Check if a string ends with another string
+ * @param str string to investigate
+ * @param suffix suffix to look for
+ * @return true if str ends with suffix
+ */
+bool endsWith(std::string const& str, std::string const& suffix);
+
 } // namespace extra
 } // namespace lms
 

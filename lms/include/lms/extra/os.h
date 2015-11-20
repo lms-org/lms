@@ -2,6 +2,7 @@
 #define LMS_EXTRA_OS_H
 
 #include <string>
+#include <vector>
 
 namespace lms {
 namespace extra {
@@ -15,6 +16,28 @@ namespace extra {
  * @return current login name
  */
 std::string username();
+
+/**
+ * @brief List all files and directories in the given directory.
+ *
+ * The list will not contain '.' and '..'
+ *
+ * @param path directory's path
+ * @param list result list
+ * @return
+ */
+bool listDir(std::string const& path, std::vector<std::string> &list);
+
+enum class FileType {
+    REGULAR_FILE, DIRECTORY, OTHER, ERROR
+};
+
+/**
+ * @brief Request a file's type.
+ * @param path relative or absolute path to a file or directory
+ * @return file type
+ */
+FileType fileType(std::string const& path);
 
 }  // namespace extra
 }  // namespace lms
