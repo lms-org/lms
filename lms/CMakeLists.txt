@@ -35,7 +35,7 @@ configure_file(include/lms/definitions.h.in
 #include pugixml headers (hpp-files)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(include)
-include_directories(xml/pugixml-1.5/src)
+include_directories(pugixml-1.7/src)
 include_directories(tclap-1.2.1/include)
 
 set (HEADERS
