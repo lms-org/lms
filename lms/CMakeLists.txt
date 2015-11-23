@@ -152,9 +152,9 @@ add_library (lmscore SHARED
 
 # Compile xml-parser pugixml
 add_library(pugixml STATIC         
-    "xml/pugixml-1.5/src/pugixml.cpp"
-    "xml/pugixml-1.5/src/pugixml.hpp"
-    "xml/pugixml-1.5/src/pugiconfig.hpp"
+    "pugixml-1.7/src/pugixml.cpp"
+    "pugixml-1.7/src/pugixml.hpp"
+    "pugixml-1.7/src/pugiconfig.hpp"
 )
 set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE 1)
 target_link_libraries(lmscore PRIVATE pugixml)
