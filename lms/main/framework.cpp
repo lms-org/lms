@@ -280,10 +280,6 @@ Profiler& Framework::profiler() {
     return m_profiler;
 }
 
-BufferedDataManager& Framework::bufferedDataManager() {
-    return m_bufferedDataManager;
-}
-
 Loader& Framework::loader() {
     return m_loader;
 }

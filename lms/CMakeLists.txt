@@ -65,7 +65,6 @@ set (HEADERS
     "include/lms/data_channel_internal.h"
     "include/lms/runtime.h"
     "include/lms/execution_type.h"
-    "include/lms/buffered_datamanager.h"
 
     "include/lms/type/module_config.h"
 
@@ -104,7 +103,6 @@ set (SOURCE
     "main/module_config.cpp"
     "main/runtime.cpp"
     "main/execution_type.cpp"
-    "main/buffered_datamanager.cpp"
     "main/module_wrapper.cpp"
 
     "main/logging/level.cpp"

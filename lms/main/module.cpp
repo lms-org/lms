@@ -61,8 +61,4 @@ namespace lms{
     int Module::cycleCounter() {
         return m_executionManager->cycleCounter();
     }
-
-    BufferedDataManager* Module::bufferedDatamanager() {
-        return &m_wrapper->runtime->framework().bufferedDataManager();
-    }
 }

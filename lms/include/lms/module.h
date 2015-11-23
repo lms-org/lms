@@ -9,7 +9,6 @@
 #include <lms/loader.h>
 #include <lms/module_config.h>
 #include <lms/messaging.h>
-#include <lms/buffered_datamanager.h>
 #include "lms/data_channel.h"
 #include "lms/deprecated.h"
 #include "lms/definitions.h"
@@ -160,8 +159,6 @@ protected:
      * and the core framework.
      */
     Messaging* messaging() const { return m_messaging; }
-
-    BufferedDataManager* bufferedDatamanager();
 
     /**
      * @brief A logger instance. Can be used in initialize, cycle

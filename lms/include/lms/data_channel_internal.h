@@ -7,6 +7,7 @@
 #include "lms/logger.h"
 #include "lms/serializable.h"
 #include "lms/inheritance.h"
+#include "lms/extra/type.h"
 namespace lms {
 class Runtime; //circle dependency
 struct ModuleWrapper;

@@ -8,7 +8,6 @@
 #include "lms/argumenthandler.h"
 #include "lms/clock.h"
 #include "lms/execution_type.h"
-#include "lms/buffered_datamanager.h"
 
 namespace lms {
 
