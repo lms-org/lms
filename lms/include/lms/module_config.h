@@ -29,8 +29,7 @@ template<>
 bool parse<bool>(const std::string &src, bool &dst);
 
 /**
- * @brief ModuleConfig is a key-value mapping that can be read by modules to
- * configure themselves.
+ * @brief ModuleConfig is a key-value mapping used for module configuration.
  *
  * A key is always a string, the value is read as a string but can be parsed to
  * any value: int, bool, double, float, bool... and many more if they implement
@@ -44,9 +43,9 @@ bool parse<bool>(const std::string &src, bool &dst);
  * subsequent calls to loadFromFile may result in overwritten key-value pairs
  * if a key was existent from a previous call.
  *
- * Example code:
- * =============
+ * **Example code**
  *
+ * ~~~~~{.cpp}
  * ModuleConfig cfg;
  * cfg.loadFromFile("example_module.lconf");
  *
@@ -58,6 +57,7 @@ bool parse<bool>(const std::string &src, bool &dst);
  *
  * // get an array, each value is separated by commas, e.g. "1,2,3 , 4"
  * std::vector<int> checkedIds = cfg.getArray<int>("checked");
+ * ~~~~~
  *
  * @author Hans Kirchner
  */
@@ -76,10 +76,19 @@ public:
     /**
      * @brief Load a config file from the given path.
      *
-     * The format is KEY = VALUE. Empty lines are ignored. Comment lines start
-     * with '#'. Key-value pairs can continue to the next line if the line ends
-     * with '\' (backslash). This is especially useful for lists. Each value
-     * in a list needs to be separated by a comma to the next value.
+     * - The general format is KEY = VALUE.
+     * - Empty lines are ignored.
+     * - Comment lines start with '#'.
+     * - Key-value pairs can continue to the next line if the line ends
+     *   with '\' (backslash). This is especially useful for lists.
+     * - Each value in a list needs to be separated by a comma to the next value.
+     *
+     * **Example code**
+     *
+     * ~~~~~{.cpp}
+     * ModuleConfig cfg;
+     * cfg.loadFromFile("myconfig.lconf");
+     * ~~~~~
      *
      * @param path file path to the config file
      * @return false if the file could not be opened, true otherwise
@@ -88,6 +97,19 @@ public:
 
     /**
      * @brief Load a config from the given stream.
+     *
+     * The stream is not closed by this method.
+     *
+     * **Example code**
+     * ~~~~~{.cpp}
+     * std::ifstream ifs("myfile.lconf");
+     *
+     * ModuleConfig cfg;
+     * cfg.load(ifs);
+     *
+     * ifs.close();
+     * ~~~~~
+     *
      * @param is input stream to read from (will not be closed automatically)
      */
     void load(std::istream &is);
@@ -127,7 +149,7 @@ public:
      * of T is invoked the that object is returned.
      *
      * If you want to check if a key is in the config file
-     * use hasKey()
+     * use `hasKey()`.
      *
      * @param key the key to look for
      * @param defaultValue if the key doesn't exists the defaultValue will be
@@ -140,7 +162,7 @@ public:
     /**
      * @brief Return a vector of values for the given key.
      *
-     * This is similar to the get<T>(...) method, but the
+     * This is similar to the `get<T>(...)` method, but the
      * value will be separated by commas.
      *
      * @param key the key to look for

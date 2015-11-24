@@ -41,8 +41,11 @@ std::string typeName(const T& t) {
  * This function works like typeName(t), except
  * it uses only the template parameter as the argument.
  *
- * Usage:
+ * **Example code**
+ *
+ * ~~~~~
  * assert(typeName<std::vector<int>>() == "std::vector<int>");
+ * ~~~~~
  *
  * @return demangled name
  */

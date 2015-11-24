@@ -17,7 +17,20 @@ namespace extra {
 std::string currentTimeString();
 
 /**
- * @brief Generate timestamps with microsecond precision.
+ * @brief Timestamps and durations with microsecond precision.
+ *
+ * **Example code**
+ *
+ * ~~~~~{.cpp}
+ * PrecisionTime fiveSeconds = PrecisionTime::fromMillis(5000);
+ * PrecisionTime oneMilli = PrecisionTime::fromMicros(1000);
+ *
+ * PrecisionTime diff = fiveSeconds - oneMilli;
+ *
+ * assert(diff == PrecisionTime::fromMillis(4999));
+ *
+ * diff.sleep();
+ * ~~~~~
  */
 class PrecisionTime {
 public:
@@ -25,13 +38,14 @@ public:
     static const PrecisionTime ZERO;
 
     /**
-     * @brief Create a timestamp pointing to
-     * a "zero" time.
+     * @brief Create a timestamp pointing to a "zero" time.
      */
     PrecisionTime();
 
     /**
-     * @brief Generate a timestamp. The time returned is not guaranteed
+     * @brief Generate a timestamp pointing to the current time.
+     *
+     * The time returned is not guaranteed
      * to be relative to 1/1/1970 or any other historical or local
      * event. The timestamp is only intended to be used for measuring
      * durations.
