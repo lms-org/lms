@@ -146,7 +146,7 @@ public:
     int getChannelPriority(const std::string &name) const;
 
     int cycleCounter();
-protected:
+
     /**
      * @brief The FakeDataManager mimics the behavior of the old data manager.
      * This should make it backwards-compatible in most cases.
@@ -235,6 +235,7 @@ protected:
     private:
         Module *module;
     };
+protected:
 
     /**
      * @brief We do not return any data manager pointer any longer. This
