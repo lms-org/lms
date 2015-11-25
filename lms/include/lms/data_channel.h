@@ -15,12 +15,11 @@ struct ModuleWrapper;
 template<typename T>
 class DataChannel {
     //TODO doesn't work friends <3
-    //template<typename,typename> friend struct InheritanceCallerGet;
-
+    template<typename,typename> friend struct InheritanceCallerGet;
 public:
     DataChannel(std::shared_ptr<DataChannelInternal> internal) :
         m_internal(internal) {}
-public: //TODO
+protected:
     std::shared_ptr<DataChannelInternal> m_internal;
 public:
 
@@ -66,7 +65,7 @@ protected:
     template <typename A>
     struct InheritanceCallerGet<A, true> {
         static A* call (DataChannel<T> *obj) {
-            return (A*)(obj->m_internal->main->getInheritance());//avoid casting to void*
+            return dynamic_cast<A*>(obj->m_internal->main->getInheritance());//avoid casting to void*
         }
     };
 
@@ -127,12 +126,12 @@ public:
     }
     */
     const T* get() {
-        return get_();
+        return this->get_();
     }
 
     template <typename A>
     const A* getWithType() {
-        return getWithType_<A>();
+        return DataChannel<T>::template getWithType_<A>();
     }
 
     const T* operator ->() {
@@ -153,12 +152,12 @@ public:
     WriteDataChannel() : DataChannel<T>(nullptr) {}
 
     T* get() {
-        return get_();
+        return this->get_();
     }
 
     template <typename A>
     A* getWithType() {
-        return getWithType_<A>();
+        return DataChannel<T>::template getWithType_<A>();
     }
 
     T* operator ->(){
