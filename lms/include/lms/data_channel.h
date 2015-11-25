@@ -51,7 +51,7 @@ public:
             return false;
         }
     }
-
+protected:
     //Util-method
     template <typename A, bool suppInher>
     struct InheritanceCallerGet;
@@ -75,7 +75,8 @@ public:
      * @brier getWithType, used to avoid void* casting
      * returns the object if cast is possible, returns nullptr if the casting if not
      */
-    template <typename A> A* getWithType(){
+    template <typename A>
+    A* getWithType_(){
         if(castableTo<A>()){
             return InheritanceCallerGet<A,std::is_base_of<Inheritance,A>::value>::call(this);
         }
@@ -86,7 +87,7 @@ public:
      * @brief get returns the contained object, if you have a lms::Void type, use getWithType()
      * @return
      */
-    virtual T* get() {
+    T* get_() {
         if(std::is_same<T, Any>::value){
             return nullptr;
         }
@@ -125,6 +126,15 @@ public:
         }
     }
     */
+    const T* get() {
+        return get_();
+    }
+
+    template <typename A>
+    const A* getWithType() {
+        return getWithType_<A>();
+    }
+
     const T* operator ->() {
         return this->get();
     }
@@ -141,6 +151,15 @@ public:
         DataChannel<T>(internal) {}
 
     WriteDataChannel() : DataChannel<T>(nullptr) {}
+
+    T* get() {
+        return get_();
+    }
+
+    template <typename A>
+    A* getWithType() {
+        return getWithType_<A>();
+    }
 
     T* operator ->(){
         //m_cycle = maintainer->cycleCount();
