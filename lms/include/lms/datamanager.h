@@ -9,7 +9,6 @@
 #include <typeinfo>
 #include <type_traits>
 
-#include <lms/module.h>
 #include <lms/logger.h>
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
@@ -56,7 +55,7 @@ public:
     DataManager& operator= (const DataManager&) = delete;
 
     template<typename T, typename DataChannelClass, bool isWriter>
-    DataChannelClass accessChannel(Module *module, const std::string &reqName) {
+    DataChannelClass accessChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
         std::string name = module->getChannelMapping(reqName);
         std::shared_ptr<DataChannelInternal> &channel = channels[name];
 
@@ -93,11 +92,11 @@ public:
             }
         }
 
-        if(! channel->isReaderOrWriter(module->wrapper())) {
+        if(! channel->isReaderOrWriter(module)) {
             if(isWriter) {
-                channel->writers.push_back(module->wrapper());
+                channel->writers.push_back(module);
             } else {
-                channel->readers.push_back(module->wrapper());
+                channel->readers.push_back(module);
             }
             invalidateExecutionManager();
         }
@@ -116,7 +115,7 @@ public:
      * @return const data channel (only reading)
      */
     template<typename T>
-    ReadDataChannel<T> readChannel(Module *module, const std::string &reqName) {
+    ReadDataChannel<T> readChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
         return accessChannel<T, ReadDataChannel<T>, false>(module, reqName);
     }
 
@@ -129,65 +128,9 @@ public:
      * @return data channel (reading and writing)
      */
     template<typename T>
-    WriteDataChannel<T> writeChannel(Module *module, const std::string &reqName) {
+    WriteDataChannel<T> writeChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
         return accessChannel<T, WriteDataChannel<T>, true>(module, reqName);
     }
-
-    /**
-     * @brief Registers the given module to have write access on
-     * a data channel. This will not create the data channel.
-     *
-     * @param module requesting module
-     * @param name data channel name
-     */
-    DEPRECATED
-    void getWriteAccess(Module *module, const std::string &name);
-
-    /**
-     * @brief Register the given module to have read access
-     * on a data channel. This will not create the data channel.
-     *
-     * @param module requesting module
-     * @param name data channel name
-     */
-    DEPRECATED
-    void getReadAccess(Module *module, const std::string &name);
-
-    /**
-     * @brief Serialize a data channel into the given output stream.
-     *
-     * The data channel must have been initialized before you can
-     * use this method.
-     *
-     * A module needs at least read access on the data channel
-     * to be able to serialize it.
-     *
-     * @param module requesting module
-     * @param name data channel name
-     * @param os output stream to serialize into
-     * @return false if the data channel was not initialized or if it
-     * is not serializable or if no read or write access, otherwise true
-     */
-    DEPRECATED
-    bool serializeChannel(Module *module, const std::string &name, std::ostream &os);
-
-    /**
-     * @brief Deserialize a data channel from the given input stream.
-     *
-     * The data channel must have been initialized before you use
-     * this method.
-     *
-     * A module needs write access on the data channel to
-     * be able to deserialize it.
-     *
-     * @param module requesting module
-     * @param name data channel name
-     * @param is input stream to deserialize from
-     * @return false if the data channel was not initialized
-     * or if it is not serializable or if no write access, otherwise true
-     */
-    DEPRECATED
-    bool deserializeChannel(Module *module, const std::string &name, std::istream &is);
 
     /**
      * @brief Check if a data channel with the given name is

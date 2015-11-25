@@ -27,22 +27,6 @@ DataManager::~DataManager() {
     // TODO delete everything
 }
 
-void DataManager::getWriteAccess(Module *module, const std::string &reqName) {
-    writeChannel<Any>(module, reqName);
-}
-
-void DataManager::getReadAccess(Module *module, const std::string &reqName) {
-    readChannel<Any>(module, reqName);
-}
-
-bool DataManager::serializeChannel(Module *module, const std::string &reqName, std::ostream &os) {
-    return readChannel<Any>(module, reqName).serialize(os);
-}
-
-bool DataManager::deserializeChannel(Module *module, const std::string &reqName, std::istream &is) {
-    return writeChannel<Any>(module, reqName).deserialize(is);
-}
-
 const DataManager::ChannelMap &DataManager::getChannels() const {
     return channels;
 }

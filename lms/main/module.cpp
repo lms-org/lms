@@ -33,13 +33,7 @@ namespace lms{
     }
 
     lms_EXPORT std::string Module::getChannelMapping(const std::string &mapFrom) const{
-        auto it = m_wrapper->channelMapping.find(mapFrom);
-
-        if(it != m_wrapper->channelMapping.end()) {
-            return it->second;
-        } else {
-            return mapFrom;
-        }
+        return m_wrapper->getChannelMapping(mapFrom);
     }
 
     lms_EXPORT int Module::getChannelPriority(const std::string &name) const {

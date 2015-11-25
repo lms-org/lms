@@ -50,6 +50,8 @@ struct ModuleWrapper {
 
     int getChannelPriority(const std::string &name) const;
 
+    std::string getChannelMapping(const std::string &mapFrom) const;
+
     /**
      * @brief The module can only be executed on the specified thread.
      *

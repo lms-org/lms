@@ -12,6 +12,16 @@ int ModuleWrapper::getChannelPriority(const std::string &name) const {
     }
 }
 
+std::string ModuleWrapper::getChannelMapping(const std::string &mapFrom) const {
+    auto it = channelMapping.find(mapFrom);
+
+    if(it != channelMapping.end()) {
+        return it->second;
+    } else {
+        return mapFrom;
+    }
+}
+
 void ModuleWrapper::update(ModuleWrapper && other) {
     this->channelPriorities = other.channelPriorities;
     this->channelMapping = other.channelMapping;
