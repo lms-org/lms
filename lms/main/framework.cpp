@@ -60,6 +60,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     std::unique_ptr<logging::ThresholdFilter> filter;
 
+    m_serviceLoader.addModulePath(LMS_SERVICES, 0);
+
     //parse framework config
     if(arguments.argRunLevel >= RunLevel::CONFIG) {
         logger.info() << "MODULES: " << LMS_MODULES;
@@ -95,7 +97,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
         // TODO global service path
 #endif
         m_moduleLoader.addModulePath(LMS_MODULES, 0);
-        m_serviceLoader.addModulePath(LMS_SERVICES, 0);
 
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
@@ -293,12 +294,13 @@ std::shared_ptr<ServiceWrapper> Framework::getServiceWrapper(std::string const& 
 void Framework::installService(std::shared_ptr<ServiceWrapper> service) {
     auto it = services.find(service->name());
 
-    if(it == services.end()) {
+    if(it != services.end()) {
         logger.error("installService") << "Tried to install service "
             << service->name() << " but was already installed";
     } else {
         services[service->name()] = service;
         m_serviceLoader.load(service.get());
+        service->instance()->initBase(service.get(), logging::Level::DEBUG);
     }
 }
 

@@ -19,15 +19,15 @@ public:
     ServiceHandle() : m_valid(false) {}
 
     T* operator -> () {
-        return m_wrapper->instance();
+        return static_cast<T*>(m_wrapper->instance());
     }
 
     operator bool() const {
-        return isValid();
+        return m_valid;
     }
 
     bool isValid() const {
-        return m_wrapper;
+        return m_valid;
     }
 private:
     std::shared_ptr<ServiceWrapper> m_wrapper;

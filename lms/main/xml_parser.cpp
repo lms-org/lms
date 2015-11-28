@@ -517,6 +517,8 @@ void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
             parseInclude(node, file, flag);
         } else if(std::string("runtime") == node.name()) {
             parseRuntime(node, file, flag);
+        } else if(std::string("service") == node.name()) {
+            parseService(node, file, flag);
         } else {
             errorUnknownNode(node);
         }
