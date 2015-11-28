@@ -19,21 +19,46 @@ class Runtime;
  * @brief The module_entry struct
  * used to store available modules
  */
-struct ModuleWrapper {
-    ModuleWrapper(Runtime *runtime) : runtime(runtime), enabled(false),
-        moduleInstance(nullptr) {}
-
-    Runtime *runtime;
-
-    /**
-     * @brief Name of the module
-     */
-    std::string name;
+class ModuleWrapper {
+    Runtime *m_runtime;
 
     /**
      * @brief name of the shared library that will be loaded
      */
-    std::string libname;
+    std::string m_libname;
+
+    /**
+     * @brief Name of the module
+     */
+    std::string m_name;
+
+    /**
+     * @brief Is set to true if the module is enabled
+     */
+    bool m_enabled;
+
+    /**
+     * @brief Points to the loaded module instance if enabled, otherwise
+     * equals to nullptr
+     */
+    std::unique_ptr<Module> m_moduleInstance;
+public:
+    ModuleWrapper(Runtime *runtime) : m_runtime(runtime), m_enabled(false),
+        m_moduleInstance(nullptr) {}
+
+    std::string libname() const;
+    void libname(std::string const& libname);
+
+    std::string name() const;
+    void name(std::string const& name);
+
+    bool enabled() const;
+
+    Module* instance() const;
+    void instance(Module* instance);
+
+    Runtime* runtime() const;
+    void runtime(Runtime* runtime);
 
     /**
      * @brief Used for transparent datachannel mapping. Maps requested
@@ -61,31 +86,11 @@ struct ModuleWrapper {
      */
     ExecutionType executionType;
 
-    /**
-     * @brief Is set to true if the module is enabled
-     */
-    bool enabled;
-
-    /**
-     * @brief Points to the loaded module instance if enabled, otherwise
-     * equals to nullptr
-     */
-    Module *moduleInstance;
-
     std::map<std::string, ModuleConfig> configs;
 
     void update(ModuleWrapper && other);
 
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
-
-#ifdef _WIN32
-    // TODO pointer to open shared library or something similar
-#else
-    /**
-     * @brief Handle that is returned by dlopen and is needed by dlclose.
-     */
-    void *dlHandle;
-#endif
 };
 
 typedef std::list<std::shared_ptr<ModuleWrapper>> ModuleList;

@@ -19,10 +19,12 @@ public:
     std::string name() const;
     void name(std::string const& name);
 
+    std::string libname() const;
     void libname(std::string const& libname);
 
     Runtime* runtime();
     Service* instance();
+    void instance(Service *service);
     std::mutex& mutex();
 
     ModuleConfig& getConfig(std::string const& name);

@@ -296,6 +296,7 @@ void Framework::installService(std::shared_ptr<ServiceWrapper> service) {
             << service->name() << " but was already installed";
     } else {
         services[service->name()] = service;
+        m_serviceLoader.load(service.get());
     }
 }
 

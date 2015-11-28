@@ -327,14 +327,14 @@ void XmlParser::parseModules(pugi::xml_node node,
                              LoadConfigFlag flag) {
     std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>(m_runtime);
 
-    module->name = node.child("name").child_value();
+    module->name(node.child("name").child_value());
 
     pugi::xml_node realNameNode = node.child("realName");
 
     if(realNameNode) {
-        module->libname = Loader<Module>::getModulePath(realNameNode.child_value());
+        module->libname(Loader<Module>::getModulePath(realNameNode.child_value()));
     } else {
-        module->libname = Loader<Module>::getModulePath(module->name);
+        module->libname(Loader<Module>::getModulePath(module->name()));
     }
 
     pugi::xml_node executionTypeNode = node.child("executionType");

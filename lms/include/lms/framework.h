@@ -82,6 +82,7 @@ private:
     ArgumentHandler argumentHandler;
     Profiler m_profiler;
     Loader<Module> m_moduleLoader;
+    Loader<Service> m_serviceLoader;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;

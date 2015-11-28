@@ -107,10 +107,10 @@ public:
         // for information on dlopen, dlsym, dlerror and dlclose
         // see here: http://linux.die.net/man/3/dlclose
 
-        std::string libpath = m_pathMapping[entry->libname];
+        std::string libpath = m_pathMapping[entry->libname()];
 
         if(libpath.empty()) {
-            logger.error("load") << "Module cannot be found: " << entry->name;
+            logger.error("load") << "libname is empty: " << entry->name();
             return false;
         }
 
@@ -119,7 +119,7 @@ public:
 
         // check for errors while opening
         if(lib == NULL) {
-            logger.error("load") << "Could not open dynamic lib: " << entry->name
+            logger.error("load") << "Could not open dynamic lib: " << entry->name()
                 << std::endl << "Message: " << dlerror();
             return false;
         }
@@ -131,12 +131,12 @@ public:
         getLmsVersion.src = dlsym(lib, "getLmsVersion");
         char *err;
         if((err = dlerror()) != NULL) {
-            logger.warn("load") << "Module " << entry->name << " does not provide getLmsVersion()";
+            logger.warn("load") << "Module " << entry->name() << " does not provide getLmsVersion()";
         } else {
             uint32_t moduleVersion = getLmsVersion.target();
 
             if((moduleVersion & LMS_VERSION_MASK) != (LMS_VERSION_CODE & LMS_VERSION_MASK)) {
-                logger.error("load") << "Module " << entry->name << " has bad version. "
+                logger.error("load") << "Module " << entry->name() << " has bad version. "
                     << "LMS Version " << LMS_VERSION_STRING << ", Module was compiled for "
                     << lms::extra::versionCodeToString(moduleVersion);
                 return false;
@@ -152,13 +152,10 @@ public:
 
         // check for errors while calling dlsym
         if ((err = dlerror()) != NULL) {
-            logger.error("load") << "Could not get symbol 'getInstance' of module " << entry->name
+            logger.error("load") << "Could not get symbol 'getInstance' of module " << entry->name()
                 << std::endl << "Message: " << err;
             return false;
         }
-
-        entry->dlHandle = lib;
-        entry->enabled = true;
 
         // TODO check if close is needed here
     //    if(dlclose(lib) != 0) {
@@ -174,7 +171,7 @@ public:
 
         // call the getInstance function and cast it to a Module pointer
         // -> getInstance should return a newly created object.
-        entry->moduleInstance = static_cast<T*> (conv.target());
+        entry->instance(static_cast<T*> (conv.target()));
 
         // Cast symbol to function pointer returning a pointer to a Module instance and
         // call the function to get the a module instance
@@ -188,9 +185,8 @@ public:
     }
 
     void unload(typename T::WrapperType *entry) {
-        if(entry->enabled) {
-            delete (entry->moduleInstance);
-            entry->moduleInstance = nullptr;
+        if(entry->enabled()) {
+            entry->instance(nullptr);
 
             // even with dlclose there is a 32 byte memory leak reported by valgrind
             // http://stackoverflow.com/questions/1542457/memory-leak-reported-by-valgrind-in-dlopen
@@ -199,10 +195,6 @@ public:
     //        if(0 != dlclose(entry.dlHandle)) {
     //            logger.error("unload") << "dlclose failed for " << entry.name;
     //        }
-            entry->dlHandle = nullptr;
-
-            //logger.info() << "Closed dl for " << entry.name;
-            entry->enabled = false;
         }
     }
 };
