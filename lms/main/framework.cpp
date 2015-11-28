@@ -92,8 +92,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
 #ifdef __unix__
         m_moduleLoader.addModulePath("/usr/lib/lms");
         m_moduleLoader.addModulePath("/usr/local/lib/lms");
+        // TODO global service path
 #endif
-        m_moduleLoader.addModulePath(LMS_MODULES, 1);
+        m_moduleLoader.addModulePath(LMS_MODULES, 0);
+        m_serviceLoader.addModulePath(LMS_SERVICES, 0);
 
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
