@@ -332,9 +332,9 @@ void XmlParser::parseModules(pugi::xml_node node,
     pugi::xml_node realNameNode = node.child("realName");
 
     if(realNameNode) {
-        module->libname = Loader::getModulePath(realNameNode.child_value());
+        module->libname = Loader<Module>::getModulePath(realNameNode.child_value());
     } else {
-        module->libname = Loader::getModulePath(module->name);
+        module->libname = Loader<Module>::getModulePath(module->name);
     }
 
     pugi::xml_node executionTypeNode = node.child("executionType");

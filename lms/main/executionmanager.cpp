@@ -42,7 +42,7 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
         dataManager.releaseChannelsOf(*it);
-        m_runtime.framework().loader().unload(it->get());
+        m_runtime.framework().moduleLoader().unload(it->get());
     }
 
     enabledModules.clear();
@@ -300,7 +300,7 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
     }
     for(std::shared_ptr<ModuleWrapper> it:available){
         if(it->name == name){
-            if(m_runtime.framework().loader().load(it.get())) {
+            if(m_runtime.framework().moduleLoader().load(it.get())) {
                 Module *module = it->moduleInstance;
                 module->initializeBase(it,minLogLevel);
 
@@ -330,7 +330,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
 
             for(std::shared_ptr<ModuleWrapper> entry : available) {
                 if(entry->name == name) {
-                    m_runtime.framework().loader().unload(entry.get());
+                    m_runtime.framework().moduleLoader().unload(entry.get());
                     break;
                 }
             }

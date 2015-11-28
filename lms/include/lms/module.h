@@ -14,7 +14,6 @@
 #include "lms/definitions.h"
 #include "lms/datamanager.h"
 #include "lms/service_handle.h"
-#include "lms/runtime.h"
 
 namespace lms {
 
@@ -42,6 +41,8 @@ uint32_t getLmsVersion() { \
  */
 class Module {
 public:
+    typedef ModuleWrapper WrapperType;
+
     Module(): logger(""), m_datamanager(nullptr),
         m_messaging(nullptr), m_fakeDataManager(this) { }
     virtual ~Module() { }
@@ -242,7 +243,7 @@ protected:
     template <class T>
     ServiceHandle<T> getService(std::string const& name) {
         std::shared_ptr<ServiceWrapper> wrapper =
-                m_wrapper->runtime->getServiceWrapper(name);
+                m_wrapper->getServiceWrapper(name);
 
         if(wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
             // TODO type check

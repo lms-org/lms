@@ -1,4 +1,5 @@
 #include "lms/module_wrapper.h"
+#include "lms/runtime.h"
 
 namespace lms {
 
@@ -30,6 +31,10 @@ void ModuleWrapper::update(ModuleWrapper && other) {
     for(auto&& entry : other.configs) {
         this->configs[entry.first] = entry.second;
     }
+}
+
+std::shared_ptr<ServiceWrapper> ModuleWrapper::getServiceWrapper(std::string const& name) {
+    return this->runtime->getServiceWrapper(name);
 }
 
 }  // namespace lms

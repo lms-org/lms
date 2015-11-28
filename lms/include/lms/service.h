@@ -5,11 +5,12 @@
 
 #include "lms/module_config.h"
 #include "lms/logging/logger.h"
+#include "lms/definitions.h"
 
 namespace lms {
 
 #define LMS_SERVICE_INTERFACE(CLASS) extern "C" { \
-void* getInstance () { \
+lms::Service* getInstance () { \
     return new CLASS(); \
 } \
 uint32_t getLmsVersion() { \
@@ -21,6 +22,8 @@ class ServiceWrapper;
 
 class Service {
 public:
+    Service();
+
     void initBase(ServiceWrapper *wrapper, lms::logging::Level minLogLevel);
 
     virtual ~Service() {}

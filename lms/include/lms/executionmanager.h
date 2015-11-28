@@ -21,7 +21,6 @@
 namespace lms {
 
 class DataManager;
-class Loader;
 
 class ExecutionManager {
 public:

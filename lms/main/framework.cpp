@@ -90,10 +90,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
 #ifdef __unix__
-        m_loader.addModulePath("/usr/lib/lms");
-        m_loader.addModulePath("/usr/local/lib/lms");
+        m_moduleLoader.addModulePath("/usr/lib/lms");
+        m_moduleLoader.addModulePath("/usr/local/lib/lms");
 #endif
-        m_loader.addModulePath(LMS_MODULES, 1);
+        m_moduleLoader.addModulePath(LMS_MODULES, 1);
 
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
@@ -280,8 +280,8 @@ Profiler& Framework::profiler() {
     return m_profiler;
 }
 
-Loader& Framework::loader() {
-    return m_loader;
+Loader<Module>& Framework::moduleLoader() {
+    return m_moduleLoader;
 }
 
 std::shared_ptr<ServiceWrapper> Framework::getServiceWrapper(std::string const& name) {
