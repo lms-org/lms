@@ -60,6 +60,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     std::unique_ptr<logging::ThresholdFilter> filter;
 
+    m_serviceLoader.addModulePath(LMS_SERVICES, 0);
+
     //parse framework config
     if(arguments.argRunLevel >= RunLevel::CONFIG) {
         logger.info() << "MODULES: " << LMS_MODULES;
@@ -90,10 +92,11 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
 #ifdef __unix__
-        m_loader.addModulePath("/usr/lib/lms");
-        m_loader.addModulePath("/usr/local/lib/lms");
+        m_moduleLoader.addModulePath("/usr/lib/lms");
+        m_moduleLoader.addModulePath("/usr/local/lib/lms");
+        // TODO global service path
 #endif
-        m_loader.addModulePath(LMS_MODULES, 1);
+        m_moduleLoader.addModulePath(LMS_MODULES, 0);
 
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
@@ -280,8 +283,32 @@ Profiler& Framework::profiler() {
     return m_profiler;
 }
 
-Loader& Framework::loader() {
-    return m_loader;
+Loader<Module>& Framework::moduleLoader() {
+    return m_moduleLoader;
+}
+
+std::shared_ptr<ServiceWrapper> Framework::getServiceWrapper(std::string const& name) {
+    return services[name];
+}
+
+void Framework::installService(std::shared_ptr<ServiceWrapper> service) {
+    auto it = services.find(service->name());
+
+    if(it != services.end()) {
+        logger.error("installService") << "Tried to install service "
+            << service->name() << " but was already installed";
+    } else {
+        services[service->name()] = service;
+        m_serviceLoader.load(service.get());
+        service->instance()->initBase(service.get(), logging::Level::DEBUG);
+    }
+}
+
+void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
+    std::shared_ptr<ServiceWrapper> originalService = services[service->name()];
+
+    std::unique_lock<std::mutex> lock(originalService->mutex());
+    originalService->update(std::move(*service.get()));
 }
 
 }

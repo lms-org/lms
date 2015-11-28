@@ -13,19 +13,19 @@ namespace lms{
     bool Module::initializeBase(std::shared_ptr<ModuleWrapper> wrapper,
         logging::Level minLogLevel) {
 
-        m_datamanager = &wrapper->runtime->dataManager();
-        m_executionManager = &wrapper->runtime->executionManager();
+        m_datamanager = &wrapper->runtime()->dataManager();
+        m_executionManager = &wrapper->runtime()->executionManager();
         m_messaging = &m_executionManager->messaging();
         m_wrapper = wrapper;
 
-        logger.name = wrapper->runtime->name() + "." + wrapper->name;
+        logger.name = wrapper->runtime()->name() + "." + wrapper->name();
         logger.threshold = minLogLevel;
 
         return true;
     }
 
     lms_EXPORT std::string Module::getName() const{
-        return m_wrapper->name;
+        return m_wrapper->name();
     }
 
     lms_EXPORT ExecutionType Module::getExecutionType() const {

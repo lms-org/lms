@@ -119,6 +119,9 @@ public:
     void parseModules(pugi::xml_node node, const std::string &currentFile,
                       LoadConfigFlag flag);
 
+    void parseService(pugi::xml_node node, const std::string &currentFile,
+                      LoadConfigFlag flag);
+
     void parseFile(const std::string &file, LoadConfigFlag flag);
 
     void parseRuntime(pugi::xml_node node, const std::string &currentFile,

@@ -68,7 +68,12 @@ public:
 
     Profiler& profiler();
 
-    Loader& loader();
+    Loader<Module>& moduleLoader();
+
+    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
+
+    void installService(std::shared_ptr<ServiceWrapper> service);
+    void reloadService(std::shared_ptr<ServiceWrapper> service);
 private:
     bool exportGraphsHelper(std::string const& path, bool isExecOrData);
 
@@ -76,7 +81,8 @@ private:
 
     ArgumentHandler argumentHandler;
     Profiler m_profiler;
-    Loader m_loader;
+    Loader<Module> m_moduleLoader;
+    Loader<Service> m_serviceLoader;
 
     extra::FileMonitor configMonitor;
     bool configMonitorEnabled;
@@ -84,6 +90,7 @@ private:
     bool m_running;
 
     std::map<std::string, std::unique_ptr<Runtime>> runtimes;
+    std::map<std::string, std::shared_ptr<ServiceWrapper>> services;
 
     /**
      * @brief signal called by the system (Segfaults etc)

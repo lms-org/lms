@@ -69,7 +69,7 @@ void DataManager::printMapping()  {
         if(! ch.second->readers.empty()) {
             std::string readerLine = "    reading: ";
             for(std::shared_ptr<ModuleWrapper> reader : ch.second->readers) {
-                readerLine += reader->name + " ";
+                readerLine += reader->name() + " ";
             }
             logger.debug("mapping") << readerLine;
         }
@@ -77,7 +77,7 @@ void DataManager::printMapping()  {
         if(! ch.second->writers.empty()) {
             std::string writerLine = "    writing: ";
             for(std::shared_ptr<ModuleWrapper> writer : ch.second->writers) {
-                writerLine += writer->name + " ";
+                writerLine += writer->name() + " ";
             }
             logger.debug("mapping") << writerLine;
         }
@@ -99,20 +99,20 @@ void DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &pref
             if(prio != 0) {
                 dot.label(std::to_string(prio));
             }
-            dot.edge(prefix + "_" + writer->name, prefix + "_" + ch.first);
+            dot.edge(prefix + "_" + writer->name(), prefix + "_" + ch.first);
             dot.reset();
 
-            modules.insert(writer->name);
+            modules.insert(writer->name());
         }
         for(auto reader : ch.second->readers) {
             int prio = reader->getChannelPriority(ch.first);
             if(prio != 0) {
                 dot.label(std::to_string(prio));
             }
-            dot.edge(prefix + "_" + ch.first, prefix + "_" + reader->name);
+            dot.edge(prefix + "_" + ch.first, prefix + "_" + reader->name());
             dot.reset();
 
-            modules.insert(reader->name);
+            modules.insert(reader->name());
         }
     }
 

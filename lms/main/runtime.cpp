@@ -102,4 +102,8 @@ void Runtime::enableModules() {
     }
 }
 
+std::shared_ptr<ServiceWrapper> Runtime::getServiceWrapper(std::string const& name) {
+    return m_framework.getServiceWrapper(name);
+}
+
 }  // namespace lms

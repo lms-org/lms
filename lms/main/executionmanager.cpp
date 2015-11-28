@@ -36,13 +36,13 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
-        (*it)->moduleInstance->deinitialize();
+        (*it)->instance()->deinitialize();
     }
 
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
         dataManager.releaseChannelsOf(*it);
-        m_runtime.framework().loader().unload(it->get());
+        m_runtime.framework().moduleLoader().unload(it->get());
     }
 
     enabledModules.clear();
@@ -247,9 +247,9 @@ void ExecutionManager::stopRunning() {
 
 void ExecutionManager::installModule(std::shared_ptr<ModuleWrapper> mod){
     for(std::shared_ptr<ModuleWrapper> modEntry : available) {
-        if(modEntry->name == mod->name) {
+        if(modEntry->name() == mod->name()) {
             logger.error("addAvailableModule") << "Tried to add available "
-                                               << "module " << mod->name << " but was already available.";
+                                               << "module " << mod->name() << " but was already available.";
             return;
         }
     }
@@ -268,7 +268,7 @@ void ExecutionManager::updateOrInstall() {
         bool found = false;
 
         for(std::shared_ptr<ModuleWrapper> modEntry : available) {
-            if(modEntry->name == mod->name) {
+            if(modEntry->name() == mod->name()) {
                 found = true;
 
                 // update relevant attributes
@@ -293,15 +293,15 @@ void ExecutionManager::updateOrInstall() {
 void ExecutionManager::enableModule(const std::string &name, lms::logging::Level minLogLevel){
     //Check if module is already enabled
     for(auto it:enabledModules){
-        if(it->name == name){
+        if(it->name() == name){
             logger.error("enableModule") << "Module " << name << " is already enabled.";
             return;
         }
     }
     for(std::shared_ptr<ModuleWrapper> it:available){
-        if(it->name == name){
-            if(m_runtime.framework().loader().load(it.get())) {
-                Module *module = it->moduleInstance;
+        if(it->name() == name){
+            if(m_runtime.framework().moduleLoader().load(it.get())) {
+                Module *module = it->instance();
                 module->initializeBase(it,minLogLevel);
 
                 if(module->initialize()){
@@ -322,15 +322,15 @@ bool ExecutionManager::disableModule(const std::string &name) {
     for(ModuleList::iterator it = enabledModules.begin();
         it != enabledModules.end(); ++it) {
 
-        if((*it)->name == name) {
-            if(! (*it)->moduleInstance->deinitialize()) {
+        if((*it)->name() == name) {
+            if(! (*it)->instance()->deinitialize()) {
                 logger.error("disableModule")
                         << "Deinitialize failed for module " << name;
             }
 
             for(std::shared_ptr<ModuleWrapper> entry : available) {
-                if(entry->name == name) {
-                    m_runtime.framework().loader().unload(entry.get());
+                if(entry->name() == name) {
+                    m_runtime.framework().moduleLoader().unload(entry.get());
                     break;
                 }
             }
@@ -403,7 +403,7 @@ void ExecutionManager::sort(){
     //add modules to the list
     for(std::shared_ptr<ModuleWrapper> it : enabledModules){
         std::vector<Module*> tmp;
-        tmp.push_back(it->moduleInstance);
+        tmp.push_back(it->instance());
         cycleList.push_back(tmp);
     }
     sortModules();
@@ -440,9 +440,9 @@ void ExecutionManager::sortModules(){
                     bool mw2Write = false;
 
                     for(std::shared_ptr<ModuleWrapper> r1 : pair.second->writers){
-                        if(r1->name == mw1->name){
+                        if(r1->name() == mw1->name()){
                             mw1Write = true;
-                        }else if(r1->name == mw2->name){
+                        }else if(r1->name() == mw2->name()){
                             mw2Write = true;
                         }
                     }
@@ -462,8 +462,8 @@ void ExecutionManager::addModuleDependency(std::shared_ptr<ModuleWrapper> depend
     for(std::vector<Module*> &list: cycleList){
         Module *toAdd = list[0];
         //add it to the list
-        if(toAdd->getName() == dependent->name){
-            list.push_back(independent->moduleInstance);
+        if(toAdd->getName() == dependent->name()){
+            list.push_back(independent->instance());
         }
     }
 }
@@ -483,7 +483,7 @@ const ModuleList& ExecutionManager::getEnabledModules() const {
 
 void ExecutionManager::fireConfigsChangedEvent() {
     for(std::shared_ptr<ModuleWrapper> mod : enabledModules) {
-        mod->moduleInstance->configsChanged();
+        mod->instance()->configsChanged();
     }
 }
 

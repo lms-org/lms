@@ -1,4 +1,5 @@
 #include "lms/module_wrapper.h"
+#include "lms/runtime.h"
 
 namespace lms {
 
@@ -30,6 +31,47 @@ void ModuleWrapper::update(ModuleWrapper && other) {
     for(auto&& entry : other.configs) {
         this->configs[entry.first] = entry.second;
     }
+}
+
+std::shared_ptr<ServiceWrapper> ModuleWrapper::getServiceWrapper(std::string const& name) {
+    return this->runtime()->getServiceWrapper(name);
+}
+
+std::string ModuleWrapper::libname() const {
+    return m_libname;
+}
+
+void ModuleWrapper::libname(std::string const& libname) {
+    m_libname = libname;
+}
+
+std::string ModuleWrapper::name() const {
+    return m_name;
+}
+
+void ModuleWrapper::name(std::string const& name) {
+    m_name = name;
+}
+
+bool ModuleWrapper::enabled() const {
+    return m_enabled;
+}
+
+Module* ModuleWrapper::instance() const {
+    return m_moduleInstance.get();
+}
+
+void ModuleWrapper::instance(Module* instance) {
+    m_enabled = instance != nullptr;
+    m_moduleInstance.reset(instance);
+}
+
+Runtime* ModuleWrapper::runtime() const {
+    return m_runtime;
+}
+
+void ModuleWrapper::runtime(Runtime* runtime) {
+    m_runtime = runtime;
 }
 
 }  // namespace lms
