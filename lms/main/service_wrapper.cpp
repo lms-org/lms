@@ -2,6 +2,9 @@
 
 namespace lms {
 
+ServiceWrapper::ServiceWrapper(Runtime *runtime) : m_runtime(runtime) {
+}
+
 std::string ServiceWrapper::name() const {
     return m_name;
 }
@@ -28,6 +31,17 @@ std::mutex& ServiceWrapper::mutex() {
 
 bool ServiceWrapper::checkHashCode(size_t hashCode) {
     return m_service && (m_service->hashCode() == hashCode);
+}
+
+void ServiceWrapper::libname(std::string const& libname) {
+    m_libname = libname;
+}
+
+void ServiceWrapper::update(ServiceWrapper && other) {
+    // preserve location of existing ModuleConfigs
+    for(auto&& entry : other.m_configs) {
+        this->m_configs[entry.first] = entry.second;
+    }
 }
 
 }  // namespace lms

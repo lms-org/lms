@@ -288,4 +288,22 @@ std::shared_ptr<ServiceWrapper> Framework::getServiceWrapper(std::string const& 
     return services[name];
 }
 
+void Framework::installService(std::shared_ptr<ServiceWrapper> service) {
+    auto it = services.find(service->name());
+
+    if(it == services.end()) {
+        logger.error("installService") << "Tried to install service "
+            << service->name() << " but was already installed";
+    } else {
+        services[service->name()] = service;
+    }
+}
+
+void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
+    std::shared_ptr<ServiceWrapper> originalService = services[service->name()];
+
+    std::unique_lock<std::mutex> lock(originalService->mutex());
+    originalService->update(std::move(*service.get()));
+}
+
 }

@@ -71,6 +71,9 @@ public:
     Loader<Module>& moduleLoader();
 
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
+
+    void installService(std::shared_ptr<ServiceWrapper> service);
+    void reloadService(std::shared_ptr<ServiceWrapper> service);
 private:
     bool exportGraphsHelper(std::string const& path, bool isExecOrData);
 

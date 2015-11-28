@@ -421,6 +421,69 @@ void XmlParser::parseModules(pugi::xml_node node,
     }
 }
 
+void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile,
+                  LoadConfigFlag flag) {
+    std::shared_ptr<ServiceWrapper> service = std::make_shared<ServiceWrapper>(m_runtime);
+
+    service->name(node.child("name").child_value());
+
+    pugi::xml_node realNameNode = node.child("realName");
+
+    if(realNameNode) {
+        service->libname(Loader<Service>::getModulePath(realNameNode.child_value()));
+    } else {
+        service->libname(Loader<Service>::getModulePath(service->name()));
+    }
+
+    // parse all config
+    for(pugi::xml_node configNode : node.children("config")) {
+        pugi::xml_attribute srcAttr = configNode.attribute("src");
+        pugi::xml_attribute nameAttr = configNode.attribute("name");
+        pugi::xml_attribute userAttr = configNode.attribute("user");
+
+        if(userAttr) {
+            std::vector<std::string> allowedUsers =
+                    lms::extra::split(std::string(userAttr.value()), ',');
+
+            if(std::find(allowedUsers.begin(), allowedUsers.end(),
+                         m_args.argUser) == allowedUsers.end()) {
+                continue;
+            }
+        }
+
+        std::string name = "default";
+        if(nameAttr) {
+            name = nameAttr.value();
+        }
+
+        if(srcAttr) {
+            std::string lconfPath = srcAttr.value();
+
+            if(extra::isAbsolute(lconfPath)) {
+                lconfPath = LMS_CONFIGS + lconfPath;
+            } else {
+                lconfPath = extra::dirname(currentFile) + "/" + lconfPath;
+            }
+
+            bool loadResult = service->getConfig(name).loadFromFile(lconfPath);
+            if(!loadResult) {
+                errorFile(lconfPath);
+            } else {
+                m_files.push_back(lconfPath);
+            }
+        } else {
+            // if there was no src attribut then parse the tag's content
+            parseModuleConfig(configNode, service->getConfig(name), "");
+        }
+    }
+
+    if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
+        m_runtime->framework().installService(service);
+    } else {
+        m_runtime->framework().reloadService(service);
+    }
+}
+
 void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
     std::ifstream ifs(file);
 

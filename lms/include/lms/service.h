@@ -22,6 +22,8 @@ class ServiceWrapper;
 
 class Service {
 public:
+    typedef ServiceWrapper WrapperType;
+
     Service();
 
     void initBase(ServiceWrapper *wrapper, lms::logging::Level minLogLevel);

@@ -14,11 +14,12 @@ class Runtime;
 
 class ServiceWrapper {
 public:
-    ServiceWrapper() {
-    }
+    ServiceWrapper(Runtime *runtime);
 
     std::string name() const;
     void name(std::string const& name);
+
+    void libname(std::string const& libname);
 
     Runtime* runtime();
     Service* instance();
@@ -26,11 +27,14 @@ public:
 
     ModuleConfig& getConfig(std::string const& name);
     bool checkHashCode(size_t hashCode);
+
+    void update(ServiceWrapper && other);
 private:
     Runtime *m_runtime;
     std::string m_name;
     std::map<std::string, ModuleConfig> m_configs;
     std::unique_ptr<Service> m_service;
+    std::string m_libname;
 
     std::mutex m_mutex;
 };
