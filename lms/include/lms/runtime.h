@@ -44,6 +44,7 @@ public:
     std::string name() const;
     ExecutionType executionType() const;
     void executionType(ExecutionType type);
+    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
 private:
     std::string m_name;
     lms::logging::Logger logger;

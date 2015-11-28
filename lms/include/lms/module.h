@@ -13,6 +13,8 @@
 #include "lms/deprecated.h"
 #include "lms/definitions.h"
 #include "lms/datamanager.h"
+#include "lms/service_handle.h"
+#include "lms/runtime.h"
 
 namespace lms {
 
@@ -236,6 +238,20 @@ public:
         Module *module;
     };
 protected:
+
+    template <class T>
+    ServiceHandle<T> getService(std::string const& name) {
+        std::shared_ptr<ServiceWrapper> wrapper =
+                m_wrapper->runtime->getServiceWrapper(name);
+
+        if(wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
+            // TODO type check
+            return ServiceHandle<T>(wrapper);
+        } else {
+            // return invalid handle
+            return ServiceHandle<T>();
+        }
+    }
 
     /**
      * @brief We do not return any data manager pointer any longer. This

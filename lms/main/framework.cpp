@@ -284,4 +284,8 @@ Loader& Framework::loader() {
     return m_loader;
 }
 
+std::shared_ptr<ServiceWrapper> Framework::getServiceWrapper(std::string const& name) {
+    return services[name];
+}
+
 }

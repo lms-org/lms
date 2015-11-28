@@ -69,6 +69,8 @@ public:
     Profiler& profiler();
 
     Loader& loader();
+
+    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
 private:
     bool exportGraphsHelper(std::string const& path, bool isExecOrData);
 
@@ -84,6 +86,7 @@ private:
     bool m_running;
 
     std::map<std::string, std::unique_ptr<Runtime>> runtimes;
+    std::map<std::string, std::shared_ptr<ServiceWrapper>> services;
 
     /**
      * @brief signal called by the system (Segfaults etc)
