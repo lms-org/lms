@@ -163,13 +163,13 @@ public:
         template<typename T>
         ReadDataChannel<T> readChannel(Module* module, const std::string &name) {
             (void)module;  // thanks for the pointer anyway
-            return module->readChannel<T>(name);
+            return this->module->readChannel<T>(name);
         }
 
         template<typename T>
         WriteDataChannel<T> writeChannel(Module* module, const std::string &name) {
             (void)module;  // thanks again
-            return module->writeChannel<T>(name);
+            return this->module->writeChannel<T>(name);
         }
 
         /**
