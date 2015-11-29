@@ -254,6 +254,18 @@ protected:
         }
     }
 
+    template<class T>
+    T* getUnsafeService(std::string const& name) {
+        std::shared_ptr<ServiceWrapper> wrapper =
+                m_wrapper->getServiceWrapper(name);
+
+        if(wrapper) {
+            return static_cast<T*>(wrapper->instance());
+        } else {
+            return nullptr;
+        }
+    }
+
     /**
      * @brief We do not return any data manager pointer any longer. This
      * method is deprecated will be removed in a future release.
