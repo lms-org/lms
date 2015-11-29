@@ -4,7 +4,7 @@
 #include <string>
 
 #include "lms/module_config.h"
-#include "lms/logging/logger.h"
+#include "lms/logger.h"
 #include "lms/definitions.h"
 
 namespace lms {

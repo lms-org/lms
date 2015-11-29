@@ -2,7 +2,7 @@
 
 namespace lms {
 
-ServiceWrapper::ServiceWrapper(Runtime *runtime) : m_runtime(runtime) {
+ServiceWrapper::ServiceWrapper(Framework *framework) : m_framework(framework) {
 }
 
 std::string ServiceWrapper::name() const {
@@ -17,8 +17,8 @@ ModuleConfig& ServiceWrapper::getConfig(std::string const& name) {
     return m_configs[name];
 }
 
-Runtime* ServiceWrapper::runtime() {
-    return m_runtime;
+Framework* ServiceWrapper::framework() {
+    return m_framework;
 }
 
 Service* ServiceWrapper::instance() {

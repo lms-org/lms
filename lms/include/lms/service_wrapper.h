@@ -10,11 +10,11 @@
 namespace lms {
 
 class Service;
-class Runtime;
+class Framework;
 
 class ServiceWrapper {
 public:
-    ServiceWrapper(Runtime *runtime);
+    ServiceWrapper(Framework *runtime);
 
     std::string name() const;
     void name(std::string const& name);
@@ -22,7 +22,7 @@ public:
     std::string libname() const;
     void libname(std::string const& libname);
 
-    Runtime* runtime();
+    Framework* framework();
     Service* instance();
     void instance(Service *service);
     std::mutex& mutex();
@@ -32,7 +32,7 @@ public:
 
     void update(ServiceWrapper && other);
 private:
-    Runtime *m_runtime;
+    Framework *m_framework;
     std::string m_name;
     std::map<std::string, ModuleConfig> m_configs;
     std::unique_ptr<Service> m_service;

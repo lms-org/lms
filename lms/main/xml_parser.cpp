@@ -423,7 +423,7 @@ void XmlParser::parseModules(pugi::xml_node node,
 
 void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile,
                   LoadConfigFlag flag) {
-    std::shared_ptr<ServiceWrapper> service = std::make_shared<ServiceWrapper>(m_runtime);
+    std::shared_ptr<ServiceWrapper> service = std::make_shared<ServiceWrapper>(&m_framework);
 
     service->name(node.child("name").child_value());
 

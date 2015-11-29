@@ -91,6 +91,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
+        for(auto& service : services) {
+            if(! service.second->instance()->init()) {
+                logger.error() << "Library " << service.first << " failed to init()";
+                return;
+            }
+        }
+
 #ifdef __unix__
         m_moduleLoader.addModulePath("/usr/lib/lms");
         m_moduleLoader.addModulePath("/usr/local/lib/lms");
@@ -176,6 +183,10 @@ Framework::Framework(const ArgumentHandler &arguments) :
 }
 
 Framework::~Framework() {
+    for(auto& service : services) {
+        service.second->instance()->destroy();
+    }
+
     SignalHandler::getInstance()
             .removeListener(SIGINT, this)
             .removeListener(SIGSEGV, this);

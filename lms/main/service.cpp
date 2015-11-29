@@ -8,7 +8,7 @@ Service::Service() : logger("") {}
 
 void Service::initBase(ServiceWrapper *wrapper, lms::logging::Level minLogLevel) {
     m_wrapper = wrapper;
-    logger.name = m_wrapper->runtime()->name() + "." + wrapper->name();
+    logger.name = wrapper->name();
     logger.threshold = minLogLevel;
 }
 
