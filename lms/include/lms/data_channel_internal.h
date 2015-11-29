@@ -10,7 +10,7 @@
 #include "lms/extra/type.h"
 namespace lms {
 class Runtime; //circle dependency
-struct ModuleWrapper;
+class ModuleWrapper;
 
 /**
  * @brief The Any struct used to access dataChannels for which you don't know the type

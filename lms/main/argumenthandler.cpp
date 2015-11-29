@@ -43,7 +43,7 @@ std::ostream& operator << (std::ostream &out, RunLevel runLevel) {
 ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argRunLevel(RunLevel::CYCLE),
     argLoggingThreshold(logging::Level::ALL), argDefinedLoggingThreshold(false),
-    argQuiet(false), argUser(""), argConfigMonitor(false),
+    argQuiet(false), argUser(""),
     argMultithreaded(false), argThreadsAuto(false), argThreads(1) {
 
     argUser = lms::extra::username();
@@ -92,9 +92,6 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> profilingArg("", "profiling",
         "Measure execution time of all modules and dump to a file",
         false, "", "path", cmd);
-    TCLAP::SwitchArg configMonitorSwitch("", "config-monitor",
-        "Enable live config monitoring",
-        cmd, false);
     TCLAP::ValueArg<std::string> threadsArg("", "threads",
         "Enable multithreading, number of threads or auto",
         false, "", &threadsConstraint, cmd);
@@ -112,7 +109,6 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argQuiet = quietSwitch.getValue();
     argFlags = lms::extra::split(flagsArg.getValue(), ',');
     argProfilingFile = profilingArg.getValue();
-    argConfigMonitor = configMonitorSwitch.getValue();
     runLevelByName(runLevelArg.getValue(), argRunLevel);
     if(threadsArg.isSet()) {
         argMultithreaded = true;

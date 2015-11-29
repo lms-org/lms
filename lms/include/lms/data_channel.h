@@ -10,7 +10,7 @@
 
 namespace lms {
 class Runtime; //circle dependency
-struct ModuleWrapper;
+class ModuleWrapper;
 
 template<typename T>
 class DataChannel {

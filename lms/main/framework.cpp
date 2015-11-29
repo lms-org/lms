@@ -25,7 +25,7 @@ std::string Framework::configsDirectory = LMS_CONFIGS;
 
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("lms.Framework"), argumentHandler(arguments),
-    configMonitorEnabled(false), m_running(false) {
+    m_running(false) {
 
     logging::Context &ctx = logging::Context::getDefault();
 
@@ -46,14 +46,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
         m_profiler.enable(arguments.argProfilingFile);
     } else {
         logger.info() << "Disable profiling";
-    }
-
-    configMonitorEnabled = argumentHandler.argConfigMonitor;
-
-    if(configMonitorEnabled) {
-        logger.info() << "Enable config monitor";
-    } else {
-        logger.info() << "Disable config monitor";
     }
 
     logger.info() << "RunLevel " <<  arguments.argRunLevel;
@@ -151,8 +143,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
             }
 
             // config monitor stuff
-            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitorEnabled
-                    && configMonitor.hasChangedFiles()) {
+            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitor.hasChangedFiles()) {
                 configMonitor.unwatchAll();
                 XmlParser parser(*this, getRuntimeByName("default"), arguments);
                 parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,

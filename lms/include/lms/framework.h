@@ -85,7 +85,6 @@ private:
     Loader<Service> m_serviceLoader;
 
     extra::FileMonitor configMonitor;
-    bool configMonitorEnabled;
 
     bool m_running;
 
