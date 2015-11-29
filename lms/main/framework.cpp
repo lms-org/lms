@@ -101,7 +101,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Start enabling modules";
 
         for(auto& runtime : runtimes) {
-            runtime.second->enableModules();
+            if(! runtime.second->enableModules()) {
+                return;
+            }
         }
     }
 

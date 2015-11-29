@@ -124,20 +124,6 @@ void ExecutionManager::loop() {
 
         logger.info() << "Cycle end";
     }
-
-    // TODO load or unload modules or do anything else
-    for(const std::string &message : messaging().receive("enableModule")) {
-        enableModule(message, logging::Level::WARN);
-    }
-
-    for(const std::string &message : messaging().receive("disableModule")) {
-        disableModule(message);
-    }
-
-    for(const std::string &message : messaging().receive("reloadModule")) {
-        disableModule(message);
-        enableModule(message, logging::Level::WARN);
-    }
 }
 
 void ExecutionManager::threadFunction(int threadNum) {
@@ -290,12 +276,12 @@ void ExecutionManager::updateOrInstall() {
     update.clear();
 }
 
-void ExecutionManager::enableModule(const std::string &name, lms::logging::Level minLogLevel){
+bool ExecutionManager::enableModule(const std::string &name, lms::logging::Level minLogLevel){
     //Check if module is already enabled
     for(auto it:enabledModules){
         if(it->name() == name){
             logger.error("enableModule") << "Module " << name << " is already enabled.";
-            return;
+            return false;
         }
     }
     for(std::shared_ptr<ModuleWrapper> it:available){
@@ -307,14 +293,18 @@ void ExecutionManager::enableModule(const std::string &name, lms::logging::Level
                 if(module->initialize()){
                     enabledModules.push_back(it);
                 }else{
-                    logger.error("enable Module") <<"Enabling Module "<< name << " failed";
+                    logger.error("enable Module") <<"Module "<< name << " failed to init()";
+                    return false;
                 }
                 invalidate();
+            } else {
+                return false;
             }
-            return;
+            return true;
         }
     }
     logger.error("enable Module") <<"Module " << name << "doesn't exist!";
+    return false;
 }
 
 /**Disable module with the given name, remove it from the cycle-queue */
@@ -495,10 +485,13 @@ ExecutionManager::EnableConfig& ExecutionManager::config(std::string const& name
     return m_configs[name];
 }
 
-void ExecutionManager::useConfig(std::string const& name) {
+bool ExecutionManager::useConfig(std::string const& name) {
     for(ModuleToEnable const& mod : m_configs[name]) {
-        enableModule(mod.first, mod.second);
+        if(! enableModule(mod.first, mod.second)) {
+            return false;
+        }
     }
+    return true;
 }
 
 void ExecutionManager::writeDAG(extra::DotExporter &dot, const std::string &prefix) {

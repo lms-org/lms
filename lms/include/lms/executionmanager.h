@@ -63,7 +63,7 @@ public:
      * @param name name of the module that should be enabled
      * @param minLogLevel minimum logging level
      */
-    void enableModule(const std::string &name, logging::Level minLogLevel
+    bool enableModule(const std::string &name, logging::Level minLogLevel
                       = logging::Level::ALL);
 
     /**
@@ -145,7 +145,7 @@ public:
 
     EnableConfig& config(std::string const& name);
 
-    void useConfig(std::string const& name);
+    bool useConfig(std::string const& name);
 
     void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 private:

@@ -34,7 +34,7 @@ public:
      */
     void cycle();
 
-    void enableModules();
+    bool enableModules();
 
     Profiler& profiler();
     ExecutionManager& executionManager();

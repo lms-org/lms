@@ -92,14 +92,18 @@ void Runtime::cycle() {
     m_executionManager.updateOrInstall();
 }
 
-void Runtime::enableModules() {
-    m_executionManager.useConfig("default");
+bool Runtime::enableModules() {
+    if(! m_executionManager.useConfig("default")) {
+        return false;
+    }
 
     if(m_argumentHandler.argRunLevel == RunLevel::ENABLE) {
         m_executionManager.getDataManager().printMapping();
         m_executionManager.validate();
         m_executionManager.printCycleList();
     }
+
+    return true;
 }
 
 std::shared_ptr<ServiceWrapper> Runtime::getServiceWrapper(std::string const& name) {
