@@ -25,66 +25,73 @@ class ExecutionManager;
  * @brief The DataManager manages the creation, access and deletion of
  * data channels.
  *
- * Modules can access an instance of this class via this->datamanager().
+ * Modules don't have direct acces to a datamanager instance, instead they
+ * use readChannel<T> and writeChannel<T>.
  *
  * Suggested channel types: std::array, lms::StaticImage, simple structs
  *
  * @author Hans Kirchner
  */
 class DataManager {
-friend class ExecutionManager;
-friend class Framework;
+    friend class ExecutionManager;
+
+    friend class Framework;
+
 public:
-    typedef std::unordered_map<std::string,std::shared_ptr<DataChannelInternal>> ChannelMap;
+    typedef std::unordered_map<std::string, std::shared_ptr<DataChannelInternal>> ChannelMap;
 private:
     logging::Logger logger;
     ExecutionManager &execMgr;
     ChannelMap channels;
 public:
     DataManager(Runtime &runtime, ExecutionManager &execMgr);
-    ~DataManager();
 
     /**
      * @brief Do not allow copies of a data manager instance.
      */
-    DataManager(const DataManager&) = delete;
+    DataManager(const DataManager &) = delete;
 
     /**
      * @brief Do not allow assignment copy of a data manager instance.
      */
-    DataManager& operator= (const DataManager&) = delete;
+    DataManager &operator=(const DataManager &) = delete;
 
-    template<typename T, typename DataChannelClass, bool isWriter>
-    DataChannelClass accessChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
+    /**
+     * @brief Helper function that returns initialized data channel objects.
+     */
+    template<typename T>
+    std::shared_ptr<DataChannelInternal> accessChannel(std::shared_ptr<ModuleWrapper> module,
+                                                       const std::string &reqName) {
         std::string name = module->getChannelMapping(reqName);
         std::shared_ptr<DataChannelInternal> &channel = channels[name];
 
         //initChannelIfNeeded<T>(channel);
         //create object
-        if(!channel) {
-            logger.debug("accessChannel")<<"creating new dataChannel"<<name<<" to "<< typeid(T).name();
+        if (!channel) {
+            //logger.debug("accessChannel")<<"creating new dataChannel"<<name<<" to "<< typeid(T).name();
             channel = std::make_shared<DataChannelInternal>();
             channel->maintainer = &m_runtime;
 
             //check if T is abstract
-            if(std::is_abstract<T>::value){
+            if (std::is_abstract<T>::value) {
                 channel->main.reset(new FakeObject<T>());
-            }else{
+            } else {
                 channel->main.reset(new Object<T>());
 
             }
-        }else{
-            if(!channel->main) {
+        } else {
+            if (!channel->main) {
                 channel->main.reset(new Object<T>());
-                logger.error("accessChannel")<<"INVALID STATE, channel != null && channel->main == null";
-            }else{
-                TypeResult typeRes = channel->main->checkType<T>() ;
-                if(typeRes == TypeResult::INVALID) {
-                    logger.error("accessChannel")<< "INVALID TYPES GIVEN FOR CHANNEL "<<name <<" currentType "<< channel->main->typeName()<< " tried to access it with type: "<<extra::typeName<T>();
-                    return DataChannelClass(nullptr);
-                }else if(typeRes == TypeResult::SUPERTYPE){
+                logger.error("accessChannel") << "INVALID STATE, channel != null && channel->main == null";
+            } else {
+                TypeResult typeRes = channel->main->checkType<T>();
+                if (typeRes == TypeResult::INVALID) {
+                    logger.error("accessChannel") << "INVALID TYPES GIVEN FOR CHANNEL " << name << " currentType "
+                    << channel->main->typeName() << " tried to access it with type: " << extra::typeName<T>();
+                    return nullptr;
+                } else if (typeRes == TypeResult::SUPERTYPE) {
                     //we can "upgrade" the current channel
-                    logger.info("accessChannel")<<"upgrading channel "<<name << " to "<< typeid(T).name();
+                    logger.info("accessChannel") << "upgrading channel " << name << " to " << typeid(T).name();
                     //delete old object
                     //create new one
                     channel->main.reset(new Object<T>());
@@ -92,18 +99,9 @@ public:
             }
         }
 
-        if(! channel->isReaderOrWriter(module)) {
-            if(isWriter) {
-                channel->writers.push_back(module);
-            } else {
-                channel->readers.push_back(module);
-            }
-            invalidateExecutionManager();
-        }
-
         //TODO lazy
         channel->name = name;
-        return DataChannelClass(channel);
+        return channel;
     }
 
     /**
@@ -116,7 +114,12 @@ public:
      */
     template<typename T>
     ReadDataChannel<T> readChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
-        return accessChannel<T, ReadDataChannel<T>, false>(module, reqName);
+        std::shared_ptr<DataChannelInternal> channel = accessChannel<T>(module, reqName);
+        if (!channel->isReaderOrWriter(module)) {
+            channel->readers.push_back(module);
+            invalidateExecutionManager();
+        }
+        return channel;
     }
 
     /**
@@ -129,31 +132,13 @@ public:
      */
     template<typename T>
     WriteDataChannel<T> writeChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
-        return accessChannel<T, WriteDataChannel<T>, true>(module, reqName);
+        std::shared_ptr<DataChannelInternal> channel = accessChannel<T>(module, reqName);
+        if (!channel->isReaderOrWriter(module)) {
+            channel->writers.push_back(module);
+            invalidateExecutionManager();
+        }
+        return channel;
     }
-
-    /**
-     * @brief Check if a data channel with the given name is
-     * currently initialized.
-     *
-     * NOTE: This function does not use the transparent channel mapping.
-     *
-     * @param name data channel name
-     * @return true if channel is existing
-     */
-    bool hasChannel(const std::string &name) const;
-
-    /**
-     * @brief Check if a data channel with the given name is currently
-     * initialized.
-     *
-     * This function uses transparent channel mapping.
-     *
-     * @param module the module that calls this method
-     * @param name channel name
-     * @return true if channel is existing
-     */
-    bool hasChannel(Module *module, const std::string &name) const;
 
     void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
 
@@ -162,6 +147,7 @@ public:
      * and writers to stdout.
      */
     void printMapping();
+
 private:
     Runtime &m_runtime;
 
@@ -171,7 +157,7 @@ private:
      *
      * @return datachannel map
      */
-    const ChannelMap& getChannels() const;
+    const ChannelMap &getChannels() const;
 
     /**
      * @brief Release all channels
@@ -181,28 +167,6 @@ private:
      * @param module the module to look for
      */
     void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Initialize a data channel for usage.
-     * The type is implicitly given by the type parameter T.
-     *
-     * @param channel the data channel to initialize
-     */
-    template<typename T>
-    void initChannelIfNeeded(std::shared_ptr<DataChannelInternal>& channel) {
-        if(! channel) {
-            channel = std::make_shared<DataChannelInternal>();
-            channel->maintainer = &m_runtime;
-        }
-
-        if(! channel->main) {
-            channel->main = std::make_shared<Object<T>>();
-        } else {
-            if(channel->main->isVoid()) {
-
-            }
-        }
-    }
 
     /**
      * @brief Invoke invalidate() on the execution manager instance.
@@ -215,4 +179,4 @@ private:
 
 }  // namespace lms
 
-#endif /* LMS_CORE_DATAMANAGER_H */
+#endif /* LMS_DATAMANAGER_H */
