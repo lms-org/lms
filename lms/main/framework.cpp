@@ -56,8 +56,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     //parse framework config
     if(arguments.argRunLevel >= RunLevel::CONFIG) {
-        logger.info() << "MODULES: " << LMS_MODULES;
-        logger.info() << "CONFIGS: " << LMS_CONFIGS;
 
         Runtime* rt = new Runtime("default", *this);
         registerRuntime(rt);
@@ -77,7 +75,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
         }
 
         for(auto file : parser.files()) {
-            logger.debug("file") << file;
             configMonitor.watch(file);
         }
     }
@@ -146,6 +143,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
             // config monitor stuff
             if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitor.hasChangedFiles()) {
+                logger.info() << "Reload configs";
                 configMonitor.unwatchAll();
                 XmlParser parser(*this, getRuntimeByName("default"), arguments);
                 parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,
@@ -313,6 +311,7 @@ void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
 
     std::unique_lock<std::mutex> lock(originalService->mutex());
     originalService->update(std::move(*service.get()));
+    originalService->instance()->configsChanged();
 }
 
 }

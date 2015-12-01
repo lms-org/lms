@@ -77,8 +77,6 @@ bool FileMonitor::hasChangedFiles() {
     } else if(retval == 0) {
         //printf("select returned 0\n");
     } else if (retval > 0) {
-        printf("select > 0\n");
-
         if(FD_ISSET(fd, &rfds)) {
             char buf[BUF_SIZE];
             int len = 0;

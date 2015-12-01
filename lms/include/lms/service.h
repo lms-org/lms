@@ -33,6 +33,8 @@ public:
     virtual bool init() =0;
     virtual void destroy() =0;
 
+    virtual void configsChanged() {}
+
     std::string getName() const;
     size_t hashCode() const;
 protected:
