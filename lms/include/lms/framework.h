@@ -12,9 +12,6 @@
 #include "lms/deprecated.h"
 #include "lms/runtime.h"
 
-/**
- *TODO: Framework config that contains max threads for executionManager etc.
- */
 namespace lms {
 
 /**

@@ -17,7 +17,6 @@ namespace extra {
 std::string trim(const std::string& str, const std::string &delims = " \t\n\r\f\v");
 
 /**
- * TODO write test cases
  * @brief split
  * @param string
  * @param strLength

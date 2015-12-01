@@ -131,7 +131,6 @@ set (SOURCE
 if(UNIX)
     message(STATUS "Use Unix specific sources")
     set (SOURCE ${SOURCE}
-        "main/loader_unix.cpp"
         "main/framework_unix.cpp"
         "main/extra/backtrace_formatter_unix.cpp"
         "main/signalhandler_unix.cpp"

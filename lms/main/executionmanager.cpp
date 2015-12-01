@@ -346,7 +346,6 @@ void ExecutionManager::invalidate(){
 void ExecutionManager::validate(){
     if(!valid){
         valid = true;
-        //TODO dataManager.validate()
         sort();
     }
 }

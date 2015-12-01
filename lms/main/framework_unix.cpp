@@ -1,15 +1,9 @@
-//TODO remove unused imports
-#include <climits>
 #include <cstring>
 #include <cstdio>
 #include <unistd.h>
-#include <sys/stat.h>
 #include <algorithm>
-#include <string>
 
 #include <lms/loader.h>
-#include <lms/module.h>
-#include <lms/logger.h>
 #include <lms/framework.h>
 
 #ifdef __APPLE__
@@ -44,7 +38,6 @@ std::string Framework::programDirectory(){
         }
         directory = path;
 #endif
-        // TODO optimize this a bit
         directory = directory.substr(0, directory.rfind("/"));
         directory = directory.substr(0, directory.rfind("/"));
         directory = directory + "/";

@@ -87,7 +87,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
             }
         }
 
-#ifdef __unix__
+#if defined(__unix__) && defined(LMS_STANDALONE)
         m_moduleLoader.addModulePath("/usr/lib/lms");
         m_moduleLoader.addModulePath("/usr/local/lib/lms");
         // TODO global service path

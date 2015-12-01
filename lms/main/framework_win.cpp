@@ -33,7 +33,6 @@ std::string Framework::programDirectory(){
         std::string ss(ch);
         directory = ss;
         //get programmdirectory
-        // TODO optimize this a bit
     /*
         directory = path;
         directory = directory.substr(0, directory.rfind("/"));
