@@ -102,7 +102,7 @@ struct FakeObject: public ObjectBase{
         //TODO error-handling
         return nullptr;
     }
-    Inheritance* getInheritance(){
+    Inheritance* getInheritance() override {
         return nullptr;
     }
 
