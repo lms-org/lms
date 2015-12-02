@@ -93,8 +93,6 @@ public:
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
 };
 
-typedef std::list<std::shared_ptr<ModuleWrapper>> ModuleList;
-
 }  // namespace lms
 
 #endif // LMS_MODULE_WRAPPER_H

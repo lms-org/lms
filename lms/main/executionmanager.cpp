@@ -36,13 +36,13 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
-        (*it)->instance()->deinitialize();
+        it->second->instance()->deinitialize();
     }
 
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
-        dataManager.releaseChannelsOf(*it);
-        m_runtime.framework().moduleLoader().unload(it->get());
+        dataManager.releaseChannelsOf(it->second);
+        m_runtime.framework().moduleLoader().unload(it->second.get());
     }
 
     enabledModules.clear();
@@ -231,40 +231,35 @@ void ExecutionManager::stopRunning() {
     }
 }
 
-void ExecutionManager::installModule(std::shared_ptr<ModuleWrapper> mod){
-    for(std::shared_ptr<ModuleWrapper> modEntry : available) {
-        if(modEntry->name() == mod->name()) {
-            logger.error("addAvailableModule") << "Tried to add available "
-                                               << "module " << mod->name() << " but was already available.";
-            return;
-        }
+bool ExecutionManager::installModule(std::shared_ptr<ModuleWrapper> mod) {
+    std::string moduleName = mod->name();
+
+    if(available.count(moduleName) != 0) {
+        logger.error("addAvailableModule") << "Tried to add available "
+            << "module " << mod->name() << " but was already available.";
+        return false;
     }
 
-    available.push_back(mod);
+    available[moduleName] = mod;
+    return true;
 }
 
 void ExecutionManager::bufferModule(std::shared_ptr<ModuleWrapper> mod) {
     std::unique_lock<std::mutex> lock(updateMutex);
-    update.push_back(mod);
+    update[mod->name()] = mod;
 }
 
 void ExecutionManager::updateOrInstall() {
     std::unique_lock<std::mutex> lock(updateMutex);
-    for(std::shared_ptr<ModuleWrapper> mod : update) {
-        bool found = false;
+    for(auto const& mod : update) {
+        auto it = available.find(mod.first);
 
-        for(std::shared_ptr<ModuleWrapper> modEntry : available) {
-            if(modEntry->name() == mod->name()) {
-                found = true;
-
-                // update relevant attributes
-                modEntry->update(std::move(*mod.get()));
-            }
-        }
-
-        // module was not installed yet
-        if(! found) {
-            available.push_back(mod);
+        if(it == available.end()) {
+            // module was not installed yet
+            available[mod.first] = mod.second;
+        } else {
+            // update relevant attributes
+            it->second->update(std::move(*mod.second.get()));
         }
     }
 
@@ -278,65 +273,59 @@ void ExecutionManager::updateOrInstall() {
 
 bool ExecutionManager::enableModule(const std::string &name, lms::logging::Level minLogLevel){
     //Check if module is already enabled
-    for(auto it:enabledModules){
-        if(it->name() == name){
-            logger.error("enableModule") << "Module " << name << " is already enabled.";
-            return false;
-        }
+    if(enabledModules.count(name) != 0) {
+        logger.error("enableModule") << "Module " << name << " is already enabled.";
+        return false;
     }
-    for(std::shared_ptr<ModuleWrapper> it:available){
-        if(it->name() == name){
-            if(m_runtime.framework().moduleLoader().load(it.get())) {
-                Module *module = it->instance();
-                module->initializeBase(it,minLogLevel);
 
-                if(module->initialize()){
-                    enabledModules.push_back(it);
-                }else{
-                    logger.error("enable Module") <<"Module "<< name << " failed to init()";
-                    return false;
-                }
-                invalidate();
-            } else {
-                return false;
-            }
-            return true;
-        }
+    auto it = available.find(name);
+
+    if(it == available.end()) {
+        logger.error("enableModule") <<"Module " << name << " doesn't exist!";
+        return false;
     }
-    logger.error("enable Module") <<"Module " << name << "doesn't exist!";
-    return false;
+
+    std::shared_ptr<ModuleWrapper> mod = it->second;
+
+    if (! m_runtime.framework().moduleLoader().load(mod.get())) {
+        return false;
+    }
+
+    Module *module = mod->instance();
+    module->initializeBase(mod,minLogLevel);
+
+    if (! module->initialize()) {
+        logger.error("enableModule") << "Module " << name << " failed to init()";
+        return false;
+    }
+
+    enabledModules[mod->name()] = mod;
+    invalidate();
+    return true;
 }
 
-/**Disable module with the given name, remove it from the cycle-queue */
 bool ExecutionManager::disableModule(const std::string &name) {
-    for(ModuleList::iterator it = enabledModules.begin();
-        it != enabledModules.end(); ++it) {
+    auto it = enabledModules.find(name);
 
-        if((*it)->name() == name) {
-            if(! (*it)->instance()->deinitialize()) {
-                logger.error("disableModule")
-                        << "Deinitialize failed for module " << name;
-            }
-
-            for(std::shared_ptr<ModuleWrapper> entry : available) {
-                if(entry->name() == name) {
-                    m_runtime.framework().moduleLoader().unload(entry.get());
-                    break;
-                }
-            }
-
-            enabledModules.erase(it);
-
-            dataManager.releaseChannelsOf(*it);
-
-            invalidate();
-            return true;
-        }
+    if (it == enabledModules.end()) {
+        logger.error("disableModule") << "Tried to disable module " << name
+            << ", but was not enabled.";
+        return false;
     }
 
-    logger.error("disableModule") << "Tried to disable module " << name
-                                  << ", but was not enabled.";
-    return false;
+    if(! it->second->instance()->deinitialize()) {
+        logger.error("disableModule")
+        << "Deinitialize failed for module " << name;
+    }
+
+    m_runtime.framework().moduleLoader().unload(it->second.get());
+
+    enabledModules.erase(it);
+
+    dataManager.releaseChannelsOf(it->second);
+
+    invalidate();
+    return true;
 }
 
 void ExecutionManager::invalidate(){
@@ -390,9 +379,9 @@ void ExecutionManager::sort(){
     cycleList.clear();
     logger.debug("sort") << "No. of enabled modules: " << enabledModules.size();
     //add modules to the list
-    for(std::shared_ptr<ModuleWrapper> it : enabledModules){
+    for(auto it : enabledModules){
         std::vector<Module*> tmp;
-        tmp.push_back(it->instance());
+        tmp.push_back(it.second->instance());
         cycleList.push_back(tmp);
     }
     sortModules();
@@ -466,13 +455,9 @@ Messaging& ExecutionManager::messaging() {
     return m_messaging;
 }
 
-const ModuleList& ExecutionManager::getEnabledModules() const {
-    return enabledModules;
-}
-
 void ExecutionManager::fireConfigsChangedEvent() {
-    for(std::shared_ptr<ModuleWrapper> mod : enabledModules) {
-        mod->instance()->configsChanged();
+    for(auto mod : enabledModules) {
+        mod.second->instance()->configsChanged();
     }
 }
 

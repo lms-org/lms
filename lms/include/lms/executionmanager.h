@@ -23,6 +23,8 @@ namespace lms {
 class DataManager;
 
 class ExecutionManager {
+private:
+    typedef std::map<std::string, std::shared_ptr<ModuleWrapper>> ModuleList;
 public:
 
     ExecutionManager(Profiler &profiler, Runtime &runtime);
@@ -34,7 +36,7 @@ public:
     /**
      * @brief Add a new module to the list of available modules.
      */
-    void installModule(std::shared_ptr<ModuleWrapper> mod);
+    bool installModule(std::shared_ptr<ModuleWrapper> mod);
 
     /**
      * @brief Append the given module to a list of new modules. After the
@@ -126,8 +128,6 @@ public:
     Profiler& profiler();
 
     Messaging& messaging();
-
-    const ModuleList& getEnabledModules() const;
 
     /**
      * @brief Invoke configsChanged() of all enabled modules.
