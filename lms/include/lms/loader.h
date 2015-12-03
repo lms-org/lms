@@ -148,7 +148,11 @@ public:
 
         // get the pointer to a C-function with name 'getInstance'
         // that was declared inside the dynamic library
-        void* func = dlsym(lib, "getInstance");
+        // Union-Hack to avoid a warning message
+        // We use it here to convert a void* to a function pointer.
+        // The function has this signature: void* getInstance();
+        converter <T*(*)()> conv;
+        conv.src = dlsym(lib, "getInstance");
 
         // check for errors while calling dlsym
         if ((err = dlerror()) != NULL) {
@@ -163,15 +167,9 @@ public:
     //            << std::endl << "Message: " << dlerror();
     //    }
 
-        // Union-Hack to avoid a warning message
-        // We use it here to convert a void* to a function pointer.
-        // The function has this signature: void* getInstance();
-        converter <T*(*)()> conv;
-        conv.src = func;
-
         // call the getInstance function and cast it to a Module pointer
         // -> getInstance should return a newly created object.
-        entry->instance(static_cast<T*> (conv.target()));
+        entry->instance(conv.target());
 
         // Cast symbol to function pointer returning a pointer to a Module instance and
         // call the function to get the a module instance

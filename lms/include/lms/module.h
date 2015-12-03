@@ -21,7 +21,7 @@ class DataManager;
 class ExecutionManager;
 
 #define LMS_MODULE_INTERFACE(CLASS) extern "C" { \
-void* getInstance () { \
+lms::Module* getInstance () { \
     return new CLASS(); \
 } \
 uint32_t getLmsVersion() { \
