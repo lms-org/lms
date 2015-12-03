@@ -36,7 +36,12 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = enabledModules.rbegin();
         it != enabledModules.rend(); ++it) {
 
-        it->second->instance()->deinitialize();
+        try {
+            it->second->instance()->deinitialize();
+        } catch(std::exception &e) {
+            logger.error("disableModule") << "Module " << it->first << " threw exception: "
+                << e.what();
+        }
     }
 
     for(ModuleList::reverse_iterator it = available.rbegin();
@@ -313,9 +318,15 @@ bool ExecutionManager::disableModule(const std::string &name) {
         return false;
     }
 
-    if(! it->second->instance()->deinitialize()) {
-        logger.error("disableModule")
-        << "Deinitialize failed for module " << name;
+    try {
+        if(! it->second->instance()->deinitialize()) {
+            logger.error("disableModule")
+            << "Deinitialize failed for module " << name;
+        }
+    } catch(std::exception &e) {
+        logger.error("disableModule") << "Module " << name << " threw exception: "
+            << e.what();
+        return false;
     }
 
     m_runtime.framework().moduleLoader().unload(it->second.get());
