@@ -15,6 +15,10 @@ class Framework;
 
 class Runtime {
 public:
+    enum class State {
+        RUNNING, PAUSED
+    };
+
     Runtime(const std::string& name, Framework &framework);
 
     /**
@@ -27,12 +31,26 @@ public:
      */
     void stopAsync();
 
+    /**
+     * @brief Join the runtime thread (if running).
+     */
     void join();
 
     /**
-     * @brief Synchronously execute a single cycle of this runtime.
+     * @brief Pause a running runtime.
      */
-    void cycle();
+    void pause();
+
+    /**
+     * @brief Resume a pause runtime.
+     */
+    void resume();
+
+    /**
+     * @brief Synchronously execute a single cycle of this runtime.
+     * @return true if cycle got executed, false if runtime is paused
+     */
+    bool cycle();
 
     bool enableModules();
 
@@ -56,13 +74,13 @@ private:
     ExecutionManager m_executionManager;
     Clock m_clock;
 
-    /**
-     * @brief running just for main-while-loop if it's set to false, the programm will terminate
-     */
-    bool m_running;
-
     std::thread m_thread;
     ExecutionType m_executionType;
+
+    std::mutex m_mutex;
+    State m_state;
+    bool m_threadRunning;
+    std::condition_variable m_cond;
 };
 
 }

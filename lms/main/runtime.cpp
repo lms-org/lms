@@ -9,7 +9,8 @@ Runtime::Runtime(const std::string &name, Framework& framework) :
     m_name(name), logger(name), m_framework(framework),
     m_argumentHandler(framework.getArgumentHandler()),
     m_profiler(framework.profiler()),
-    m_executionManager(m_profiler, *this), m_running(false) {
+    m_executionManager(m_profiler, *this),
+    m_state(State::RUNNING), m_threadRunning(false) {
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
 
@@ -65,24 +66,55 @@ void Runtime::executionType(ExecutionType type) {
 }
 
 void Runtime::stopAsync() {
-    m_running = false;
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_threadRunning = false;
+}
+
+void Runtime::pause() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_state = State::PAUSED;
+    m_cond.notify_one();
+}
+
+void Runtime::resume() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_state = State::RUNNING;
+    m_cond.notify_one();
 }
 
 void Runtime::startAsync() {
-    m_running = true;
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_state = State::RUNNING;
+    if(! m_threadRunning) {
+        m_threadRunning = true;
 
-    m_thread = std::thread([this] () {
-        while(m_running) {
-            cycle();
-        }
-    });
+        m_thread = std::thread([this] () {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            while(m_threadRunning) {
+                m_cond.wait(lock, [this] () {
+                    return m_state == State::RUNNING;
+                });
+
+                lock.unlock();
+                cycle();
+                lock.lock();
+            }
+        });
+    }
 }
 
 void Runtime::join() {
     m_thread.join();
 }
 
-void Runtime::cycle() {
+bool Runtime::cycle() {
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        if(m_state == State::PAUSED) {
+            return false;
+        }
+    }
+
     m_clock.beforeLoopIteration();
     m_profiler.markBegin(m_name);
     m_executionManager.loop();
@@ -90,6 +122,7 @@ void Runtime::cycle() {
 
     // Config monitor
     m_executionManager.updateOrInstall();
+    return true;
 }
 
 bool Runtime::enableModules() {
