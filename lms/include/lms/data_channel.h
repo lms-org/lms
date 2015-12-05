@@ -38,7 +38,7 @@ public:
         TypeResult r = checkType<L>();
         return r == TypeResult::SAME || r == TypeResult::SUBTYPE;
     }
-    bool serialize(std::ostream &os) {
+    bool serialize(std::ostream &os) const {
         // if we would use dynamic_cast here, we hcould remove the serializable
         // flag of data channels, but that is not necessarily faster or better
 
