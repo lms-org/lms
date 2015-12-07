@@ -69,12 +69,12 @@ namespace lms{
         return m_wrapper->runtime()->pause();
     }
 
-    bool Module::resumeRuntime(std::string const& name) {
+    bool Module::resumeRuntime(std::string const& name, bool reset) {
         if(! m_wrapper->runtime()->framework().hasRuntime(name)) {
             return false;
         }
 
-        m_wrapper->runtime()->framework().getRuntimeByName(name)->resume();
+        m_wrapper->runtime()->framework().getRuntimeByName(name)->resume(reset);
         return true;
     }
 }

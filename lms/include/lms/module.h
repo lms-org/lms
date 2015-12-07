@@ -324,7 +324,7 @@ protected:
      *
      * @return true if resuming was successful, false if runtime was not found.
      */
-    bool resumeRuntime(std::string const& name);
+    bool resumeRuntime(std::string const& name, bool reset = false);
 private:
     std::shared_ptr<ModuleWrapper> m_wrapper;
     DataManager* m_datamanager;

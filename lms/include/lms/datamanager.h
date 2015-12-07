@@ -148,6 +148,11 @@ public:
      */
     void printMapping();
 
+    /**
+     * @brief Delete all data channels
+     */
+    void reset();
+
 private:
     Runtime &m_runtime;
 

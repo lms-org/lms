@@ -108,4 +108,8 @@ void DataManager::invalidateExecutionManager() {
     execMgr.invalidate();
 }
 
+void DataManager::reset() {
+    channels.clear();
+}
+
 }  // namespace lms

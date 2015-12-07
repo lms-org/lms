@@ -11,7 +11,7 @@ Runtime::Runtime(const std::string &name, Framework& framework) :
     m_profiler(framework.profiler()),
     m_executionManager(m_profiler, *this),
     m_executionType(ExecutionType::NEVER_MAIN_THREAD),
-    m_state(State::RUNNING), m_threadRunning(false) {
+    m_state(State::RUNNING), m_threadRunning(false), m_requestReset(false) {
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
 
@@ -82,10 +82,13 @@ void Runtime::pause() {
     m_cond.notify_one();
 }
 
-void Runtime::resume() {
+void Runtime::resume(bool reset) {
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_state = State::RUNNING;
+        if (reset) {
+            m_requestReset = true;
+        }
     }
     m_cond.notify_one();
 }
@@ -123,6 +126,14 @@ bool Runtime::cycle() {
         std::unique_lock<std::mutex> lock(m_mutex);
         if(m_state == State::PAUSED) {
             return false;
+        }
+
+        if(m_requestReset) {
+            logger.info() << "Reset runtime " << m_name;
+            m_executionManager.disableAllModules();
+            m_executionManager.getDataManager().reset();
+            m_executionManager.useConfig("default");
+            m_requestReset = false;
         }
     }
 

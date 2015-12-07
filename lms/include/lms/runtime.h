@@ -44,7 +44,7 @@ public:
     /**
      * @brief Resume a pause runtime.
      */
-    void resume();
+    void resume(bool reset);
 
     /**
      * @brief Synchronously execute a single cycle of this runtime.
@@ -80,6 +80,7 @@ private:
     std::mutex m_mutex;
     State m_state;
     bool m_threadRunning;
+    bool m_requestReset;
     std::condition_variable m_cond;
 };
 
