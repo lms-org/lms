@@ -208,6 +208,7 @@ logging::ThresholdFilter* XmlParser::parseLogging(pugi::xml_node node) {
 void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
     pugi::xml_node clockNode = node.child("clock");
     pugi::xml_node executionTypeNode = node.child("executionType");
+    pugi::xml_node pausedNode = node.child("paused");
 
     Clock& clock = runtime->clock();
 
@@ -263,6 +264,10 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         if(! lms::executionTypeByName(executionType, type)) {
             errorInvalidNodeContent(executionTypeNode, "ONLY_MAIN_THREAD|NEVER_MAIN_THREAD");
         }
+    }
+
+    if(pausedNode) {
+        runtime->pause();
     }
 
     runtime->executionType(type);

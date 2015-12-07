@@ -66,25 +66,31 @@ void Runtime::executionType(ExecutionType type) {
 }
 
 void Runtime::stopAsync() {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    m_threadRunning = false;
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_threadRunning = false;
+    }
+    m_cond.notify_one();
 }
 
 void Runtime::pause() {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    m_state = State::PAUSED;
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_state = State::PAUSED;
+    }
     m_cond.notify_one();
 }
 
 void Runtime::resume() {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    m_state = State::RUNNING;
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_state = State::RUNNING;
+    }
     m_cond.notify_one();
 }
 
 void Runtime::startAsync() {
     std::unique_lock<std::mutex> lock(m_mutex);
-    m_state = State::RUNNING;
     if(! m_threadRunning) {
         m_threadRunning = true;
 
@@ -92,8 +98,12 @@ void Runtime::startAsync() {
             std::unique_lock<std::mutex> lock(m_mutex);
             while(m_threadRunning) {
                 m_cond.wait(lock, [this] () {
-                    return m_state == State::RUNNING;
+                    return m_state == State::RUNNING || !m_threadRunning;
                 });
+
+                if(! m_threadRunning) {
+                    break;
+                }
 
                 lock.unlock();
                 cycle();
