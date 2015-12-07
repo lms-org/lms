@@ -10,6 +10,7 @@ Runtime::Runtime(const std::string &name, Framework& framework) :
     m_argumentHandler(framework.getArgumentHandler()),
     m_profiler(framework.profiler()),
     m_executionManager(m_profiler, *this),
+    m_executionType(ExecutionType::NEVER_MAIN_THREAD),
     m_state(State::RUNNING), m_threadRunning(false) {
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
