@@ -75,6 +75,7 @@ void Runtime::stopAsync() {
 }
 
 void Runtime::pause() {
+    logger.info("state") << "pause";
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_state = State::PAUSED;
@@ -83,6 +84,7 @@ void Runtime::pause() {
 }
 
 void Runtime::resume(bool reset) {
+    logger.info("state") << "resume";
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_state = State::RUNNING;
@@ -129,7 +131,7 @@ bool Runtime::cycle() {
         }
 
         if(m_requestReset) {
-            logger.info() << "Reset runtime " << m_name;
+            logger.info("state") << "reset";
             m_executionManager.disableAllModules();
             m_executionManager.getDataManager().reset();
             m_executionManager.useConfig("default");
