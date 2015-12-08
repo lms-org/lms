@@ -3,6 +3,7 @@
 #include "lms/clock.h"
 #include "lms/framework.h"
 #include "lms/definitions.h"
+#include "lms/extra/os.h"
 
 #include <algorithm>
 #include <iostream>
@@ -109,15 +110,29 @@ XmlParser::XmlParser(Framework &framework, Runtime* runtime, const ArgumentHandl
     m_framework(framework), m_runtime(runtime), m_args(args) {}
 
 void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig){
-
-    std::string configPath = std::string(LMS_CONFIGS "/");
-    if(argLoadConfig.empty()) {
-        configPath += "framework_conf.xml";
-    } else {
-        configPath += argLoadConfig + ".xml";
+    std::vector<std::string> configPaths;
+#ifndef LMS_STANDALONE
+    configPaths.push_back(LMS_CONFIGS);
+#endif
+    char *lms_config_path = std::getenv("LMS_CONFIG_PATH");
+    if(lms_config_path != nullptr && lms_config_path[0] != '\0') {
+        configPaths.push_back(lms_config_path);
     }
 
-    parseFile(configPath, flag);
+    for(std::string path : configPaths) {
+        if(argLoadConfig.empty()) {
+            path += "/framework_conf.xml";
+        } else {
+            path += "/" + argLoadConfig + ".xml";
+        }
+
+        if(lms::extra::fileType(path) == lms::extra::FileType::REGULAR_FILE) {
+            parseFile(path, flag);
+            return;
+        }
+    }
+
+    errorFile("framework_conf.xml or similar");
 }
 
 void parseModuleConfig(pugi::xml_node node, ModuleConfig &config,

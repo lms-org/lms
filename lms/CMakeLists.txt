@@ -7,6 +7,7 @@ if(APPLE)
 else()
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 include(CMakeData.txt)
 
@@ -17,9 +18,9 @@ if(NOT DEFINED LMS_STANDALONE)
 endif()
 
 if(LMS_STANDALONE)
-    set(LMS_DIR_CONFIGS "/etc/lms")
-    set(LMS_DIR_MODULES "/usr/local/lib/lms/modules")
-    set(LMS_DIR_EXTERNAL "/usr/local/lib/lms")
+    set(LMS_DIR_CONFIGS "")
+    set(LMS_DIR_MODULES "")
+    set(LMS_DIR_EXTERNAL "")
 
     if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"))
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic")

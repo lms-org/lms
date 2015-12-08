@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
+#include <cstdlib>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/extra/time.h"
@@ -52,7 +53,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     std::unique_ptr<logging::ThresholdFilter> filter;
 
+#ifndef LMS_STANDALONE
     m_serviceLoader.addModulePath(LMS_SERVICES, 0);
+#endif
+    char *lms_service_path = std::getenv("LMS_SERVICE_PATH");
+    if(lms_service_path != nullptr && lms_service_path[0] != '\0') {
+        m_serviceLoader.addModulePath(lms_service_path, 0);
+    }
 
     //parse framework config
     if(arguments.argRunLevel >= RunLevel::CONFIG) {
@@ -87,12 +94,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
             }
         }
 
-#if defined(__unix__) && defined(LMS_STANDALONE)
-        m_moduleLoader.addModulePath("/usr/lib/lms");
-        m_moduleLoader.addModulePath("/usr/local/lib/lms");
-        // TODO global service path
-#endif
+#ifndef LMS_STANDALONE
         m_moduleLoader.addModulePath(LMS_MODULES, 0);
+#endif
+        char *lms_module_path = std::getenv("LMS_MODULE_PATH");
+        if(lms_module_path != nullptr && lms_module_path[0] != '\0') {
+            m_moduleLoader.addModulePath(lms_module_path, 0);
+        }
 
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
