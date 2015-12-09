@@ -55,4 +55,26 @@ namespace lms{
     int Module::cycleCounter() {
         return m_executionManager->cycleCounter();
     }
+
+    bool Module::pauseRuntime(std::string const& name) {
+        if(! m_wrapper->runtime()->framework().hasRuntime(name)) {
+            return false;
+        }
+
+        m_wrapper->runtime()->framework().getRuntimeByName(name)->pause();
+        return true;
+    }
+
+    void Module::pauseRuntime() {
+        return m_wrapper->runtime()->pause();
+    }
+
+    bool Module::resumeRuntime(std::string const& name, bool reset) {
+        if(! m_wrapper->runtime()->framework().hasRuntime(name)) {
+            return false;
+        }
+
+        m_wrapper->runtime()->framework().getRuntimeByName(name)->resume(reset);
+        return true;
+    }
 }

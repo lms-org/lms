@@ -222,7 +222,8 @@ logging::ThresholdFilter* XmlParser::parseLogging(pugi::xml_node node) {
 
 void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
     pugi::xml_node clockNode = node.child("clock");
-    pugi::xml_node executionTypeNode = node.child("executionType");
+    pugi::xml_node mainThreadNode = node.child("mainThread");
+    pugi::xml_node pausedNode = node.child("paused");
 
     Clock& clock = runtime->clock();
 
@@ -270,17 +271,13 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         }
     }
 
-    ExecutionType type = ExecutionType::NEVER_MAIN_THREAD;
-
-    if(executionTypeNode) {
-        std::string executionType = executionTypeNode.child_value();
-
-        if(! lms::executionTypeByName(executionType, type)) {
-            errorInvalidNodeContent(executionTypeNode, "ONLY_MAIN_THREAD|NEVER_MAIN_THREAD");
-        }
+    if(mainThreadNode) {
+        runtime->executionType(ExecutionType::ONLY_MAIN_THREAD);
     }
 
-    runtime->executionType(type);
+    if(pausedNode) {
+        runtime->pause();
+    }
 }
 
 void XmlParser::parseInclude(pugi::xml_node node,
@@ -352,16 +349,12 @@ void XmlParser::parseModules(pugi::xml_node node,
         module->libname(Loader<Module>::getModulePath(module->name()));
     }
 
-    pugi::xml_node executionTypeNode = node.child("executionType");
+    pugi::xml_node mainThreadNode = node.child("mainThread");
 
-    module->executionType = ExecutionType::NEVER_MAIN_THREAD;
-
-    if(executionTypeNode) {
-        std::string executionType = executionTypeNode.child_value();
-
-        if(! lms::executionTypeByName(executionType, module->executionType)) {
-            errorInvalidNodeContent(executionTypeNode, "ONLY_MAIN_THREAD|NEVER_MAIN_THREAD");
-        }
+    if(mainThreadNode) {
+        module->executionType = ExecutionType::ONLY_MAIN_THREAD;
+    } else {
+        module->executionType = ExecutionType::NEVER_MAIN_THREAD;
     }
 
     // parse all channel mappings

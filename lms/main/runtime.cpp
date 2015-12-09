@@ -9,7 +9,9 @@ Runtime::Runtime(const std::string &name, Framework& framework) :
     m_name(name), logger(name), m_framework(framework),
     m_argumentHandler(framework.getArgumentHandler()),
     m_profiler(framework.profiler()),
-    m_executionManager(m_profiler, *this), m_running(false) {
+    m_executionManager(m_profiler, *this),
+    m_executionType(ExecutionType::NEVER_MAIN_THREAD),
+    m_state(State::RUNNING), m_threadRunning(false), m_requestReset(false) {
 
     m_executionManager.enabledMultithreading(m_argumentHandler.argMultithreaded);
 
@@ -65,24 +67,78 @@ void Runtime::executionType(ExecutionType type) {
 }
 
 void Runtime::stopAsync() {
-    m_running = false;
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_threadRunning = false;
+    }
+    m_cond.notify_one();
+}
+
+void Runtime::pause() {
+    logger.info("state") << "pause";
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_state = State::PAUSED;
+    }
+    m_cond.notify_one();
+}
+
+void Runtime::resume(bool reset) {
+    logger.info("state") << "resume";
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_state = State::RUNNING;
+        if (reset) {
+            m_requestReset = true;
+        }
+    }
+    m_cond.notify_one();
 }
 
 void Runtime::startAsync() {
-    m_running = true;
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if(! m_threadRunning) {
+        m_threadRunning = true;
 
-    m_thread = std::thread([this] () {
-        while(m_running) {
-            cycle();
-        }
-    });
+        m_thread = std::thread([this] () {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            while(m_threadRunning) {
+                m_cond.wait(lock, [this] () {
+                    return m_state == State::RUNNING || !m_threadRunning;
+                });
+
+                if(! m_threadRunning) {
+                    break;
+                }
+
+                lock.unlock();
+                cycle();
+                lock.lock();
+            }
+        });
+    }
 }
 
 void Runtime::join() {
     m_thread.join();
 }
 
-void Runtime::cycle() {
+bool Runtime::cycle() {
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        if(m_state == State::PAUSED) {
+            return false;
+        }
+
+        if(m_requestReset) {
+            logger.info("state") << "reset";
+            m_executionManager.disableAllModules();
+            m_executionManager.getDataManager().reset();
+            m_executionManager.useConfig("default");
+            m_requestReset = false;
+        }
+    }
+
     m_clock.beforeLoopIteration();
     m_profiler.markBegin(m_name);
     m_executionManager.loop();
@@ -90,6 +146,7 @@ void Runtime::cycle() {
 
     // Config monitor
     m_executionManager.updateOrInstall();
+    return true;
 }
 
 bool Runtime::enableModules() {

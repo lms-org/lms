@@ -306,6 +306,25 @@ protected:
     WriteDataChannel<T> writeChannel(const std::string &reqName) {
         return m_datamanager->writeChannel<T>(m_wrapper, reqName);
     }
+
+    /**
+     * @brief Pause a running runtime or do nothing if already pausing.
+     *
+     * @return true if pausing was successful, false if runtime was not found
+     */
+    bool pauseRuntime(std::string const& name);
+
+    /**
+     * @brief Pause the module's own runtime.
+     */
+    void pauseRuntime();
+
+    /**
+     * @brief Resume a paused runtime or do nothing if already running.
+     *
+     * @return true if resuming was successful, false if runtime was not found.
+     */
+    bool resumeRuntime(std::string const& name, bool reset = false);
 private:
     std::shared_ptr<ModuleWrapper> m_wrapper;
     DataManager* m_datamanager;

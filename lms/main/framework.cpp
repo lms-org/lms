@@ -138,8 +138,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
             for(auto& runtime : runtimes) {
                 if(runtime.second->executionType() == ExecutionType::ONLY_MAIN_THREAD) {
-                    runtime.second->cycle();
-                    anyCycle = true;
+                    if(runtime.second->cycle()) {
+                        anyCycle = true;
+                    }
                 }
             }
 
