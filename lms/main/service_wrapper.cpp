@@ -12,9 +12,12 @@ std::string ServiceWrapper::name() const {
 void ServiceWrapper::name(std::string const& name) {
     m_name = name;
 }
-
-ModuleConfig& ServiceWrapper::getConfig(std::string const& name) {
+ModuleConfig& ServiceWrapper::getConfig(std::string const& name){
     return m_configs[name];
+}
+const ModuleConfig& ServiceWrapper::getConfig(std::string const& name) const{
+    //It should already exist
+    return m_configs.at(name);
 }
 
 Framework* ServiceWrapper::framework() {

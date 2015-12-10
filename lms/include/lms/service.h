@@ -38,7 +38,7 @@ public:
     std::string getName() const;
     size_t hashCode() const;
 protected:
-    const ModuleConfig& config(const std::string &name = "default");
+    const ModuleConfig& config(const std::string &name = "default") const;
     logging::Logger logger;
 private:
     ServiceWrapper *m_wrapper;

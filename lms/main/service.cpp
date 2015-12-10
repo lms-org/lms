@@ -12,7 +12,7 @@ void Service::initBase(ServiceWrapper *wrapper, lms::logging::Level minLogLevel)
     logger.threshold = minLogLevel;
 }
 
-const ModuleConfig& Service::config(const std::string &name) {
+const ModuleConfig& Service::config(const std::string &name) const{
     return m_wrapper->getConfig(name);
 }
 

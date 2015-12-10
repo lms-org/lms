@@ -28,6 +28,7 @@ public:
     std::mutex& mutex();
 
     ModuleConfig& getConfig(std::string const& name);
+    const ModuleConfig& getConfig(std::string const& name) const;
     bool checkHashCode(size_t hashCode);
 
     void update(ServiceWrapper && other);

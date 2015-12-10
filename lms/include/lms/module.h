@@ -239,7 +239,9 @@ public:
         Module *module;
     };
 protected:
-
+    /**
+     *TODO docs
+     */
     template <class T>
     ServiceHandle<T> getService(std::string const& name) {
         std::shared_ptr<ServiceWrapper> wrapper =
@@ -253,7 +255,9 @@ protected:
             return ServiceHandle<T>();
         }
     }
-
+    /**
+     *TODO docs
+     */
     template<class T>
     T* getUnsafeService(std::string const& name) {
         std::shared_ptr<ServiceWrapper> wrapper =
