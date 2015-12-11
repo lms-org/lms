@@ -10,6 +10,9 @@ namespace extra {
 DEPRECATED
 typedef lms::Time PrecisionTime;
 
+DEPRECATED
+const auto& currentTimeString = lms::currentTimeString;
+
 }  // namespace extra
 }  // namespace lms
 

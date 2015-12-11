@@ -46,6 +46,7 @@ set (HEADERS
     "include/lms/internal/signalhandler.h"
     "include/lms/extra/colors.h"
     "include/lms/internal/datamanager.h"
+    "include/lms/datamanager.h"
     "include/lms/internal/argumenthandler.h"
     "include/lms/logger.h"
     "include/lms/internal/executionmanager.h"
