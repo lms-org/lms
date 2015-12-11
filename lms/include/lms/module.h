@@ -69,6 +69,11 @@ public:
     bool initializeBase(std::shared_ptr<ModuleWrapper> loaderEntry,
                         logging::Level minLogLevel);
 
+    /**
+     * @brief Check if this module is executed on the main thread or another
+     * thread.
+     * @return ONLY_MAIN_THREAD or NEVER_MAIN_THREAD
+     */
     ExecutionType getExecutionType() const;
 
     /**
@@ -148,6 +153,11 @@ public:
 
     int getChannelPriority(const std::string &name) const;
 
+    /**
+     * @brief Return the current number of the cycle counter which is
+     * incremented after each cycle by 1.
+     * @return cycle number
+     */
     int cycleCounter();
 
     /**
@@ -240,7 +250,18 @@ public:
     };
 protected:
     /**
-     *TODO docs
+     * @brief Returns a handle to a service. The service is locked during the
+     * handle's lifetime and no other process may call methods and access
+     * properties of the service.
+     *
+     * Usage:
+     * ~~~~~{.cpp}
+     * {
+     *   ServiceHandle<MyService> service = getService<MyService>("my_service");
+     *   service->doSomething();
+     *   // unlocks automatically
+     * }
+     * ~~~~~
      */
     template <class T>
     ServiceHandle<T> getService(std::string const& name) {
@@ -255,8 +276,10 @@ protected:
             return ServiceHandle<T>();
         }
     }
+
     /**
-     *TODO docs
+     * @brief Returns the service instance of the given name if available.
+     * This does not lock the service and is therefore not thread-safe.
      */
     template<class T>
     T* getUnsafeService(std::string const& name) {
@@ -266,7 +289,7 @@ protected:
         if(wrapper) {
             return static_cast<T*>(wrapper->instance());
         } else {
-            return nullptr;
+            throw std::system_error("Service not installed: " + name);
         }
     }
 
@@ -297,18 +320,43 @@ protected:
      */
     DEPRECATED
     const ModuleConfig* getConfig(const std::string &name = "default");
+
+    /**
+     * @brief Return a read-only config of the given name.
+     * @param name config's name
+     * @return module config
+     */
     const ModuleConfig& config(const std::string &name = "default");
 
+    /**
+     * @brief Check if a config of the given name was loaded.
+     * @param name config's name
+     * @return true if config is loaded, false otherwise
+     */
     bool hasConfig(const std::string &name = "default");
 
+    /**
+     * @brief Read a data channel and return a corresponding handle.
+     * Should be called in initialize() but can be called in cycle() as well.
+     * The invokation of this method may change the module execution order.
+     * @param name channel name
+     * @return data channel handle
+     */
     template<typename T>
-    ReadDataChannel<T> readChannel(const std::string &reqName) {
-        return m_datamanager->readChannel<T>(m_wrapper, reqName);
+    ReadDataChannel<T> readChannel(const std::string &name) {
+        return m_datamanager->readChannel<T>(m_wrapper, name);
     }
 
+    /**
+     * @brief Write a data channel and return a corresponding handle.
+     * Should be called in initialize() but can be called cycle() as well.
+     * The invokation of this method may change the module execution order.
+     * @param name channel name
+     * @return data channel handle
+     */
     template<typename T>
-    WriteDataChannel<T> writeChannel(const std::string &reqName) {
-        return m_datamanager->writeChannel<T>(m_wrapper, reqName);
+    WriteDataChannel<T> writeChannel(const std::string &name) {
+        return m_datamanager->writeChannel<T>(m_wrapper, name);
     }
 
     /**
