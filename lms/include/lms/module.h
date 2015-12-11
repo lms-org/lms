@@ -289,7 +289,8 @@ protected:
         if(wrapper) {
             return static_cast<T*>(wrapper->instance());
         } else {
-            throw std::system_error("Service not installed: " + name);
+            //TODO throw std::system_error("Service not installed: " + name);
+            return nullptr;
         }
     }
 
