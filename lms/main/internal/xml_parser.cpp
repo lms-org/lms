@@ -260,11 +260,11 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
 
         if(clock.enabled()) {
             if(clockUnit == "hz") {
-                clock.cycleTime(extra::PrecisionTime::fromMicros(1000000 / clockValue));
+                clock.cycleTime(Time::fromMicros(1000000 / clockValue));
             } else if(clockUnit == "ms") {
-                clock.cycleTime(extra::PrecisionTime::fromMillis(clockValue));
+                clock.cycleTime(Time::fromMillis(clockValue));
             } else if(clockUnit == "us") {
-                clock.cycleTime(extra::PrecisionTime::fromMicros(clockValue));
+                clock.cycleTime(Time::fromMicros(clockValue));
             } else {
                 clock.enabled(false);
                 errorInvalidAttr(clockNode, unitAttr, "ms/us/hz");

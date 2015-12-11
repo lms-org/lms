@@ -6,7 +6,7 @@
 #include <map>
 
 #include "level.h"
-#include "lms/extra/time.h"
+#include "lms/time.h"
 
 namespace lms {
 namespace logging {
@@ -129,7 +129,7 @@ public:
      */
     Level threshold;
 private:
-    std::map<std::string, extra::PrecisionTime> m_timestampCache;
+    std::map<std::string, lms::Time> m_timestampCache;
 };
 
 } // namespace logging

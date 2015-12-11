@@ -4,7 +4,7 @@ namespace lms {
 namespace internal {
 
 Profiler::Profiler() : m_enabled(false),
-    m_lastTimestamp(lms::extra::PrecisionTime::now())
+    m_lastTimestamp(Time::now())
 {}
 
 Profiler::~Profiler() {
@@ -24,12 +24,12 @@ void Profiler::markEnd(const std::string &label) {
 
 void Profiler::mark(Type type, const std::string &label) {
     if(m_enabled) {
-        lms::extra::PrecisionTime now = lms::extra::PrecisionTime::now();
+        Time now = Time::now();
 
         // lock after checking enabled flag and saving the current time
         std::unique_lock<std::mutex> lock(m_mutex);
 
-        lms::extra::PrecisionTime diff = now - m_lastTimestamp;
+        Time diff = now - m_lastTimestamp;
         m_lastTimestamp = now;
 
         MappingType::iterator it = m_stringMapping.find(label);

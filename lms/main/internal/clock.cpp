@@ -4,31 +4,29 @@ namespace lms {
 namespace internal {
 
 Clock::Clock()
-    : logger("lms.Clock"), loopTime(extra::PrecisionTime::ZERO),
+    : logger("lms.Clock"), loopTime(Time::ZERO),
       m_enabled(false), firstIteration(true),
-      overflowTime(extra::PrecisionTime::ZERO) {
+      overflowTime(Time::ZERO) {
 }
 
-void Clock::cycleTime(extra::PrecisionTime cycleTime) {
+void Clock::cycleTime(Time cycleTime) {
     this->loopTime = cycleTime;
 }
 
-extra::PrecisionTime Clock::cycleTime() const {
+Time Clock::cycleTime() const {
     return this->loopTime;
 }
 
 void Clock::beforeLoopIteration() {
     if(! enabled()) return;
 
-    using extra::PrecisionTime;
-
     if(! firstIteration) {
-        PrecisionTime deltaWork = PrecisionTime::now() - beforeWorkTimestamp;
+        Time deltaWork = Time::now() - beforeWorkTimestamp;
 
         // compute time that should be slept
-        PrecisionTime computedSleep = loopTime - deltaWork - overflowTime;
+        Time computedSleep = loopTime - deltaWork - overflowTime;
 
-        if(computedSleep > PrecisionTime::ZERO) {
+        if(computedSleep > Time::ZERO) {
             //PrecisionTime beforeSleep = PrecisionTime::now();
             computedSleep.sleep();
             //PrecisionTime actualSleep = PrecisionTime::now() - beforeSleep;
@@ -36,14 +34,14 @@ void Clock::beforeLoopIteration() {
             //logger.info("sleep") << "Computed " << computedSleep << " Actual " << actualSleep;
         }
 
-        overflowTime = (PrecisionTime::now() - beforeWorkTimestamp) - loopTime;
+        overflowTime = (Time::now() - beforeWorkTimestamp) - loopTime;
 
         //logger.info("overflow") << " Overflow " << overflowTime;
     }
 
     firstIteration = false;
     // save time before the main loop's body is executed
-    beforeWorkTimestamp = PrecisionTime::now();
+    beforeWorkTimestamp = Time::now();
 }
 
 void Clock::enabled(bool flag) {

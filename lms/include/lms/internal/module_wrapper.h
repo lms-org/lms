@@ -5,7 +5,7 @@
 #include <map>
 #include <memory>
 
-#include "lms/extra/time.h"
+#include "lms/time.h"
 #include "lms/execution_type.h"
 #include "lms/module_config.h"
 #include "service_wrapper.h"

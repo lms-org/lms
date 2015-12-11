@@ -59,12 +59,12 @@ void Logger::time(const std::string &timerName) {
     debug(timerName) << "started";
 
     // at LAST: save the current time in our cache
-    m_timestampCache[timerName] = extra::PrecisionTime::now();
+    m_timestampCache[timerName] = Time::now();
 }
 
 void Logger::timeEnd(const std::string &timerName) {
     // at FIRST: save the current time
-    extra::PrecisionTime endTime = extra::PrecisionTime::now();
+    Time endTime = Time::now();
 
     // check if time() was called with the same timer name.
     auto it = m_timestampCache.find(timerName);
@@ -74,7 +74,7 @@ void Logger::timeEnd(const std::string &timerName) {
         debug(timerName) << "timeEnd() was called without time()";
     } else {
         // compute time difference
-        extra::PrecisionTime deltaTime = endTime - it->second;
+        Time deltaTime = endTime - it->second;
 
         // print delta time as debug message
         debug(timerName) << deltaTime;

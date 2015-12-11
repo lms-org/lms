@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logger.h"
-#include "lms/extra/time.h"
+#include "lms/time.h"
 #include "lms/module_config.h"
 #include "lms/extra/string.h"
 #include "lms/internal/xml_parser.h"
@@ -148,7 +148,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
             // wait some time if there are no main thread runtimes
             // TODO this should wait for SIGINT instead
             if(! anyCycle) {
-                lms::extra::PrecisionTime::fromMillis(100).sleep();
+                Time::fromMillis(100).sleep();
             }
 
             // config monitor stuff

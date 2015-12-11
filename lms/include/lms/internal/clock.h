@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "lms/extra/time.h"
+#include "lms/time.h"
 #include "lms/logger.h"
 
 namespace lms {
@@ -35,13 +35,13 @@ public:
      *
      * @param cycleTime microseconds
      */
-    void cycleTime(extra::PrecisionTime cycleTime);
+    void cycleTime(Time cycleTime);
 
     /**
      * @brief Get the clock's loop time.
      * @return cycle time in microseconds
      */
-    extra::PrecisionTime cycleTime() const;
+    Time cycleTime() const;
 
     /**
      * @brief Enable or disable the clock.
@@ -63,13 +63,13 @@ private:
     logging::Logger logger;
 
     // configuration
-    extra::PrecisionTime loopTime;
+    Time loopTime;
     bool m_enabled;
 
     // current status variables
     bool firstIteration;
-    extra::PrecisionTime beforeWorkTimestamp;
-    extra::PrecisionTime overflowTime;
+    Time beforeWorkTimestamp;
+    Time overflowTime;
 };
 
 }  // namespace internal

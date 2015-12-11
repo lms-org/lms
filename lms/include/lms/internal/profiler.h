@@ -6,7 +6,7 @@
 #include <fstream>
 #include <unordered_map>
 
-#include <lms/extra/time.h>
+#include "lms/time.h"
 
 namespace lms {
 namespace internal {
@@ -62,7 +62,7 @@ private:
     void mark(Type type, const std::string& label);
 
     bool m_enabled;
-    lms::extra::PrecisionTime m_lastTimestamp;
+    lms::Time m_lastTimestamp;
     std::mutex m_mutex;
     std::ofstream m_stream;
 
