@@ -184,4 +184,4 @@ std::ostream& operator <<(std::ostream &stream, const Time &t);
 
 }  // namespace lms
 
-#endif /* LMS_EXTRA_TIME_H */
+#endif /* LMS_TIME_H */

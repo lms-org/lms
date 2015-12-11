@@ -11,7 +11,7 @@ DEPRECATED
 typedef lms::Time PrecisionTime;
 
 DEPRECATED
-const auto& currentTimeString = lms::currentTimeString;
+constexpr auto currentTimeString = lms::currentTimeString;
 
 }  // namespace extra
 }  // namespace lms
