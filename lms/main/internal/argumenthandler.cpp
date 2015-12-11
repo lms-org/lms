@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "lms/argumenthandler.h"
+#include "lms/internal/argumenthandler.h"
 #include "lms/extra/os.h"
 #include "lms/extra/string.h"
 #include "lms/definitions.h"
@@ -9,6 +9,7 @@
 #include "tclap/CmdLine.h"
 
 namespace lms {
+namespace internal {
 
 bool runLevelByName(const std::string &str, RunLevel &runLevel) {
     if (str == "CONFIG" || str == "0") {
@@ -122,4 +123,5 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
 #undef USER_ENV
 }
 
+}  // namespace internal
 }  // namespace lms

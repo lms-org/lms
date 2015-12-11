@@ -6,21 +6,23 @@
 #include <algorithm>
 #include "lms/logger.h"
 #include "lms/serializable.h"
-#include "data_channel_internal.h"
+#include "internal/data_channel_internal.h"
 
 namespace lms {
+namespace internal {
 class Runtime; //circle dependency
 class ModuleWrapper;
+}
 
 template<typename T>
 class DataChannel {
     //TODO doesn't work friends <3
     template<typename,typename> friend struct InheritanceCallerGet;
 public:
-    DataChannel(std::shared_ptr<DataChannelInternal> internal) :
+    DataChannel(std::shared_ptr<internal::DataChannelInternal> internal) :
         m_internal(internal) {}
 protected:
-    std::shared_ptr<DataChannelInternal> m_internal;
+    std::shared_ptr<internal::DataChannelInternal> m_internal;
 public:
 
     std::string name() const{
@@ -100,7 +102,7 @@ class ReadDataChannel : public DataChannel<T> {
 public:
     ReadDataChannel() : DataChannel<T>(nullptr) {}
 
-    ReadDataChannel(std::shared_ptr<DataChannelInternal> internal) :
+    ReadDataChannel(std::shared_ptr<internal::DataChannelInternal> internal) :
         DataChannel<T>(internal) {}
     /**
      * @brief get returns the contained object, if you have a lms::Void type, use getVoid()
@@ -146,7 +148,7 @@ public:
 template<typename T>
 class WriteDataChannel : public DataChannel<T> {
 public:
-    WriteDataChannel(std::shared_ptr<DataChannelInternal> internal) :
+    WriteDataChannel(std::shared_ptr<internal::DataChannelInternal> internal) :
         DataChannel<T>(internal) {}
 
     WriteDataChannel() : DataChannel<T>(nullptr) {}

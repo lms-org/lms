@@ -6,11 +6,12 @@
 #include <unordered_set>
 
 #include <lms/module.h>
-#include <lms/datamanager.h>
-#include <lms/executionmanager.h>
+#include <lms/internal/datamanager.h>
+#include <lms/internal/executionmanager.h>
 #include <lms/extra/dot_exporter.h>
 
 namespace lms {
+namespace internal {
 
 DataManager::DataManager(Runtime &runtime, ExecutionManager &execMgr)
         : logger("lms.DataManager"), execMgr(execMgr), m_runtime(runtime) { }
@@ -112,4 +113,5 @@ void DataManager::reset() {
     channels.clear();
 }
 
+}  // namespace internal
 }  // namespace lms

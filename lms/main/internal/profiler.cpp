@@ -1,6 +1,7 @@
-#include "lms/profiler.h"
+#include "lms/internal/profiler.h"
 
 namespace lms {
+namespace internal {
 
 Profiler::Profiler() : m_enabled(false),
     m_lastTimestamp(lms::extra::PrecisionTime::now())
@@ -61,4 +62,5 @@ void Profiler::enable(const std::string &file) {
     }
 }
 
+}  // namespace internal
 }  // namespace lms

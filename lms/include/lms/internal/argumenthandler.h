@@ -9,6 +9,7 @@
 #include "tclap/CmdLine.h"
 
 namespace lms {
+namespace internal {
 
 enum class RunLevel {
     /**
@@ -85,6 +86,7 @@ class ArgumentHandler {
     std::string argDotFile;
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_ARGUMENT_HANDLER_H */

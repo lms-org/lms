@@ -1,9 +1,10 @@
 #include <thread>
 
-#include "lms/runtime.h"
-#include "lms/framework.h"
+#include "lms/internal/runtime.h"
+#include "lms/internal/framework.h"
 
 namespace lms {
+namespace internal {
 
 Runtime::Runtime(const std::string &name, Framework& framework) :
     m_name(name), logger(name), m_framework(framework),
@@ -167,4 +168,5 @@ std::shared_ptr<ServiceWrapper> Runtime::getServiceWrapper(std::string const& na
     return m_framework.getServiceWrapper(name);
 }
 
+}  // namespace internal
 }  // namespace lms

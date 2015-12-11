@@ -5,14 +5,14 @@
 #include <mutex>
 
 #include "lms/service.h"
-#include "lms/service_wrapper.h"
+#include "internal/service_wrapper.h"
 
 namespace lms {
 
 template<class T>
 class ServiceHandle {
 public:
-    ServiceHandle(std::shared_ptr<ServiceWrapper> wrapper) :
+    ServiceHandle(std::shared_ptr<internal::ServiceWrapper> wrapper) :
         m_wrapper(wrapper), m_lock(wrapper->mutex()), m_valid(true) {
     }
 
@@ -30,7 +30,7 @@ public:
         return m_valid;
     }
 private:
-    std::shared_ptr<ServiceWrapper> m_wrapper;
+    std::shared_ptr<internal::ServiceWrapper> m_wrapper;
     std::unique_lock<std::mutex> m_lock;
     bool m_valid;
 };

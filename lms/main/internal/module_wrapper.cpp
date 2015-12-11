@@ -1,7 +1,8 @@
-#include "lms/module_wrapper.h"
-#include "lms/runtime.h"
+#include "lms/internal/module_wrapper.h"
+#include "lms/internal/runtime.h"
 
 namespace lms {
+namespace internal {
 
 int ModuleWrapper::getChannelPriority(const std::string &name) const {
     std::map<std::string, int>::const_iterator it = channelPriorities.find(name);
@@ -74,4 +75,5 @@ void ModuleWrapper::runtime(Runtime* runtime) {
     m_runtime = runtime;
 }
 
+}  // namespace internal
 }  // namespace lms

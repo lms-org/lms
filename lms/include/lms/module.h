@@ -6,19 +6,22 @@
 #include <memory>
 #include <map>
 
-#include <lms/loader.h>
-#include <lms/module_config.h>
-#include <lms/messaging.h>
-#include "lms/data_channel.h"
-#include "lms/deprecated.h"
+#include "internal/loader.h"
+#include "internal/datamanager.h"
+#include "module_config.h"
+#include "messaging.h"
+#include "data_channel.h"
+#include "deprecated.h"
 #include "lms/definitions.h"
-#include "lms/datamanager.h"
 #include "lms/service_handle.h"
+#include "execution_type.h"
 
 namespace lms {
 
+namespace internal {
 class DataManager;
 class ExecutionManager;
+}
 
 #define LMS_MODULE_INTERFACE(CLASS) extern "C" { \
 lms::Module* getInstance () { \
@@ -41,7 +44,7 @@ uint32_t getLmsVersion() { \
  */
 class Module {
 public:
-    typedef ModuleWrapper WrapperType;
+    typedef internal::ModuleWrapper WrapperType;
 
     Module(): logger(""), m_datamanager(nullptr),
         m_messaging(nullptr), m_fakeDataManager(this) { }
@@ -57,7 +60,7 @@ public:
      */
     std::string getName() const;
 
-    std::shared_ptr<ModuleWrapper> wrapper() const {
+    std::shared_ptr<internal::ModuleWrapper> wrapper() const {
         return m_wrapper;
     }
 
@@ -66,7 +69,7 @@ public:
      *
      * Do not call this inside a module!
      */
-    bool initializeBase(std::shared_ptr<ModuleWrapper> loaderEntry,
+    bool initializeBase(std::shared_ptr<internal::ModuleWrapper> loaderEntry,
                         logging::Level minLogLevel);
 
     /**
@@ -265,7 +268,7 @@ protected:
      */
     template <class T>
     ServiceHandle<T> getService(std::string const& name) {
-        std::shared_ptr<ServiceWrapper> wrapper =
+        std::shared_ptr<internal::ServiceWrapper> wrapper =
                 m_wrapper->getServiceWrapper(name);
 
         if(wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
@@ -283,7 +286,7 @@ protected:
      */
     template<class T>
     T* getUnsafeService(std::string const& name) {
-        std::shared_ptr<ServiceWrapper> wrapper =
+        std::shared_ptr<internal::ServiceWrapper> wrapper =
                 m_wrapper->getServiceWrapper(name);
 
         if(wrapper) {
@@ -379,10 +382,10 @@ protected:
      */
     bool resumeRuntime(std::string const& name, bool reset = false);
 private:
-    std::shared_ptr<ModuleWrapper> m_wrapper;
-    DataManager* m_datamanager;
+    std::shared_ptr<internal::ModuleWrapper> m_wrapper;
+    internal::DataManager* m_datamanager;
     Messaging* m_messaging;
-    ExecutionManager* m_executionManager;
+    internal::ExecutionManager* m_executionManager;
     FakeDataManager m_fakeDataManager;
 };
 

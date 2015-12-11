@@ -1,7 +1,7 @@
-#include "lms/xml_parser.h"
+#include "lms/internal/xml_parser.h"
 #include "lms/extra/string.h"
-#include "lms/clock.h"
-#include "lms/framework.h"
+#include "lms/internal/clock.h"
+#include "lms/internal/framework.h"
 #include "lms/definitions.h"
 #include "lms/extra/os.h"
 
@@ -10,6 +10,7 @@
 #include <utility>
 
 namespace lms {
+namespace internal {
 
 bool evaluateSet(const std::string &condition,
                  const std::vector<std::string> &flags) {
@@ -576,4 +577,5 @@ std::unique_ptr<logging::ThresholdFilter> XmlParser::filter() {
     return std::move(m_filter);
 }
 
+}  // namespace internal
 }  // namespace lms

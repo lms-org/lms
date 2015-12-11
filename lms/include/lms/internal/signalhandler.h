@@ -5,6 +5,7 @@
 #include <map>
 
 namespace lms {
+namespace internal {
 
 /**
  * @brief Object-oriented wrapper for signal.h
@@ -73,6 +74,7 @@ private:
     void platform_unregisterSignal(int signalCode);
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_SIGNAL_HANDLER_H */

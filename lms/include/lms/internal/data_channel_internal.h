@@ -8,32 +8,16 @@
 #include "lms/serializable.h"
 #include "lms/inheritance.h"
 #include "lms/extra/type.h"
+#include "lms/type_result.h"
+#include "lms/any.h"
+
 namespace lms {
+namespace internal {
+
 class Runtime; //circle dependency
 class ModuleWrapper;
 
-/**
- * @brief The Any struct used to access dataChannels for which you don't know the type
- */
-struct Any {
-    void operator* () {
-        throw std::runtime_error("Any is afraid of stars");
-    }
-
-    void* operator-> () {
-        throw new std::runtime_error("Robin Hood won't give you his arrow");
-    }
-};
-
 // BACKEND
-/**
-* TODO -1 if the type is invalid, 0 if the type of the DataChannel is
-* subtype of the given one, 1 if the given type is the same or subtype of
-* the DataChannel-type
-*/
-enum class TypeResult {
-    INVALID, SUBTYPE, SUPERTYPE, SAME
-};
 
 struct ObjectBase {
     virtual ~ObjectBase() {}
@@ -60,7 +44,7 @@ struct ObjectBase {
             return TypeResult::SAME;
         }
         //check if the asked object is void
-        if(std::is_same<T, Any>::value){
+        if(std::is_same<T, lms::Any>::value){
             return TypeResult::SUBTYPE;
         }
 
@@ -273,6 +257,8 @@ public:
         }
     }
 };
-}  //namespace lms
+
+}  // namespace internal
+}  // namespace lms
 
 #endif //LMS_DATA_CHANNEL_INTERNAL_H

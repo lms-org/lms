@@ -10,7 +10,7 @@
 
 #include "pugixml.hpp"
 #include <lms/logger.h>
-#include <lms/module_wrapper.h>
+#include "module_wrapper.h"
 #include <lms/logger.h>
 #include <lms/module.h>
 #include <lms/extra/os.h>
@@ -23,14 +23,13 @@
 #include <sys/stat.h>
 #include <algorithm>
 #include <string>
-
-#include <lms/loader.h>
 #include <lms/module.h>
 #include <lms/logger.h>
 
 namespace lms {
-
 class Module;
+
+namespace internal {
 
 /**
  * @brief The Loader class used to load Modules
@@ -197,6 +196,7 @@ public:
     }
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_LOADER_H */

@@ -8,10 +8,11 @@
 #include "pugixml.hpp"
 #include "lms/module_config.h"
 #include "lms/logger.h"
-#include "lms/clock.h"
-#include "lms/framework.h"
+#include "clock.h"
+#include "framework.h"
 
 namespace lms {
+namespace internal {
 
 /**
  * @brief Traverse an XML node and evaluate <if> tags with the given condition.
@@ -170,6 +171,7 @@ private:
     void errorUnknownNode(pugi::xml_node node);
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_XML_PARSER_H */

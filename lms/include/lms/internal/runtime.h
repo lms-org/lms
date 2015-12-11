@@ -2,14 +2,15 @@
 #define LMS_RUNTIME_H
 
 #include "lms/logger.h"
-#include "lms/executionmanager.h"
-#include "lms/profiler.h"
-#include "lms/datamanager.h"
-#include "lms/argumenthandler.h"
-#include "lms/clock.h"
+#include "executionmanager.h"
+#include "profiler.h"
+#include "datamanager.h"
+#include "argumenthandler.h"
+#include "clock.h"
 #include "lms/execution_type.h"
 
 namespace lms {
+namespace internal {
 
 class Framework;
 
@@ -84,6 +85,7 @@ private:
     std::condition_variable m_cond;
 };
 
-}
+}  // namespace internal
+}  // namespace lms
 
 #endif // LMS_RUNTIME_H

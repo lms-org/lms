@@ -8,11 +8,13 @@
 #include "lms/extra/time.h"
 #include "lms/execution_type.h"
 #include "lms/module_config.h"
-#include "lms/service_wrapper.h"
+#include "service_wrapper.h"
 
 namespace lms {
-
 class Module;
+
+namespace internal {
+
 class Runtime;
 
 /**
@@ -93,6 +95,7 @@ public:
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif // LMS_MODULE_WRAPPER_H

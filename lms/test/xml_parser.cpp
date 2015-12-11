@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "lms/xml_parser.h"
+#include "lms/internal/xml_parser.h"
 
 TEST(xml_parser, preprocessXML) {
     std::string XMLwithIF(
@@ -31,7 +31,7 @@ TEST(xml_parser, preprocessXML) {
     std::istringstream iss(XMLwithIF);
     ASSERT_TRUE(doc.load(iss));
 
-    lms::preprocessXML(doc, {"test", "notTest2", "b"});
+    lms::internal::preprocessXML(doc, {"test", "notTest2", "b"});
 
     std::ostringstream oss;
     doc.save(oss, "", pugi::format_raw | pugi::format_no_declaration);
@@ -54,7 +54,7 @@ TEST(xml_parser, parseModuleConfig) {
     ASSERT_TRUE(doc.load(iss));
 
     lms::ModuleConfig config;
-    lms::parseModuleConfig(doc.child("config"), config, "");
+    lms::internal::parseModuleConfig(doc.child("config"), config, "");
 
     EXPECT_EQ(400, config.get<int>("size.width"));
     EXPECT_FLOAT_EQ(300.10, config.get<float>("size.height"));

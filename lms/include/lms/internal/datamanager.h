@@ -12,12 +12,13 @@
 #include <lms/logger.h>
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
-#include "lms/module_wrapper.h"
+#include "module_wrapper.h"
 #include "lms/extra/dot_exporter.h"
 #include "lms/data_channel.h"
 #include "lms/deprecated.h"
 
 namespace lms {
+namespace internal {
 
 class ExecutionManager;
 
@@ -182,6 +183,7 @@ private:
     void invalidateExecutionManager();
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_DATAMANAGER_H */

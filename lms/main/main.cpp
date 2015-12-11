@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "lms/framework.h"
+#include "lms/internal/framework.h"
 
 /**
  * @brief Parse command line arguments, show help and start
@@ -10,10 +10,10 @@
  * @return EXIT_SUCCESS
  */
 int main(int argc, char *argv[]) {
-    lms::ArgumentHandler arguments;
+    lms::internal::ArgumentHandler arguments;
     arguments.parseArguments(argc, argv);
 
-    lms::Framework framework(arguments);
+    lms::internal::Framework framework(arguments);
 
     return EXIT_SUCCESS;
 }

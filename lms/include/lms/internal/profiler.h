@@ -9,6 +9,7 @@
 #include <lms/extra/time.h>
 
 namespace lms {
+namespace internal {
 
 /**
  * @brief Collect profiling data and write it to a file.
@@ -69,6 +70,7 @@ private:
     MappingType m_stringMapping;
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_PROFILER_H */

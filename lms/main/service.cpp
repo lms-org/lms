@@ -1,12 +1,12 @@
 #include "lms/service.h"
-#include "lms/service_wrapper.h"
-#include "lms/runtime.h"
+#include "lms/internal/service_wrapper.h"
+#include "lms/internal/runtime.h"
 
 namespace lms {
 
 Service::Service() : logger("") {}
 
-void Service::initBase(ServiceWrapper *wrapper, lms::logging::Level minLogLevel) {
+void Service::initBase(internal::ServiceWrapper *wrapper, lms::logging::Level minLogLevel) {
     m_wrapper = wrapper;
     logger.name = wrapper->name();
     logger.threshold = minLogLevel;

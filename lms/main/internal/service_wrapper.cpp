@@ -1,6 +1,7 @@
-#include "lms/service_wrapper.h"
+#include "lms/internal/service_wrapper.h"
 
 namespace lms {
+namespace internal {
 
 ServiceWrapper::ServiceWrapper(Framework *framework) : m_framework(framework) {
 }
@@ -55,4 +56,5 @@ void ServiceWrapper::update(ServiceWrapper && other) {
     }
 }
 
+}  // namespace internal
 }  // namespace lms

@@ -1,16 +1,16 @@
 #include <string>
 
-#include "lms/module_wrapper.h"
+#include "lms/internal/module_wrapper.h"
 #include <lms/module.h>
 #include <lms/lms_exports.h>
-#include <lms/datamanager.h>
+#include "lms/internal/datamanager.h"
 #include "lms/module_config.h"
-#include "lms/runtime.h"
-#include "lms/executionmanager.h"
-#include "lms/framework.h"
+#include "lms/internal/runtime.h"
+#include "lms/internal/executionmanager.h"
+#include "lms/internal/framework.h"
 
 namespace lms{
-    bool Module::initializeBase(std::shared_ptr<ModuleWrapper> wrapper,
+    bool Module::initializeBase(std::shared_ptr<internal::ModuleWrapper> wrapper,
         logging::Level minLogLevel) {
 
         m_datamanager = &wrapper->runtime()->dataManager();

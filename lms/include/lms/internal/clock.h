@@ -7,6 +7,7 @@
 #include "lms/logger.h"
 
 namespace lms {
+namespace internal {
 
 /**
  * @brief Used in the main loop of class Framework this
@@ -71,6 +72,7 @@ private:
     extra::PrecisionTime overflowTime;
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_CLOCK_H */

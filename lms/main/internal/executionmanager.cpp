@@ -4,19 +4,20 @@
 #include <memory>
 #include <algorithm>
 
-#include "lms/executionmanager.h"
-#include "lms/datamanager.h"
+#include "lms/internal/executionmanager.h"
+#include "lms/internal/datamanager.h"
 #include "lms/module.h"
-#include "lms/module_wrapper.h"
-#include "lms/loader.h"
-#include "lms/datamanager.h"
-#include "lms/profiler.h"
+#include "lms/internal/module_wrapper.h"
+#include "lms/internal/loader.h"
+#include "lms/internal/datamanager.h"
+#include "lms/internal/profiler.h"
 #include "lms/logger.h"
 #include <lms/extra/dot_exporter.h>
-#include "lms/runtime.h"
-#include "lms/framework.h"
+#include "lms/internal/runtime.h"
+#include "lms/internal/framework.h"
 
 namespace lms {
+namespace internal {
 
 ExecutionManager::ExecutionManager(Profiler &profiler, Runtime &runtime)
     : m_runtimeName(runtime.name()),
@@ -508,4 +509,5 @@ void ExecutionManager::writeDAG(extra::DotExporter &dot, const std::string &pref
     }
 }
 
+}  // namespace internal
 }  // namespace lms

@@ -11,14 +11,15 @@
 #include <condition_variable>
 
 #include "lms/module.h"
-#include "lms/loader.h"
-#include "lms/datamanager.h"
-#include "lms/executionmanager.h"
+#include "loader.h"
+#include "datamanager.h"
+#include "executionmanager.h"
 #include "lms/logger.h"
-#include "lms/profiler.h"
+#include "profiler.h"
 #include "lms/messaging.h"
 
 namespace lms {
+namespace internal {
 
 class DataManager;
 
@@ -211,6 +212,7 @@ private:
     void addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent);
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_EXECUTION_MANAGER_H */

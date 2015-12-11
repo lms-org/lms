@@ -8,8 +8,10 @@
 #include "lms/service.h"
 
 namespace lms {
-
 class Service;
+
+namespace internal {
+
 class Framework;
 
 class ServiceWrapper {
@@ -42,6 +44,7 @@ private:
     std::mutex m_mutex;
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif // LMS_SERVICE_WRAPPER_H

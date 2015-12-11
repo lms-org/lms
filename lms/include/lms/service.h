@@ -7,8 +7,6 @@
 #include "lms/logger.h"
 #include "lms/definitions.h"
 
-namespace lms {
-
 #define LMS_SERVICE_INTERFACE(CLASS) extern "C" { \
 lms::Service* getInstance () { \
     return new CLASS(); \
@@ -18,7 +16,11 @@ uint32_t getLmsVersion() { \
 } \
 }
 
+namespace lms {
+
+namespace internal {
 class ServiceWrapper;
+}
 
 /**
  * @brief Abstract super class for an LMS service. Services are loaded and
@@ -26,11 +28,11 @@ class ServiceWrapper;
  */
 class Service {
 public:
-    typedef ServiceWrapper WrapperType;
+    typedef internal::ServiceWrapper WrapperType;
 
     Service();
 
-    void initBase(ServiceWrapper *wrapper, lms::logging::Level minLogLevel);
+    void initBase(internal::ServiceWrapper *wrapper, lms::logging::Level minLogLevel);
 
     virtual ~Service() {}
 
@@ -71,7 +73,7 @@ protected:
     const ModuleConfig& config(const std::string &name = "default") const;
     logging::Logger logger;
 private:
-    ServiceWrapper *m_wrapper;
+    internal::ServiceWrapper *m_wrapper;
 };
 
 }  // namespace lms

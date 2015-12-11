@@ -3,14 +3,15 @@
 #include <unistd.h>
 #include <algorithm>
 
-#include <lms/loader.h>
-#include <lms/framework.h>
+#include <lms/internal/loader.h>
+#include <lms/internal/framework.h>
 
 #ifdef __APPLE__
     #include <mach-o/dyld.h>
 #endif
 
 namespace lms{
+namespace internal {
 
 std::string Framework::programDirectory(){
     static std::string directory;
@@ -46,4 +47,6 @@ std::string Framework::programDirectory(){
     //std::cout << "ProgramDirectory: " << directory << std::endl;
     return directory;
 }
-}
+
+}  // namespace internal
+}  // namespace lms

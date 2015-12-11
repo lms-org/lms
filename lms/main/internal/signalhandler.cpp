@@ -1,7 +1,9 @@
-#include <lms/signalhandler.h>
+#include <lms/internal/signalhandler.h>
 #include <iostream>
 
-namespace lms{
+namespace lms {
+namespace internal {
+
 SignalHandler SignalHandler::instance;
 
 SignalHandler& SignalHandler::getInstance() {
@@ -46,4 +48,6 @@ void SignalHandler::handlerForAllSignals(int signal) {
         listener->signal(signal);
     }
 }
-}
+
+}  // namespace internal
+}  // namespace lms

@@ -1,5 +1,5 @@
-#include <lms/framework.h>
-#include <lms/executionmanager.h>
+#include <lms/internal/framework.h>
+#include <lms/internal/executionmanager.h>
 #include <pugixml.hpp>
 #include <fstream>
 #include <csignal>
@@ -14,12 +14,13 @@
 #include "lms/extra/time.h"
 #include "lms/module_config.h"
 #include "lms/extra/string.h"
-#include "lms/xml_parser.h"
+#include "lms/internal/xml_parser.h"
 #include "lms/extra/colors.h"
 #include "lms/definitions.h"
-#include "lms/runtime.h"
+#include "lms/internal/runtime.h"
 
-namespace lms{
+namespace lms {
+namespace internal {
 
 std::string Framework::externalDirectory = LMS_EXTERNAL;
 std::string Framework::configsDirectory = LMS_CONFIGS;
@@ -323,4 +324,5 @@ void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
     originalService->instance()->configsChanged();
 }
 
-}
+}  // namespace internal
+}  // namespace lms

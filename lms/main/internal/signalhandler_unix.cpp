@@ -1,9 +1,10 @@
 #include <iostream>
 #include <csignal>
 
-#include <lms/signalhandler.h>
+#include <lms/internal/signalhandler.h>
 
 namespace lms {
+namespace internal {
 
 void SignalHandler::platform_registerSignal(int signalCode) {
     signal(signalCode, handlerForAllSignals);
@@ -21,5 +22,5 @@ void SignalHandler::platform_unregisterSignal(int signalCode) {
     signal(signalCode, SIG_DFL);
 }
 
-}
-
+}  // namespace internal
+}  // namespace lms

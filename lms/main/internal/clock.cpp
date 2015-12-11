@@ -1,6 +1,7 @@
-#include "lms/clock.h"
+#include "lms/internal/clock.h"
 
 namespace lms {
+namespace internal {
 
 Clock::Clock()
     : logger("lms.Clock"), loopTime(extra::PrecisionTime::ZERO),
@@ -53,4 +54,5 @@ bool Clock::enabled() const {
     return m_enabled;
 }
 
+}  // namespace internal
 }  // namespace lms

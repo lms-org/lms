@@ -1,18 +1,19 @@
 #ifndef LMS_FRAMEWORK_H
 #define LMS_FRAMEWORK_H
 
-#include <lms/datamanager.h>
-#include <lms/signalhandler.h>
-#include <lms/argumenthandler.h>
-#include <lms/executionmanager.h>
+#include "datamanager.h"
+#include "signalhandler.h"
+#include "argumenthandler.h"
+#include "executionmanager.h"
 #include <lms/logger.h>
-#include "lms/clock.h"
+#include "clock.h"
 #include "pugixml.hpp"
 #include "lms/extra/file_monitor.h"
 #include "lms/deprecated.h"
-#include "lms/runtime.h"
+#include "runtime.h"
 
 namespace lms {
+namespace internal {
 
 /**
  * @brief Main entry point into the lightweight module system.
@@ -95,6 +96,7 @@ private:
     void signal(int s);
 };
 
+}  // namespace internal
 }  // namespace lms
 
 #endif /* LMS_FRAMEWORK_H */
