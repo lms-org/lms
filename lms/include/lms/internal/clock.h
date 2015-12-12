@@ -44,15 +44,28 @@ public:
     Time cycleTime() const;
 
     /**
-     * @brief Enable or disable the clock.
+     * @brief Enable or disable cycle time balancing.
      * @param flag true for enable, false for disable
      */
-    void enabled(bool flag);
+    void enabledSleep(bool flag);
 
     /**
-     * @brief Returns true if enabled, false otherwise.
+     * @brief Cycle time balancing by sleeping.
+     * @return Returns true if enabled, false otherwise.
      */
-    bool enabled() const;
+    bool enabledSleep() const;
+
+    /**
+     * @brief Enable or disable slow cycle warnings.
+     * @param flag true for enable, false for disable
+     */
+    void enabledSlowWarning(bool flag);
+
+    /**
+     * @brief If slow cycle warnings are logged.
+     * @return Returns true if enabled, false otherwise.
+     */
+    bool enabledSlowWarning() const;
 
     /**
      * @brief Should be called directly at the beginning
@@ -64,7 +77,8 @@ private:
 
     // configuration
     Time loopTime;
-    bool m_enabled;
+    bool m_enabledSleep;
+    bool m_enabledSlowWarning;
 
     // current status variables
     bool firstIteration;

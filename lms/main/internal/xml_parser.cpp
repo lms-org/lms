@@ -232,43 +232,43 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         std::string clockUnit;
         std::int64_t clockValue = 0;
 
-        pugi::xml_attribute enabledAttr = clockNode.attribute("enabled");
+        pugi::xml_attribute sleepAttr = clockNode.attribute("sleep");
         pugi::xml_attribute unitAttr = clockNode.attribute("unit");
         pugi::xml_attribute valueAttr = clockNode.attribute("value");
 
-        if(enabledAttr) {
-            clock.enabled(enabledAttr.as_bool());
+        clock.enabledSlowWarning(true);
+
+        if(sleepAttr) {
+            clock.enabledSleep(sleepAttr.as_bool());
         } else {
             // if not enabled attribute is given then the clock is considered
             // to be disabled
-            clock.enabled(false);
+            clock.enabledSleep(false);
         }
 
         if(valueAttr) {
             clockValue = valueAttr.as_llong();
         } else {
-            clock.enabled(false);
+            clock.enabledSlowWarning(false);
             errorMissingAttr(clockNode, valueAttr);
         }
 
         if(unitAttr) {
             clockUnit = unitAttr.value();
         } else {
-            runtime->clock().enabled(false);
+            clock.enabledSlowWarning(false);
             errorMissingAttr(clockNode, unitAttr);
         }
 
-        if(clock.enabled()) {
-            if(clockUnit == "hz") {
-                clock.cycleTime(Time::fromMicros(1000000 / clockValue));
-            } else if(clockUnit == "ms") {
-                clock.cycleTime(Time::fromMillis(clockValue));
-            } else if(clockUnit == "us") {
-                clock.cycleTime(Time::fromMicros(clockValue));
-            } else {
-                clock.enabled(false);
-                errorInvalidAttr(clockNode, unitAttr, "ms/us/hz");
-            }
+        if(clockUnit == "hz") {
+            clock.cycleTime(Time::fromMicros(1000000 / clockValue));
+        } else if(clockUnit == "ms") {
+            clock.cycleTime(Time::fromMillis(clockValue));
+        } else if(clockUnit == "us") {
+            clock.cycleTime(Time::fromMicros(clockValue));
+        } else {
+            clock.enabledSlowWarning(false);
+            errorInvalidAttr(clockNode, unitAttr, "ms/us/hz");
         }
     }
 

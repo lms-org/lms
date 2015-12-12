@@ -28,10 +28,10 @@ Runtime::Runtime(const std::string &name, Framework& framework) :
         logger.info() << "Single threaded";
     }
 
-    if(m_clock.enabled()) {
-        logger.info() << "Enabled clock with " << m_clock.cycleTime();
+    if(m_clock.enabledSleep()) {
+        logger.info() << "Enabled clock sleep" << m_clock.cycleTime();
     } else {
-        logger.info() << "Disabled clock";
+        logger.info() << "Disabled clock sleep";
     }
 }
 
