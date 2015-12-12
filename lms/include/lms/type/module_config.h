@@ -1,7 +1,7 @@
 #ifndef LMS_TYPE_MODULE_CONFIG_H
 #define LMS_TYPE_MODULE_CONFIG_H
 
-#include "lms/config.h"
+#include "lms/module_config.h"
 #include "lms/deprecated.h"
 
 namespace lms {
@@ -14,7 +14,7 @@ namespace type {
  *
  * TODO Remove this file in a future release.
  */
-DEPRECATED typedef lms::Config ModuleConfig;
+DEPRECATED typedef lms::ModuleConfig ModuleConfig;
 
 }  // namespace type
 }  // namespace lms
