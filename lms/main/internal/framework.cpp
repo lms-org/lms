@@ -12,7 +12,7 @@
 #include "lms/extra/backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/time.h"
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "lms/extra/string.h"
 #include "lms/internal/xml_parser.h"
 #include "lms/extra/colors.h"

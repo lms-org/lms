@@ -4,7 +4,7 @@
 #include <lms/module.h>
 #include <lms/lms_exports.h>
 #include "lms/internal/datamanager.h"
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "lms/internal/runtime.h"
 #include "lms/internal/executionmanager.h"
 #include "lms/internal/framework.h"
@@ -40,11 +40,11 @@ namespace lms{
         return m_wrapper->getChannelPriority(getChannelMapping(name));
     }
 
-    lms_EXPORT const ModuleConfig* Module::getConfig(const std::string &name){
+    lms_EXPORT const Config* Module::getConfig(const std::string &name){
         return &config(name);
     }
 
-    lms_EXPORT const ModuleConfig& Module::config(const std::string &name){
+    lms_EXPORT const Config& Module::config(const std::string &name){
         return m_wrapper->configs[name];
     }
 

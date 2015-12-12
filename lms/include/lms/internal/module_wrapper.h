@@ -7,7 +7,7 @@
 
 #include "lms/time.h"
 #include "lms/execution_type.h"
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "service_wrapper.h"
 
 namespace lms {
@@ -88,7 +88,7 @@ public:
      */
     ExecutionType executionType;
 
-    std::map<std::string, ModuleConfig> configs;
+    std::map<std::string, Config> configs;
 
     void update(ModuleWrapper && other);
 

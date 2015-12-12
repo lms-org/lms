@@ -1,20 +1,20 @@
 #ifndef LMS_TYPE_MODULE_CONFIG_H
 #define LMS_TYPE_MODULE_CONFIG_H
 
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "lms/deprecated.h"
 
 namespace lms {
 namespace type {
 
 /**
- * @brief Moved lms::type::ModuleConfig to lms::ModuleConfig
+ * @brief Moved lms::type::ModuleConfig to lms::ModuleConfig (lms::Config)
  *
  * This header and typedefs makes the change backwards compatible.
  *
  * TODO Remove this file in a future release.
  */
-DEPRECATED typedef lms::ModuleConfig ModuleConfig;
+DEPRECATED typedef lms::Config ModuleConfig;
 
 }  // namespace type
 }  // namespace lms

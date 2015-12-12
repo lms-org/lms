@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "pugixml.hpp"
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "lms/logger.h"
 #include "clock.h"
 #include "framework.h"
@@ -79,7 +79,7 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags);
  * @param key Initial config parameter key
  * @param config ModuleConfig object to put the parsed key-value pairs into.
  */
-void parseModuleConfig(pugi::xml_node node,  ModuleConfig &config,
+void parseModuleConfig(pugi::xml_node node,  Config &config,
                        const std::string &key = "");
 
 class XmlParser {

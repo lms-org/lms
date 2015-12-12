@@ -136,7 +136,7 @@ void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &a
     errorFile("framework_conf.xml or similar");
 }
 
-void parseModuleConfig(pugi::xml_node node, ModuleConfig &config,
+void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key) {
     // if node has no children
     if(node.type() == pugi::node_pcdata) {

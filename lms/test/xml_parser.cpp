@@ -53,7 +53,7 @@ TEST(xml_parser, parseModuleConfig) {
     std::istringstream iss(configNode);
     ASSERT_TRUE(doc.load(iss));
 
-    lms::ModuleConfig config;
+    lms::Config config;
     lms::internal::parseModuleConfig(doc.child("config"), config, "");
 
     EXPECT_EQ(400, config.get<int>("size.width"));

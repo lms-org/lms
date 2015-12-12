@@ -61,7 +61,7 @@ set (HEADERS
     "include/lms/config_observer.h"
     "include/lms/internal/module_wrapper.h"
     "include/lms/internal/profiler.h"
-    "include/lms/module_config.h"
+    "include/lms/config.h"
     "include/lms/data_channel.h"
     "include/lms/inheritance.h"
     "include/lms/internal/data_channel_internal.h"
@@ -75,6 +75,7 @@ set (HEADERS
     "include/lms/internal/file_monitor.h"
 
     "include/lms/type/module_config.h"
+    "include/lms/module_config.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -107,7 +108,7 @@ set (SOURCE
     "main/internal/clock.cpp"
     "main/internal/xml_parser.cpp"
     "main/config_observer.cpp"
-    "main/module_config.cpp"
+    "main/config.cpp"
     "main/internal/execution_type.cpp"
     "main/internal/module_wrapper.cpp"
     "main/service.cpp"

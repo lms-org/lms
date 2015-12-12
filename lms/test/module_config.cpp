@@ -1,7 +1,7 @@
 #include <sstream>
 #include <vector>
 
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "gtest/gtest.h"
 
 class ModuleConfigTest : public ::testing::Test {
@@ -25,8 +25,8 @@ protected:
         config.load(iss);
     }
 
-    lms::ModuleConfig config;
-    lms::ModuleConfig emptyConfig;
+    lms::Config config;
+    lms::Config emptyConfig;
 };
 
 TEST_F(ModuleConfigTest, empty) {

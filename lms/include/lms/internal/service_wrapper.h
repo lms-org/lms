@@ -4,7 +4,7 @@
 #include <string>
 #include <mutex>
 
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "lms/service.h"
 
 namespace lms {
@@ -29,15 +29,15 @@ public:
     void instance(Service *service);
     std::mutex& mutex();
 
-    ModuleConfig& getConfig(std::string const& name);
-    const ModuleConfig& getConfig(std::string const& name) const;
+    Config& getConfig(std::string const& name);
+    const Config& getConfig(std::string const& name) const;
     bool checkHashCode(size_t hashCode);
 
     void update(ServiceWrapper && other);
 private:
     Framework *m_framework;
     std::string m_name;
-    std::map<std::string, ModuleConfig> m_configs;
+    std::map<std::string, Config> m_configs;
     std::unique_ptr<Service> m_service;
     std::string m_libname;
 

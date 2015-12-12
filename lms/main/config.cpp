@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <lms/module_config.h>
+#include <lms/config.h>
 #include <lms/extra/string.h>
 
 namespace lms {
@@ -28,7 +28,7 @@ bool parse<bool>(const std::string &src, bool &dst) {
     return false;
 }
 
-void ModuleConfig::load(std::istream &in) {
+void Config::load(std::istream &in) {
     std::string line;
     bool isMultiline = false;
     std::string lineBuffer;
@@ -62,7 +62,7 @@ void ModuleConfig::load(std::istream &in) {
     }
 }
 
-bool ModuleConfig::loadFromFile(const std::string &path) {
+bool Config::loadFromFile(const std::string &path) {
     std::ifstream in(path);
 
     if(! in.is_open()) {
@@ -74,16 +74,16 @@ bool ModuleConfig::loadFromFile(const std::string &path) {
     return true;
 }
 
-bool ModuleConfig::hasKey(const std::string &key) const {
+bool Config::hasKey(const std::string &key) const {
     return properties.count(key) == 1;
 }
 
-bool ModuleConfig::empty() const {
+bool Config::empty() const {
     return properties.empty();
 }
 
 template<>
-void ModuleConfig::set<std::string>(const std::string &key, const std::string &value) {
+void Config::set<std::string>(const std::string &key, const std::string &value) {
     properties[key] = value;
 }
 

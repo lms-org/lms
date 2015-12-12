@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "lms/module_config.h"
+#include "lms/config.h"
 #include "lms/logger.h"
 #include "lms/definitions.h"
 
@@ -70,7 +70,7 @@ protected:
      * @param name config's name
      * @return module config
      */
-    const ModuleConfig& config(const std::string &name = "default") const;
+    const Config& config(const std::string &name = "default") const;
     logging::Logger logger;
 private:
     internal::ServiceWrapper *m_wrapper;

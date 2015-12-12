@@ -8,7 +8,7 @@
 
 #include "internal/loader.h"
 #include "internal/datamanager.h"
-#include "module_config.h"
+#include "config.h"
 #include "messaging.h"
 #include "data_channel.h"
 #include "deprecated.h"
@@ -323,14 +323,14 @@ protected:
      * configuration.
      */
     DEPRECATED
-    const ModuleConfig* getConfig(const std::string &name = "default");
+    const Config* getConfig(const std::string &name = "default");
 
     /**
      * @brief Return a read-only config of the given name.
      * @param name config's name
      * @return module config
      */
-    const ModuleConfig& config(const std::string &name = "default");
+    const Config& config(const std::string &name = "default");
 
     /**
      * @brief Check if a config of the given name was loaded.
