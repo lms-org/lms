@@ -1,5 +1,5 @@
-#ifndef LMS_EXTRA_FILE_MONITOR_H
-#define LMS_EXTRA_FILE_MONITOR_H
+#ifndef LMS_INTERNAL_FILE_MONITOR_H
+#define LMS_INTERNAL_FILE_MONITOR_H
 
 #include <string>
 
@@ -58,4 +58,4 @@ private:
 }  // namespace extra
 }  // namespace lms
 
-#endif /* LMS_EXTRA_FILE_MONITOR_H */
+#endif /* LMS_INTERNAL_FILE_MONITOR_H */
