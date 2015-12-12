@@ -5,10 +5,10 @@
 #include "signalhandler.h"
 #include "argumenthandler.h"
 #include "executionmanager.h"
-#include <lms/logger.h>
+#include "../logger.h"
 #include "clock.h"
 #include "pugixml.hpp"
-#include "lms/extra/file_monitor.h"
+#include "file_monitor.h"
 #include "lms/deprecated.h"
 #include "runtime.h"
 

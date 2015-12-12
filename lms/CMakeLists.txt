@@ -72,6 +72,7 @@ set (HEADERS
     "include/lms/service_handle.h"
     "include/lms/type_result.h"
     "include/lms/any.h"
+    "include/lms/internal/file_monitor.h"
 
     "include/lms/type/module_config.h"
 
@@ -89,7 +90,6 @@ set (HEADERS
     "include/lms/extra/string.h"
     "include/lms/extra/time.h"
     "include/lms/time.h"
-    "include/lms/extra/file_monitor.h"
     "include/lms/extra/backtrace_formatter.h"
     "include/lms/extra/os.h"
     "include/lms/extra/dot_exporter.h"
@@ -113,6 +113,7 @@ set (SOURCE
     "main/service.cpp"
     "main/internal/service_wrapper.cpp"
     "main/internal/runtime.cpp"
+    "main/internal/file_monitor.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"
@@ -125,7 +126,6 @@ set (SOURCE
     "main/extra/type.cpp"
     "main/extra/string.cpp"
     "main/time.cpp"
-    "main/extra/file_monitor.cpp"
     "main/extra/os.cpp"
     "main/extra/dot_exporter.cpp"
 )
@@ -137,7 +137,7 @@ if(UNIX)
         "main/internal/framework_unix.cpp"
         "main/extra/backtrace_formatter_unix.cpp"
         "main/internal/signalhandler_unix.cpp"
-        "main/extra/file_monitor_unix.cpp"
+        "main/internal/file_monitor_unix.cpp"
     )
 elseif(WIN32)
     message(STATUS "Use Win32 specific sources")
