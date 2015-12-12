@@ -84,6 +84,7 @@ class ArgumentHandler {
     bool argThreadsAuto;
     int argThreads;
     std::string argDotFile;
+    bool argDebug;
 };
 
 }  // namespace internal

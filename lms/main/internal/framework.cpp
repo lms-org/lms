@@ -324,5 +324,9 @@ void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
     originalService->instance()->configsChanged();
 }
 
+bool Framework::isDebug() const {
+    return argumentHandler.argDebug;
+}
+
 }  // namespace internal
 }  // namespace lms

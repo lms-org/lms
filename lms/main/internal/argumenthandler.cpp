@@ -45,7 +45,8 @@ ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argRunLevel(RunLevel::CYCLE),
     argLoggingThreshold(logging::Level::ALL), argDefinedLoggingThreshold(false),
     argQuiet(false), argUser(""),
-    argMultithreaded(false), argThreadsAuto(false), argThreads(1) {
+    argMultithreaded(false), argThreadsAuto(false), argThreads(1),
+    argDebug(false) {
 
     argUser = lms::extra::username();
 }
@@ -99,6 +100,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> dotFileArg("", "dot-file",
         "Dump the dependency graph as a dot file",
         false, "", "path", cmd);
+    TCLAP::SwitchArg debugSwitch("", "debug",
+        "Make a ridiculous number of debug outputs",
+        cmd, false);
 
     cmd.parse(argc, argv);
 
@@ -110,6 +114,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argQuiet = quietSwitch.getValue();
     argFlags = lms::extra::split(flagsArg.getValue(), ',');
     argProfilingFile = profilingArg.getValue();
+    argDebug = debugSwitch.getValue();
     runLevelByName(runLevelArg.getValue(), argRunLevel);
     if(threadsArg.isSet()) {
         argMultithreaded = true;

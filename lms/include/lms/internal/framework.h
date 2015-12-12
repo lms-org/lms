@@ -72,6 +72,8 @@ public:
 
     void installService(std::shared_ptr<ServiceWrapper> service);
     void reloadService(std::shared_ptr<ServiceWrapper> service);
+
+    bool isDebug() const;
 private:
     bool exportGraphsHelper(std::string const& path, bool isExecOrData);
 

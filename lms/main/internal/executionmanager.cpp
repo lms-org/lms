@@ -81,7 +81,13 @@ void ExecutionManager::loop() {
                 if(moduleV.size() == 1) {
                     profiler().markBegin(m_runtimeName + "." + moduleV[0]->getName());
 
+                    if(m_runtime.framework().isDebug()) {
+                        logger.debug("executeBegin") << moduleV[0]->getName();
+                    }
                     moduleV[0]->cycle();
+                    if(m_runtime.framework().isDebug()) {
+                        logger.debug("executeEnd") << moduleV[0]->getName();
+                    }
 
                     profiler().markEnd(m_runtimeName + "." + moduleV[0]->getName());
 
