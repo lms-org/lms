@@ -1,7 +1,7 @@
 #ifndef LMS_CONFIG_OBSERVER_H
 #define LMS_CONFIG_OBSERVER_H
 
-#include "lms/module_config.h"
+#include "lms/config.h"
 
 #include <functional>
 #include <vector>
@@ -26,7 +26,7 @@ public:
      * @brief Call this method inside the module's initialize() method.
      * @param config
      */
-    void init(const ModuleConfig *config);
+    void init(const Config *config);
 
     /**
      * @brief Call this method inside the module's configsChanged() method.
@@ -42,8 +42,8 @@ private:
     ValueChangedListener m_valueChangedListener;
     std::vector<std::string> m_keys;
 
-    ModuleConfig m_cachedConfig;
-    const ModuleConfig *m_currentConfig;
+    Config m_cachedConfig;
+    const Config *m_currentConfig;
 };
 
 }  // namespace lms

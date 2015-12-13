@@ -1,14 +1,11 @@
-#include "lms/extra/backtrace_formatter.h"
+#include "lms/internal/backtrace_formatter.h"
 #include <iostream>
 #include <execinfo.h>
-#include <iostream>
 #include <cxxabi.h>
-#include <sys/wait.h>
-#include <unistd.h>
 #include "lms/extra/type.h"
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 void printStacktrace() {
     // http://linux.die.net/man/3/backtrace
@@ -62,5 +59,5 @@ void printStacktrace() {
     free (messages);
 }
 
-}  // namespace extra
+}  // namespace internal
 }  // namespace lms

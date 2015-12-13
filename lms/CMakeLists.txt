@@ -91,9 +91,9 @@ set (HEADERS
     "include/lms/extra/string.h"
     "include/lms/extra/time.h"
     "include/lms/time.h"
-    "include/lms/extra/backtrace_formatter.h"
+    "include/lms/internal/backtrace_formatter.h"
     "include/lms/extra/os.h"
-    "include/lms/extra/dot_exporter.h"
+    "include/lms/internal/dot_exporter.h"
 )
 
 set (SOURCE
@@ -128,7 +128,7 @@ set (SOURCE
     "main/extra/string.cpp"
     "main/time.cpp"
     "main/extra/os.cpp"
-    "main/extra/dot_exporter.cpp"
+    "main/internal/dot_exporter.cpp"
 )
 
 # Add system-specific source
@@ -136,7 +136,7 @@ if(UNIX)
     message(STATUS "Use Unix specific sources")
     set (SOURCE ${SOURCE}
         "main/internal/framework_unix.cpp"
-        "main/extra/backtrace_formatter_unix.cpp"
+        "main/internal/backtrace_formatter_unix.cpp"
         "main/internal/signalhandler_unix.cpp"
         "main/internal/file_monitor_unix.cpp"
     )
@@ -145,7 +145,7 @@ elseif(WIN32)
     set (SOURCE ${SOURCE}
         "main/loader_win.cpp"
         "main/framework_win.cpp"
-        "main/extra/backtrace_formatter_win.cpp"
+        "main/internal/backtrace_formatter_win.cpp"
         "main/signalhandler_win.cpp"
         "main/extra/file_monitor_win.cpp"
     )

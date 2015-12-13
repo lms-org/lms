@@ -12,7 +12,7 @@
 #include "lms/internal/datamanager.h"
 #include "lms/internal/profiler.h"
 #include "lms/logger.h"
-#include <lms/extra/dot_exporter.h>
+#include "lms/internal/dot_exporter.h"
 #include "lms/internal/runtime.h"
 #include "lms/internal/framework.h"
 
@@ -496,9 +496,7 @@ bool ExecutionManager::useConfig(std::string const& name) {
     return true;
 }
 
-void ExecutionManager::writeDAG(extra::DotExporter &dot, const std::string &prefix) {
-    using extra::DotExporter;
-
+void ExecutionManager::writeDAG(DotExporter &dot, const std::string &prefix) {
     for(const auto &list : cycleList) {
         dot.label(list[0]->getName());
         dot.node(prefix + "_" + list[0]->getName());

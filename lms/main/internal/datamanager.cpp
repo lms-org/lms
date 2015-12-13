@@ -8,7 +8,7 @@
 #include <lms/module.h>
 #include <lms/internal/datamanager.h>
 #include <lms/internal/executionmanager.h>
-#include <lms/extra/dot_exporter.h>
+#include <lms/internal/dot_exporter.h>
 
 namespace lms {
 namespace internal {
@@ -66,9 +66,7 @@ void DataManager::printMapping() {
     }
 }
 
-void DataManager::writeDAG(lms::extra::DotExporter &dot, const std::string &prefix) {
-    using lms::extra::DotExporter;
-
+void DataManager::writeDAG(DotExporter &dot, const std::string &prefix) {
     std::unordered_set<std::string> modules;
 
     for (const auto &ch : channels) {

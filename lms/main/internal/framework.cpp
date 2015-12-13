@@ -9,7 +9,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cstdlib>
-#include "lms/extra/backtrace_formatter.h"
+#include "lms/internal/backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/time.h"
 #include "lms/config.h"
@@ -215,7 +215,7 @@ void Framework::signal(int s) {
         //In Case of Segfault while recovering - shutdown.
         SignalHandler::getInstance().removeListener(SIGSEGV, this);
 
-        extra::printStacktrace();
+        printStacktrace();
 
         exit(EXIT_FAILURE);
 
@@ -241,7 +241,7 @@ bool Framework::exportGraphsHelper(std::string const& path, bool isExecOrData) {
         return false;
     }
 
-    lms::extra::DotExporter dot(file);
+    DotExporter dot(file);
     dot.startDigraph("exec");
     for(auto& rt : runtimes) {
         dot.startSubgraph(rt.first);
@@ -255,7 +255,7 @@ bool Framework::exportGraphsHelper(std::string const& path, bool isExecOrData) {
     dot.endDigraph();
     file.close();
 
-    if(dot.lastError() != lms::extra::DotExporter::Error::OK) {
+    if(dot.lastError() != DotExporter::Error::OK) {
         logger.error() << "Dot export failed: " << dot.lastError();
         return false;
     }

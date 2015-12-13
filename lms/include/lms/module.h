@@ -10,7 +10,6 @@
 #include "internal/datamanager.h"
 #include "config.h"
 #include "module_config.h"
-#include "type/module_config.h"
 #include "messaging.h"
 #include "data_channel.h"
 #include "deprecated.h"

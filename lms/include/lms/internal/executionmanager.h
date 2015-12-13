@@ -148,7 +148,7 @@ public:
 
     bool useConfig(std::string const& name);
 
-    void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
+    void writeDAG(DotExporter &dot, const std::string &prefix);
 private:
     std::string m_runtimeName;
     logging::Logger logger;

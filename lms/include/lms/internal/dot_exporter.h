@@ -1,12 +1,12 @@
-#ifndef LMS_EXTRA_DOT_EXPORTER_H
-#define LMS_EXTRA_DOT_EXPORTER_H
+#ifndef LMS_INTERNAL_DOT_EXPORTER_H
+#define LMS_INTERNAL_DOT_EXPORTER_H
 
 #include <iostream>
 #include <string>
 #include <stack>
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 /**
  * @brief Export a directed or undirected graph to a file in dot format.
@@ -145,7 +145,7 @@ std::ostream& operator << (std::ostream& os, DotExporter::Shape type);
 
 std::ostream& operator << (std::ostream& os, DotExporter::Error error);
 
-}  // namespace extra
+}  // namespace internal
 }  // namespace lms
 
-#endif // PROJECT_DOT_EXPORTER_H
+#endif // LMS_INTERNAL_DOT_EXPORTER_H

@@ -13,7 +13,7 @@
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
 #include "module_wrapper.h"
-#include "lms/extra/dot_exporter.h"
+#include "dot_exporter.h"
 #include "lms/data_channel.h"
 #include "lms/deprecated.h"
 
@@ -141,7 +141,7 @@ public:
         return channel;
     }
 
-    void writeDAG(lms::extra::DotExporter &dot, const std::string &prefix);
+    void writeDAG(DotExporter &dot, const std::string &prefix);
 
     /**
      * @brief Print all channels with their corresponding readers

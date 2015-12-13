@@ -1,7 +1,7 @@
-#include "lms/extra/dot_exporter.h"
+#include "lms/internal/dot_exporter.h"
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 DotExporter::DotExporter(std::ostream &os) : m_os(os), m_error(Error::OK) {
     reset();
@@ -143,5 +143,5 @@ std::ostream& operator << (std::ostream& os, DotExporter::Error error) {
     return os;
 }
 
-}  // namespace extra
+}  // namespace internal
 }  // namespace lms

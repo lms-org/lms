@@ -1,13 +1,4 @@
 #include "lms/internal/xml_parser.h"
-#include "lms/extra/string.h"
-#include "lms/internal/clock.h"
-#include "lms/internal/framework.h"
-#include "lms/definitions.h"
-#include "lms/extra/os.h"
-
-#include <algorithm>
-#include <iostream>
-#include <utility>
 
 namespace lms {
 namespace internal {

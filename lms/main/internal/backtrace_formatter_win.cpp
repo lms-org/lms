@@ -1,10 +1,10 @@
-#include "lms/extra/backtrace_formatter.h"
+#include "lms/internal/backtrace_formatter.h"
 #include <iostream>
 #include <Windows.h>
 #include <DbgHelp.h>
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 void printStacktrace() {
     // http://stackoverflow.com/questions/5693192/win32-backtrace-from-c-code
@@ -36,6 +36,6 @@ void printStacktrace() {
     free( symbol );
 }
 
-}  // namespace extra
+}  // namespace internal
 }  // namespace lms
 
