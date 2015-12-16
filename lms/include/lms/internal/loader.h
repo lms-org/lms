@@ -132,9 +132,13 @@ public:
         if((err = dlerror()) != NULL) {
             logger.warn("load") << "Module " << entry->name() << " does not provide getLmsVersion()";
         } else {
+            constexpr uint32_t MAJOR_MASK = LMS_VERSION(0xff, 0, 0);
+            constexpr uint32_t MINOR_MASK = LMS_VERSION(0, 0xff, 0);
+
             uint32_t moduleVersion = getLmsVersion.target();
 
-            if((moduleVersion & LMS_VERSION_MASK) != (LMS_VERSION_CODE & LMS_VERSION_MASK)) {
+            if((moduleVersion & MAJOR_MASK) != (LMS_VERSION_CODE & MAJOR_MASK) ||
+                    (LMS_VERSION_CODE & MINOR_MASK) < (moduleVersion & MINOR_MASK)) {
                 logger.error("load") << "Module " << entry->name() << " has bad version. "
                     << "LMS Version " << LMS_VERSION_STRING << ", Module was compiled for "
                     << lms::extra::versionCodeToString(moduleVersion);
