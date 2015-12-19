@@ -5,6 +5,7 @@ set(TESTS
     extra/string.cpp
     extra/time.cpp
     logging/threshold_filter.cpp
+    internal/dag.cpp
 )
 
 if(USE_GOOGLETEST)

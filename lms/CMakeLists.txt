@@ -73,6 +73,7 @@ set (HEADERS
     "include/lms/type_result.h"
     "include/lms/any.h"
     "include/lms/internal/file_monitor.h"
+    "include/lms/internal/dag.h"
 
     "include/lms/type/module_config.h"
     "include/lms/module_config.h"
