@@ -149,6 +149,11 @@ else()
     message(FATAL_ERROR "OS is probably not supported")
 endif()
 
+if(POLICY CMP0042)
+    # Set new MACOSX_RPATH policy on OS X
+    cmake_policy(SET CMP0042 NEW)
+endif()
+
 # LMS core library
 add_library (lmscore SHARED
     ${HEADERS}
