@@ -37,14 +37,48 @@ TEST(DAG, getFree) {
     EXPECT_EQ(1, result);
 }
 
-TEST(DAG, hasFree) {
+TEST(DAG, getFreePredicate) {
     lms::internal::DAG<int> g;
 
-    g.edge(2, 1);
-    ASSERT_TRUE(g.hasFree());
+    g.edge(1, 3);
+    g.edge(2, 3);
 
+    int result;
+    ASSERT_TRUE(g.getFree(result, [] (int i) {
+        return i % 2 == 0;
+    }));
+    EXPECT_EQ(2, result);
+
+    ASSERT_FALSE(g.getFree(result, [] (int i) {
+        return i > 3;
+    }));
+}
+
+TEST(DAG, hasFreePredicate) {
+    lms::internal::DAG<int> g;
+
+    ASSERT_FALSE(g.hasFree([] (int x) {
+        (void)x;
+        return true;
+    }));
+
+    g.edge(1, 3);
     g.edge(1, 2);
-    ASSERT_FALSE(g.hasFree());
+
+    ASSERT_TRUE(g.hasFree([] (int x) {
+        return x < 2;
+    }));
+
+    ASSERT_FALSE(g.hasFree([] (int x) {
+        return x >= 2;
+    }));
+
+    g.edge(3, 1);
+
+    ASSERT_FALSE(g.hasFree([] (int x) {
+        (void)x;
+        return true;
+    }));
 }
 
 TEST(DAG, removeEdgesFrom) {
@@ -76,6 +110,12 @@ TEST(DAG, empty) {
 
     g.edge(1, 2);
     ASSERT_FALSE(g.empty());
+
+    g.clear();
+    ASSERT_TRUE(g.empty());
+
+    g.node(1);
+    ASSERT_FALSE(g.empty());
 }
 
 TEST(DAG, clear) {
@@ -99,4 +139,15 @@ TEST(DAG, topoSort) {
 
     g.edge(0, 1);
     ASSERT_FALSE(g.topoSort(result));
+}
+
+TEST(DAG, countNodes) {
+    lms::internal::DAG<int> g;
+    ASSERT_EQ(0, g.countNodes());
+
+    g.edge(1, 2);
+    ASSERT_EQ(2, g.countNodes());
+
+    g.edge(2, 3);
+    ASSERT_EQ(3, g.countNodes());
 }

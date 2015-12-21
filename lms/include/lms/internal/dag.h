@@ -45,6 +45,25 @@ public:
     }
 
     /**
+     * @brief Remove a node and its incoming edges.
+     *
+     * This function is intended to be used for free nodes.
+     *
+     * @param node node to remove
+     */
+    void removeNode(T const& node) {
+        m_data.erase(node);
+    }
+
+    /**
+     * @brief Count the number of nodes available in this graph.
+     * @return number of nodes
+     */
+    size_t countNodes() const {
+        return m_data.size();
+    }
+
+    /**
      * @brief Check if the graph contains an edge.
      * @param node
      * @param dependency
@@ -71,12 +90,19 @@ public:
     }
 
     /**
-     * @brief Check if the graph contains any free node.
+     * @brief Check if the graph contains any free node that satifies the
+     * predicate.
+     *
+     * The predicate must be function or lamda that takes a const& T and returns
+     * bool.
+     *
+     * @param predicate a function of type bool (*)(T const&)
      * @return true if a free node was found, false otherwise
      */
-    bool hasFree() const {
+    template<typename PredicateFn>
+    bool hasFree(PredicateFn predicate) const {
         for(typename GraphType::const_iterator it = m_data.begin(); it != m_data.end(); it++) {
-            if(it->second.empty()) {
+            if(it->second.empty() && predicate(it->first)) {
                 return true;
             }
         }
@@ -100,16 +126,16 @@ public:
     }
 
     /**
-     * @brief Search for a node having no incoming edges and remove it.
-     * @param result The node value will be assigned to this parameter
-     * @return true if a free node was found and result was assigned, false
-     * otherwise
+     * @brief Search for a node having no incoming edges and satisfying the
+     * predicate.
+     * @param result the found node will be place there
+     * @param predicate a function of type bool (*)(T &)
      */
-    bool getAndRemoveFree(T& result) {
-        for(typename GraphType::iterator it = m_data.begin(); it != m_data.end(); it++) {
-            if(it->second.empty()) {
+    template<typename PredicateFn>
+    bool getFree(T& result, PredicateFn predicate) {
+        for(typename GraphType::const_iterator it = m_data.begin(); it != m_data.end(); it++) {
+            if(it->second.empty() && predicate(it->first)) {
                 result = it->first;
-                m_data.erase(it);
                 return true;
             }
         }
@@ -143,7 +169,8 @@ public:
         DAG copy(*this);
 
         T node;
-        while(copy.getAndRemoveFree(node)) {
+        while(copy.getFree(node)) {
+            copy.removeNode(node);
             copy.removeEdgesFrom(node);
         }
 
@@ -174,7 +201,8 @@ public:
         DAG copy(*this);
 
         T node;
-        while(copy.getAndRemoveFree(node)) {
+        while(copy.getFree(node)) {
+            copy.removeNode(node);
             copy.removeEdgesFrom(node);
             result.push_back(node);
         }
@@ -186,7 +214,7 @@ public:
      * @brief Iterator to the internal data structure.
      * @return read-only begin iterator
      */
-    typename GraphType::iterator begin() const {
+    typename GraphType::const_iterator begin() const {
         return m_data.begin();
     }
 
@@ -194,7 +222,7 @@ public:
      * @brief Iterator to the internal data structure.
      * @return  read-only end iterator
      */
-    typename GraphType::iterator end() const {
+    typename GraphType::const_iterator end() const {
         return m_data.end();
     }
 };
