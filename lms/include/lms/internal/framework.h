@@ -75,7 +75,7 @@ public:
 
     bool isDebug() const;
 private:
-    bool exportGraphsHelper(std::string const& path, bool isExecOrData);
+    bool exportGraphsHelper(bool isExecOrData);
 
     logging::Logger logger;
 

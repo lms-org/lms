@@ -9,6 +9,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cstdlib>
+#include <unistd.h>
 #include "lms/internal/backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/time.h"
@@ -18,6 +19,7 @@
 #include "lms/extra/colors.h"
 #include "lms/definitions.h"
 #include "lms/internal/runtime.h"
+#include "lms/extra/os.h"
 
 namespace lms {
 namespace internal {
@@ -223,16 +225,18 @@ void Framework::signal(int s) {
     }
 }
 
-bool Framework::exportGraphsHelper(std::string const& path, bool isExecOrData) {
-    std::string gvPath = path;
-    std::string outPath = path;
+bool Framework::exportGraphsHelper(bool isExecOrData) {
+    std::string gvPath("/tmp/lms.");
+    std::string outPath("/tmp/lms.");
     if(isExecOrData) {
-        gvPath += ".exec.gv";
-        outPath += ".exec.png";
+        gvPath += "exec";
+        outPath += "exec";
     } else {
-        gvPath += ".data.gv";
-        outPath += ".data.png";
+        gvPath += "data";
+        outPath += "data";
     }
+    gvPath += ".gv";
+    outPath += ".png";
 
     std::ofstream file(gvPath);
 
@@ -242,7 +246,7 @@ bool Framework::exportGraphsHelper(std::string const& path, bool isExecOrData) {
     }
 
     DotExporter dot(file);
-    dot.startDigraph("exec");
+    dot.startDigraph("dag");
     for(auto& rt : runtimes) {
         dot.startSubgraph(rt.first);
         if(isExecOrData) {
@@ -260,18 +264,34 @@ bool Framework::exportGraphsHelper(std::string const& path, bool isExecOrData) {
         return false;
     }
 
+#ifdef __linux__
+    std::string dotCall = "dot -Tpng " + gvPath + " -o " + outPath;
+    std::string xdgOpenCall = "xdg-open " + outPath;
+
+    if(0 != system(dotCall.c_str())) {
+        logger.error() << "Failed to execute " << dotCall;
+        logger.error() << "Check for file permissions and graphviz package";
+        return false;
+    }
+
+    if(0 != system(xdgOpenCall.c_str())) {
+        logger.error() << "Failed to execute " << xdgOpenCall;
+        logger.error() << "Are you using gnome?";
+        return false;
+    }
+#else
     logger.info() << "dot -Tpng " << gvPath << " > " << outPath;
     logger.info() << "xdg-open " << outPath;
-
+#endif
     return true;
 }
 
 void Framework::exportGraphs() {
-    if(! argumentHandler.argDotFile.empty()) {
+    if(argumentHandler.argDAG) {
         logger.info() << "Write dot files...";
 
-        exportGraphsHelper(argumentHandler.argDotFile, true);
-        exportGraphsHelper(argumentHandler.argDotFile, false);
+        exportGraphsHelper(true);
+        exportGraphsHelper(false);
     }
 }
 
