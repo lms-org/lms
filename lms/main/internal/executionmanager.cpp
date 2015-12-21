@@ -70,37 +70,18 @@ void ExecutionManager::loop() {
     validate();
 
     if(! m_multithreading) {
-        //copy cycleList so it can be modified
-        cycleListTmp = cycleList;
+        for(Module* mod : sortedCycleList) {
+            profiler().markBegin(m_runtimeName + "." + mod->getName());
 
-        //simple single list
-        while(cycleListTmp.size() > 0){
-            //Iter over all module-vectors and check if they can be executed
-            for(size_t i = 0; i < cycleListTmp.size();i++){
-                std::vector<Module*>& moduleV = cycleListTmp[i];
-                if(moduleV.size() == 1) {
-                    profiler().markBegin(m_runtimeName + "." + moduleV[0]->getName());
-
-                    if(m_runtime.framework().isDebug()) {
-                        logger.debug("executeBegin") << moduleV[0]->getName();
-                    }
-                    moduleV[0]->cycle();
-                    if(m_runtime.framework().isDebug()) {
-                        logger.debug("executeEnd") << moduleV[0]->getName();
-                    }
-
-                    profiler().markEnd(m_runtimeName + "." + moduleV[0]->getName());
-
-                    //remove module from others
-                    for(std::vector<Module*>& moduleV2:cycleListTmp){
-                        moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),moduleV[0]),moduleV2.end());
-                    }
-                    //remove moduleV from cycleList
-                    cycleListTmp.erase(std::remove(cycleListTmp.begin(),cycleListTmp.end(),moduleV),cycleListTmp.end());
-                    i--;
-
-                }
+            if(m_runtime.framework().isDebug()) {
+                logger.debug("executeBegin") << mod->getName();
             }
+            mod->cycle();
+            if(m_runtime.framework().isDebug()) {
+                logger.debug("executeEnd") << mod->getName();
+            }
+
+            profiler().markEnd(m_runtimeName + "." + mod->getName());
         }
     }else{
         logger.info() << "Cycle start";
@@ -118,7 +99,7 @@ void ExecutionManager::loop() {
             std::lock_guard<std::mutex> lck(mutex);
             // copy cycleList so it can be modified
             cycleListTmp = cycleList;
-            numModulesToExecute = cycleListTmp.size();
+            numModulesToExecute = cycleListTmp.countNodes();
 
             // inform all threads that there are new jobs to do
             cv.notify_all();
@@ -158,26 +139,18 @@ void ExecutionManager::threadFunction(int threadNum) {
             break;
         }
 
-        Module* executableModule = nullptr;
-        int executableModuleIndex = 0;
+        Module* executableModule;
 
-        for(size_t i = 0; i < cycleListTmp.size();i++){
-            std::vector<Module*>& moduleV = cycleListTmp[i];
-            if(moduleV.size() == 1) {
-                ExecutionType execType = moduleV[0]->getExecutionType();
-                if((execType == ExecutionType::ONLY_MAIN_THREAD && threadNum == 0) ||
-                        (execType == ExecutionType::NEVER_MAIN_THREAD && threadNum != 0)) {
-                    executableModuleIndex = i;
-                    executableModule = moduleV[0];
-                    break;
-                }
-            }
-        }
+        bool found = cycleListTmp.getFree(executableModule, [threadNum] (Module* mod) {
+            ExecutionType execType = mod->getExecutionType();
+            return (execType == ExecutionType::ONLY_MAIN_THREAD && threadNum == 0) ||
+                (execType == ExecutionType::NEVER_MAIN_THREAD && threadNum != 0);
+        });
 
-        if(executableModule != nullptr) {
+        if(found) {
             // if an executable module was found
             // then delete it from the cycleListTmp
-            cycleListTmp.erase(cycleListTmp.begin() + executableModuleIndex);
+            cycleListTmp.removeNode(executableModule);
 
             logger.info() << "Thread " << threadNum << " executes "
                           << executableModule->getName();
@@ -194,9 +167,7 @@ void ExecutionManager::threadFunction(int threadNum) {
 
             // now we should delete the executed module from
             // the dependencies of other modules
-            for(std::vector<Module*>& moduleV2:cycleListTmp){
-                moduleV2.erase(std::remove(moduleV2.begin(),moduleV2.end(),executableModule),moduleV2.end());
-            }
+            cycleListTmp.removeEdgesFrom(executableModule);
 
             numModulesToExecute --;
 
@@ -216,19 +187,11 @@ bool ExecutionManager::hasExecutableModules(int thread) {
         return false;
     }
 
-    for(size_t i = 0; i < cycleListTmp.size();i++){
-        std::vector<Module*>& moduleV = cycleListTmp[i];
-        if(moduleV.size() == 1) {
-            ExecutionType execType = moduleV[0]->getExecutionType();
-            if(execType == ExecutionType::ONLY_MAIN_THREAD && thread == 0) {
-                return true;
-            } else if(execType == ExecutionType::NEVER_MAIN_THREAD && thread != 0) {
-                return true;
-            }
-        }
-    }
-
-    return false;
+    return cycleListTmp.hasFree([thread] (Module* mod) -> bool {
+        ExecutionType execType = mod->getExecutionType();
+        return (execType == ExecutionType::ONLY_MAIN_THREAD && thread == 0) ||
+                ((execType == ExecutionType::NEVER_MAIN_THREAD && thread != 0));
+    });
 }
 
 void ExecutionManager::stopRunning() {
@@ -354,6 +317,13 @@ void ExecutionManager::validate(){
     if(!valid){
         valid = true;
         sort();
+
+        sortedCycleList.clear();
+        bool success = cycleList.topoSort(sortedCycleList);
+
+        if(! success) {
+            logger.error("validate") << "Module graph has circle";
+        }
     }
 }
 
@@ -377,13 +347,17 @@ bool ExecutionManager::enabledMultithreading() const {
     return m_multithreading;
 }
 
-void ExecutionManager::printCycleList(cycleListType &clist) {
-    for(const std::vector<Module*> &list : clist) {
-        std::string line;
+void ExecutionManager::printCycleList(DAG<Module *> &clist) {
+    clist.removeTransitiveEdges();
 
-        for(Module* mod : list) {
-            line += mod->getName() + " ";
+    for(auto const& pair : clist) {
+        std::string line(pair.first->getName() + " (");
+
+        for(Module* mod : pair.second) {
+            line += " " + mod->getName();
         }
+
+        line += " )";
 
         logger.debug("cycleList") << line;
     }
@@ -398,9 +372,7 @@ void ExecutionManager::sort(){
     logger.debug("sort") << "No. of enabled modules: " << enabledModules.size();
     //add modules to the list
     for(auto it : enabledModules){
-        std::vector<Module*> tmp;
-        tmp.push_back(it.second->instance());
-        cycleList.push_back(tmp);
+        cycleList.node(it.second->instance());
     }
     sortModules();
 }
@@ -455,13 +427,7 @@ void ExecutionManager::sortModules(){
 
 
 void ExecutionManager::addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent){
-    for(std::vector<Module*> &list: cycleList){
-        Module *toAdd = list[0];
-        //add it to the list
-        if(toAdd->getName() == dependent->name()){
-            list.push_back(independent->instance());
-        }
-    }
+    cycleList.edge(independent->instance(), dependent->instance());
 }
 
 
@@ -497,18 +463,20 @@ bool ExecutionManager::useConfig(std::string const& name) {
 }
 
 void ExecutionManager::writeDAG(DotExporter &dot, const std::string &prefix) {
-    for(const auto &list : cycleList) {
-        dot.label(list[0]->getName());
-        dot.node(prefix + "_" + list[0]->getName());
+    cycleList.removeTransitiveEdges();
+
+    for(auto const& pair : cycleList) {
+        dot.label(pair.first->getName());
+        dot.node(prefix + "_" + pair.first->getName());
     }
 
     dot.reset();
 
-    for(const auto &list : cycleList) {
-        std::string from = list[0]->getName();
+    for(auto const& pair : cycleList) {
+        std::string from = pair.first->getName();
 
-        for(size_t i = 1; i < list.size(); i++) {
-            dot.edge(prefix + "_" + list[i]->getName(), prefix + "_" + from);
+        for(auto const& to : pair.second) {
+            dot.edge(prefix + "_" + to->getName(), prefix + "_" + from);
         }
     }
 }

@@ -151,3 +151,40 @@ TEST(DAG, countNodes) {
     g.edge(2, 3);
     ASSERT_EQ(3, g.countNodes());
 }
+
+TEST(DAG, hasPath) {
+    lms::internal::DAG<int> g;
+
+    g.edge(1, 2);
+    g.edge(2, 3);
+    g.edge(2, 4);
+
+    // loop
+    ASSERT_TRUE(g.hasPath(1, 1));
+
+    // single edge
+    ASSERT_TRUE(g.hasPath(1, 2));
+
+    // multiple edges
+    ASSERT_TRUE(g.hasPath(1, 4));
+
+    // wrong direction
+    ASSERT_FALSE(g.hasPath(4, 1));
+
+    // nodes does not exist
+    ASSERT_FALSE(g.hasPath(1, 5));
+}
+
+TEST(DAG, removeTransitiveEdges) {
+    lms::internal::DAG<int> g;
+
+    g.edge(1, 2);
+    g.edge(2, 3);
+    g.edge(1, 3);
+
+    g.removeTransitiveEdges();
+
+    ASSERT_FALSE(g.hasEdge(1, 3));
+    ASSERT_TRUE(g.hasEdge(1, 2));
+    ASSERT_TRUE(g.hasEdge(2, 3));
+}

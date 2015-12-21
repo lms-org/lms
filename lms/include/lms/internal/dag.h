@@ -25,12 +25,16 @@ public:
      *
      * The nodes will be created if not yet existent.
      *
+     * Reflexive edges are ignored.
+     *
      * @param node target node
      * @param dependency source node
      */
     void edge(T const& from, T const& to) {
-        m_data[to].insert(from);
-        m_data[from];
+        if(from != to) {
+            m_data[to].insert(from);
+            m_data[from];
+        }
     }
 
     /**
@@ -208,6 +212,77 @@ public:
         }
 
         return copy.empty();
+    }
+
+    /**
+     * @brief Check if there is a path from one node to another via one or more
+     * edges.
+     * @param from start node
+     * @param to end node
+     * @return true if at least one path was found, false otherwise
+     */
+    bool hasPath(T const& from, T const& to) const {
+        if(0 == m_data.count(from) || 0 == m_data.count(to)) {
+            return false;
+        }
+
+        std::set<T> done, todo;
+
+        todo.insert(to);
+
+        while(! todo.empty()) {
+            if(1 == todo.count(from)) {
+                return true;
+            }
+
+            T const& work = *todo.begin();
+            auto towork = m_data.find(work);
+
+            if(towork == m_data.end()) {
+                todo.erase(work);
+                continue;
+            }
+
+            for(T const& x : towork->second) {
+                // if node not yet done then put it todo
+                if(0 == done.count(x)) {
+                    todo.insert(x);
+                }
+            }
+
+            // the work node is now done
+            todo.erase(work);
+            done.insert(work);
+        }
+
+        return false;
+    }
+
+    /**
+     * @brief Remove all transitive edges from the graph.
+     *
+     * Transitive edges are edges that connect two nodes that are also connected
+     * via a path not using this edge.
+     */
+    void removeTransitiveEdges() {
+        bool changed;
+
+        do {
+            changed = false;
+
+            for(auto & pair : m_data) {
+                T const& to = pair.first;
+                std::set<T> copy(pair.second);
+                for(auto const& from : copy) {
+                    pair.second.erase(from);
+                    if(hasPath(from, to)) {
+                        changed = true;
+                    } else {
+                        pair.second.insert(from);
+                    }
+                }
+            }
+        } while(changed);
     }
 
     /**

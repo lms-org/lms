@@ -17,6 +17,7 @@
 #include "lms/logger.h"
 #include "profiler.h"
 #include "lms/messaging.h"
+#include "dag.h"
 
 namespace lms {
 namespace internal {
@@ -167,7 +168,7 @@ private:
     std::vector<std::thread> threadPool;
     std::mutex mutex;
     std::condition_variable cv;
-    int numModulesToExecute;
+    size_t numModulesToExecute;
     bool running;
     bool hasExecutableModules(int thread);
     void threadFunction(int threadNum);
@@ -181,14 +182,11 @@ private:
      */
     ModuleList enabledModules;
 
-    /**
-     * @brief cycleListT the cycleListType
-     */
-    typedef std::vector<std::vector<Module*>> cycleListType;
-    cycleListType cycleList;
-    cycleListType cycleListTmp;
+    DAG<Module*> cycleList;
+    DAG<Module*> cycleListTmp;
+    std::vector<Module*> sortedCycleList;
 
-    void printCycleList(cycleListType &list);
+    void printCycleList(DAG<Module*> &list);
 
     /**
      * @brief available contains all Modules which can be loaded
