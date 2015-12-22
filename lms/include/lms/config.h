@@ -140,7 +140,9 @@ public:
      * @return value of type T
      */
     template<typename T>
-    T get(const std::string &key) const;
+    T get(const std::string &key) const {
+        return get(key, T());
+    }
 
     /**
      * @brief Return the value by the given config key.
@@ -157,7 +159,58 @@ public:
      * @return value of type T
      */
     template<typename T>
-    T get(const std::string &key, const T &defaultValue) const;
+    T get(const std::string &key, const T &defaultValue) const {
+        const auto it = properties.find(key);
+        if(it == properties.end()) {
+            return defaultValue;
+        } else {
+            T result;
+            if(parse(it->second, result)) {
+                return result;
+            } else {
+                // if parsing failed take the default value
+                return defaultValue;
+            }
+        }
+    }
+
+    /**
+     * @brief Retrieve a config value and split it at commas.
+     *
+     * The found values will be pushed to the given list. The list is not
+     * cleared before writing any values to it.
+     *
+     * @param key config key to look for
+     * @param list values will be push_back'ed there
+     */
+    template<typename T, typename ListType>
+    void getArray(std::string const& key, ListType & list) const {
+        std::string fullValue(get<std::string>(key));
+
+        // if the key/value-pair was not set -> stop
+        if(fullValue.empty()) {
+            return;
+        }
+
+        size_t pos, nextPos = -1;
+
+        do {
+            pos = nextPos + 1;
+            nextPos = fullValue.find(',', pos);
+
+            // slice one value out of the string
+            std::string value(lms::extra::trim(fullValue.substr(pos,
+                nextPos == std::string::npos ? nextPos : nextPos - pos)));
+
+            // parse the value
+            T parsedValue;
+
+            if(parse(value, parsedValue)) {
+                // add the value to the vector
+                list.push_back(parsedValue);
+            }
+        } while(nextPos != std::string::npos);
+    }
 
     /**
      * @brief Return a vector of values for the given key.
@@ -169,7 +222,11 @@ public:
      * @return list of values of type T
      */
     template<typename T>
-    std::vector<T> getArray(const std::string &key) const;
+    std::vector<T> getArray(const std::string &key) const {
+        std::vector<T> result;
+        getArray<T>(key, result);
+        return result;
+    }
 
     /**
      * @brief Check if the given key is available.
@@ -193,60 +250,6 @@ private:
 
 template<>
 void Config::set<std::string>(const std::string &key, const std::string &value);
-
-template<typename T>
-T Config::get(const std::string &key) const {
-    return get(key, T());
-}
-
-template<typename T>
-T Config::get(const std::string &key, const T &defaultValue) const {
-    const auto it = properties.find(key);
-    if(it == properties.end()) {
-        return defaultValue;
-    } else {
-        T result;
-        if(parse(it->second, result)) {
-            return result;
-        } else {
-            // if parsing failed take the default value
-            return defaultValue;
-        }
-    }
-}
-
-template<typename T>
-std::vector<T> Config::getArray(const std::string &key) const {
-    std::string fullValue(get<std::string>(key));
-    std::vector<T> array;
-
-    // if the key/value-pair was not set
-    // -> just return empty vector
-    if(fullValue.empty()) {
-        return array;
-    }
-
-    size_t pos, nextPos = -1;
-
-    do {
-        pos = nextPos + 1;
-        nextPos = fullValue.find(',', pos);
-
-        // slice one value out of the string
-        std::string value(lms::extra::trim(fullValue.substr(pos,
-            nextPos == std::string::npos ? nextPos : nextPos - pos)));
-
-        // parse the value
-        T parsedValue;
-
-        if(parse(value, parsedValue)) {
-            // add the value to the vector
-            array.push_back(parsedValue);
-        }
-    } while(nextPos != std::string::npos);
-
-    return array;
-}
 
 } // namespace lms
 

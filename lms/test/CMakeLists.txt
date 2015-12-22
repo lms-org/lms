@@ -1,6 +1,6 @@
 set(TESTS
     internal/xml_parser.cpp
-    module_config.cpp
+    config.cpp
     inheritance.cpp
     extra/string.cpp
     time.cpp
