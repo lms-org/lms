@@ -1,9 +1,9 @@
 set(TESTS
-    xml_parser.cpp
+    internal/xml_parser.cpp
     module_config.cpp
     inheritance.cpp
     extra/string.cpp
-    extra/time.cpp
+    time.cpp
     logging/threshold_filter.cpp
     internal/dag.cpp
 )

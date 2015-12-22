@@ -143,13 +143,13 @@ TEST(DAG, topoSort) {
 
 TEST(DAG, countNodes) {
     lms::internal::DAG<int> g;
-    ASSERT_EQ(0, g.countNodes());
+    ASSERT_EQ(0u, g.countNodes());
 
     g.edge(1, 2);
-    ASSERT_EQ(2, g.countNodes());
+    ASSERT_EQ(2u, g.countNodes());
 
     g.edge(2, 3);
-    ASSERT_EQ(3, g.countNodes());
+    ASSERT_EQ(3u, g.countNodes());
 }
 
 TEST(DAG, hasPath) {
