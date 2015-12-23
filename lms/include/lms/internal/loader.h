@@ -109,7 +109,7 @@ public:
         std::string libpath = m_pathMapping[entry->libname()];
 
         if(libpath.empty()) {
-            logger.error("load") << "libname is empty: " << entry->name();
+            logger.error("load") << "Could not find " << entry->name();
             return false;
         }
 

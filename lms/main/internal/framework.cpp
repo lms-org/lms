@@ -91,8 +91,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
         for(auto& service : services) {
-            if(! service.second->instance()->init()) {
-                logger.error() << "Library " << service.first << " failed to init()";
+            if(m_serviceLoader.load(service.second.get())) {
+                service.second->instance()->initBase(service.second.get(), logging::Level::DEBUG);
+
+                if(! service.second->instance()->init()) {
+                    logger.error() << "Library " << service.first << " failed to init()";
+                    return;
+                }
+            } else {
                 return;
             }
         }
@@ -187,7 +193,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
 Framework::~Framework() {
     for(auto& service : services) {
-        service.second->instance()->destroy();
+        if(service.second->instance() != nullptr) {
+            service.second->instance()->destroy();
+        }
     }
 
     SignalHandler::getInstance()
@@ -330,11 +338,7 @@ void Framework::installService(std::shared_ptr<ServiceWrapper> service) {
         logger.error("installService") << "Tried to install service "
             << service->name() << " but was already installed";
     } else {
-        if(m_serviceLoader.load(service.get()))
-        {
-            service->instance()->initBase(service.get(), logging::Level::DEBUG);
-            services[service->name()] = service;
-        }
+        services[service->name()] = service;
     }
 }
 
