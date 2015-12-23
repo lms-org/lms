@@ -330,9 +330,11 @@ void Framework::installService(std::shared_ptr<ServiceWrapper> service) {
         logger.error("installService") << "Tried to install service "
             << service->name() << " but was already installed";
     } else {
-        services[service->name()] = service;
-        m_serviceLoader.load(service.get());
-        service->instance()->initBase(service.get(), logging::Level::DEBUG);
+        if(m_serviceLoader.load(service.get()))
+        {
+            service->instance()->initBase(service.get(), logging::Level::DEBUG);
+            services[service->name()] = service;
+        }
     }
 }
 
