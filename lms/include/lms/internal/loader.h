@@ -53,7 +53,13 @@ public:
 
             if(type == lms::extra::FileType::REGULAR_FILE &&
                     lms::extra::startsWith(child, "lib") &&
-                    lms::extra::endsWith(child, ".so")) {
+#ifdef __APPLE__
+                    // Shared objects may end in .so or .dylib on OS X
+                    ( lms::extra::endsWith(child, ".so") || lms::extra::endsWith(child, ".dylib") )
+#else
+                    lms::extra::endsWith(child, ".so")
+#endif
+                    ) {
                 m_pathMapping[child] = childPath;
             } else if(type == lms::extra::FileType::DIRECTORY && recursion > 0) {
                 addModulePath(childPath, recursion - 1);
@@ -75,6 +81,19 @@ public:
      */
     static std::string getModulePath(const std::string &libname) {
         return "lib" + libname + ".so";
+    }
+
+    /**
+     * @brief getServicePath
+     * @param libname the name of the binary (How it's written in CMakeLists.txt
+     * @return the ABSOLUTE path of the shared library file (.so or .dylib)
+     */
+    static std::string getServicePath(const std::string &libname) {
+#ifdef __APPLE__
+        return "lib" + libname + ".dylib";
+#else
+        return "lib" + libname + ".so";
+#endif
     }
 
     /**
