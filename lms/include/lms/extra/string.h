@@ -75,6 +75,21 @@ bool endsWith(std::string const& str, std::string const& suffix);
 
 std::string versionCodeToString(uint32_t versionCode);
 
+/**
+ * @brief Return the length of a string literal.
+ *
+ * This function computes its result at compile-time.
+ *
+ * Usage:
+ * static_assert(lenOf("test") == 4, "Test should be 4 characters long");
+ *
+ * @return length of string literal
+ */
+template<size_t N>
+constexpr size_t lenOf(const char (&)[N]) {
+    return N - 1;
+}
+
 } // namespace extra
 } // namespace lms
 

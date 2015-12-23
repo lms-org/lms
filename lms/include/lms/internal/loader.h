@@ -25,6 +25,7 @@
 #include <string>
 #include <lms/module.h>
 #include <lms/logger.h>
+#include "lms/extra/string.h"
 
 namespace lms {
 class Module;
@@ -44,6 +45,8 @@ public:
     }
 
     void addModulePath(std::string const& path, int recursion = 0) {
+        constexpr size_t LIB_LEN = lms::extra::lenOf("lib");
+
         std::vector<std::string> list;
         lms::extra::listDir(path, list);
 
@@ -53,8 +56,16 @@ public:
 
             if(type == lms::extra::FileType::REGULAR_FILE &&
                     lms::extra::startsWith(child, "lib") &&
-                    lms::extra::endsWith(child, ".so")) {
-                m_pathMapping[child] = childPath;
+#ifdef __APPLE__
+                    // Shared objects may end in .so or .dylib on OS X
+                    ( lms::extra::endsWith(child, ".so") || lms::extra::endsWith(child, ".dylib") )
+#else
+                    lms::extra::endsWith(child, ".so")
+#endif
+            ) {
+                size_t dotIndex = child.find_last_of('.');
+
+                m_pathMapping[child.substr(LIB_LEN, dotIndex - LIB_LEN)] = childPath;
             } else if(type == lms::extra::FileType::DIRECTORY && recursion > 0) {
                 addModulePath(childPath, recursion - 1);
             }
@@ -66,16 +77,6 @@ public:
         void* src;
         _Target target;
     };
-
-    /**
-     * @brief getModulePath
-     * @param localPathToModule the path from the modules folder to the module folder that contains the so file
-     * @param libname the name of the binary (How it's written in CMakeLists.txt
-     * @return the ABSOLUTE path of the shared library file (.so)
-     */
-    static std::string getModulePath(const std::string &libname) {
-        return "lib" + libname + ".so";
-    }
 
     /**
      * @brief checkModule checks if the module could be loaded

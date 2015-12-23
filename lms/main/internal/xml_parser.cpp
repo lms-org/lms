@@ -336,9 +336,9 @@ void XmlParser::parseModules(pugi::xml_node node,
     pugi::xml_node realNameNode = node.child("realName");
 
     if(realNameNode) {
-        module->libname(Loader<Module>::getModulePath(realNameNode.child_value()));
+        module->libname(realNameNode.child_value());
     } else {
-        module->libname(Loader<Module>::getModulePath(module->name()));
+        module->libname(module->name());
     }
 
     pugi::xml_node mainThreadNode = node.child("mainThread");
@@ -430,9 +430,9 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
     pugi::xml_node realNameNode = node.child("realName");
 
     if(realNameNode) {
-        service->libname(Loader<Service>::getModulePath(realNameNode.child_value()));
+        service->libname(realNameNode.child_value());
     } else {
-        service->libname(Loader<Service>::getModulePath(service->name()));
+        service->libname(service->name());
     }
 
     // parse all config

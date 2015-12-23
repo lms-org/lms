@@ -108,3 +108,10 @@ TEST(string, safeGetline) {
     safeGetline(iss, line);
     ASSERT_FALSE(!!iss);
 }
+
+TEST(string, lenOf) {
+    using lms::extra::lenOf;
+
+    ASSERT_EQ(size_t(4), lenOf("test"));
+    ASSERT_EQ(size_t(0), lenOf(""));
+}
