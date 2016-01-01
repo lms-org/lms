@@ -118,7 +118,11 @@ Time Time::fromMillis(Time::TimeType millis) {
 }
 
 Time Time::since(const Time& reference) {
-    return Time( now() - reference );
+    return reference.since();
+}
+
+Time Time::since() const {
+    return now() - *this;
 }
 
 Time& Time::operator +=(const Time &t) {

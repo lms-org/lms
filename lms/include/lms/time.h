@@ -62,6 +62,15 @@ public:
     static Time since( const Time& reference );
 
     /**
+     * @brief Calculate the time passed since this timestamp
+     *
+     * Computes now() - *this.
+     *
+     * @return time representing the time passed since this timestamp
+     */
+    Time since() const;
+
+    /**
      * @brief Get the time as microseconds.
      * @return microseconds
      */
