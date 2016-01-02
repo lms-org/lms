@@ -152,8 +152,10 @@ void ExecutionManager::threadFunction(int threadNum) {
             // then delete it from the cycleListTmp
             cycleListTmp.removeNode(executableModule);
 
-            logger.info() << "Thread " << threadNum << " executes "
-                          << executableModule->getName();
+            if(m_runtime.framework().isDebug()) {
+                logger.info() << "Thread " << threadNum << " executes "
+                              << executableModule->getName();
+            }
 
             // now we can execute it
             lck.unlock();
@@ -162,8 +164,10 @@ void ExecutionManager::threadFunction(int threadNum) {
             profiler().markEnd(m_runtimeName + "." + executableModule->getName());
             lck.lock();
 
-            logger.info() << "Thread " << threadNum << " executed "
-                          << executableModule->getName();
+            if(m_runtime.framework().isDebug()) {
+                logger.info() << "Thread " << threadNum << " executed "
+                              << executableModule->getName();
+            }
 
             // now we should delete the executed module from
             // the dependencies of other modules
