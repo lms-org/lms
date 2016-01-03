@@ -20,7 +20,7 @@ std::string currentTimeString() {
     time_t rawtime;
     time (&rawtime);
     tm *t = gmtime(&rawtime);
-    snprintf(str, sizeof(str), "%04i%02i%02i-%02i%02i%02i",
+    snprintf(str, sizeof(str), "%04i-%02i-%02iT%02i-%02i-%02iZ",
         t->tm_year+1900,
         t->tm_mon+1,
         t->tm_mday,

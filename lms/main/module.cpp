@@ -77,4 +77,12 @@ namespace lms{
         m_wrapper->runtime()->framework().getRuntimeByName(name)->resume(reset);
         return true;
     }
+
+    std::string Module::logFile(std::string const& name) {
+        return m_wrapper->runtime()->framework().logObject(name, false);
+    }
+
+    std::string Module::logDir(std::string const& name) {
+        return m_wrapper->runtime()->framework().logObject(name, true);
+    }
 }

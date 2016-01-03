@@ -85,6 +85,9 @@ class ArgumentHandler {
     int argThreads;
     bool argDAG;
     bool argDebug;
+    bool argEnableLoad;
+    std::string argEnableLoadPath;
+    bool argEnableSave;
 };
 
 }  // namespace internal

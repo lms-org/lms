@@ -39,6 +39,12 @@ enum class FileType {
  */
 FileType fileType(std::string const& path);
 
+/**
+ * @brief Returns $HOME on unix systems
+ * @return home path of the user ("~")
+ */
+std::string homepath();
+
 }  // namespace extra
 }  // namespace lms
 

@@ -74,6 +74,8 @@ public:
     void reloadService(std::shared_ptr<ServiceWrapper> service);
 
     bool isDebug() const;
+
+    std::string logObject(std::string const& name, bool isDir);
 private:
     bool exportGraphsHelper(bool isExecOrData);
 
@@ -96,6 +98,9 @@ private:
      * @param s
      */
     void signal(int s);
+
+    static constexpr std::uint32_t MODE = 0775;
+    std::string m_logPath;
 };
 
 }  // namespace internal

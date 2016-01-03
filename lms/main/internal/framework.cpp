@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "lms/internal/backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/time.h"
@@ -90,6 +91,26 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
+        if(arguments.argEnableLoad) {
+            if(arguments.argEnableLoadPath.find('/') == std::string::npos) {
+                // no slashes
+                m_logPath = lms::extra::homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
+            } else {
+                m_logPath = arguments.argEnableLoadPath;
+            }
+
+            if(extra::fileType(m_logPath) != extra::FileType::DIRECTORY) {
+                logger.error() << "Given load path is not a directory: " << m_logPath;
+                return;
+            }
+        } else {
+            m_logPath = lms::extra::homepath() + "/.lmslog";
+            if(arguments.argEnableSave) mkdir(m_logPath.c_str(), MODE);
+
+            m_logPath += "/" + currentTimeString();
+            if(arguments.argEnableSave) mkdir(m_logPath.c_str(), MODE);
+        }
+
         for(auto& service : services) {
             if(m_serviceLoader.load(service.second.get())) {
                 service.second->instance()->initBase(service.second.get(), logging::Level::DEBUG);
@@ -352,6 +373,16 @@ void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
 
 bool Framework::isDebug() const {
     return argumentHandler.argDebug;
+}
+
+std::string Framework::logObject(std::string const& name, bool isDir) {
+    std::string logobj = m_logPath + "/" + name;
+
+    if(isDir) {
+        mkdir(logobj.c_str(), MODE);
+    }
+
+    return isDir ? logobj + "/" : logobj;
 }
 
 }  // namespace internal

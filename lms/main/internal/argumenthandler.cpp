@@ -46,7 +46,7 @@ ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argLoggingThreshold(logging::Level::ALL), argDefinedLoggingThreshold(false),
     argQuiet(false), argUser(""),
     argMultithreaded(false), argThreadsAuto(false), argThreads(1),
-    argDebug(false) {
+    argDebug(false), argEnableLoad(false), argEnableSave(false) {
 
     argUser = lms::extra::username();
 }
@@ -103,6 +103,11 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::SwitchArg debugSwitch("", "debug",
         "Make a ridiculous number of debug outputs",
         cmd, false);
+    TCLAP::ValueArg<std::string> enableLoadArg("", "enable-load",
+        "Enable all loading modules and set a default load path",
+         false, "", "path", cmd);
+    TCLAP::SwitchArg enableSaveSwitch("", "enable-save",
+         "Enable all saving modules", cmd, false);
 
     cmd.parse(argc, argv);
 
@@ -125,6 +130,16 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         }
     }
     argDAG = dagSwitch.getValue();
+    argEnableLoad = enableLoadArg.isSet();
+    argEnableLoadPath = enableLoadArg.getValue();
+    argEnableSave = enableSaveSwitch.getValue();
+
+    if(argEnableLoad) {
+        argFlags.push_back("__load");
+    }
+    if(argEnableSave) {
+        argFlags.push_back("__save");
+    }
 #undef USER_ENV
 }
 

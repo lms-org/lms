@@ -314,6 +314,28 @@ protected:
     Messaging* messaging() const { return m_messaging; }
 
     /**
+     * @brief Return the path to a log file with the given name.
+     *
+     * The file will not be created but its parent directories will be if
+     * --enable-save was given on the command line.
+     *
+     * @param name file name
+     * @return absolute path to a file
+     */
+    std::string logFile(std::string const& name);
+
+    /**
+     * @brief Return the path to a log directory with a given name.
+     *
+     * The directory (and all parent directories) will be created if
+     * --enable-save was given on the command line.
+     *
+     * @param name directory name
+     * @return absolute path to a directory with trailing slash
+     */
+    std::string logDir(std::string const& name);
+
+    /**
      * @brief A logger instance. Can be used in initialize, cycle
      * and deinitialize to log debugging information.
      */

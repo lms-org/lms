@@ -8,7 +8,9 @@
 namespace lms {
 
 /**
- * @brief Generate timestamp string formatted as "YYYYMMDD-HHMMSS".
+ * @brief Generate timestamp string formatted as "YYYY-MM-DDTHH-MM-SSZ",
+ * a modified version of ISO8601 (to avoid the colon character ':')
+ *
  * This string can be used as a filename for logging.
  *
  * @return timestamp string

@@ -56,5 +56,10 @@ FileType fileType(std::string const& path) {
     }
 }
 
+std::string homepath() {
+    const char* home = ::getenv("HOME");
+    return home != nullptr ? home : "";
+}
+
 }  // namespace extra
 }  // namespace lms
