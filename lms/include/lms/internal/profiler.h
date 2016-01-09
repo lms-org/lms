@@ -5,11 +5,15 @@
 #include <mutex>
 #include <fstream>
 #include <unordered_map>
+#include <vector>
+#include <memory>
 
 #include "lms/time.h"
 
 namespace lms {
 namespace internal {
+
+class DebugServer;
 
 /**
  * @brief Collect profiling data and write it to a file.
@@ -33,17 +37,6 @@ public:
     Profiler();
 
     /**
-     * @brief Close the internal file descriptor if previously enabled.
-     */
-    ~Profiler();
-
-    /**
-     * @brief Enables this profiler and write marks to the given file.
-     * @param file path to a file
-     */
-    void enable(const std::string &file);
-
-    /**
      * @brief Mark the begin of a process identified by a label.
      * @param label the same label should be used in markEnd()
      */
@@ -54,20 +47,47 @@ public:
      * @param label the same label that was used in markBegin()
      */
     void markEnd(const std::string &label);
-private:
-    enum Type {
+
+    enum Type : std::uint8_t {
         BEGIN = 0, END, MAPPING
     };
 
+    class ProfilingListener {
+    public:
+        virtual ~ProfilingListener() {}
+        virtual void onMarker(Type type, lms::Time now, std::string const& label) =0;
+    };
+
+    void appendListener(ProfilingListener *listener);
+private:
     void mark(Type type, const std::string& label);
 
-    bool m_enabled;
-    lms::Time m_lastTimestamp;
-    std::mutex m_mutex;
+    std::vector<std::unique_ptr<ProfilingListener>> m_listeners;
+};
+
+class FileProfiler : public Profiler::ProfilingListener {
+public:
+    FileProfiler(std::string const& file);
+    ~FileProfiler();
+
+    void onMarker(Profiler::Type type, lms::Time now, std::string const& label) override;
+private:
     std::ofstream m_stream;
+
+    std::mutex m_mutex;
+    lms::Time m_lastTimestamp;
 
     typedef std::unordered_map<std::string, size_t> MappingType;
     MappingType m_stringMapping;
+};
+
+class DebugServerProfiler : public Profiler::ProfilingListener {
+public:
+    DebugServerProfiler(DebugServer *server);
+
+    void onMarker(Profiler::Type type, lms::Time now, std::string const& label) override;
+private:
+    DebugServer * m_server;
 };
 
 }  // namespace internal

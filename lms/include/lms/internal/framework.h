@@ -11,6 +11,7 @@
 #include "file_monitor.h"
 #include "lms/deprecated.h"
 #include "runtime.h"
+#include "debug_server.h"
 
 namespace lms {
 namespace internal {
@@ -101,6 +102,8 @@ private:
 
     static constexpr std::uint32_t MODE = 0775;
     std::string m_logPath;
+
+    DebugServer m_debugServer;
 };
 
 }  // namespace internal

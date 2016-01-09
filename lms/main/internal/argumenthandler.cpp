@@ -103,6 +103,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::SwitchArg debugSwitch("", "debug",
         "Make a ridiculous number of debug outputs",
         cmd, false);
+    TCLAP::SwitchArg debugServerSwitch("", "debug-server",
+        "Start a local debug server providing logging and profiling data",
+        cmd, false);
     TCLAP::ValueArg<std::string> enableLoadArg("", "enable-load",
         "Enable all loading modules and set a default load path",
          false, "", "path", cmd);
@@ -133,6 +136,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argEnableLoad = enableLoadArg.isSet();
     argEnableLoadPath = enableLoadArg.getValue();
     argEnableSave = enableSaveSwitch.getValue();
+    argEnableDebugServer = debugServerSwitch.getValue();
 
     if(argEnableLoad) {
         argFlags.push_back("__load");

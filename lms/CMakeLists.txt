@@ -74,6 +74,7 @@ set (HEADERS
     "include/lms/any.h"
     "include/lms/internal/file_monitor.h"
     "include/lms/internal/dag.h"
+    "include/lms/internal/debug_server.h"
 
     "include/lms/type/module_config.h"
     "include/lms/module_config.h"
@@ -87,6 +88,7 @@ set (HEADERS
     "include/lms/logging/console_sink.h"
     "include/lms/logging/file_sink.h"
     "include/lms/logging/threshold_filter.h"
+    "include/lms/logging/debug_server_sink.h"
 
     "include/lms/extra/type.h"
     "include/lms/extra/string.h"
@@ -116,6 +118,7 @@ set (SOURCE
     "main/internal/service_wrapper.cpp"
     "main/internal/runtime.cpp"
     "main/internal/file_monitor.cpp"
+    "main/internal/debug_server.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"
@@ -124,6 +127,7 @@ set (SOURCE
     "main/logging/console_sink.cpp"
     "main/logging/file_sink.cpp"
     "main/logging/threshold_filter.cpp"
+    "main/logging/debug_server_sink.cpp"
 
     "main/extra/type.cpp"
     "main/extra/string.cpp"

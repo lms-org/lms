@@ -21,6 +21,7 @@
 #include "lms/definitions.h"
 #include "lms/internal/runtime.h"
 #include "lms/extra/os.h"
+#include "lms/logging/debug_server_sink.h"
 
 namespace lms {
 namespace internal {
@@ -46,9 +47,18 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGINT, this)
             .addListener(SIGSEGV, this);
 
+    if(arguments.argEnableDebugServer) {
+        m_debugServer.useUnixSocket("/tmp/lms.sock");
+        m_debugServer.startThread();
+
+        ctx.appendSink(new logging::DebugServerSink(&m_debugServer));
+
+        m_profiler.appendListener(new DebugServerProfiler(&m_debugServer));
+    }
+
     if(! argumentHandler.argProfilingFile.empty()) {
         logger.info() << "Enable profiling";
-        m_profiler.enable(arguments.argProfilingFile);
+        m_profiler.appendListener(new FileProfiler(arguments.argProfilingFile));
     } else {
         logger.info() << "Disable profiling";
     }

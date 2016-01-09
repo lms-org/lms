@@ -1,18 +1,12 @@
+#include <algorithm>
+
 #include "lms/internal/profiler.h"
+#include "lms/internal/debug_server.h"
 
 namespace lms {
 namespace internal {
 
-Profiler::Profiler() : m_enabled(false),
-    m_lastTimestamp(Time::now())
-{}
-
-Profiler::~Profiler() {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    if(m_stream.is_open()) {
-        m_stream.close();
-    }
-}
+Profiler::Profiler() {}
 
 void Profiler::markBegin(const std::string &label) {
     mark(BEGIN, label);
@@ -23,43 +17,72 @@ void Profiler::markEnd(const std::string &label) {
 }
 
 void Profiler::mark(Type type, const std::string &label) {
-    if(m_enabled) {
-        Time now = Time::now();
+    lms::Time now = lms::Time::now();
 
-        // lock after checking enabled flag and saving the current time
-        std::unique_lock<std::mutex> lock(m_mutex);
-
-        Time diff = now - m_lastTimestamp;
-        m_lastTimestamp = now;
-
-        MappingType::iterator it = m_stringMapping.find(label);
-        size_t id;
-
-        if(it == m_stringMapping.end()) {
-            // id is an ascending value starting with 0
-            id = m_stringMapping.size();
-            // insert new string mapping
-            m_stringMapping[label] = id;
-
-            // write string mapping to file (for later parsing)
-            m_stream << static_cast<int>(MAPPING) << "," << id << ","
-                << label << "\n";
-        } else {
-            // otherwise just take the stored id
-            id = it->second;
-        }
-
-        m_stream << static_cast<int>(type) << "," << id << "," <<
-            diff.micros() << "\n";
+    for(auto & listener : m_listeners) {
+        listener->onMarker(type, now, label);
     }
 }
 
-void Profiler::enable(const std::string &file) {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    if(! m_enabled) {
-        m_stream.open(file);
-        m_enabled = true;
+void Profiler::appendListener(ProfilingListener *listener) {
+    m_listeners.push_back(std::unique_ptr<ProfilingListener>(listener));
+}
+
+FileProfiler::FileProfiler(std::string const& file)
+    : m_lastTimestamp(Time::now()) {
+    m_stream.open(file);
+}
+
+FileProfiler::~FileProfiler() {
+    if(m_stream.is_open()) {
+        m_stream.close();
     }
+}
+
+void FileProfiler::onMarker(Profiler::Type type, Time now, std::string const& label) {
+    // lock after checking enabled flag and saving the current time
+    std::unique_lock<std::mutex> lock(m_mutex);
+
+    Time diff = now - m_lastTimestamp;
+    m_lastTimestamp = now;
+
+    MappingType::iterator it = m_stringMapping.find(label);
+    size_t id;
+
+    if(it == m_stringMapping.end()) {
+        // id is an ascending value starting with 0
+        id = m_stringMapping.size();
+        // insert new string mapping
+        m_stringMapping[label] = id;
+
+        // write string mapping to file (for later parsing)
+        m_stream << static_cast<int>(Profiler::MAPPING) << "," << id << ","
+            << label << "\n";
+    } else {
+        // otherwise just take the stored id
+        id = it->second;
+    }
+
+    m_stream << static_cast<int>(type) << "," << id << "," <<
+        diff.micros() << "\n";
+}
+
+DebugServerProfiler::DebugServerProfiler(DebugServer *server) :
+    m_server(server) {}
+
+void DebugServerProfiler::onMarker(Profiler::Type type, Time now, std::string const& label) {
+    internal::DebugServer::Datagram datagram;
+
+    std::uint8_t labelLen = std::min(label.size(), size_t(std::numeric_limits<std::uint8_t>::max()));
+
+    datagram.data.resize(10 + labelLen);
+    datagram.data[0] = static_cast<std::uint8_t>(type);
+    *reinterpret_cast<int64_t*>(&datagram.data[1]) = htobe64(now.micros());
+    datagram.data[9] = labelLen;
+
+    std::copy(label.begin(), label.begin() + labelLen, &datagram.data[10]);
+
+    m_server->broadcast(static_cast<std::uint8_t>(DebugServer::MessageType::PROFILING), datagram);
 }
 
 }  // namespace internal
