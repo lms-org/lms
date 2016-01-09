@@ -68,6 +68,18 @@ public:
     bool enabledSlowWarning() const;
 
     /**
+     * @brief Compensate too long or too short sleeping.
+     * @return true if enabled
+     */
+    bool enabledCompensate() const;
+
+    /**
+     * @brief Turn on or off sleep compensation.
+     * @param flag true for enable
+     */
+    void enabledCompensate(bool flag);
+
+    /**
      * @brief Should be called directly at the beginning
      * of the main loop's body.
      */
@@ -79,6 +91,7 @@ private:
     Time loopTime;
     bool m_enabledSleep;
     bool m_enabledSlowWarning;
+    bool m_enabledCompensate;
 
     // current status variables
     bool firstIteration;

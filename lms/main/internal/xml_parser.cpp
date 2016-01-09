@@ -224,6 +224,7 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         std::int64_t clockValue = 0;
 
         pugi::xml_attribute sleepAttr = clockNode.attribute("sleep");
+        pugi::xml_attribute compensateAttr = clockNode.attribute("compensate");
         pugi::xml_attribute unitAttr = clockNode.attribute("unit");
         pugi::xml_attribute valueAttr = clockNode.attribute("value");
 
@@ -249,6 +250,12 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         } else {
             clock.enabledSlowWarning(false);
             errorMissingAttr(clockNode, unitAttr);
+        }
+
+        if(compensateAttr) {
+            clock.enabledCompensate(compensateAttr.as_bool());
+        } else {
+            clock.enabledCompensate(false);
         }
 
         if(clockUnit == "hz") {

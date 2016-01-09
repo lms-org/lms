@@ -5,7 +5,8 @@ namespace internal {
 
 Clock::Clock()
     : logger("lms.Clock"), loopTime(Time::ZERO),
-      m_enabledSleep(false), m_enabledSlowWarning(false), firstIteration(true),
+      m_enabledSleep(false), m_enabledSlowWarning(false),
+      m_enabledCompensate(false), firstIteration(true),
       overflowTime(Time::ZERO) {
 }
 
@@ -21,7 +22,7 @@ void Clock::beforeLoopIteration() {
     if(! firstIteration) {
         Time deltaWork = Time::now() - beforeWorkTimestamp;
 
-        if(deltaWork > loopTime && loopTime > lms::Time::ZERO) {
+        if(m_enabledSlowWarning && deltaWork > loopTime && loopTime > lms::Time::ZERO) {
             float ratio = deltaWork.toFloat() / loopTime.toFloat();
             int percentage = int((ratio - 1) * 100);
             logger.warn() << "Cycle was too slow: " << deltaWork << " (+ "
@@ -41,7 +42,9 @@ void Clock::beforeLoopIteration() {
             //logger.info("sleep") << "Computed " << computedSleep << " Actual " << actualSleep;
         }
 
-        overflowTime = (Time::now() - beforeWorkTimestamp) - loopTime;
+        if(m_enabledCompensate) {
+            overflowTime += (Time::now() - beforeWorkTimestamp) - loopTime;
+        }
 
         //logger.info("overflow") << " Overflow " << overflowTime;
     }
@@ -65,6 +68,14 @@ void Clock::enabledSlowWarning(bool flag) {
 
 bool Clock::enabledSlowWarning() const {
     return m_enabledSlowWarning;
+}
+
+bool Clock::enabledCompensate() const {
+    return m_enabledCompensate;
+}
+
+void Clock::enabledCompensate(bool flag) {
+    m_enabledCompensate = flag;
 }
 
 }  // namespace internal
