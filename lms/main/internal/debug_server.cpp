@@ -12,7 +12,10 @@ DebugServer::DebugServer() : m_shutdown(false) {}
 
 DebugServer::~DebugServer() {
     m_shutdown = true;
-    m_thread.join();
+    if(m_thread.joinable()) {
+        // TODO instead of join() in destructor, better use detach()
+        m_thread.join();
+    }
 }
 
 bool DebugServer::useUnixSocket(std::string const& path) {
