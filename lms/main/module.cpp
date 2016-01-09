@@ -78,11 +78,27 @@ namespace lms{
         return true;
     }
 
-    std::string Module::logFile(std::string const& name) {
-        return m_wrapper->runtime()->framework().logObject(name, false);
+    bool Module::isEnableSave() const {
+        return m_wrapper->runtime()->framework().isEnableSave();
     }
 
-    std::string Module::logDir(std::string const& name) {
-        return m_wrapper->runtime()->framework().logObject(name, true);
+    bool Module::isEnableLoad() const {
+        return m_wrapper->runtime()->framework().isEnableLoad();
+    }
+
+    std::string Module::saveLogFile(std::string const& name) {
+        return m_wrapper->runtime()->framework().saveLogObject(name, false);
+    }
+
+    std::string Module::loadLogFile(std::string const& name) {
+        return m_wrapper->runtime()->framework().loadLogObject(name, false);
+    }
+
+    std::string Module::saveLogDir(std::string const& name) {
+        return m_wrapper->runtime()->framework().saveLogObject(name, true);
+    }
+
+    std::string Module::loadLogDir(std::string const& name) {
+        return m_wrapper->runtime()->framework().loadLogObject(name, true);
     }
 }

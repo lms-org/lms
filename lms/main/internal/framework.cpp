@@ -104,21 +104,26 @@ Framework::Framework(const ArgumentHandler &arguments) :
         if(arguments.argEnableLoad) {
             if(arguments.argEnableLoadPath.find('/') == std::string::npos) {
                 // no slashes
-                m_logPath = lms::extra::homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
+                m_loadLogPath = lms::extra::homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
             } else {
-                m_logPath = arguments.argEnableLoadPath;
+                m_loadLogPath = arguments.argEnableLoadPath;
             }
 
-            if(extra::fileType(m_logPath) != extra::FileType::DIRECTORY) {
-                logger.error() << "Given load path is not a directory: " << m_logPath;
+            if(extra::fileType(m_loadLogPath) != extra::FileType::DIRECTORY) {
+                logger.error() << "Given load path is not a directory: " << m_loadLogPath;
                 return;
             }
-        } else {
-            m_logPath = lms::extra::homepath() + "/.lmslog";
-            if(arguments.argEnableSave) mkdir(m_logPath.c_str(), MODE);
 
-            m_logPath += "/" + currentTimeString();
-            if(arguments.argEnableSave) mkdir(m_logPath.c_str(), MODE);
+            logger.info() << "Enable load: " << m_loadLogPath;
+        }
+        if(arguments.argEnableSave) {
+            m_saveLogPath = lms::extra::homepath() + "/.lmslog";
+            mkdir(m_saveLogPath.c_str(), MODE);
+
+            m_saveLogPath += "/" + currentTimeString();
+            mkdir(m_saveLogPath.c_str(), MODE);
+
+            logger.info() << "Enable save: " << m_saveLogPath;
         }
 
         for(auto& service : services) {
@@ -385,14 +390,36 @@ bool Framework::isDebug() const {
     return argumentHandler.argDebug;
 }
 
-std::string Framework::logObject(std::string const& name, bool isDir) {
-    std::string logobj = m_logPath + "/" + name;
+std::string Framework::loadLogObject(std::string const& name, bool isDir) {
+    if(!isEnableLoad()) {
+        throw std::runtime_error("Command line option --enable-load was not specified");
+    }
+
+    std::string logobj = m_loadLogPath + "/" + name;
+
+    return isDir ? logobj + "/" : logobj;
+}
+
+std::string Framework::saveLogObject(std::string const& name, bool isDir) {
+    if(!isEnableSave()) {
+        throw std::runtime_error("Command line option --enable-save was not specified");
+    }
+
+    std::string logobj = m_saveLogPath + "/" + name;
 
     if(isDir) {
         mkdir(logobj.c_str(), MODE);
     }
 
     return isDir ? logobj + "/" : logobj;
+}
+
+bool Framework::isEnableLoad() const {
+    return argumentHandler.argEnableLoad;
+}
+
+bool Framework::isEnableSave() const {
+    return argumentHandler.argEnableSave;
 }
 
 }  // namespace internal

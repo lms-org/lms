@@ -76,7 +76,10 @@ public:
 
     bool isDebug() const;
 
-    std::string logObject(std::string const& name, bool isDir);
+    std::string loadLogObject(std::string const& name, bool isDir);
+    std::string saveLogObject(std::string const& name, bool isDir);
+    bool isEnableLoad() const;
+    bool isEnableSave() const;
 private:
     bool exportGraphsHelper(bool isExecOrData);
 
@@ -101,7 +104,8 @@ private:
     void signal(int s);
 
     static constexpr std::uint32_t MODE = 0775;
-    std::string m_logPath;
+    std::string m_loadLogPath;
+    std::string m_saveLogPath;
 
     DebugServer m_debugServer;
 };
