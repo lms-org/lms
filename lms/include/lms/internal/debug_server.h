@@ -6,6 +6,8 @@
 #include <memory>
 #include <thread>
 
+#include "lms/logger.h"
+
 namespace lms {
 namespace internal {
 
@@ -22,7 +24,13 @@ public:
         LOGGING = 1, PROFILING = 2
     };
 
-    bool useUnixSocket(std::string const& path);
+    bool useUnix(std::string const& path);
+
+    bool useIPv4(uint16_t port);
+
+    bool useIPv6(uint16_t port);
+
+    bool useDualstack(uint16_t port);
 
     void process();
 
@@ -30,6 +38,14 @@ public:
 
     void broadcast(std::uint8_t type, Datagram const& datagram);
 private:
+    void enableReuseAddr(int sock);
+
+    void enableIPv6Only(int sock);
+
+    void startListening(int sock);
+
+    void enableNonBlock(int sock);
+
     struct Client {
         Client() : valid(false), buffer(4096), bufferUsed(0) {}
 
@@ -39,13 +55,15 @@ private:
         size_t bufferUsed;
     };
 
-    int m_sockfd;
+    logging::Logger logger;
+
+    std::vector<int> m_server;
     fd_set m_rfds;
     std::vector<Client> m_clients;
     std::thread m_thread;
     bool m_shutdown;
 
-    void acceptClients();
+    void processServer(int sockfd);
     void processClient(Client & client);
 };
 

@@ -89,6 +89,7 @@ class ArgumentHandler {
     std::string argEnableLoadPath;
     bool argEnableSave;
     bool argEnableDebugServer;
+    std::string argDebugServerBind;
 };
 
 }  // namespace internal

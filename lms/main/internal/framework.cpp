@@ -48,7 +48,11 @@ Framework::Framework(const ArgumentHandler &arguments) :
             .addListener(SIGSEGV, this);
 
     if(arguments.argEnableDebugServer) {
-        m_debugServer.useUnixSocket("/tmp/lms.sock");
+        if(arguments.argDebugServerBind.find('/') == std::string::npos) {
+            m_debugServer.useDualstack(atoi(arguments.argDebugServerBind.c_str()));
+        } else {
+            m_debugServer.useUnix(arguments.argDebugServerBind);
+        }
         m_debugServer.startThread();
 
         ctx.appendSink(new logging::DebugServerSink(&m_debugServer));

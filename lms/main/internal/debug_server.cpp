@@ -4,11 +4,12 @@
 #include <unistd.h>
 #include <thread>
 #include <arpa/inet.h>
+#include <fcntl.h>
 
 namespace lms {
 namespace internal {
 
-DebugServer::DebugServer() : m_shutdown(false) {}
+DebugServer::DebugServer() : logger("DebugServer"), m_shutdown(false) {}
 
 DebugServer::~DebugServer() {
     m_shutdown = true;
@@ -16,15 +17,29 @@ DebugServer::~DebugServer() {
         // TODO instead of join() in destructor, better use detach()
         m_thread.join();
     }
+
+    for(Client const& client : m_clients) {
+        if(close(client.sockfd) == -1) {
+            logger.perror("close");
+        }
+    }
+
+    for(int const& server : m_server) {
+        if(close(server) == -1) {
+            logger.perror("close");
+        }
+    }
 }
 
-bool DebugServer::useUnixSocket(std::string const& path) {
-    struct sockaddr_un addr;
+bool DebugServer::useUnix(std::string const& path) {
+    int sockfd;
 
-    if ( (m_sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-        perror("socket error");
+    if ( (sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+        logger.perror("socket");
         return false;
     }
+
+    struct sockaddr_un addr;
 
     memset(&addr, 0, sizeof(addr));
     addr.sun_family = AF_UNIX;
@@ -32,31 +47,122 @@ bool DebugServer::useUnixSocket(std::string const& path) {
 
     unlink(path.c_str());
 
-    if (bind(m_sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-        perror("bind error");
+    if (bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+        logger.perror("bind");
         return false;
     }
 
-    if (listen(m_sockfd, 5) == -1) {
-        perror("listen error");
-        return false;
-    }
+    startListening(sockfd);
+
+    m_server.push_back(sockfd);
 
     return true;
 }
 
+bool DebugServer::useIPv4(uint16_t port) {
+    int sockfd;
+
+    if( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) {
+        logger.perror("socket");
+        return false;
+    }
+
+    enableReuseAddr(sockfd);
+
+    struct sockaddr_in addr;
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if(bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+        logger.perror("bind");
+        return false;
+    }
+
+    startListening(sockfd);
+
+    m_server.push_back(sockfd);
+
+    return true;
+}
+
+bool DebugServer::useIPv6(uint16_t port) {
+    int sockfd;
+
+    if( (sockfd = socket(AF_INET6, SOCK_STREAM, 0)) == -1 ) {
+        logger.perror("socket");
+        return false;
+    }
+
+    enableIPv6Only(sockfd);
+    enableReuseAddr(sockfd);
+
+    struct sockaddr_in6 addr;
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sin6_flowinfo = 0;
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(port);
+    addr.sin6_addr = in6addr_any;
+
+    if(bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+        logger.perror("bind");
+        return false;
+    }
+
+    startListening(sockfd);
+
+    m_server.push_back(sockfd);
+
+    return true;
+}
+
+bool DebugServer::useDualstack(uint16_t port) {
+    // Note: & instead of && (Call both methods in any case)
+    return useIPv4(port) & useIPv6(port);
+}
+
+void DebugServer::enableReuseAddr(int sock) {
+    int mode = 1;
+    if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &mode, sizeof(mode)) == -1) {
+        logger.perror("setsockopt.SO_REUSEADDR");
+    }
+}
+
+void DebugServer::enableIPv6Only(int sock) {
+    int mode = 1;
+    if(setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, &mode, sizeof(mode)) == -1) {
+        logger.perror("setsockopt.IPV6_V6ONLY");
+    }
+}
+
+void DebugServer::startListening(int sock) {
+    if(listen(sock, 1) == -1) {
+        logger.perror("listen");
+    }
+}
+
+void DebugServer::enableNonBlock(int sock) {
+    int flags = fcntl(sock, F_GETFL);
+    flags |= O_NONBLOCK;
+    fcntl(sock, F_SETFL, flags);
+}
+
 void DebugServer::process() {
     FD_ZERO(&m_rfds);
+    int maxfd = 0;
 
-    FD_SET(m_sockfd, &m_rfds);
-    int maxfd = m_sockfd;
+    for(auto const& server : m_server) {
+        FD_SET(server, &m_rfds);
+        maxfd = std::max(maxfd, server);
+    }
 
     for(Client const& client : m_clients) {
         if(client.valid) {
             FD_SET(client.sockfd, &m_rfds);
-            if(client.sockfd > maxfd) {
-                maxfd = client.sockfd;
-            }
+            maxfd = std::max(maxfd, client.sockfd);
         }
     }
 
@@ -68,13 +174,15 @@ void DebugServer::process() {
     int retval = select(maxfd + 1, &m_rfds, nullptr, nullptr, &timeout);
 
     if(retval == -1) {
-        perror("process");
+        logger.perror("select");
         return;
     }
 
     // new clients tried to connect to this server
-    if(FD_ISSET(m_sockfd, &m_rfds)) {
-        acceptClients();
+    for(auto const& server : m_server) {
+        if(FD_ISSET(server, &m_rfds)) {
+            processServer(server);
+        }
     }
 
     // connected clients sent some data
@@ -85,10 +193,10 @@ void DebugServer::process() {
     }
 }
 
-void DebugServer::acceptClients() {
+void DebugServer::processServer(int server) {
     Client client;
     client.valid = true;
-    client.sockfd = accept(m_sockfd, NULL, NULL);
+    client.sockfd = accept(server, nullptr, nullptr);
 
     if(client.sockfd != -1) {
         m_clients.push_back(client);
@@ -100,7 +208,7 @@ void DebugServer::processClient(Client & client) {
          client.buffer.size() - client.bufferUsed);
 
     if(retval == -1) {
-        perror("processClient");
+        logger.perror("read");
         client.valid = false;
     } else if(retval == 0) {
         // connection closed
