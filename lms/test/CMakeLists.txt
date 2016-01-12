@@ -6,6 +6,7 @@ set(TESTS
     time.cpp
     logging/threshold_filter.cpp
     internal/dag.cpp
+    endian.cpp
 )
 
 if(USE_GOOGLETEST)
