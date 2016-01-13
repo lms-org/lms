@@ -18,6 +18,7 @@
 #include "profiler.h"
 #include "lms/messaging.h"
 #include "dag.h"
+#include "watch_dog.h"
 
 namespace lms {
 namespace internal {
@@ -123,6 +124,8 @@ public:
      */
     bool enabledMultithreading() const;
 
+    WatchDog & dog();
+
     DataManager& getDataManager();
 
     void printCycleList();
@@ -161,6 +164,7 @@ private:
 
     DataManager dataManager;
     Messaging m_messaging;
+    WatchDog m_dog;
 
     int m_cycleCounter;
 

@@ -25,7 +25,8 @@ ExecutionManager::ExecutionManager(Profiler &profiler, Runtime &runtime)
       m_multithreading(false),
       valid(false), dataManager(runtime, *this),
       m_messaging(), m_cycleCounter(-1), running(true),
-      m_profiler(profiler), m_runtime(runtime) {}
+      m_profiler(profiler), m_runtime(runtime) {
+}
 
 ExecutionManager::~ExecutionManager () {
     stopRunning();
@@ -71,17 +72,22 @@ void ExecutionManager::loop() {
 
     if(! m_multithreading) {
         for(Module* mod : sortedCycleList) {
+            m_dog.beginModule(mod->getName());
+
             profiler().markBegin(m_runtimeName + "." + mod->getName());
 
             if(m_runtime.framework().isDebug()) {
                 logger.debug("executeBegin") << mod->getName();
             }
+
             mod->cycle();
             if(m_runtime.framework().isDebug()) {
                 logger.debug("executeEnd") << mod->getName();
             }
 
             profiler().markEnd(m_runtimeName + "." + mod->getName());
+
+            m_dog.endModule();
         }
     }else{
         logger.info() << "Cycle start";
@@ -483,6 +489,10 @@ void ExecutionManager::writeDAG(DotExporter &dot, const std::string &prefix) {
             dot.edge(prefix + "_" + to->getName(), prefix + "_" + from);
         }
     }
+}
+
+WatchDog & ExecutionManager::dog() {
+    return m_dog;
 }
 
 }  // namespace internal

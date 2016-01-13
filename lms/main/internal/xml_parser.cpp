@@ -227,6 +227,7 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         pugi::xml_attribute compensateAttr = clockNode.attribute("compensate");
         pugi::xml_attribute unitAttr = clockNode.attribute("unit");
         pugi::xml_attribute valueAttr = clockNode.attribute("value");
+        pugi::xml_attribute watchDog = clockNode.attribute("watchDog");
 
         clock.enabledSlowWarning(true);
 
@@ -267,6 +268,20 @@ void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
         } else {
             clock.enabledSlowWarning(false);
             errorInvalidAttr(clockNode, unitAttr, "ms/us/hz");
+        }
+
+        if(watchDog) {
+            WatchDog &dog = runtime->executionManager().dog();
+
+            if(clockUnit == "hz") {
+                dog.watch(Time::fromMicros(1000000 / watchDog.as_llong()));
+            } else if(clockUnit == "ms") {
+                dog.watch(Time::fromMillis(watchDog.as_llong()));
+            } else if(clockUnit == "us") {
+                dog.watch(Time::fromMicros(watchDog.as_llong()));
+            } else {
+                errorInvalidAttr(clockNode, watchDog, "ms/us/hz");
+            }
         }
     }
 

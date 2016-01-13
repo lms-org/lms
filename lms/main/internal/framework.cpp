@@ -45,7 +45,8 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     SignalHandler::getInstance()
             .addListener(SIGINT, this)
-            .addListener(SIGSEGV, this);
+            .addListener(SIGSEGV, this)
+            .addListener(SIGUSR1, this);
 
     if(arguments.argEnableDebugServer) {
         if(arguments.argDebugServerBind.find('/') == std::string::npos) {
@@ -269,6 +270,9 @@ void Framework::signal(int s) {
 
         exit(EXIT_FAILURE);
 
+        break;
+    case SIGUSR1:
+        printStacktrace();
         break;
     }
 }
