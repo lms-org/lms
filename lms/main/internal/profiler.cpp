@@ -2,6 +2,7 @@
 
 #include "lms/internal/profiler.h"
 #include "lms/internal/debug_server.h"
+#include "lms/endian.h"
 
 namespace lms {
 namespace internal {
@@ -77,7 +78,7 @@ void DebugServerProfiler::onMarker(Profiler::Type type, Time now, std::string co
 
     datagram.data.resize(10 + labelLen);
     datagram.data[0] = static_cast<std::uint8_t>(type);
-    *reinterpret_cast<int64_t*>(&datagram.data[1]) = htobe64(now.micros());
+    *reinterpret_cast<uint64_t*>(&datagram.data[1]) = Endian::htobe(static_cast<uint64_t>(now.micros()));
     datagram.data[9] = labelLen;
 
     std::copy(label.begin(), label.begin() + labelLen, &datagram.data[10]);

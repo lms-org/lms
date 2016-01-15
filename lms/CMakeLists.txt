@@ -79,6 +79,7 @@ set (HEADERS
 
     "include/lms/type/module_config.h"
     "include/lms/module_config.h"
+    "include/lms/endian.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -121,6 +122,7 @@ set (SOURCE
     "main/internal/file_monitor.cpp"
     "main/internal/debug_server.cpp"
     "main/internal/watch_dog.cpp"
+    "main/endian.cpp"
 
     "main/logging/level.cpp"
     "main/logging/logger.cpp"
