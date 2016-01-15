@@ -15,6 +15,6 @@ TEST(Endian, uint32) {
 
 TEST(Endian, uint64) {
     using lms::Endian;
-    ASSERT_EQ(0xEFBEADDEFECAEDFEu, Endian::letoh(Endian::htobe(0xFEEDCAFEDEADBEEFu)));
-    ASSERT_EQ(0xEFBEADDEFECAEDFEu, Endian::betoh(Endian::htole(0xFEEDCAFEDEADBEEFu)));
+    ASSERT_EQ(0xEFBEADDEFECAEDFEu, Endian::letoh(Endian::htobe(uint64_t(0xFEEDCAFEDEADBEEFu))));
+    ASSERT_EQ(0xEFBEADDEFECAEDFEu, Endian::betoh(Endian::htole(uint64_t(0xFEEDCAFEDEADBEEFu))));
 }
