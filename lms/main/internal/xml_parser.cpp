@@ -372,6 +372,7 @@ void XmlParser::parseModules(pugi::xml_node node,
     }
 
     // parse all channel mappings
+    // TODO This now deprecated in favor for channelHint
     for(pugi::xml_node mappingNode : node.children("channelMapping")) {
         pugi::xml_attribute fromAttr = mappingNode.attribute("from");
         pugi::xml_attribute toAttr = mappingNode.attribute("to");
@@ -391,6 +392,26 @@ void XmlParser::parseModules(pugi::xml_node node,
             if(priorityAttr) {
                 module->channelPriorities[toAttr.value()] = priorityAttr.as_int();
             }
+        }
+    }
+
+    for(pugi::xml_node channelNode : node.children("channelHint")) {
+        pugi::xml_attribute nameAttr = channelNode.attribute("name");
+        pugi::xml_attribute mapToAttr = channelNode.attribute("mapTo");
+        pugi::xml_attribute priorityAttr = channelNode.attribute("priority");
+
+        if(! nameAttr) {
+            errorMissingAttr(channelNode, nameAttr);
+            continue;
+        }
+
+        if(mapToAttr) {
+            module->channelMapping[nameAttr.value()] = mapToAttr.value();
+        }
+
+        if(priorityAttr) {
+            std::string mapTo = mapToAttr ? mapToAttr.value() : nameAttr.value();
+            module->channelPriorities[mapTo] = priorityAttr.as_int();
         }
     }
 
