@@ -24,4 +24,8 @@ size_t Service::hashCode() const {
     return typeid(this).hash_code();
 }
 
+void Service::logLevelChanged(logging::Level level) {
+    logger.threshold = level;
+}
+
 }  // namespace lms

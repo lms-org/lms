@@ -64,6 +64,8 @@ public:
      * @brief TODO This method is currently not rather useful.
      */
     size_t hashCode() const;
+
+    void logLevelChanged(logging::Level level);
 protected:
     /**
      * @brief Return a read-only config of the given name.
