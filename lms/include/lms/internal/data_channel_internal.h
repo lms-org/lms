@@ -27,6 +27,7 @@ struct ObjectBase {
      * @return inhertiance*
      */
     virtual Inheritance* getInheritance() = 0;
+    virtual Serializable* getSerializable()=0;
     virtual std::string typeName() const =0;
     virtual size_t hashCode() const =0;
     virtual bool isSerializable() const =0;
@@ -89,6 +90,9 @@ struct FakeObject: public ObjectBase{
     Inheritance* getInheritance() override {
         return nullptr;
     }
+    Serializable* getSerializable() override{
+        return nullptr;
+    }
 
     std::string typeName() const override {
         return extra::typeName<T>();
@@ -117,21 +121,22 @@ template<typename T>
 struct Object : public FakeObject<T> {
     T value;
 
-    template <typename A, bool suppInher>
+    //TODO rename InheritanceCaller :)
+    template <typename A, typename B, bool suppInher>
     struct InheritanceCallerGet;
 
-    template <typename A>
-    struct InheritanceCallerGet<A, false> {
-        static Inheritance* call(Object<A> *obj) {
+    template <typename A, typename B>
+    struct InheritanceCallerGet<A,B, false> {
+        static B* call(Object<A> *obj) {
             (void)obj;
             return nullptr;
         }
     };
 
-    template <typename A>
-    struct InheritanceCallerGet<A, true> {
-        static Inheritance* call (Object<A> *obj) {
-            return static_cast<Inheritance*>(&obj->value);
+    template <typename A, typename B>
+    struct InheritanceCallerGet<A,B, true> {
+        static B* call (Object<A> *obj) {
+            return static_cast<B*>(&obj->value);
         }
     };
 
@@ -140,7 +145,11 @@ struct Object : public FakeObject<T> {
     }
 
     Inheritance *getInheritance() override{
-        return InheritanceCallerGet<T,std::is_base_of<Inheritance,T>::value>::call(this);
+        return InheritanceCallerGet<T,Inheritance,std::is_base_of<Inheritance,T>::value>::call(this);
+    }
+
+    Serializable* getSerializable() override{
+        return InheritanceCallerGet<T,Serializable,std::is_base_of<Serializable,T>::value>::call(this);
     }
 };
 

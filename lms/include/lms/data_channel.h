@@ -45,7 +45,7 @@ public:
         // flag of data channels, but that is not necessarily faster or better
 
         if(m_internal->main && m_internal->main->isSerializable()) {
-            const Serializable *data = static_cast<Serializable*>(m_internal->main->get());
+            const Serializable *data = m_internal->main->getSerializable();
             data->lmsSerialize(os);
             return true;
         } else {
@@ -173,7 +173,7 @@ public:
 
     bool deserialize(std::istream &is) {
         if(this->m_internal->main && this->m_internal->main->isSerializable()) {
-            Serializable *data = static_cast<Serializable*>(this->m_internal->main->get());
+            Serializable *data = this->m_internal->main->getSerializable();
             data->lmsDeserialize(is);
             return true;
         } else {
