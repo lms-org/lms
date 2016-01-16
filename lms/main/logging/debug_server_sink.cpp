@@ -1,6 +1,7 @@
 #include "lms/logging/debug_server_sink.h"
 #include "lms/logging/event.h"
 #include <limits>
+#include <algorithm>
 
 namespace lms {
 namespace logging {
@@ -12,27 +13,23 @@ void DebugServerSink::sink(const Event &message) {
     constexpr std::uint8_t MAX_LEN = std::numeric_limits<std::uint8_t>::max();
 
     std::string text = message.messageText();
-    if(text.size() > MAX_LEN) {
-        text = text.substr(0, MAX_LEN);
-    }
-
     std::string tag = message.tag;
-    if(tag.size() > MAX_LEN) {
-        tag = tag.substr(0, MAX_LEN);
-    }
 
-    internal::DebugServer::Datagram datagram;
+    uint8_t tagLen = std::min(size_t(MAX_LEN), tag.size());
+    uint8_t textLen = std::min(size_t(MAX_LEN), text.size());
 
     // Format: Level + Tag Size + Tag + Message Size + Message
-    datagram.data.resize(3 + tag.size() + text.size());
+    uint32_t len = 3 + tagLen + textLen;
 
-    datagram.data[0] = static_cast<std::uint8_t>(message.level);
-    datagram.data[1] = tag.size();
-    datagram.data[2] = text.size();
-    std::copy(tag.begin(), tag.end(), &datagram.data[3]);
-    std::copy(text.begin(), text.end(), &datagram.data[3 + tag.size()]);
+    internal::DebugServer::Datagram datagram(internal::DebugServer::MessageType::LOGGING, len);
 
-    m_server->broadcast(static_cast<std::uint8_t>(internal::DebugServer::MessageType::LOGGING), datagram);
+    datagram.data()[0] = static_cast<std::uint8_t>(message.level);
+    datagram.data()[1] = tagLen;
+    datagram.data()[2] = textLen;
+    std::copy(tag.begin(), tag.begin() + tagLen, &datagram.data()[3]);
+    std::copy(text.begin(), text.begin() + textLen, &datagram.data()[3 + tagLen]);
+
+    m_server->broadcast(datagram);
 }
 
 }  // namespace logging

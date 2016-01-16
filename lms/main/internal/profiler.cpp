@@ -72,18 +72,17 @@ DebugServerProfiler::DebugServerProfiler(DebugServer *server) :
     m_server(server) {}
 
 void DebugServerProfiler::onMarker(Profiler::Type type, Time now, std::string const& label) {
-    internal::DebugServer::Datagram datagram;
-
     std::uint8_t labelLen = std::min(label.size(), size_t(std::numeric_limits<std::uint8_t>::max()));
 
-    datagram.data.resize(10 + labelLen);
-    datagram.data[0] = static_cast<std::uint8_t>(type);
-    *reinterpret_cast<uint64_t*>(&datagram.data[1]) = Endian::htobe(static_cast<uint64_t>(now.micros()));
-    datagram.data[9] = labelLen;
+    internal::DebugServer::Datagram datagram(DebugServer::MessageType::PROFILING, 10 + labelLen);
 
-    std::copy(label.begin(), label.begin() + labelLen, &datagram.data[10]);
+    datagram.data()[0] = static_cast<std::uint8_t>(type);
+    *reinterpret_cast<uint64_t*>(&datagram.data()[1]) = Endian::htobe(static_cast<uint64_t>(now.micros()));
+    datagram.data()[9] = labelLen;
 
-    m_server->broadcast(static_cast<std::uint8_t>(DebugServer::MessageType::PROFILING), datagram);
+    std::copy(label.begin(), label.begin() + labelLen, &datagram.data()[10]);
+
+    m_server->broadcast(datagram);
 }
 
 }  // namespace internal
