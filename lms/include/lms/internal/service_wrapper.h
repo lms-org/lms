@@ -24,6 +24,9 @@ public:
     std::string libname() const;
     void libname(std::string const& libname);
 
+    void defaultLogLevel(logging::Level level);
+    logging::Level defaultLogLevel() const;
+
     Framework* framework();
     Service* instance();
     void instance(Service *service);
@@ -40,6 +43,7 @@ private:
     std::map<std::string, Config> m_configs;
     std::unique_ptr<Service> m_service;
     std::string m_libname;
+    logging::Level m_defaultLevel;
 
     std::mutex m_mutex;
 };

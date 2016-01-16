@@ -3,7 +3,8 @@
 namespace lms {
 namespace internal {
 
-ServiceWrapper::ServiceWrapper(Framework *framework) : m_framework(framework) {
+ServiceWrapper::ServiceWrapper(Framework *framework) : m_framework(framework),
+                                                       m_defaultLevel(logging::Level::ALL) {
 }
 
 std::string ServiceWrapper::name() const {
@@ -54,6 +55,19 @@ void ServiceWrapper::update(ServiceWrapper && other) {
     for(auto&& entry : other.m_configs) {
         this->m_configs[entry.first] = entry.second;
     }
+
+    this->m_defaultLevel = other.m_defaultLevel;
+    if(m_service) {
+        m_service->logLevelChanged(other.m_defaultLevel);
+    }
+}
+
+void ServiceWrapper::defaultLogLevel(logging::Level level) {
+    m_defaultLevel = level;
+}
+
+logging::Level ServiceWrapper::defaultLogLevel() const {
+    return m_defaultLevel;
 }
 
 }  // namespace internal

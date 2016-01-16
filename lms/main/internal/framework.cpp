@@ -133,7 +133,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
         for(auto& service : services) {
             if(m_serviceLoader.load(service.second.get())) {
-                service.second->instance()->initBase(service.second.get(), logging::Level::DEBUG);
+                service.second->instance()->initBase(service.second.get(), service.second->defaultLogLevel());
 
                 if(! service.second->instance()->init()) {
                     logger.error() << "Library " << service.first << " failed to init()";

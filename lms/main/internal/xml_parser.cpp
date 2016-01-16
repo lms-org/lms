@@ -520,6 +520,13 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
         }
     }
 
+    pugi::xml_node logLevelNode = node.child("logLevel");
+    logging::Level  defaultLevel = logging::Level::ALL;
+    if(logLevelNode) {
+        logging::levelFromName(logLevelNode.child_value(), defaultLevel);
+    }
+    service->defaultLogLevel(defaultLevel);
+
     if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
         m_runtime->framework().installService(service);
     } else {
