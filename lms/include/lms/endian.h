@@ -2,6 +2,7 @@
 #define LMS_ENDIAN_H
 
 #include <cstdint>
+#include <type_traits>
 
 namespace lms {
 
@@ -16,28 +17,60 @@ public:
     Endian() = delete;
 
     /**
-     * @brief Convert host order to big endian.
+     * @brief Convert unsigned integers from host order to big endian.
      */
     template<typename T>
-    static inline T htobe(T x);
+    static inline typename std::enable_if<std::is_unsigned<T>::value, T>::type htobe(T x);
 
     /**
-     * @brief Convert host order to little endian.
+     * @brief Convert signed integers from host order to big endian.
      */
     template<typename T>
-    static inline T htole(T x);
+    static inline typename std::enable_if<std::is_signed<T>::value, T>::type htobe(T x) {
+        return static_cast<T>(htobe(static_cast<typename std::make_unsigned<T>::type>(x)));
+    }
 
     /**
-     * @brief Convert big endian to host order.
+     * @brief Convert unsigned integers from host order to little endian.
      */
     template<typename T>
-    static inline T betoh(T x);
+    static inline typename std::enable_if<std::is_unsigned<T>::value, T>::type htole(T x);
 
     /**
-     * @brief Convert little endian to host order.
+     * @brief Convert signed integers from host order to little endian.
      */
     template<typename T>
-    static inline T letoh(T x);
+    static inline typename std::enable_if<std::is_signed<T>::value, T>::type htole(T x) {
+        return static_cast<T>(htole(static_cast<typename std::make_unsigned<T>::type>(x)));
+    }
+
+    /**
+     * @brief Convert unsigned integers from big endian to host order.
+     */
+    template<typename T>
+    static inline typename std::enable_if<std::is_unsigned<T>::value, T>::type betoh(T x);
+
+    /**
+     * @brief Convert signed integers from big endian to host order.
+     */
+    template<typename T>
+    static inline typename std::enable_if<std::is_signed<T>::value, T>::type betoh(T x) {
+        return static_cast<T>(betoh(static_cast<typename std::make_unsigned<T>::type>(x)));
+    }
+
+    /**
+     * @brief Convert unsigned integers from little endian to host order.
+     */
+    template<typename T>
+    static inline typename std::enable_if<std::is_unsigned<T>::value, T>::type letoh(T x);
+
+    /**
+     * @brief Convert signed integers from little endian to host order.
+     */
+    template<typename T>
+    static inline typename std::enable_if<std::is_signed<T>::value, T>::type letoh(T x) {
+        return static_cast<T>(letoh(static_cast<typename std::make_unsigned<T>::type>(x)));
+    }
 };
 
 template<> uint16_t Endian::htobe<uint16_t>(uint16_t x);
