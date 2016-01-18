@@ -234,7 +234,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
 Framework::~Framework() {
     for(auto& service : services) {
-        if(service.second->instance() != nullptr) {
+        if(service.second && service.second->instance() != nullptr) {
             service.second->instance()->destroy();
         }
     }
