@@ -135,8 +135,13 @@ Framework::Framework(const ArgumentHandler &arguments) :
             if(m_serviceLoader.load(service.second.get())) {
                 service.second->instance()->initBase(service.second.get(), service.second->defaultLogLevel());
 
-                if(! service.second->instance()->init()) {
-                    logger.error() << "Library " << service.first << " failed to init()";
+                try {
+                    if(! service.second->instance()->init()) {
+                        logger.error() << "Library " << service.first << " failed to init()";
+                        return;
+                    }
+                } catch(std::exception const& ex) {
+                    logger.error() << "Library " << service.first << " threw exception: " << ex.what();
                     return;
                 }
             } else {
@@ -235,7 +240,11 @@ Framework::Framework(const ArgumentHandler &arguments) :
 Framework::~Framework() {
     for(auto& service : services) {
         if(service.second && service.second->instance() != nullptr) {
-            service.second->instance()->destroy();
+            try {
+                service.second->instance()->destroy();
+            } catch(std::exception const& ex) {
+                logger.error() << "Service " << service.first << " threw exception: " << ex.what();
+            }
         }
     }
 
