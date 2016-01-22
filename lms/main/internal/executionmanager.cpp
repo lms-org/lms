@@ -80,7 +80,12 @@ void ExecutionManager::loop() {
                 logger.debug("executeBegin") << mod->getName();
             }
 
-            mod->cycle();
+            try {
+                mod->cycle();
+            } catch(std::exception const& ex) {
+                logger.error("cycle") << "Module " << mod->getName() << " threw exception: " << ex.what();
+            }
+
             if(m_runtime.framework().isDebug()) {
                 logger.debug("executeEnd") << mod->getName();
             }
@@ -166,7 +171,11 @@ void ExecutionManager::threadFunction(int threadNum) {
             // now we can execute it
             lck.unlock();
             profiler().markBegin(m_runtimeName + "." + executableModule->getName());
-            executableModule->cycle();
+            try {
+                executableModule->cycle();
+            } catch(std::exception const& ex) {
+                logger.error("cycle") << "Module " << executableModule->getName() << " threw exception: " << ex.what();
+            }
             profiler().markEnd(m_runtimeName + "." + executableModule->getName());
             lck.lock();
 
@@ -279,8 +288,13 @@ bool ExecutionManager::enableModule(const std::string &name, lms::logging::Level
     Module *module = mod->instance();
     module->initializeBase(mod,minLogLevel);
 
-    if (! module->initialize()) {
-        logger.error("enableModule") << "Module " << name << " failed to init()";
+    try {
+        if (! module->initialize()) {
+            logger.error("enableModule") << "Module " << name << " failed to init()";
+            return false;
+        }
+    } catch(std::exception const& ex) {
+        logger.error("enableModule") << "Module " << name << " threw exception: " << ex.what();
         return false;
     }
 
@@ -303,9 +317,9 @@ bool ExecutionManager::disableModule(const std::string &name) {
             logger.error("disableModule")
             << "Deinitialize failed for module " << name;
         }
-    } catch(std::exception &e) {
+    } catch(std::exception const& ex) {
         logger.error("disableModule") << "Module " << name << " threw exception: "
-            << e.what();
+            << ex.what();
         return false;
     }
 
