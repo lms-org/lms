@@ -83,7 +83,8 @@ void ExecutionManager::loop() {
             try {
                 mod->cycle();
             } catch(std::exception const& ex) {
-                logger.error("cycle") << "Module " << mod->getName() << " threw exception: " << ex.what();
+                logger.error("cycle") << mod->getName() << " throws " << extra::typeName(ex)
+                                      << " : " << ex.what();
             }
 
             if(m_runtime.framework().isDebug()) {
@@ -174,7 +175,8 @@ void ExecutionManager::threadFunction(int threadNum) {
             try {
                 executableModule->cycle();
             } catch(std::exception const& ex) {
-                logger.error("cycle") << "Module " << executableModule->getName() << " threw exception: " << ex.what();
+                logger.error("cycle") << executableModule->getName() << " throws "
+                                      << extra::typeName(ex) << " : " << ex.what();
             }
             profiler().markEnd(m_runtimeName + "." + executableModule->getName());
             lck.lock();
@@ -294,7 +296,7 @@ bool ExecutionManager::enableModule(const std::string &name, lms::logging::Level
             return false;
         }
     } catch(std::exception const& ex) {
-        logger.error("enableModule") << "Module " << name << " threw exception: " << ex.what();
+        logger.error("enableModule") << name << " throws " << extra::typeName(ex) <<  " : " << ex.what();
         return false;
     }
 
@@ -318,7 +320,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
             << "Deinitialize failed for module " << name;
         }
     } catch(std::exception const& ex) {
-        logger.error("disableModule") << "Module " << name << " threw exception: "
+        logger.error("disableModule") << name << " throws " << extra::typeName(ex) << " : "
             << ex.what();
         return false;
     }

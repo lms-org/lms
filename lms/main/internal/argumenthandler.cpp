@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "lms/internal/argumenthandler.h"
 #include "lms/extra/os.h"
@@ -49,6 +50,14 @@ ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argDebug(false), argEnableLoad(false), argEnableSave(false) {
 
     argUser = lms::extra::username();
+}
+
+std::string ArgumentHandler::slug(std::string const& tag) {
+    std::string res(tag);
+    std::replace(res.begin(), res.end(), ' ', '-');
+    std::replace(res.begin(), res.end(), '/', '-');
+    std::replace(res.begin(), res.end(), '\\', '-');
+    return res;
 }
 
 void ArgumentHandler::parseArguments(int argc, char* const*argv) {
@@ -111,6 +120,9 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
          false, "", "path", cmd);
     TCLAP::SwitchArg enableSaveSwitch("", "enable-save",
          "Enable all saving modules", cmd, false);
+    TCLAP::ValueArg<std::string> enableSaveTag("", "enable-save-tag",
+         "Enable all saving modules and mark the save folder",
+         false, "", "tag", cmd);
 
     cmd.parse(argc, argv);
 
@@ -135,9 +147,11 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argDAG = dagSwitch.getValue();
     argEnableLoad = enableLoadArg.isSet();
     argEnableLoadPath = enableLoadArg.getValue();
-    argEnableSave = enableSaveSwitch.getValue();
+    argEnableSave = enableSaveSwitch.getValue() || enableSaveTag.isSet();
     argEnableDebugServer = debugServerArg.isSet();
     argDebugServerBind = debugServerArg.getValue();
+
+    argEnableSaveTag = slug(enableSaveTag.getValue());
 
     if(argEnableLoad) {
         argFlags.push_back("__load");

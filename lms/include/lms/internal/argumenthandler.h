@@ -88,8 +88,11 @@ class ArgumentHandler {
     bool argEnableLoad;
     std::string argEnableLoadPath;
     bool argEnableSave;
+    std::string argEnableSaveTag;
     bool argEnableDebugServer;
     std::string argDebugServerBind;
+private:
+    std::string slug(std::string const& tag);
 };
 
 }  // namespace internal

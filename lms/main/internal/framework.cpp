@@ -126,6 +126,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
             mkdir(m_saveLogPath.c_str(), MODE);
 
             m_saveLogPath += "/" + currentTimeString();
+            if(! arguments.argEnableSaveTag.empty()) {
+                m_saveLogPath += "-" + arguments.argEnableSaveTag;
+            }
             mkdir(m_saveLogPath.c_str(), MODE);
 
             logger.info() << "Enable save: " << m_saveLogPath;
@@ -141,7 +144,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
                         return;
                     }
                 } catch(std::exception const& ex) {
-                    logger.error() << "Library " << service.first << " threw exception: " << ex.what();
+                    logger.error() << service.first << " throws " << extra::typeName(ex) << " : " << ex.what();
                     return;
                 }
             } else {
@@ -243,7 +246,7 @@ Framework::~Framework() {
             try {
                 service.second->instance()->destroy();
             } catch(std::exception const& ex) {
-                logger.error() << "Service " << service.first << " threw exception: " << ex.what();
+                logger.error() << service.first << " throws " << extra::typeName(ex) << " : " << ex.what();
             }
         }
     }
