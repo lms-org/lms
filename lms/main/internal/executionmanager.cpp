@@ -96,7 +96,9 @@ void ExecutionManager::loop() {
             m_dog.endModule();
         }
     }else{
-        logger.info() << "Cycle start";
+        if(m_runtime.framework().isDebug()) {
+            logger.info() << "Cycle start";
+        }
 
         // if thread pool is not yet initialized then do it now
         if(threadPool.empty()) {
@@ -127,7 +129,9 @@ void ExecutionManager::loop() {
             threadFunction(0);
         }
 
-        logger.info() << "Cycle end";
+        if(m_runtime.framework().isDebug()) {
+            logger.info() << "Cycle end";
+        }
     }
 }
 
