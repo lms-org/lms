@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <iostream>
 #include <ratio>
+#include "unit.h"
+#include "config.h"
 
 namespace lms {
 
@@ -192,6 +194,9 @@ private:
  * in micro seconds.
  */
 std::ostream& operator <<(std::ostream &stream, const Time &t);
+
+template<>
+bool parse<Time>(const std::string &src, Time &dst);
 
 }  // namespace lms
 

@@ -1,4 +1,5 @@
 #include <iostream> // only for "Not Implemented" messages
+#include <map>
 
 #ifdef _WIN32
 #elif __APPLE__
@@ -11,6 +12,7 @@
 #endif
 
 #include "lms/time.h"
+#include "lms/extra/string.h"
 
 namespace lms {
 
@@ -188,6 +190,16 @@ bool Time::operator !=(const Time &t) const {
 std::ostream& operator <<(std::ostream &stream, const Time &t) {
     stream << t.micros() << " us";
     return stream;
+}
+
+template<>
+bool parse<Time>(const std::string &src, Time &dst) {
+    std::map<std::string, float> units;
+    units["s"] = 1000000.f;
+    units["ms"] = 1000.f;
+    units["us"] = 1.f;
+    dst = lms::Time::fromMicros(parseUnitHelper(src, units));
+    return true;
 }
 
 }  // namespace lms
