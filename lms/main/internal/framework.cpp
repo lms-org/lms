@@ -343,6 +343,21 @@ bool Framework::exportGraphsHelper(bool isExecOrData) {
         logger.error() << "Are you using gnome?";
         return false;
     }
+#elif __APPLE__
+    std::string dotCall = "dot -Tpng " + gvPath + " -o " + outPath;
+    std::string openCall = "open " + outPath;
+
+    if(0 != system(dotCall.c_str())) {
+        logger.error() << "Failed to execute " << dotCall;
+        logger.error() << "Check for file permissions and graphviz package";
+        return false;
+    }
+
+    if(0 != system(openCall.c_str())) {
+        logger.error() << "Failed to execute " << openCall;
+        logger.error() << "Are you using gnome?";
+        return false;
+    }
 #else
     logger.info() << "dot -Tpng " << gvPath << " > " << outPath;
     logger.info() << "xdg-open " << outPath;
