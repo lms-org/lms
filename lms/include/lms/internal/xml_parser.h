@@ -131,7 +131,7 @@ public:
     /**
      * @brief parseConfig parses the framework-config
      */
-    void parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig);
+    void parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig, std::string const& configPath);
 
     std::unique_ptr<logging::ThresholdFilter> filter();
 private:

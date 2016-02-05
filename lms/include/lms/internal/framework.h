@@ -80,6 +80,7 @@ public:
     std::string saveLogObject(std::string const& name, bool isDir);
     bool isEnableLoad() const;
     bool isEnableSave() const;
+    std::string loadPath() const;
 private:
     bool exportGraphsHelper(bool isExecOrData);
 
@@ -96,6 +97,8 @@ private:
 
     std::map<std::string, std::unique_ptr<Runtime>> runtimes;
     std::map<std::string, std::shared_ptr<ServiceWrapper>> services;
+
+    std::string configPath;
 
     /**
      * @brief signal called by the system (Segfaults etc)

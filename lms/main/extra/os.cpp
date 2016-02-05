@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <dirent.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+#include <iostream>
+#include <fstream>
 
 #include "lms/extra/os.h"
 
@@ -59,6 +59,31 @@ FileType fileType(std::string const& path) {
 std::string homepath() {
     const char* home = ::getenv("HOME");
     return home != nullptr ? home : "";
+}
+
+void copyTree(std::string const& from, std::string const& to) {
+    switch(fileType(from)) {
+    case FileType::REGULAR_FILE:
+    {
+        std::ifstream source(from, std::ios::binary);
+        std::ofstream dest(to, std::ios::binary);
+        dest << source.rdbuf();
+        break;
+    }
+    case FileType::DIRECTORY:
+    {
+        mkdir(to.c_str(), 0775);
+        std::vector<std::string> children;
+        listDir(from, children);
+        for(auto const& child : children) {
+            copyTree(from + "/" + child, to + "/" + child);
+        }
+        break;
+    }
+    default:
+        // ignore
+        break;
+    }
 }
 
 }  // namespace extra

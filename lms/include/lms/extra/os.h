@@ -45,6 +45,11 @@ FileType fileType(std::string const& path);
  */
 std::string homepath();
 
+/**
+ * @brief Copy a complete folder structure to another location
+ */
+void copyTree(std::string const& from, std::string const& to);
+
 }  // namespace extra
 }  // namespace lms
 

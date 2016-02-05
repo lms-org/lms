@@ -72,6 +72,48 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
     std::unique_ptr<logging::ThresholdFilter> filter;
 
+    if(arguments.argEnableLoad) {
+        if(arguments.argEnableLoadPath.find('/') == std::string::npos) {
+            // no slashes
+            m_loadLogPath = lms::extra::homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
+        } else {
+            m_loadLogPath = arguments.argEnableLoadPath;
+        }
+
+        if(extra::fileType(m_loadLogPath) != extra::FileType::DIRECTORY) {
+            logger.error() << "Given load path is not a directory: " << m_loadLogPath;
+            return;
+        }
+
+        logger.info() << "Enable load: " << m_loadLogPath;
+    }
+
+    const char *lms_config_path = std::getenv("LMS_CONFIG_PATH");
+    if(isEnableLoad()) {
+        configPath = loadPath() + "/configs";
+    } else if(lms_config_path != nullptr && lms_config_path[0] != '\0') {
+        // use LMS_CONFIG_PATH from environment
+        configPath = lms_config_path;
+    } else {
+        // Fallback to built-in config path
+        configPath = LMS_CONFIGS;
+    }
+
+    if(arguments.argEnableSave) {
+        m_saveLogPath = lms::extra::homepath() + "/.lmslog";
+        mkdir(m_saveLogPath.c_str(), MODE);
+
+        m_saveLogPath += "/" + currentTimeString();
+        if(! arguments.argEnableSaveTag.empty()) {
+            m_saveLogPath += "-" + arguments.argEnableSaveTag;
+        }
+        mkdir(m_saveLogPath.c_str(), MODE);
+
+        lms::extra::copyTree(configPath, m_saveLogPath + "/configs");
+
+        logger.info() << "Enable save: " << m_saveLogPath;
+    }
+
 #ifndef LMS_STANDALONE
     m_serviceLoader.addModulePath(LMS_SERVICES, 0);
 #endif
@@ -87,7 +129,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
         registerRuntime(rt);
 
         XmlParser parser(*this, rt, arguments);
-        parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration);
+        parser.parseConfig(XmlParser::LoadConfigFlag::LOAD_EVERYTHING, arguments.argLoadConfiguration, configPath);
 
         for(const auto& rt : runtimes) {
             logger.info("registerRuntime") << rt.first << " " <<
@@ -106,34 +148,6 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argRunLevel >= RunLevel::ENABLE) {
-        if(arguments.argEnableLoad) {
-            if(arguments.argEnableLoadPath.find('/') == std::string::npos) {
-                // no slashes
-                m_loadLogPath = lms::extra::homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
-            } else {
-                m_loadLogPath = arguments.argEnableLoadPath;
-            }
-
-            if(extra::fileType(m_loadLogPath) != extra::FileType::DIRECTORY) {
-                logger.error() << "Given load path is not a directory: " << m_loadLogPath;
-                return;
-            }
-
-            logger.info() << "Enable load: " << m_loadLogPath;
-        }
-        if(arguments.argEnableSave) {
-            m_saveLogPath = lms::extra::homepath() + "/.lmslog";
-            mkdir(m_saveLogPath.c_str(), MODE);
-
-            m_saveLogPath += "/" + currentTimeString();
-            if(! arguments.argEnableSaveTag.empty()) {
-                m_saveLogPath += "-" + arguments.argEnableSaveTag;
-            }
-            mkdir(m_saveLogPath.c_str(), MODE);
-
-            logger.info() << "Enable save: " << m_saveLogPath;
-        }
-
         for(auto& service : services) {
             if(m_serviceLoader.load(service.second.get())) {
                 service.second->instance()->initBase(service.second.get(), service.second->defaultLogLevel());
@@ -214,7 +228,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
                 configMonitor.unwatchAll();
                 XmlParser parser(*this, getRuntimeByName("default"), arguments);
                 parser.parseConfig(XmlParser::LoadConfigFlag::ONLY_MODULE_CONFIG,
-                                   arguments.argLoadConfiguration);
+                                   arguments.argLoadConfiguration, configPath);
 
                 for(auto error : parser.errors()) {
                     logger.error() << error;
@@ -423,6 +437,10 @@ void Framework::reloadService(std::shared_ptr<ServiceWrapper> service) {
 
 bool Framework::isDebug() const {
     return argumentHandler.argDebug;
+}
+
+std::string Framework::loadPath() const {
+    return m_loadLogPath;
 }
 
 std::string Framework::loadLogObject(std::string const& name, bool isDir) {
