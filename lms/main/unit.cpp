@@ -47,19 +47,21 @@ float Angle::toDeg() const {
 
 template<>
 bool parse<Distance>(const std::string &src, Distance &dst) {
-    std::map<std::string, float> units;
-    units["m"] = 1.f;
-    units["cm"] = 0.01f;
-    units["mm"] = 0.001f;
+    const std::map<std::string, float> units {
+        {"m", 1.f},
+        {"cm", 0.01f},
+        {"mm", 0.001f}
+    };
     dst = Distance(parseUnitHelper(src, units));
     return true;
 }
 
 template<>
 bool parse<Angle>(const std::string &src, Angle &dst) {
-    std::map<std::string, float> units;
-    units["rad"] = 1.f;
-    units["deg"] = M_PI / 180;
+    const std::map<std::string, float> units {
+        {"rad", 1.f},
+        {"deg", M_PI / 180}
+    };
     dst = Angle(parseUnitHelper(src, units));
     return true;
 }

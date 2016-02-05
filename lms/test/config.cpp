@@ -1,7 +1,9 @@
 #include <sstream>
 #include <vector>
+#include <cmath>
 
 #include "lms/config.h"
+#include "lms/time.h"
 #include "gtest/gtest.h"
 
 class ConfigTest : public ::testing::Test {
@@ -20,6 +22,9 @@ protected:
         "users = Ben, Charles, David\\\n"
         "\n"
         "speed = 7.52\n"
+        "duration=12s 10ms\n"
+        "dist=12cm -3mm\n"
+        "angle=180deg"
         );
 
         config.load(iss);
@@ -87,4 +92,17 @@ TEST_F(ConfigTest, getArrayString) {
 
     // default value
     ASSERT_EQ(V(), emptyConfig.getArray<std::string>("users"));
+}
+
+TEST_F(ConfigTest, getTime) {
+    ASSERT_EQ(lms::Time::fromMillis(12010), config.get<lms::Time>("duration"));
+}
+
+TEST_F(ConfigTest, getDistance) {
+    ASSERT_FLOAT_EQ(0.117f, config.get<lms::Distance>("dist").toSI());
+}
+
+TEST_F(ConfigTest, getAngle) {
+    ASSERT_FLOAT_EQ(180, config.get<lms::Angle>("angle").toDeg());
+    ASSERT_FLOAT_EQ(M_PI, config.get<lms::Angle>("angle").toRad());
 }

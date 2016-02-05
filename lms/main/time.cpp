@@ -194,10 +194,11 @@ std::ostream& operator <<(std::ostream &stream, const Time &t) {
 
 template<>
 bool parse<Time>(const std::string &src, Time &dst) {
-    std::map<std::string, float> units;
-    units["s"] = 1000000.f;
-    units["ms"] = 1000.f;
-    units["us"] = 1.f;
+    const std::map<std::string, float> units {
+        {"s", 1000000.f},
+        {"ms", 1000.f},
+        {"us", 1.f}
+    };
     dst = lms::Time::fromMicros(parseUnitHelper(src, units));
     return true;
 }
