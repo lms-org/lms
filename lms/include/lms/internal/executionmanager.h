@@ -148,9 +148,8 @@ public:
     typedef std::pair<std::string, logging::Level> ModuleToEnable;
     typedef std::vector<ModuleToEnable> EnableConfig;
 
-    EnableConfig& config(std::string const& name);
-
-    bool useConfig(std::string const& name);
+    EnableConfig& config();
+    bool useConfig();
 
     void writeDAG(DotExporter &dot, const std::string &prefix);
 private:
@@ -197,7 +196,7 @@ private:
      */
     ModuleList available;
 
-    std::map<std::string, EnableConfig> m_configs;
+    EnableConfig m_configs;
 
     std::mutex updateMutex;
     ModuleList update;

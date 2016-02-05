@@ -135,7 +135,7 @@ bool Runtime::cycle() {
             logger.info("state") << "reset";
             m_executionManager.disableAllModules();
             m_executionManager.getDataManager().reset();
-            m_executionManager.useConfig("default");
+            m_executionManager.useConfig();
             m_requestReset = false;
         }
     }
@@ -151,7 +151,7 @@ bool Runtime::cycle() {
 }
 
 bool Runtime::enableModules() {
-    if(! m_executionManager.useConfig("default")) {
+    if(! m_executionManager.useConfig()) {
         return false;
     }
 

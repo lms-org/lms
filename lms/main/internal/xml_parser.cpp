@@ -140,14 +140,7 @@ void parseModuleConfig(pugi::xml_node node, Config &config,
 }
 
 void XmlParser::parseModulesToEnable(pugi::xml_node node) {
-    std::string name = "default";
-
-    pugi::xml_attribute nameAttr = node.attribute("name");
-    if(nameAttr) {
-        name = nameAttr.as_string();
-    }
-
-    ExecutionManager::EnableConfig &config = m_runtime->executionManager().config(name);
+    ExecutionManager::EnableConfig &config = m_runtime->executionManager().config();
 
     lms::logging::Level defaultModuleLevel = lms::logging::Level::ALL;
 
