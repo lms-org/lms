@@ -91,6 +91,7 @@ class ArgumentHandler {
     std::string argEnableSaveTag;
     bool argEnableDebugServer;
     std::string argDebugServerBind;
+    std::string configPath;
 private:
     std::string slug(std::string const& tag);
 };

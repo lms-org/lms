@@ -123,6 +123,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     TCLAP::ValueArg<std::string> enableSaveTag("", "enable-save-tag",
          "Enable all saving modules and mark the save folder",
          false, "", "tag", cmd);
+    TCLAP::ValueArg<std::string> configPathArg("", "config-path",
+        "Set configs path explicitly", false, "", "path", cmd);
 
     cmd.parse(argc, argv);
 
@@ -159,6 +161,8 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     if(argEnableSave) {
         argFlags.push_back("__save");
     }
+
+    configPath = configPathArg.getValue();
 #undef USER_ENV
 }
 

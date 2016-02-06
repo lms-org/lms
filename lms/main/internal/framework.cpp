@@ -89,7 +89,9 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     const char *lms_config_path = std::getenv("LMS_CONFIG_PATH");
-    if(isEnableLoad()) {
+    if(!arguments.configPath.empty()) {
+        configPath = arguments.configPath;
+    } else if(isEnableLoad()) {
         configPath = loadPath() + "/configs";
     } else if(lms_config_path != nullptr && lms_config_path[0] != '\0') {
         // use LMS_CONFIG_PATH from environment
