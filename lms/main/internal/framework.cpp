@@ -225,7 +225,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
             }
 
             // config monitor stuff
-            if(lms::extra::FILE_MONITOR_SUPPORTED && configMonitor.hasChangedFiles()) {
+            if(configMonitor.hasChangedFiles()) {
                 logger.info() << "Reload configs";
                 configMonitor.unwatchAll();
                 XmlParser parser(*this, getRuntimeByName("default"), arguments);

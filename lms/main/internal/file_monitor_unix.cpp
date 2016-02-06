@@ -31,7 +31,7 @@ FileMonitor::~FileMonitor() {
 FileMonitor::operator bool () const {
 #ifdef __APPLE__
     // TODO
-    return false;
+    return true;
 #else
     return fd != -1;
 #endif
@@ -39,7 +39,11 @@ FileMonitor::operator bool () const {
 
 bool FileMonitor::watch(const std::string &path) {
 #ifdef __APPLE__
-    // TODO
+    time_t lastMod;
+    if(lastModified(path, lastMod)) {
+        files.push_back(std::make_pair(path, lastMod));
+        return true;
+    }
     return false;
 #else
     int wd = inotify_add_watch(fd, path.c_str(), MASK);
@@ -49,7 +53,7 @@ bool FileMonitor::watch(const std::string &path) {
 
 void FileMonitor::unwatchAll() {
 #ifdef __APPLE__
-    // TODO
+    files.clear();
 #else
     close(fd);
     fd = inotify_init1(IN_NONBLOCK);
@@ -58,8 +62,17 @@ void FileMonitor::unwatchAll() {
 
 bool FileMonitor::hasChangedFiles() {
 #ifdef __APPLE__
-    // TODO
-    return false;
+    bool changes = false;
+    for(File& file : files) {
+        time_t newLastMod;
+        if(lastModified(file.first, newLastMod)) {
+            if(newLastModified != file.second) {
+                changes = true;
+                file.second = newLastModified;
+            }
+        }
+    }
+    return changes;
 #else
     fd_set rfds;
 
@@ -104,6 +117,18 @@ bool FileMonitor::hasChangedFiles() {
     return false;
 #endif
 }
+
+#ifdef __APPLE__
+bool FileMonitor::lastModified(const std::string& path, time_t& t) {
+    struct stat fileStats;
+    if(stat(path.c_str(), &fileStats) == 0) {
+        t = fileStats.st_mtime;
+        return true;
+    }
+
+    return false;
+}
+#endif
 
 #ifndef __APPLE__
 bool FileMonitor::checkEvent(inotify_event *evt) {

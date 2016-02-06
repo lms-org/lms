@@ -5,6 +5,10 @@
 
 #ifdef _WIN32
 #elif __APPLE__
+#include <vector>
+#include <ctime>
+#include <utility>
+#include <sys/stat.h>
 #else  // UNIX
 #include <sys/inotify.h>
 #include <linux/limits.h>
@@ -12,19 +16,6 @@
 
 namespace lms {
 namespace extra {
-
-#ifdef _WIN32
-    // Microsoft VisualStudio does not support constexpr
-    #ifdef _MSC_VER
-        const bool FILE_MONITOR_SUPPORTED = false;
-    #else
-        constexpr bool FILE_MONITOR_SUPPORTED = false;
-    #endif
-#elif __APPLE__
-    constexpr bool FILE_MONITOR_SUPPORTED = false;
-#else // UNIX
-    constexpr bool FILE_MONITOR_SUPPORTED = true;
-#endif
 
 /**
  * @brief The FileMonitor class simple class to monitor files
@@ -46,7 +37,9 @@ private:
 #ifdef _WIN32
     // TODO
 #elif __APPLE__
-    // TODO
+    typedef std::pair<std::string, time_t> File;
+    std::vector<File> files;
+    bool lastModified(const std::string& path, time_t& t);
 #else // UNIX
     int fd;
     static constexpr int BUF_SIZE = sizeof(inotify_event) + NAME_MAX + 1;
