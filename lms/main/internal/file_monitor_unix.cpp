@@ -66,9 +66,9 @@ bool FileMonitor::hasChangedFiles() {
     for(File& file : files) {
         time_t newLastMod;
         if(lastModified(file.first, newLastMod)) {
-            if(newLastModified != file.second) {
+            if(newLastMod != file.second) {
                 changes = true;
-                file.second = newLastModified;
+                file.second = newLastMod;
             }
         }
     }
