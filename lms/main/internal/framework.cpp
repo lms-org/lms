@@ -116,13 +116,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
         logger.info() << "Enable save: " << m_saveLogPath;
     }
 
+    char *lms_service_path = std::getenv("LMS_SERVICE_PATH");
+    if(lms_service_path != nullptr && lms_service_path[0] != '\0') {
+        for(auto const& path : lms::extra::split(lms_service_path, ':')) {
+            m_serviceLoader.addModulePath(path, 0);
+        }
+    }
 #ifndef LMS_STANDALONE
     m_serviceLoader.addModulePath(LMS_SERVICES, 0);
 #endif
-    char *lms_service_path = std::getenv("LMS_SERVICE_PATH");
-    if(lms_service_path != nullptr && lms_service_path[0] != '\0') {
-        m_serviceLoader.addModulePath(lms_service_path, 0);
-    }
 
     //parse framework config
     if(arguments.argRunLevel >= RunLevel::CONFIG) {
@@ -168,13 +170,15 @@ Framework::Framework(const ArgumentHandler &arguments) :
             }
         }
 
+        char *lms_module_path = std::getenv("LMS_MODULE_PATH");
+        if(lms_module_path != nullptr && lms_module_path[0] != '\0') {
+            for(auto const& path : lms::extra::split(lms_module_path, ':')) {
+                m_moduleLoader.addModulePath(path, 0);
+            }
+        }
 #ifndef LMS_STANDALONE
         m_moduleLoader.addModulePath(LMS_MODULES, 0);
 #endif
-        char *lms_module_path = std::getenv("LMS_MODULE_PATH");
-        if(lms_module_path != nullptr && lms_module_path[0] != '\0') {
-            m_moduleLoader.addModulePath(lms_module_path, 0);
-        }
 
         // enable modules after they were made available
         logger.info() << "Start enabling modules";
