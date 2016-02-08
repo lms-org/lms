@@ -41,8 +41,8 @@ void ExecutionManager::disableAllModules() {
         try {
             it->second->instance()->deinitialize();
         } catch(std::exception &e) {
-            logger.error("disableModule") << "Module " << it->first << " threw exception: "
-                << e.what();
+            logger.error("disableModule") << "Module " << it->first << " throws "
+                << lms::extra::typeName(e) << " : " << e.what();
         }
     }
 
