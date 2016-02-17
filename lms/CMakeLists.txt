@@ -46,7 +46,6 @@ set (HEADERS
     "include/lms/internal/signalhandler.h"
     "include/lms/extra/colors.h"
     "include/lms/internal/datamanager.h"
-    "include/lms/datamanager.h"
     "include/lms/internal/argumenthandler.h"
     "include/lms/logger.h"
     "include/lms/internal/executionmanager.h"
@@ -77,8 +76,6 @@ set (HEADERS
     "include/lms/internal/debug_server.h"
     "include/lms/internal/watch_dog.h"
 
-    "include/lms/type/module_config.h"
-    "include/lms/module_config.h"
     "include/lms/endian.h"
     "include/lms/unit.h"
 
@@ -95,7 +92,6 @@ set (HEADERS
 
     "include/lms/extra/type.h"
     "include/lms/extra/string.h"
-    "include/lms/extra/time.h"
     "include/lms/time.h"
     "include/lms/internal/backtrace_formatter.h"
     "include/lms/extra/os.h"

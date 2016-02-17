@@ -9,7 +9,6 @@
 #include "internal/loader.h"
 #include "internal/datamanager.h"
 #include "config.h"
-#include "module_config.h"
 #include "messaging.h"
 #include "data_channel.h"
 #include "deprecated.h"
@@ -48,7 +47,7 @@ public:
     typedef internal::ModuleWrapper WrapperType;
 
     Module(): logger(""), m_datamanager(nullptr),
-        m_messaging(nullptr), m_fakeDataManager(this) { }
+        m_messaging(nullptr) { }
     virtual ~Module() { }
 	
     /**
@@ -163,95 +162,6 @@ public:
      * @return cycle number
      */
     int cycleCounter();
-
-    /**
-     * @brief The FakeDataManager mimics the behavior of the old data manager.
-     * This should make it backwards-compatible in most cases.
-     *
-     * This class is temporary and will be removed in a future release.
-     */
-    class FakeDataManager {
-    public:
-        FakeDataManager(Module *module) : module(module) {}
-
-        template<typename T>
-        ReadDataChannel<T> readChannel(Module* module, const std::string &name) {
-            (void)module;  // thanks for the pointer anyway
-            return this->module->readChannel<T>(name);
-        }
-
-        template<typename T>
-        WriteDataChannel<T> writeChannel(Module* module, const std::string &name) {
-            (void)module;  // thanks again
-            return this->module->writeChannel<T>(name);
-        }
-
-        /**
-         * @brief Registers the given module to have write access on
-         * a data channel. This will not create the data channel.
-         *
-         * @param module requesting module
-         * @param name data channel name
-         */
-        DEPRECATED
-        void getWriteAccess(Module* module, const std::string &reqName) {
-            writeChannel<Any>(module, reqName);
-        }
-
-        /**
-         * @brief Register the given module to have read access
-         * on a data channel. This will not create the data channel.
-         *
-         * @param module requesting module
-         * @param name data channel name
-         */
-        DEPRECATED
-        void getReadAccess(Module* module, const std::string &reqName) {
-            readChannel<Any>(module, reqName);
-        }
-
-        /**
-         * @brief Serialize a data channel into the given output stream.
-         *
-         * The data channel must have been initialized before you can
-         * use this method.
-         *
-         * A module needs at least read access on the data channel
-         * to be able to serialize it.
-         *
-         * @param module requesting module
-         * @param name data channel name
-         * @param os output stream to serialize into
-         * @return false if the data channel was not initialized or if it
-         * is not serializable or if no read or write access, otherwise true
-         */
-        DEPRECATED
-        bool serializeChannel(Module* module, const std::string &reqName, std::ostream &os) {
-            return readChannel<Any>(module, reqName).serialize(os);
-        }
-
-        /**
-         * @brief Deserialize a data channel from the given input stream.
-         *
-         * The data channel must have been initialized before you use
-         * this method.
-         *
-         * A module needs write access on the data channel to
-         * be able to deserialize it.
-         *
-         * @param module requesting module
-         * @param name data channel name
-         * @param is input stream to deserialize from
-         * @return false if the data channel was not initialized
-         * or if it is not serializable or if no write access, otherwise true
-         */
-        DEPRECATED
-        bool deserializeChannel(Module* module, const std::string &reqName, std::istream &is) {
-            return writeChannel<Any>(module, reqName).deserialize(is);
-        }
-    private:
-        Module *module;
-    };
 protected:
     /**
      * @brief Returns a handle to a service. The service is locked during the
@@ -297,13 +207,6 @@ protected:
             return nullptr;
         }
     }
-
-    /**
-     * @brief We do not return any data manager pointer any longer. This
-     * method is deprecated will be removed in a future release.
-     */
-    DEPRECATED
-    FakeDataManager* datamanager() { return &m_fakeDataManager; }
 
     /**
      * @brief Returns the messaging service.
@@ -382,13 +285,6 @@ protected:
     logging::Logger logger;
 
     /**
-     * @brief Returns a pointer to the default module-private
-     * configuration.
-     */
-    DEPRECATED
-    const Config* getConfig(const std::string &name = "default");
-
-    /**
      * @brief Return a read-only config of the given name.
      * @param name config's name
      * @return module config
@@ -449,7 +345,6 @@ private:
     internal::DataManager* m_datamanager;
     Messaging* m_messaging;
     internal::ExecutionManager* m_executionManager;
-    FakeDataManager m_fakeDataManager;
 };
 
 }  // namespace lms

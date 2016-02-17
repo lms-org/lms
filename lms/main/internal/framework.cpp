@@ -26,9 +26,6 @@
 namespace lms {
 namespace internal {
 
-std::string Framework::externalDirectory = LMS_EXTERNAL;
-std::string Framework::configsDirectory = LMS_CONFIGS;
-
 Framework::Framework(const ArgumentHandler &arguments) :
     logger("lms.Framework"), argumentHandler(arguments),
     m_running(false) {

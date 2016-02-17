@@ -15,7 +15,6 @@
 #include "module_wrapper.h"
 #include "dot_exporter.h"
 #include "lms/data_channel.h"
-#include "lms/deprecated.h"
 
 namespace lms {
 namespace internal {

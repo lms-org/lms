@@ -9,7 +9,6 @@
 #include "clock.h"
 #include "pugixml.hpp"
 #include "file_monitor.h"
-#include "lms/deprecated.h"
 #include "runtime.h"
 #include "debug_server.h"
 
@@ -23,25 +22,6 @@ namespace internal {
  */
 class Framework : public SignalHandler::Listener {
 public:
-    /**
-     * @brief executionPath absolute path to running framework (folder that contains core and external)
-     */
-    DEPRECATED static std::string programDirectory();
-
-    /**
-     * @brief Framework::externalDirectory absolute path to the external directory
-     *
-     * This attribute is deprecated.
-     */
-
-    static std::string externalDirectory;
-    /**
-     * @brief Framework::configsDirectory absolute path to the configs directory
-     *
-     * This attribute is deprecated.
-     */
-    static std::string configsDirectory;
-
     /**
      * @brief Instantiate the framework, initiate datamanager and
      * execution manager and start the main loop.

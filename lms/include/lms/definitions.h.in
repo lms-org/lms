@@ -12,7 +12,4 @@
 #define LMS_MODULES "@LMS_DIR_MODULES@"
 #define LMS_SERVICES "@LMS_DIR_SERVICES@"
 
-// Deprecated
-#define LMS_EXTERNAL "@LMS_DIR_EXTERNAL@"
-
 #endif  // LMS_DEFINITIONS_H

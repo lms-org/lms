@@ -40,10 +40,6 @@ namespace lms{
         return m_wrapper->getChannelPriority(getChannelMapping(name));
     }
 
-    lms_EXPORT const Config* Module::getConfig(const std::string &name){
-        return &config(name);
-    }
-
     lms_EXPORT const Config& Module::config(const std::string &name){
         return m_wrapper->configs[name];
     }
