@@ -337,19 +337,23 @@ void XmlParser::parseModules(pugi::xml_node node,
                              LoadConfigFlag flag) {
     std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>(m_runtime);
 
-    module->name(node.child("name").child_value());
+    pugi::xml_attribute nameAttr = node.attribute("name");
+    pugi::xml_attribute realNameAttr = node.attribute("realName");
+    pugi::xml_attribute mainThreadAttr = node.attribute("mainThread");
 
-    pugi::xml_node realNameNode = node.child("realName");
+    if(nameAttr) {
+        module->name(nameAttr.as_string());
+    } else {
+        errorMissingAttr(node, nameAttr);
+    }
 
-    if(realNameNode) {
-        module->libname(realNameNode.child_value());
+    if(realNameAttr) {
+        module->libname(realNameAttr.as_string());
     } else {
         module->libname(module->name());
     }
 
-    pugi::xml_node mainThreadNode = node.child("mainThread");
-
-    if(mainThreadNode) {
+    if(mainThreadAttr.as_bool()) {
         module->executionType = ExecutionType::ONLY_MAIN_THREAD;
     } else {
         module->executionType = ExecutionType::NEVER_MAIN_THREAD;
@@ -452,15 +456,27 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
                   LoadConfigFlag flag) {
     std::shared_ptr<ServiceWrapper> service = std::make_shared<ServiceWrapper>(&m_framework);
 
-    service->name(node.child("name").child_value());
+    pugi::xml_attribute nameAttr = node.attribute("name");
+    pugi::xml_attribute realNameAttr = node.attribute("realName");
+    pugi::xml_attribute logLevelAttr = node.attribute("logLevel");
 
-    pugi::xml_node realNameNode = node.child("realName");
+    if(nameAttr) {
+        service->name(nameAttr.as_string());
+    } else {
+        errorMissingAttr(node, nameAttr);
+    }
 
-    if(realNameNode) {
-        service->libname(realNameNode.child_value());
+    if(realNameAttr) {
+        service->libname(realNameAttr.as_string());
     } else {
         service->libname(service->name());
     }
+
+    logging::Level  defaultLevel = logging::Level::ALL;
+    if(logLevelAttr) {
+        logging::levelFromName(logLevelAttr.as_string(), defaultLevel);
+    }
+    service->defaultLogLevel(defaultLevel);
 
     // parse all config
     for(pugi::xml_node configNode : node.children("config")) {
@@ -503,13 +519,6 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
             parseModuleConfig(configNode, service->getConfig(name), "");
         }
     }
-
-    pugi::xml_node logLevelNode = node.child("logLevel");
-    logging::Level  defaultLevel = logging::Level::ALL;
-    if(logLevelNode) {
-        logging::levelFromName(logLevelNode.child_value(), defaultLevel);
-    }
-    service->defaultLogLevel(defaultLevel);
 
     if(flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
         m_runtime->framework().installService(service);
