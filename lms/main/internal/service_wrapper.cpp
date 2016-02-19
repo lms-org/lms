@@ -50,6 +50,14 @@ void ServiceWrapper::libname(std::string const& libname) {
     m_libname = libname;
 }
 
+std::string ServiceWrapper::className() const {
+    return m_class;
+}
+
+void ServiceWrapper::className(std::string const& className) {
+    m_class = className;
+}
+
 void ServiceWrapper::update(ServiceWrapper && other) {
     // preserve location of existing ModuleConfigs
     for(auto&& entry : other.m_configs) {
@@ -68,6 +76,10 @@ void ServiceWrapper::defaultLogLevel(logging::Level level) {
 
 logging::Level ServiceWrapper::defaultLogLevel() const {
     return m_defaultLevel;
+}
+
+std::string ServiceWrapper::loaderPrefix() {
+    return "lms_service_";
 }
 
 }  // namespace internal

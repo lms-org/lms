@@ -6,15 +6,7 @@
 #include "lms/config.h"
 #include "lms/logger.h"
 #include "lms/definitions.h"
-
-#define LMS_SERVICE_INTERFACE(CLASS) extern "C" { \
-lms::Service* getInstance () { \
-    return new CLASS(); \
-} \
-uint32_t getLmsVersion() { \
-    return LMS_VERSION_CODE; \
-} \
-}
+#include "lms/interface.h"
 
 namespace lms {
 

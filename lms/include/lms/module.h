@@ -15,6 +15,7 @@
 #include "lms/definitions.h"
 #include "lms/service_handle.h"
 #include "execution_type.h"
+#include "interface.h"
 
 namespace lms {
 
@@ -22,16 +23,6 @@ namespace internal {
 class DataManager;
 class ExecutionManager;
 }
-
-#define LMS_MODULE_INTERFACE(CLASS) extern "C" { \
-lms::Module* getInstance () { \
-    return new CLASS(); \
-} \
-uint32_t getLmsVersion() { \
-    return LMS_VERSION_CODE; \
-} \
-}
-
 
 /**
  * @brief Abstract super class for dynamic loadable modules

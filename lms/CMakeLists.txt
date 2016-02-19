@@ -78,6 +78,7 @@ set (HEADERS
 
     "include/lms/endian.h"
     "include/lms/unit.h"
+    "include/lms/interface.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"

@@ -338,7 +338,8 @@ void XmlParser::parseModules(pugi::xml_node node,
     std::shared_ptr<ModuleWrapper> module = std::make_shared<ModuleWrapper>(m_runtime);
 
     pugi::xml_attribute nameAttr = node.attribute("name");
-    pugi::xml_attribute realNameAttr = node.attribute("realName");
+    pugi::xml_attribute libAttr = node.attribute("lib");
+    pugi::xml_attribute classAttr = node.attribute("class");
     pugi::xml_attribute mainThreadAttr = node.attribute("mainThread");
 
     if(nameAttr) {
@@ -347,10 +348,16 @@ void XmlParser::parseModules(pugi::xml_node node,
         errorMissingAttr(node, nameAttr);
     }
 
-    if(realNameAttr) {
-        module->libname(realNameAttr.as_string());
+    if(libAttr) {
+        module->libname(libAttr.as_string());
     } else {
-        module->libname(module->name());
+        errorMissingAttr(node, libAttr);
+    }
+
+    if(classAttr) {
+        module->className(classAttr.as_string());
+    } else {
+        errorMissingAttr(node, classAttr);
     }
 
     if(mainThreadAttr.as_bool()) {
@@ -457,7 +464,8 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
     std::shared_ptr<ServiceWrapper> service = std::make_shared<ServiceWrapper>(&m_framework);
 
     pugi::xml_attribute nameAttr = node.attribute("name");
-    pugi::xml_attribute realNameAttr = node.attribute("realName");
+    pugi::xml_attribute libAttr = node.attribute("lib");
+    pugi::xml_attribute classAttr = node.attribute("class");
     pugi::xml_attribute logLevelAttr = node.attribute("logLevel");
 
     if(nameAttr) {
@@ -466,10 +474,16 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
         errorMissingAttr(node, nameAttr);
     }
 
-    if(realNameAttr) {
-        service->libname(realNameAttr.as_string());
+    if(libAttr) {
+        service->libname(libAttr.as_string());
     } else {
-        service->libname(service->name());
+        errorMissingAttr(node, libAttr);
+    }
+
+    if(classAttr) {
+        service->className(classAttr.as_string());
+    } else {
+        errorMissingAttr(node,  classAttr);
     }
 
     logging::Level  defaultLevel = logging::Level::ALL;

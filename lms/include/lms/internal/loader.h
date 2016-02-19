@@ -128,10 +128,10 @@ public:
         dlerror();
 
         converter <uint32_t (*) ()> getLmsVersion;
-        getLmsVersion.src = dlsym(lib, "getLmsVersion");
+        getLmsVersion.src = dlsym(lib, "lms_version");
         char *err;
         if((err = dlerror()) != NULL) {
-            logger.warn("load") << "Module " << entry->name() << " does not provide getLmsVersion()";
+            logger.warn("load") << "Module " << entry->name() << " does not provide lms_version()";
         } else {
             constexpr uint32_t MAJOR_MASK = LMS_VERSION(0xff, 0, 0);
             constexpr uint32_t MINOR_MASK = LMS_VERSION(0, 0xff, 0);
@@ -156,12 +156,13 @@ public:
         // We use it here to convert a void* to a function pointer.
         // The function has this signature: void* getInstance();
         converter <T*(*)()> conv;
-        conv.src = dlsym(lib, "getInstance");
+        std::string getterFunc = T::WrapperType::loaderPrefix() + entry->className();
+        conv.src = dlsym(lib, getterFunc.c_str());
 
         // check for errors while calling dlsym
         if ((err = dlerror()) != NULL) {
-            logger.error("load") << "Could not get symbol 'getInstance' of module " << entry->name()
-                << std::endl << "Message: " << err;
+            logger.error("load") << "Could not get symbol " << getterFunc;
+            logger.error("load") << err;
             return false;
         }
 

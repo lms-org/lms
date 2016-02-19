@@ -75,5 +75,17 @@ void ModuleWrapper::runtime(Runtime* runtime) {
     m_runtime = runtime;
 }
 
+std::string ModuleWrapper::className() const {
+    return m_class;
+}
+
+void ModuleWrapper::className(std::string const& className) {
+    m_class = className;
+}
+
+std::string ModuleWrapper::loaderPrefix() {
+    return "lms_module_";
+}
+
 }  // namespace internal
 }  // namespace lms

@@ -30,6 +30,11 @@ class ModuleWrapper {
     std::string m_libname;
 
     /**
+     * @brief Name of the class that will be loaded from the lib.
+     */
+    std::string m_class;
+
+    /**
      * @brief Name of the module
      */
     std::string m_name;
@@ -50,6 +55,9 @@ public:
 
     std::string libname() const;
     void libname(std::string const& libname);
+
+    std::string className() const;
+    void className(std::string const& className);
 
     std::string name() const;
     void name(std::string const& name);
@@ -93,6 +101,8 @@ public:
     void update(ModuleWrapper && other);
 
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
+
+    static std::string loaderPrefix();
 };
 
 }  // namespace internal
