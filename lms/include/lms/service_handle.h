@@ -4,7 +4,7 @@
 #include <memory>
 #include <mutex>
 
-#include "lms/service.h"
+#include "service.h"
 #include "internal/service_wrapper.h"
 
 namespace lms {

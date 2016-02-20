@@ -15,7 +15,7 @@ struct Any {
     }
 
     void* operator-> () {
-        throw new std::runtime_error("Robin Hood won't give you his arrow");
+        throw std::runtime_error("Robin Hood won't give you his arrow");
     }
 };
 

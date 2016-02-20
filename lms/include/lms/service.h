@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "lms/config.h"
-#include "lms/logger.h"
+#include "config.h"
+#include "logger.h"
 #include "lms/definitions.h"
-#include "lms/interface.h"
+#include "interface.h"
 
 namespace lms {
 

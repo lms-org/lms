@@ -1,7 +1,7 @@
 #ifndef LMS_CONFIG_OBSERVER_H
 #define LMS_CONFIG_OBSERVER_H
 
-#include "lms/config.h"
+#include "config.h"
 
 #include <functional>
 #include <vector>

@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include "lms/logger.h"
-#include "lms/serializable.h"
+#include "logger.h"
+#include "serializable.h"
 #include "internal/data_channel_internal.h"
 
 namespace lms {

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include "lms/config.h"
+#include "config.h"
 
 namespace lms {
 
