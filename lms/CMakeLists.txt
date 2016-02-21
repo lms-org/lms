@@ -146,7 +146,6 @@ set (SOURCE
 if(UNIX)
     message(STATUS "Use Unix specific sources")
     set (SOURCE ${SOURCE}
-        "main/internal/framework_unix.cpp"
         "main/internal/backtrace_formatter_unix.cpp"
         "main/internal/signalhandler_unix.cpp"
         "main/internal/file_monitor_unix.cpp"
@@ -155,7 +154,6 @@ elseif(WIN32)
     message(STATUS "Use Win32 specific sources")
     set (SOURCE ${SOURCE}
         "main/loader_win.cpp"
-        "main/framework_win.cpp"
         "main/internal/backtrace_formatter_win.cpp"
         "main/signalhandler_win.cpp"
         "main/extra/file_monitor_win.cpp"
