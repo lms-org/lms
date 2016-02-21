@@ -1,4 +1,5 @@
 #include "lms/internal/xml_parser.h"
+#include "lms/extra/os.h"
 
 namespace lms {
 namespace internal {
@@ -349,13 +350,13 @@ void XmlParser::parseModules(pugi::xml_node node,
     }
 
     if(libAttr) {
-        module->libname(libAttr.as_string());
+        module->lib(libAttr.as_string());
     } else {
         errorMissingAttr(node, libAttr);
     }
 
     if(classAttr) {
-        module->className(classAttr.as_string());
+        module->clazz(classAttr.as_string());
     } else {
         errorMissingAttr(node, classAttr);
     }
@@ -475,13 +476,13 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
     }
 
     if(libAttr) {
-        service->libname(libAttr.as_string());
+        service->lib(libAttr.as_string());
     } else {
         errorMissingAttr(node, libAttr);
     }
 
     if(classAttr) {
-        service->className(classAttr.as_string());
+        service->clazz(classAttr.as_string());
     } else {
         errorMissingAttr(node,  classAttr);
     }

@@ -6,6 +6,7 @@
 
 #include "lms/config.h"
 #include "lms/service.h"
+#include "wrapper.h"
 
 namespace lms {
 class Service;
@@ -14,25 +15,15 @@ namespace internal {
 
 class Framework;
 
-class ServiceWrapper {
+class ServiceWrapper : public Wrapper {
 public:
     ServiceWrapper(Framework *runtime);
-
-    std::string name() const;
-    void name(std::string const& name);
-
-    std::string libname() const;
-    void libname(std::string const& libname);
-
-    std::string className() const;
-    void className(std::string const& className);
 
     void defaultLogLevel(logging::Level level);
     logging::Level defaultLogLevel() const;
 
     Framework* framework();
     Service* instance();
-    void instance(Service *service);
     std::mutex& mutex();
 
     Config& getConfig(std::string const& name);
@@ -41,14 +32,13 @@ public:
 
     void update(ServiceWrapper && other);
 
-    static std::string loaderPrefix();
+    void load(void* instance) override;
+    void unload() override;
+    std::string interfaceFunction() const override;
 private:
     Framework *m_framework;
-    std::string m_name;
     std::map<std::string, Config> m_configs;
     std::unique_ptr<Service> m_service;
-    std::string m_libname;
-    std::string m_class;
     logging::Level m_defaultLevel;
 
     std::mutex m_mutex;

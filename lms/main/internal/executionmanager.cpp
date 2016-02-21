@@ -49,7 +49,7 @@ void ExecutionManager::disableAllModules() {
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
         dataManager.releaseChannelsOf(it->second);
-        m_runtime.framework().moduleLoader().unload(it->second.get());
+        it->second->unload();
     }
 
     enabledModules.clear();
@@ -329,7 +329,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
         return false;
     }
 
-    m_runtime.framework().moduleLoader().unload(it->second.get());
+    it->second->unload();
 
     enabledModules.erase(it);
 

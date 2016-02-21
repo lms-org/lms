@@ -38,22 +38,6 @@ std::shared_ptr<ServiceWrapper> ModuleWrapper::getServiceWrapper(std::string con
     return this->runtime()->getServiceWrapper(name);
 }
 
-std::string ModuleWrapper::libname() const {
-    return m_libname;
-}
-
-void ModuleWrapper::libname(std::string const& libname) {
-    m_libname = libname;
-}
-
-std::string ModuleWrapper::name() const {
-    return m_name;
-}
-
-void ModuleWrapper::name(std::string const& name) {
-    m_name = name;
-}
-
 bool ModuleWrapper::enabled() const {
     return m_enabled;
 }
@@ -62,9 +46,14 @@ Module* ModuleWrapper::instance() const {
     return m_moduleInstance.get();
 }
 
-void ModuleWrapper::instance(Module* instance) {
+void ModuleWrapper::load(void* instance) {
     m_enabled = instance != nullptr;
-    m_moduleInstance.reset(instance);
+    m_moduleInstance.reset(static_cast<Module*>(instance));
+}
+
+void ModuleWrapper::unload() {
+    m_enabled = false;
+    m_moduleInstance.reset();
 }
 
 Runtime* ModuleWrapper::runtime() const {
@@ -75,16 +64,8 @@ void ModuleWrapper::runtime(Runtime* runtime) {
     m_runtime = runtime;
 }
 
-std::string ModuleWrapper::className() const {
-    return m_class;
-}
-
-void ModuleWrapper::className(std::string const& className) {
-    m_class = className;
-}
-
-std::string ModuleWrapper::loaderPrefix() {
-    return "lms_module_";
+std::string ModuleWrapper::interfaceFunction() const {
+    return "lms_module_" + clazz();
 }
 
 }  // namespace internal

@@ -75,6 +75,7 @@ set (HEADERS
     "include/lms/internal/dag.h"
     "include/lms/internal/debug_server.h"
     "include/lms/internal/watch_dog.h"
+    "include/lms/internal/wrapper.h"
 
     "include/lms/endian.h"
     "include/lms/unit.h"
@@ -120,6 +121,8 @@ set (SOURCE
     "main/internal/file_monitor.cpp"
     "main/internal/debug_server.cpp"
     "main/internal/watch_dog.cpp"
+    "main/internal/wrapper.cpp"
+    "main/internal/loader.cpp"
     "main/endian.cpp"
     "main/unit.cpp"
 

@@ -9,6 +9,7 @@
 #include "lms/execution_type.h"
 #include "lms/config.h"
 #include "service_wrapper.h"
+#include "wrapper.h"
 
 namespace lms {
 class Module;
@@ -21,23 +22,8 @@ class Runtime;
  * @brief The module_entry struct
  * used to store available modules
  */
-class ModuleWrapper {
+class ModuleWrapper : public Wrapper {
     Runtime *m_runtime;
-
-    /**
-     * @brief name of the shared library that will be loaded
-     */
-    std::string m_libname;
-
-    /**
-     * @brief Name of the class that will be loaded from the lib.
-     */
-    std::string m_class;
-
-    /**
-     * @brief Name of the module
-     */
-    std::string m_name;
 
     /**
      * @brief Is set to true if the module is enabled
@@ -53,19 +39,12 @@ public:
     ModuleWrapper(Runtime *runtime) : m_runtime(runtime), m_enabled(false),
         m_moduleInstance(nullptr) {}
 
-    std::string libname() const;
-    void libname(std::string const& libname);
-
-    std::string className() const;
-    void className(std::string const& className);
-
-    std::string name() const;
-    void name(std::string const& name);
-
     bool enabled() const;
 
     Module* instance() const;
-    void instance(Module* instance);
+
+    void load(void* instance) override;
+    void unload() override;
 
     Runtime* runtime() const;
     void runtime(Runtime* runtime);
@@ -102,7 +81,7 @@ public:
 
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
 
-    static std::string loaderPrefix();
+    std::string interfaceFunction() const override;
 };
 
 }  // namespace internal

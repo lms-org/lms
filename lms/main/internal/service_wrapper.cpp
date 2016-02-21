@@ -7,13 +7,6 @@ ServiceWrapper::ServiceWrapper(Framework *framework) : m_framework(framework),
                                                        m_defaultLevel(logging::Level::ALL) {
 }
 
-std::string ServiceWrapper::name() const {
-    return m_name;
-}
-
-void ServiceWrapper::name(std::string const& name) {
-    m_name = name;
-}
 Config& ServiceWrapper::getConfig(std::string const& name){
     return m_configs[name];
 }
@@ -30,8 +23,12 @@ Service* ServiceWrapper::instance() {
     return m_service.get();
 }
 
-void ServiceWrapper::instance(Service *service) {
-    m_service.reset(service);
+void ServiceWrapper::load(void* instance) {
+    m_service.reset(static_cast<Service*>(instance));
+}
+
+void ServiceWrapper::unload() {
+    m_service.reset();
 }
 
 std::mutex& ServiceWrapper::mutex() {
@@ -40,22 +37,6 @@ std::mutex& ServiceWrapper::mutex() {
 
 bool ServiceWrapper::checkHashCode(size_t hashCode) {
     return m_service && (m_service->hashCode() == hashCode);
-}
-
-std::string ServiceWrapper::libname() const {
-    return m_libname;
-}
-
-void ServiceWrapper::libname(std::string const& libname) {
-    m_libname = libname;
-}
-
-std::string ServiceWrapper::className() const {
-    return m_class;
-}
-
-void ServiceWrapper::className(std::string const& className) {
-    m_class = className;
 }
 
 void ServiceWrapper::update(ServiceWrapper && other) {
@@ -78,8 +59,8 @@ logging::Level ServiceWrapper::defaultLogLevel() const {
     return m_defaultLevel;
 }
 
-std::string ServiceWrapper::loaderPrefix() {
-    return "lms_service_";
+std::string ServiceWrapper::interfaceFunction() const {
+    return "lms_service_" + clazz();
 }
 
 }  // namespace internal

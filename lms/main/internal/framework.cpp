@@ -116,11 +116,11 @@ Framework::Framework(const ArgumentHandler &arguments) :
     char *lms_service_path = std::getenv("LMS_SERVICE_PATH");
     if(lms_service_path != nullptr && lms_service_path[0] != '\0') {
         for(auto const& path : lms::extra::split(lms_service_path, ':')) {
-            m_serviceLoader.addModulePath(path, 0);
+            m_serviceLoader.addSearchPath(path, 0);
         }
     }
 #ifndef LMS_STANDALONE
-    m_serviceLoader.addModulePath(LMS_SERVICES, 0);
+    m_serviceLoader.addSearchPath(LMS_SERVICES, 0);
 #endif
 
     //parse framework config
@@ -170,11 +170,11 @@ Framework::Framework(const ArgumentHandler &arguments) :
         char *lms_module_path = std::getenv("LMS_MODULE_PATH");
         if(lms_module_path != nullptr && lms_module_path[0] != '\0') {
             for(auto const& path : lms::extra::split(lms_module_path, ':')) {
-                m_moduleLoader.addModulePath(path, 0);
+                m_moduleLoader.addSearchPath(path, 0);
             }
         }
 #ifndef LMS_STANDALONE
-        m_moduleLoader.addModulePath(LMS_MODULES, 0);
+        m_moduleLoader.addSearchPath(LMS_MODULES, 0);
 #endif
 
         // enable modules after they were made available
@@ -411,7 +411,7 @@ Profiler& Framework::profiler() {
     return m_profiler;
 }
 
-Loader<Module>& Framework::moduleLoader() {
+Loader &Framework::moduleLoader() {
     return m_moduleLoader;
 }
 

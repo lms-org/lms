@@ -47,7 +47,7 @@ public:
 
     Profiler& profiler();
 
-    Loader<Module>& moduleLoader();
+    Loader& moduleLoader();
 
     std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
 
@@ -68,8 +68,8 @@ private:
 
     ArgumentHandler argumentHandler;
     Profiler m_profiler;
-    Loader<Module> m_moduleLoader;
-    Loader<Service> m_serviceLoader;
+    Loader m_moduleLoader;
+    Loader m_serviceLoader;
 
     extra::FileMonitor configMonitor;
 
