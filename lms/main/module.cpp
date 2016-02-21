@@ -32,14 +32,6 @@ namespace lms{
         return m_wrapper->executionType;
     }
 
-    lms_EXPORT std::string Module::getChannelMapping(const std::string &mapFrom) const{
-        return m_wrapper->getChannelMapping(mapFrom);
-    }
-
-    lms_EXPORT int Module::getChannelPriority(const std::string &name) const {
-        return m_wrapper->getChannelPriority(getChannelMapping(name));
-    }
-
     lms_EXPORT const Config& Module::config(const std::string &name){
         return m_wrapper->configs[name];
     }

@@ -6,7 +6,6 @@
 #include <memory>
 #include <map>
 
-#include "internal/loader.h"
 #include "internal/datamanager.h"
 #include "config.h"
 #include "messaging.h"
@@ -35,8 +34,6 @@ class ExecutionManager;
  */
 class Module {
 public:
-    typedef internal::ModuleWrapper WrapperType;
-
     Module(): logger(""), m_datamanager(nullptr),
         m_messaging(nullptr) { }
     virtual ~Module() { }
@@ -50,10 +47,6 @@ public:
      * @return name of the loaded module
      */
     std::string getName() const;
-
-    std::shared_ptr<internal::ModuleWrapper> wrapper() const {
-        return m_wrapper;
-    }
 
     /**
      * @brief Called by the framework itself at module-creation.
@@ -136,16 +129,6 @@ public:
      * module were changed.
      */
     virtual void configsChanged() {}
-
-    /**
-     * @brief getDataChannelMapping
-     * @param mapFrom
-     * @return the mapping for the given key or the key itself if it has no
-     * mapping for it
-     */
-    std::string getChannelMapping(const std::string &mapFrom) const;
-
-    int getChannelPriority(const std::string &name) const;
 
     /**
      * @brief Return the current number of the cycle counter which is
