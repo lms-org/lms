@@ -20,7 +20,6 @@ namespace lms {
 
 namespace internal {
 class DataManager;
-class ExecutionManager;
 }
 
 /**
@@ -153,8 +152,7 @@ protected:
      */
     template <class T>
     ServiceHandle<T> getService(std::string const& name) {
-        std::shared_ptr<internal::ServiceWrapper> wrapper =
-                m_wrapper->getServiceWrapper(name);
+        auto wrapper = getServiceWrapper(name);
 
         if(wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
             // TODO type check
@@ -171,8 +169,7 @@ protected:
      */
     template<class T>
     T* getUnsafeService(std::string const& name) {
-        std::shared_ptr<internal::ServiceWrapper> wrapper =
-                m_wrapper->getServiceWrapper(name);
+        auto wrapper = getServiceWrapper(name);
 
         if(wrapper) {
             return static_cast<T*>(wrapper->instance());
@@ -315,6 +312,8 @@ protected:
      */
     bool resumeRuntime(std::string const& name, bool reset = false);
 private:
+    std::shared_ptr<internal::ServiceWrapper> getServiceWrapper(std::string const& name);
+
     std::shared_ptr<internal::ModuleWrapper> m_wrapper;
     internal::DataManager* m_datamanager;
     Messaging* m_messaging;

@@ -89,4 +89,8 @@ namespace lms{
     std::string Module::loadLogDir(std::string const& name) {
         return m_wrapper->runtime()->framework().loadLogObject(name, true);
     }
+
+    std::shared_ptr<internal::ServiceWrapper> Module::getServiceWrapper(std::string const& name) {
+        return m_wrapper->getServiceWrapper(name);
+    }
 }
