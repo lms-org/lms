@@ -12,9 +12,10 @@
 #include "data_channel.h"
 #include "deprecated.h"
 #include "lms/definitions.h"
-#include "lms/service_handle.h"
+#include "service_handle.h"
 #include "execution_type.h"
 #include "interface.h"
+#include "life_cycle.h"
 
 namespace lms {
 
@@ -31,7 +32,7 @@ class DataManager;
  * - cycle() - can be called any number of times
  * - deinitialize() - called once before module unloading
  */
-class Module {
+class Module : public LifeCycle {
 public:
     Module(): logger(""), m_datamanager(nullptr),
         m_messaging(nullptr) { }
@@ -81,7 +82,13 @@ public:
      *
      * @return true if initialization was succesful, otherwise false
      */
-    virtual bool initialize() = 0;
+    virtual bool init() override;
+
+    /**
+     * @brief Deprecated alias for init().
+     * @return true if initialization was successful, otherwise false
+     */
+    virtual bool initialize();
 
     /**
      * @brief Informs a module that it should now read or write to
@@ -113,10 +120,14 @@ public:
      * true. This method will be never called before initialize().
      *
      * Must be overridden by a module.
-     *
-     * @return true if deinitialization was succesful, otherwise false
      */
-    virtual bool deinitialize() = 0;
+    virtual void destroy() override;
+
+    /**
+     * @brief Deprecated alias for destroy.
+     * @return ignored
+     */
+    virtual bool deinitialize();
 
     /**
      * @brief This method gets called whenever a config changed during execution.
@@ -127,7 +138,7 @@ public:
      * NOTE: This method can be called even if no config files accessed by this
      * module were changed.
      */
-    virtual void configsChanged() {}
+    virtual void configsChanged() override;
 
     /**
      * @brief Return the current number of the cycle counter which is

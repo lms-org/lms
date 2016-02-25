@@ -90,7 +90,7 @@ bool Loader::load(Wrapper *wrapper) {
     // Union-Hack to avoid a warning message
     // We use it here to convert a void* to a function pointer.
     // The function has this signature: void* function_name();
-    UnionHack <void*, void*(*)()> conv;
+    UnionHack <void*, LifeCycle*(*)()> conv;
     std::string getterFunc = wrapper->interfaceFunction();
     conv.src = dlsym(lib, getterFunc.c_str());
 

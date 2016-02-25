@@ -6,6 +6,16 @@ namespace lms {
 
 Service::Service() : logger("") {}
 
+bool Service::init() {
+    return true;
+}
+
+void Service::destroy() {
+}
+
+void Service::configsChanged() {
+}
+
 void Service::initBase(internal::ServiceWrapper *wrapper, lms::logging::Level minLogLevel) {
     m_wrapper = wrapper;
     logger.name = wrapper->name();

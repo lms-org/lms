@@ -7,6 +7,7 @@
 #include "logger.h"
 #include "lms/definitions.h"
 #include "interface.h"
+#include "life_cycle.h"
 
 namespace lms {
 
@@ -18,7 +19,7 @@ class ServiceWrapper;
  * @brief Abstract super class for an LMS service. Services are loaded and
  * will be initialized and destroyed by the framework.
  */
-class Service {
+class Service : public LifeCycle {
 public:
     Service();
 
@@ -30,18 +31,18 @@ public:
      * @brief Initialize a service. Must be overridden in subclasses.
      * @return true if the initialization was succesful, otherwise false
      */
-    virtual bool init() =0;
+    virtual bool init() override;
 
     /**
      * @brief Destroy a service. Must be overridden in subclasses.
      */
-    virtual void destroy() =0;
+    virtual void destroy() override;
 
     /**
      * @brief This method is called by the framework if any config file has
      * changed. This method may be called after cycle().
      */
-    virtual void configsChanged() {}
+    virtual void configsChanged() override;
 
     /**
      * @brief Return the name of a service. The framework sets a service's name

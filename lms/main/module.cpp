@@ -10,6 +10,25 @@
 #include "lms/internal/framework.h"
 
 namespace lms{
+    bool Module::init() {
+        return initialize();
+    }
+
+    void Module::destroy() {
+        deinitialize();
+    }
+
+    bool Module::initialize() {
+        return true;
+    }
+
+    bool Module::deinitialize() {
+        return true;
+    }
+
+    void Module::configsChanged() {
+    }
+
     bool Module::initializeBase(std::shared_ptr<internal::ModuleWrapper> wrapper,
         logging::Level minLogLevel) {
 

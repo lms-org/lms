@@ -32,7 +32,7 @@ public:
 
     void update(ServiceWrapper && other);
 
-    void load(void* instance) override;
+    void load(LifeCycle* instance) override;
     void unload() override;
     std::string interfaceFunction() const override;
 private:

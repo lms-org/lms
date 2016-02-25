@@ -39,7 +39,7 @@ void ExecutionManager::disableAllModules() {
         it != enabledModules.rend(); ++it) {
 
         try {
-            it->second->instance()->deinitialize();
+            it->second->instance()->destroy();
         } catch(std::exception &e) {
             logger.error("disableModule") << "Module " << it->first << " throws "
                 << lms::extra::typeName(e) << " : " << e.what();
@@ -295,7 +295,7 @@ bool ExecutionManager::enableModule(const std::string &name, lms::logging::Level
     module->initializeBase(mod,minLogLevel);
 
     try {
-        if (! module->initialize()) {
+        if (! module->init()) {
             logger.error("enableModule") << "Module " << name << " failed to init()";
             return false;
         }
@@ -319,10 +319,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
     }
 
     try {
-        if(! it->second->instance()->deinitialize()) {
-            logger.error("disableModule")
-            << "Deinitialize failed for module " << name;
-        }
+        it->second->instance()->destroy();
     } catch(std::exception const& ex) {
         logger.error("disableModule") << name << " throws " << extra::typeName(ex) << " : "
             << ex.what();

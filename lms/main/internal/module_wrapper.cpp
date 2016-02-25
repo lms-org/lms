@@ -46,7 +46,7 @@ Module* ModuleWrapper::instance() const {
     return m_moduleInstance.get();
 }
 
-void ModuleWrapper::load(void* instance) {
+void ModuleWrapper::load(LifeCycle *instance) {
     m_enabled = instance != nullptr;
     m_moduleInstance.reset(static_cast<Module*>(instance));
 }

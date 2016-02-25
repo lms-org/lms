@@ -23,7 +23,7 @@ Service* ServiceWrapper::instance() {
     return m_service.get();
 }
 
-void ServiceWrapper::load(void* instance) {
+void ServiceWrapper::load(LifeCycle *instance) {
     m_service.reset(static_cast<Service*>(instance));
 }
 

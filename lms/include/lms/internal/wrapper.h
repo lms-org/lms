@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "lms/life_cycle.h"
+
 namespace lms {
 namespace internal {
 
@@ -25,7 +27,7 @@ public:
      *
      * @param instance non-null Module or Service object
      */
-    virtual void load(void* instance) =0;
+    virtual void load(LifeCycle* instance) =0;
 
     /**
      * @brief Free and delete the internal Module or Service

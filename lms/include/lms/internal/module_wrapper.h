@@ -43,7 +43,7 @@ public:
 
     Module* instance() const;
 
-    void load(void* instance) override;
+    void load(LifeCycle* instance) override;
     void unload() override;
 
     Runtime* runtime() const;
