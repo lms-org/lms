@@ -34,9 +34,6 @@ class DotExporter;
  */
 class DataManager {
     friend class ExecutionManager;
-
-    friend class Framework;
-
 public:
     typedef std::unordered_map<std::string, std::shared_ptr<DataChannelInternal>> ChannelMap;
 private:
@@ -70,7 +67,6 @@ public:
         if (!channel) {
             //logger.debug("accessChannel")<<"creating new dataChannel"<<name<<" to "<< typeid(T).name();
             channel = std::make_shared<DataChannelInternal>();
-            channel->maintainer = &m_runtime;
 
             //check if T is abstract
             if (std::is_abstract<T>::value) {

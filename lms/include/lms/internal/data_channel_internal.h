@@ -169,19 +169,6 @@ public:
     std::string name;
 
     /**
-     * @brief maintainer Runtime that holds the dataChannel
-     */
-    Runtime *maintainer;
-    /**
-     * @brief runtimes which need the dataChannel
-     */
-    std::vector<Runtime*> runtimes;
-    /**
-     * @brief dataHost runtime that provides the data
-     */
-    const Runtime *dataHost;
-    int m_cycle; //TODO not sure where/how to set it // -> (not const) sets current cycle-count + returns const ->
-    /**
      * @brief readers reading modules
      */
     std::vector<std::shared_ptr<ModuleWrapper>> readers;
@@ -189,19 +176,6 @@ public:
      * @brief writers writing modules
      */
     std::vector<std::shared_ptr<ModuleWrapper>> writers;
-    /**
-     * @brief addRuntime adds Runtime that wants the data
-     * @param runtime
-     */
-    void addRuntime(Runtime *runtime){
-        runtimes.push_back(runtime);
-    }
-    /**
-     * @brief clearRuntimes clears the list of depending runtimes
-     */
-    void clearRuntimes(){
-        runtimes.clear();
-    }
 
     bool isReader(std::shared_ptr<ModuleWrapper> module) const{
         return std::find(readers.begin(),readers.end(),module) != readers.end();
@@ -215,17 +189,10 @@ public:
         return isReader(module) || isWriter(module);
     }
 
-    /**
-     * @brief getCycle
-     * @return cycle in which the object was created
-     */
-    int getCycle() const{
-        return m_cycle;
-    }
-
     bool hasReader() const{
         return readers.size() > 0;
     }
+
     /**
      * @brief hasWriter
      * @return
