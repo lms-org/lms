@@ -13,13 +13,13 @@
 #include <lms/extra/type.h>
 #include <lms/serializable.h>
 #include "module_wrapper.h"
-#include "dot_exporter.h"
 #include "lms/data_channel.h"
 
 namespace lms {
 namespace internal {
 
 class ExecutionManager;
+class DotExporter;
 
 /**
  * @brief The DataManager manages the creation, access and deletion of

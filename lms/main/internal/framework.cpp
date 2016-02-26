@@ -22,6 +22,7 @@
 #include "lms/internal/runtime.h"
 #include "lms/extra/os.h"
 #include "lms/logging/debug_server_sink.h"
+#include "lms/internal/dot_exporter.h"
 
 namespace lms {
 namespace internal {
