@@ -1,6 +1,9 @@
 #ifndef LMS_INHERITANCE_H
 #define LMS_INHERITANCE_H
+
 #include <memory>
+#include <typeindex>
+
 namespace lms{
 
 class Inheritance{
@@ -11,23 +14,8 @@ public:
      * @param hashcode of the given class
      * @return true if the object is a subtype of the class given by it's hashcode
      */
-    virtual bool isSubType(size_t hashcode) const = 0;
+    virtual bool isSubType(std::type_index) const = 0;
     virtual ~Inheritance(){}
-};
-
-template <typename... Args>
-struct Impl;
-
-template <>
-struct Impl<>
-{
-    static bool isSubType(size_t hashcode,const void* obj){
-        (void)hashcode;
-        (void)obj;
-        return false;
-  }
-
-    virtual ~Impl(){}
 };
 
 template <typename T, bool HasBase>
@@ -35,40 +23,42 @@ struct InheritanceCaller;
 
 template <typename T>
 struct InheritanceCaller<T, true> {
-    static bool call (T* obj,size_t hashcode) {
-        return obj->T::isSubType(hashcode);
+    static bool call (const T* obj, std::type_index type) {
+        return obj->T::isSubType(type);
     }
 };
 
 template <typename T>
 struct InheritanceCaller<T, false> {
-    static bool call (T* obj,size_t hashcode) {
-        (void)hashcode;
-        (void)obj;
+    static bool call (const T*, std::type_index) {
         return false;
     }
 };
-//TODO rename impl
-template <typename First, typename... Args>
-struct Impl<First, Args...>
+
+template <typename... Args>
+struct Extends;
+
+template <>
+struct Extends<>
 {
-    static bool isSubType(size_t hashcode,const void* obj){
-        if(hashcode == typeid(First).hash_code()){
-            //is subtype
-            return true;
-        }
-        //enroll others
-        bool sub = Impl<Args...>::isSubType(hashcode,obj);
-        if(sub)
-            return true;
-        //go deeper in the tree
-        sub = InheritanceCaller<First,std::is_base_of<Inheritance,First>::value>::call((First*)(obj),hashcode);
-        return sub;
-  }
+    template<typename This>
+    static bool isSubType(const This*, std::type_index) {
+        return false;
+    }
 };
 
+template <typename Head, typename... Tail>
+struct Extends<Head, Tail...>
+{
+    template<typename This>
+    static bool isSubType(const This* obj, std::type_index type) {
+        constexpr bool hasInheritance = std::is_base_of<Inheritance,Head>::value;
 
-
+        return type == typeid(Head)
+            || Extends<Tail...>::isSubType(obj, type)
+            || InheritanceCaller<Head,hasInheritance>::call(static_cast<const Head*>(obj),type);
+    }
+};
 
 }//lms
 

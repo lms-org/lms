@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <typeindex>
 #include "lms/logger.h"
 #include "lms/serializable.h"
 #include "lms/inheritance.h"
@@ -29,7 +30,7 @@ struct ObjectBase {
     virtual Inheritance* getInheritance() = 0;
     virtual Serializable* getSerializable()=0;
     virtual std::string typeName() const =0;
-    virtual size_t hashCode() const =0;
+    virtual std::type_index type() const =0;
     virtual bool isSerializable() const =0;
     virtual bool isVoid() const =0;
     virtual bool supportsInheritance() const = 0;
@@ -41,7 +42,7 @@ struct ObjectBase {
     template<typename T>
     TypeResult checkType() {
         //Check if they are the same
-        if(hashCode() == typeid(T).hash_code()) {
+        if(type() == typeid(T)) {
             return TypeResult::SAME;
         }
         //check if the asked object is void
@@ -63,7 +64,7 @@ struct ObjectBase {
        // std::cout << "checkType check old type for Inheritance"<<std::endl;
         if(supportsInheritance()){
             Inheritance *inh = getInheritance();
-            if(inh->isSubType(typeid(T).hash_code())){
+            if(inh->isSubType(typeid(T))){
                 return TypeResult::SUBTYPE;
             }
         }
@@ -71,7 +72,7 @@ struct ObjectBase {
        // std::cout << "checkType check asked type for Inheritance"<<std::endl;
         if(std::is_base_of<Inheritance,T>::value){
             Inheritance* t = (Inheritance*)new T();
-            if(t->isSubType(hashCode())){
+            if(t->isSubType(type())){
                 return TypeResult::SUPERTYPE;
             }
             delete t;
@@ -98,8 +99,8 @@ struct FakeObject: public ObjectBase{
         return extra::typeName<T>();
     }
 
-    size_t hashCode() const override {
-        return typeid(T).hash_code();
+    std::type_index type() const override {
+        return typeid(T);
     }
 
     bool isSerializable() const override {
@@ -162,8 +163,6 @@ public:
 
 
     std::unique_ptr<ObjectBase> main;
-    std::vector<DataChannelInternal> m_preBuffer;
-    std::vector<DataChannelInternal> m_buffer;
 
     virtual ~DataChannelInternal() {}
 
@@ -233,37 +232,6 @@ public:
      */
     bool hasWriter() const{
         return writers.size() > 0;
-    }
-
-    /**
-     * @brief sharesData
-     * @return true if the data is accessed by another runtime
-     */
-    bool sharesData() const{
-        return runtimes.size() > 0;
-    }
-
-    /**
-     * @brief buffered
-     * @return true if it receives data from another runtime (hasWriters returns false!)
-     */
-    bool buffered() const {
-        return dataHost != nullptr;//TODO not sure if this works
-    }
-
-    //called after each cycle of the runtime for each dataChannel
-    void bufferCycle(){
-        if(buffered()){
-        //clears the buffer
-        m_buffer.clear();
-        }else if(sharesData()){
-        //add data to other runtime
-        for(Runtime *runtime : runtimes){
-            (void)runtime;
-            //TODO
-            //runtime.addData(this);
-            }
-        }
     }
 };
 
