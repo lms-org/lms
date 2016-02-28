@@ -15,12 +15,12 @@
 #include "lms/logger.h"
 #include "lms/time.h"
 #include "lms/config.h"
-#include "lms/extra/string.h"
+#include "lms/internal/string.h"
 #include "lms/internal/xml_parser.h"
-#include "lms/extra/colors.h"
+#include "lms/internal/colors.h"
 #include "lms/definitions.h"
 #include "lms/internal/runtime.h"
-#include "lms/extra/os.h"
+#include "lms/internal/os.h"
 #include "lms/logging/debug_server_sink.h"
 #include "lms/internal/dot_exporter.h"
 
@@ -73,12 +73,12 @@ Framework::Framework(const ArgumentHandler &arguments) :
     if(arguments.argEnableLoad) {
         if(arguments.argEnableLoadPath.find('/') == std::string::npos) {
             // no slashes
-            m_loadLogPath = lms::extra::homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
+            m_loadLogPath = homepath() + "/.lmslog/" + arguments.argEnableLoadPath;
         } else {
             m_loadLogPath = arguments.argEnableLoadPath;
         }
 
-        if(extra::fileType(m_loadLogPath) != extra::FileType::DIRECTORY) {
+        if(fileType(m_loadLogPath) != FileType::DIRECTORY) {
             logger.error() << "Given load path is not a directory: " << m_loadLogPath;
             return;
         }
@@ -100,7 +100,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
     }
 
     if(arguments.argEnableSave) {
-        m_saveLogPath = lms::extra::homepath() + "/.lmslog";
+        m_saveLogPath = homepath() + "/.lmslog";
         mkdir(m_saveLogPath.c_str(), MODE);
 
         m_saveLogPath += "/" + currentTimeString();
@@ -109,14 +109,14 @@ Framework::Framework(const ArgumentHandler &arguments) :
         }
         mkdir(m_saveLogPath.c_str(), MODE);
 
-        lms::extra::copyTree(configPath, m_saveLogPath + "/configs");
+        copyTree(configPath, m_saveLogPath + "/configs");
 
         logger.info() << "Enable save: " << m_saveLogPath;
     }
 
     char *lms_service_path = std::getenv("LMS_SERVICE_PATH");
     if(lms_service_path != nullptr && lms_service_path[0] != '\0') {
-        for(auto const& path : lms::extra::split(lms_service_path, ':')) {
+        for(auto const& path : split(lms_service_path, ':')) {
             m_serviceLoader.addSearchPath(path, 0);
         }
     }
@@ -160,7 +160,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
                         return;
                     }
                 } catch(std::exception const& ex) {
-                    logger.error() << service.first << " throws " << extra::typeName(ex) << " : " << ex.what();
+                    logger.error() << service.first << " throws " << lms::typeName(ex) << " : " << ex.what();
                     return;
                 }
             } else {
@@ -170,7 +170,7 @@ Framework::Framework(const ArgumentHandler &arguments) :
 
         char *lms_module_path = std::getenv("LMS_MODULE_PATH");
         if(lms_module_path != nullptr && lms_module_path[0] != '\0') {
-            for(auto const& path : lms::extra::split(lms_module_path, ':')) {
+            for(auto const& path : split(lms_module_path, ':')) {
                 m_moduleLoader.addSearchPath(path, 0);
             }
         }
@@ -264,7 +264,7 @@ Framework::~Framework() {
             try {
                 service.second->instance()->destroy();
             } catch(std::exception const& ex) {
-                logger.error() << service.first << " throws " << extra::typeName(ex) << " : " << ex.what();
+                logger.error() << service.first << " throws " << lms::typeName(ex) << " : " << ex.what();
             }
         }
     }
@@ -287,11 +287,11 @@ void Framework::signal(int s) {
         break;
     case SIGSEGV:
         //Segmentation Fault - try to identify what went wrong;
-        std::cerr << std::endl << lms::extra::COLOR_RED
+        std::cerr << std::endl << COLOR_RED
                 << "######################################################" << std::endl
                 << "                   Segfault Found                     " << std::endl
                 << "######################################################" << std::endl
-                << lms::extra::COLOR_WHITE;
+                << COLOR_WHITE;
 
         //In Case of Segfault while recovering - shutdown.
         SignalHandler::getInstance().removeListener(SIGSEGV, this);

@@ -3,8 +3,8 @@
 #include <algorithm>
 
 #include "lms/internal/argumenthandler.h"
-#include "lms/extra/os.h"
-#include "lms/extra/string.h"
+#include "lms/internal/os.h"
+#include "lms/internal/string.h"
 #include "lms/definitions.h"
 
 #include "tclap/CmdLine.h"
@@ -49,7 +49,7 @@ ArgumentHandler::ArgumentHandler() : argLoadConfiguration(""),
     argMultithreaded(false), argThreadsAuto(false), argThreads(1),
     argDebug(false), argEnableLoad(false), argEnableSave(false) {
 
-    argUser = lms::extra::username();
+    argUser = username();
 }
 
 std::string ArgumentHandler::slug(std::string const& tag) {
@@ -87,7 +87,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
         false, "ALL", &debugConstraint, cmd);
     TCLAP::ValueArg<std::string> userArg("", "user",
         "Set the username, used for config loading, defaults to " USER_ENV,
-        false, lms::extra::username(), "string", cmd);
+        false, username(), "string", cmd);
     TCLAP::ValueArg<std::string> configArg("c", "config",
         "Load XML configuration file",
         false, "framework_conf", "string", cmd);
@@ -134,7 +134,7 @@ void ArgumentHandler::parseArguments(int argc, char* const*argv) {
     argUser = userArg.getValue();
     argLogFile = logFileArg.getValue();
     argQuiet = quietSwitch.getValue();
-    argFlags = lms::extra::split(flagsArg.getValue(), ',');
+    argFlags = split(flagsArg.getValue(), ',');
     argProfilingFile = profilingArg.getValue();
     argDebug = debugSwitch.getValue();
     runLevelByName(runLevelArg.getValue(), argRunLevel);

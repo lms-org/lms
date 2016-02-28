@@ -4,10 +4,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "lms/extra/os.h"
+#include "lms/internal/os.h"
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 std::string username() {
 
@@ -86,5 +86,5 @@ void copyTree(std::string const& from, std::string const& to) {
     }
 }
 
-}  // namespace extra
+}  // namespace internal
 }  // namespace lms

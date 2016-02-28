@@ -10,7 +10,7 @@
 #include <type_traits>
 
 #include <lms/logger.h>
-#include <lms/extra/type.h>
+#include <lms/type.h>
 #include <lms/serializable.h>
 #include "module_wrapper.h"
 #include "lms/data_channel.h"
@@ -83,7 +83,7 @@ public:
                 TypeResult typeRes = channel->main->checkType<T>();
                 if (typeRes == TypeResult::INVALID) {
                     logger.error("accessChannel") << "INVALID TYPES GIVEN FOR CHANNEL " << name << " currentType "
-                    << channel->main->typeName() << " tried to access it with type: " << extra::typeName<T>();
+                    << channel->main->typeName() << " tried to access it with type: " << lms::typeName<T>();
                     return nullptr;
                 } else if (typeRes == TypeResult::SUPERTYPE) {
                     //we can "upgrade" the current channel

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <execinfo.h>
 #include <cxxabi.h>
-#include "lms/extra/type.h"
+#include "lms/type.h"
 
 namespace lms {
 namespace internal {
@@ -42,7 +42,7 @@ void printStacktrace() {
             *offset_begin++ = '\0';
             *offset_end++ = '\0';
 
-            std::string realName(lms::extra::demangle(mangled_name));
+            std::string realName(lms::demangle(mangled_name));
 
             std::cerr << "[bt]: (" << i << ") " << messages[i] << " : "
                       << realName << "+" << offset_begin << offset_end

@@ -12,7 +12,6 @@
 #endif
 
 #include "lms/time.h"
-#include "lms/extra/string.h"
 
 namespace lms {
 

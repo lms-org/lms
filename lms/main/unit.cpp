@@ -8,7 +8,7 @@ namespace lms {
 float parseUnitHelper(std::string const& str, std::map<std::string, float> const& units) {
     float result = 0;
 
-    for(auto const& part : lms::extra::split(str, ' ')) {
+    for(auto const& part : internal::split(str, ' ')) {
         size_t index = part.find_first_not_of("0123456789.-");
         if(index == std::string::npos) {
             throw std::runtime_error("Can not parse " + str);

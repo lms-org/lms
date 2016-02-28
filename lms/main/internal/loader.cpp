@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 
 #include "lms/internal/loader.h"
-#include "lms/extra/os.h"
+#include "lms/internal/os.h"
 #include "lms/internal/wrapper.h"
 #include "lms/definitions.h"
 
@@ -11,28 +11,28 @@ namespace lms {
 namespace internal {
 
 void Loader::addSearchPath(std::string const& path, int recursion) {
-    constexpr size_t LIB_LEN = lms::extra::lenOf("lib");
+    constexpr size_t LIB_LEN = lenOf("lib");
 
     std::vector<std::string> list;
-    lms::extra::listDir(path, list);
+    listDir(path, list);
 
     for(std::string const& child : list) {
         std::string childPath = path + "/" + child;
-        lms::extra::FileType type = lms::extra::fileType(childPath);
+        FileType type = fileType(childPath);
 
-        if(type == lms::extra::FileType::REGULAR_FILE &&
-                lms::extra::startsWith(child, "lib") &&
+        if(type == FileType::REGULAR_FILE &&
+                startsWith(child, "lib") &&
 #ifdef __APPLE__
                 // Shared objects may end in .so or .dylib on OS X
-                ( lms::extra::endsWith(child, ".so") || lms::extra::endsWith(child, ".dylib") )
+                ( endsWith(child, ".so") || endsWith(child, ".dylib") )
 #else
-                lms::extra::endsWith(child, ".so")
+                endsWith(child, ".so")
 #endif
         ) {
             size_t dotIndex = child.find_last_of('.');
 
             m_pathMapping[child.substr(LIB_LEN, dotIndex - LIB_LEN)] = childPath;
-        } else if(type == lms::extra::FileType::DIRECTORY && recursion > 0) {
+        } else if(type == FileType::DIRECTORY && recursion > 0) {
             addSearchPath(childPath, recursion - 1);
         }
     }
@@ -77,7 +77,7 @@ bool Loader::load(Wrapper *wrapper) {
                 (LMS_VERSION_CODE & MINOR_MASK) < (libVersion & MINOR_MASK)) {
             logger.error("load") << "Lib " << wrapper->name() << " has bad version. "
                 << "LMS Version " << LMS_VERSION_STRING << ", Lib was compiled for "
-                << lms::extra::versionCodeToString(libVersion);
+                << versionCodeToString(libVersion);
             return false;
         }
     }

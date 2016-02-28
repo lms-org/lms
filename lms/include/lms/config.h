@@ -5,7 +5,7 @@
 #include <sstream>
 #include <vector>
 
-#include "extra/string.h"
+#include "internal/string.h"
 
 namespace lms {
 
@@ -199,7 +199,7 @@ public:
             nextPos = fullValue.find(',', pos);
 
             // slice one value out of the string
-            std::string value(lms::extra::trim(fullValue.substr(pos,
+            std::string value(lms::internal::trim(fullValue.substr(pos,
                 nextPos == std::string::npos ? nextPos : nextPos - pos)));
 
             // parse the value

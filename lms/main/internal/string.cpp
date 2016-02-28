@@ -1,10 +1,10 @@
-#include <lms/extra/string.h>
+#include <lms/internal/string.h>
 #include <string>
 #include <vector>
 #include <iostream>
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 std::string trim(const std::string& str, const std::string& delims) {
     std::string result(str);
@@ -98,5 +98,5 @@ std::string versionCodeToString(uint32_t versionCode) {
             std::to_string(patch);
 }
 
-} // namespace extra
+} // namespace internal
 } // namespace lms

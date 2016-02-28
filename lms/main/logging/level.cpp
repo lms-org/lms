@@ -1,5 +1,5 @@
 #include "lms/logging/level.h"
-#include "lms/extra/colors.h"
+#include "lms/internal/colors.h"
 
 namespace lms {
 namespace logging {
@@ -30,11 +30,11 @@ bool levelFromName(const std::string &name, Level &level) {
 
 std::string levelColor(Level lvl) {
     switch(lvl) {
-    case Level::DEBUG : return lms::extra::COLOR_GREEN;
-    case Level::INFO : return lms::extra::COLOR_BLUE;
-    case Level::WARN : return lms::extra::COLOR_YELLOW;
-    case Level::ERROR : return lms::extra::COLOR_RED;
-    default: return lms::extra::COLOR_WHITE; // ALL, OFF
+    case Level::DEBUG : return lms::internal::COLOR_GREEN;
+    case Level::INFO : return lms::internal::COLOR_BLUE;
+    case Level::WARN : return lms::internal::COLOR_YELLOW;
+    case Level::ERROR : return lms::internal::COLOR_RED;
+    default: return lms::internal::COLOR_WHITE; // ALL, OFF
     }
 }
 

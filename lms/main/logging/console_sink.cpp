@@ -1,5 +1,5 @@
 #include <lms/logger.h>
-#include <lms/extra/colors.h>
+#include <lms/internal/colors.h>
 #include <ctime>
 
 namespace lms {
@@ -33,7 +33,7 @@ void ConsoleSink::sink(const Event &message) {
     }
     m_out << levelName(message.level) << " " << message.tag;
     if(m_colored) {
-        m_out << lms::extra::COLOR_WHITE;
+        m_out << lms::internal::COLOR_WHITE;
     }
     m_out << " " << message.messageText() << std::endl;
 }

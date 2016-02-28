@@ -42,7 +42,7 @@ void ExecutionManager::disableAllModules() {
             it->second->instance()->destroy();
         } catch(std::exception &e) {
             logger.error("disableModule") << "Module " << it->first << " throws "
-                << lms::extra::typeName(e) << " : " << e.what();
+                << lms::typeName(e) << " : " << e.what();
         }
     }
 
@@ -83,7 +83,7 @@ void ExecutionManager::loop() {
             try {
                 mod->cycle();
             } catch(std::exception const& ex) {
-                logger.error("cycle") << mod->getName() << " throws " << extra::typeName(ex)
+                logger.error("cycle") << mod->getName() << " throws " << lms::typeName(ex)
                                       << " : " << ex.what();
             }
 
@@ -180,7 +180,7 @@ void ExecutionManager::threadFunction(int threadNum) {
                 executableModule->cycle();
             } catch(std::exception const& ex) {
                 logger.error("cycle") << executableModule->getName() << " throws "
-                                      << extra::typeName(ex) << " : " << ex.what();
+                                      << lms::typeName(ex) << " : " << ex.what();
             }
             profiler().markEnd(m_runtimeName + "." + executableModule->getName());
             lck.lock();
@@ -300,7 +300,7 @@ bool ExecutionManager::enableModule(const std::string &name, lms::logging::Level
             return false;
         }
     } catch(std::exception const& ex) {
-        logger.error("enableModule") << name << " throws " << extra::typeName(ex) <<  " : " << ex.what();
+        logger.error("enableModule") << name << " throws " << lms::typeName(ex) <<  " : " << ex.what();
         return false;
     }
 
@@ -321,7 +321,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
     try {
         it->second->instance()->destroy();
     } catch(std::exception const& ex) {
-        logger.error("disableModule") << name << " throws " << extra::typeName(ex) << " : "
+        logger.error("disableModule") << name << " throws " << lms::typeName(ex) << " : "
             << ex.what();
         return false;
     }

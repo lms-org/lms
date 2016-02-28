@@ -44,7 +44,7 @@ set (HEADERS
 
     "include/lms/internal/framework.h"
     "include/lms/internal/signalhandler.h"
-    "include/lms/extra/colors.h"
+    "include/lms/internal/colors.h"
     "include/lms/internal/datamanager.h"
     "include/lms/internal/argumenthandler.h"
     "include/lms/logger.h"
@@ -92,11 +92,11 @@ set (HEADERS
     "include/lms/logging/threshold_filter.h"
     "include/lms/logging/debug_server_sink.h"
 
-    "include/lms/extra/type.h"
-    "include/lms/extra/string.h"
+    "include/lms/type.h"
+    "include/lms/internal/string.h"
     "include/lms/time.h"
     "include/lms/internal/backtrace_formatter.h"
-    "include/lms/extra/os.h"
+    "include/lms/internal/os.h"
     "include/lms/internal/dot_exporter.h"
 )
 
@@ -134,10 +134,10 @@ set (SOURCE
     "main/logging/threshold_filter.cpp"
     "main/logging/debug_server_sink.cpp"
 
-    "main/extra/type.cpp"
-    "main/extra/string.cpp"
+    "main/type.cpp"
+    "main/internal/string.cpp"
     "main/time.cpp"
-    "main/extra/os.cpp"
+    "main/internal/os.cpp"
     "main/internal/dot_exporter.cpp"
 )
 

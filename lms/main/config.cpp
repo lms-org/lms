@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include <lms/config.h>
-#include <lms/extra/string.h>
+#include <lms/internal/string.h>
 
 namespace lms {
 
@@ -33,8 +33,8 @@ void Config::load(std::istream &in) {
     bool isMultiline = false;
     std::string lineBuffer;
 
-    while(lms::extra::safeGetline(in, line)) {
-        if(extra::trim(line).empty() || line[0] == '#') {
+    while(internal::safeGetline(in, line)) {
+        if(internal::trim(line).empty() || line[0] == '#') {
             // ignore empty lines and comment lines
             isMultiline = false;
         } else {
@@ -55,8 +55,8 @@ void Config::load(std::istream &in) {
             size_t index = lineBuffer.find_first_of('=');
 
             if(index != std::string::npos) {
-                properties[extra::trim(lineBuffer.substr(0, index))]
-                        = extra::trim(lineBuffer.substr(index+1));
+                properties[internal::trim(lineBuffer.substr(0, index))]
+                        = internal::trim(lineBuffer.substr(index+1));
             }
         }
     }

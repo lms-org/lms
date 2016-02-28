@@ -1,5 +1,5 @@
-#ifndef LMS_EXTRA_TYPE_H
-#define LMS_EXTRA_TYPE_H
+#ifndef LMS_TYPE_H
+#define LMS_TYPE_H
 
 #include <string>
 #include <typeinfo>
@@ -7,7 +7,6 @@
 /* COPIED FROM: http://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname */
 
 namespace lms {
-namespace extra {
 
 /**
  * @brief Demangle a type name returned by typeid(t).name().
@@ -54,7 +53,6 @@ std::string typeName() {
     return demangle(typeid(T).name());
 }
 
-} // namespace extra
 } // namespace lms
 
-#endif /* LMS_EXTRA_TYPE_H */
+#endif /* LMS_TYPE_H */

@@ -2,11 +2,11 @@
 #include <string>
 #include <vector>
 
-#include "lms/extra/string.h"
+#include "lms/internal/string.h"
 #include "gtest/gtest.h"
 
 TEST(string, trim) {
-    using lms::extra::trim;
+    using lms::internal::trim;
 
     // empty string
     ASSERT_EQ(std::string(""), trim(""));
@@ -19,7 +19,7 @@ TEST(string, trim) {
 }
 
 TEST(string, split) {
-    using lms::extra::split;
+    using lms::internal::split;
     typedef std::vector<std::string> V;
 
     // usual list
@@ -36,7 +36,7 @@ TEST(string, split) {
 }
 
 TEST(string, dirname) {
-    using lms::extra::dirname;
+    using lms::internal::dirname;
 
     // absolute path
     ASSERT_EQ(std::string("/tmp"), dirname("/tmp/test.file"));
@@ -70,7 +70,7 @@ TEST(string, dirname) {
 }
 
 TEST(string, isAbsolute) {
-    using lms::extra::isAbsolute;
+    using lms::internal::isAbsolute;
 
     // relative path
     ASSERT_FALSE(isAbsolute("tmp/test.file"));
@@ -83,7 +83,7 @@ TEST(string, isAbsolute) {
 }
 
 TEST(string, safeGetline) {
-    using lms::extra::safeGetline;
+    using lms::internal::safeGetline;
 
     std::istringstream iss(
     "linux line\n"
@@ -110,7 +110,7 @@ TEST(string, safeGetline) {
 }
 
 TEST(string, lenOf) {
-    using lms::extra::lenOf;
+    using lms::internal::lenOf;
 
     ASSERT_EQ(size_t(4), lenOf("test"));
     ASSERT_EQ(size_t(0), lenOf(""));

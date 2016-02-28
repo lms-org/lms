@@ -1,11 +1,11 @@
-#ifndef LMS_EXTRA_STRING_H
-#define LMS_EXTRA_STRING_H
+#ifndef LMS_INTERNAL_STRING_H
+#define LMS_INTERNAL_STRING_H
 
 #include <string>
 #include <vector>
 
 namespace lms {
-namespace extra {
+namespace internal {
 
 /**
  * Remove surrounding whitespace from a std::string.
@@ -90,7 +90,7 @@ constexpr size_t lenOf(const char (&)[N]) {
     return N - 1;
 }
 
-} // namespace extra
+} // namespace internal
 } // namespace lms
 
-#endif /* LMS_EXTRA_STRING_H */
+#endif /* LMS_INTERNAL_STRING_H */

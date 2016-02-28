@@ -1,5 +1,5 @@
 #include "lms/internal/xml_parser.h"
-#include "lms/extra/os.h"
+#include "lms/internal/os.h"
 
 namespace lms {
 namespace internal {
@@ -63,11 +63,11 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
             } else if(notSetAttr) {
                 result = evaluateNotSet(notSetAttr.value(), flags);
             } else if(anyOfAttr) {
-                result = evaluateAnyOf(lms::extra::split(anyOfAttr.value(), ','), flags);
+                result = evaluateAnyOf(split(anyOfAttr.value(), ','), flags);
             } else if(allOfAttr) {
-                result = evaluateAllOf(lms::extra::split(allOfAttr.value(), ','), flags);
+                result = evaluateAllOf(split(allOfAttr.value(), ','), flags);
             } else if(nothingOfAttr) {
-                result = evaluateNothingOf(lms::extra::split(nothingOfAttr.value(), ','), flags);
+                result = evaluateNothingOf(split(nothingOfAttr.value(), ','), flags);
             } else {
                 std::cout << "Failed to preprocess XML <if>" << std::endl;
             }
@@ -111,7 +111,7 @@ void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &a
         path += "/" + argLoadConfig + ".xml";
     }
 
-    if(lms::extra::fileType(path) == lms::extra::FileType::REGULAR_FILE) {
+    if(fileType(path) == FileType::REGULAR_FILE) {
         parseFile(path, flag);
         return;
     } else {
@@ -123,7 +123,7 @@ void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key) {
     // if node has no children
     if(node.type() == pugi::node_pcdata) {
-        config.set<std::string>(key, extra::trim(node.value()));
+        config.set<std::string>(key, trim(node.value()));
     } else if(node.type() == pugi::node_element) {
         std::string newKey;
 
@@ -286,12 +286,12 @@ void XmlParser::parseInclude(pugi::xml_node node,
 
     if(srcAttr) {
         std::string includePath = srcAttr.value();
-        if(extra::isAbsolute(includePath)) {
+        if(isAbsolute(includePath)) {
             // if absolute then start from configs dir
             includePath = LMS_CONFIGS + includePath;
         } else {
             // otherwise go from current file's directory
-            includePath = extra::dirname(currentFile) + "/" + includePath;
+            includePath = dirname(currentFile) + "/" + includePath;
         }
         parseFile(includePath, flag);
     } else {
@@ -306,12 +306,12 @@ void XmlParser::parseRuntime(pugi::xml_node node, const std::string &currentFile
 
     if(srcAttr && nameAttr) {
         std::string includePath = srcAttr.value();
-        if(extra::isAbsolute(includePath)) {
+        if(isAbsolute(includePath)) {
             // if absolute then start from configs dir
             includePath = LMS_CONFIGS + includePath;
         } else {
             // otherwise go from current file's directory
-            includePath = extra::dirname(currentFile) + "/" + includePath;
+            includePath = dirname(currentFile) + "/" + includePath;
         }
 
         Runtime *temp = m_runtime;
@@ -419,7 +419,7 @@ void XmlParser::parseModules(pugi::xml_node node,
 
         if(userAttr) {
             std::vector<std::string> allowedUsers =
-                    lms::extra::split(std::string(userAttr.value()), ',');
+                    split(std::string(userAttr.value()), ',');
 
             if(std::find(allowedUsers.begin(), allowedUsers.end(),
                          m_args.argUser) == allowedUsers.end()) {
@@ -435,10 +435,10 @@ void XmlParser::parseModules(pugi::xml_node node,
         if(srcAttr) {
             std::string lconfPath = srcAttr.value();
 
-            if(extra::isAbsolute(lconfPath)) {
+            if(isAbsolute(lconfPath)) {
                 lconfPath = LMS_CONFIGS + lconfPath;
             } else {
-                lconfPath = extra::dirname(currentFile) + "/" + lconfPath;
+                lconfPath = dirname(currentFile) + "/" + lconfPath;
             }
 
             bool loadResult = module->configs[name].loadFromFile(lconfPath);
@@ -501,7 +501,7 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
 
         if(userAttr) {
             std::vector<std::string> allowedUsers =
-                    lms::extra::split(std::string(userAttr.value()), ',');
+                    split(std::string(userAttr.value()), ',');
 
             if(std::find(allowedUsers.begin(), allowedUsers.end(),
                          m_args.argUser) == allowedUsers.end()) {
@@ -517,10 +517,10 @@ void XmlParser::parseService(pugi::xml_node node, const std::string &currentFile
         if(srcAttr) {
             std::string lconfPath = srcAttr.value();
 
-            if(extra::isAbsolute(lconfPath)) {
+            if(isAbsolute(lconfPath)) {
                 lconfPath = LMS_CONFIGS + lconfPath;
             } else {
-                lconfPath = extra::dirname(currentFile) + "/" + lconfPath;
+                lconfPath = dirname(currentFile) + "/" + lconfPath;
             }
 
             bool loadResult = service->getConfig(name).loadFromFile(lconfPath);

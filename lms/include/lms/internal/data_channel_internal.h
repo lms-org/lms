@@ -8,7 +8,7 @@
 #include "lms/logger.h"
 #include "lms/serializable.h"
 #include "lms/inheritance.h"
-#include "lms/extra/type.h"
+#include "lms/type.h"
 #include "lms/type_result.h"
 #include "lms/any.h"
 
@@ -96,7 +96,7 @@ struct FakeObject: public ObjectBase{
     }
 
     std::string typeName() const override {
-        return extra::typeName<T>();
+        return lms::typeName<T>();
     }
 
     std::type_index type() const override {
