@@ -1,32 +1,10 @@
 #ifndef LMS_CONFIG_H
 #define LMS_CONFIG_H
 
-#include <unordered_map>
-#include <sstream>
+#include <string>
 #include <vector>
 
-#include "internal/string.h"
-
 namespace lms {
-
-/**
- * @brief Parse the given string into a type T.
- *
- * @param src string to parse
- * @param dst put the parsed thing here
- * @return true if parsing was successful, otherwise false
- */
-template<typename T>
-bool parse(const std::string &src, T &dst) {
-    std::istringstream is(src);
-    return !! (is >> dst);
-}
-
-template<>
-bool parse<std::string>(const std::string &src, std::string &dst);
-
-template<>
-bool parse<bool>(const std::string &src, bool &dst);
 
 /**
  * @brief Config is a key-value mapping used for module configuration.
@@ -63,15 +41,23 @@ bool parse<bool>(const std::string &src, bool &dst);
  */
 class Config {
 public:
-    // Microsoft VisualStudio does not support C++11 Move Semantics
-#if ! defined(_MSC_VER)
-    /* Default contructors and assignment operators */
-    Config() = default;
-    Config(const Config &) = default;
-    Config(Config &&) = default;
-    Config& operator= (const Config &) = default;
-    Config& operator= (Config &&) = default;
-#endif
+    friend void swap(Config& first, Config& second) {
+        std::swap(first.dptr, second.dptr);
+    }
+
+    Config();
+    ~Config();
+
+    Config(const Config&);
+
+    Config(Config &&other) : dptr(other.dptr) {
+        other.dptr = nullptr;
+    }
+
+    Config& operator= (Config other) {
+        swap(*this, other);
+        return *this;
+    }
 
     /**
      * @brief Load a config file from the given path.
@@ -121,28 +107,10 @@ public:
      * @param value the value to set
      */
     template<typename T>
-    void set(const std::string &key, const T &value) {
-        std::ostringstream oss;
-        oss << value;
-        properties[key] = oss.str();
-    }
+    void set(const std::string &key, const T &value);
 
-    /**
-     * @brief Return the value by the given config key.
-     *
-     * If the key is not found the default constructor
-     * of T is invoked the that object is returned.
-     *
-     * If you want to check if a key is in the config file
-     * use hasKey()
-     *
-     * @param key the key to look for
-     * @return value of type T
-     */
     template<typename T>
-    T get(const std::string &key) const {
-        return get(key, T());
-    }
+    void setArray(const std::string &key, const std::vector<T> &value);
 
     /**
      * @brief Return the value by the given config key.
@@ -159,20 +127,7 @@ public:
      * @return value of type T
      */
     template<typename T>
-    T get(const std::string &key, const T &defaultValue) const {
-        const auto it = properties.find(key);
-        if(it == properties.end()) {
-            return defaultValue;
-        } else {
-            T result;
-            if(parse(it->second, result)) {
-                return result;
-            } else {
-                // if parsing failed take the default value
-                return defaultValue;
-            }
-        }
-    }
+    T get(const std::string &key, const T &defaultValue) const;
 
     /**
      * @brief Retrieve a config value and split it at commas.
@@ -183,50 +138,8 @@ public:
      * @param key config key to look for
      * @param list values will be push_back'ed there
      */
-    template<typename T, typename ListType>
-    void getArray(std::string const& key, ListType & list) const {
-        std::string fullValue(get<std::string>(key));
-
-        // if the key/value-pair was not set -> stop
-        if(fullValue.empty()) {
-            return;
-        }
-
-        size_t pos, nextPos = -1;
-
-        do {
-            pos = nextPos + 1;
-            nextPos = fullValue.find(',', pos);
-
-            // slice one value out of the string
-            std::string value(lms::internal::trim(fullValue.substr(pos,
-                nextPos == std::string::npos ? nextPos : nextPos - pos)));
-
-            // parse the value
-            T parsedValue;
-
-            if(parse(value, parsedValue)) {
-                // add the value to the vector
-                list.push_back(parsedValue);
-            }
-        } while(nextPos != std::string::npos);
-    }
-
-    /**
-     * @brief Return a vector of values for the given key.
-     *
-     * This is similar to the `get<T>(...)` method, but the
-     * value will be separated by commas.
-     *
-     * @param key the key to look for
-     * @return list of values of type T
-     */
     template<typename T>
-    std::vector<T> getArray(const std::string &key) const {
-        std::vector<T> result;
-        getArray<T>(key, result);
-        return result;
-    }
+    std::vector<T> getArray(const std::string &key, const std::vector<T> &defaultValue) const;
 
     /**
      * @brief Check if the given key is available.
@@ -244,12 +157,42 @@ public:
      */
     bool empty() const;
 
+    /**
+     * @brief Delete all properties of this config.
+     *
+     * empty() will return true afterwards.
+     */
+    void clear();
 private:
-    std::unordered_map<std::string, std::string> properties;
+    struct Private;
+    Private *dptr;
+    inline Private* dfunc() { return dptr; }
+    inline const Private* dfunc() const { return dptr; }
 };
 
-template<>
-void Config::set<std::string>(const std::string &key, const std::string &value);
+// Template specializations get<T>
+template<> std::string Config::get<std::string>(const std::string &key, const std::string &defaultValue) const;
+template<> int Config::get<int>(const std::string &key, const int &defaultValue) const;
+template<> float Config::get<float>(const std::string &key, const float &defaultValue) const;
+template<> bool Config::get<bool>(const std::string &key, const bool &defaultValue) const;
+
+// Template specializations set<T>
+template<> void Config::set<std::string>(const std::string &key, const std::string &value);
+template<> void Config::set<int>(const std::string &key, const int &value);
+template<> void Config::set<float>(const std::string &key, const float &value);
+template<> void Config::set<bool>(const std::string &key, const bool &value);
+
+// Template specializations getArray<T>
+template<> std::vector<std::string> Config::getArray<std::string>(const std::string &key, const std::vector<std::string> &defaultValue) const;
+template<> std::vector<int> Config::getArray<int>(const std::string &key, const std::vector<int> &defaultValue) const;
+template<> std::vector<float> Config::getArray<float>(const std::string &key, const std::vector<float> &defaultValue) const;
+template<> std::vector<bool> Config::getArray<bool>(const std::string &key, const std::vector<bool> &defaultValue) const;
+
+// Template specializations setArray<T>
+template<> void Config::setArray<std::string>(const std::string &key, const std::vector<std::string> &value);
+template<> void Config::setArray<int>(const std::string &key, const std::vector<int> &value);
+template<> void Config::setArray<float>(const std::string &key, const std::vector<float> &value);
+template<> void Config::setArray<bool>(const std::string &key, const std::vector<bool> &value);
 
 } // namespace lms
 

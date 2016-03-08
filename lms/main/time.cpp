@@ -191,15 +191,13 @@ std::ostream& operator <<(std::ostream &stream, const Time &t) {
     return stream;
 }
 
-template<>
-bool parse<Time>(const std::string &src, Time &dst) {
+/*template<> Time string_cast_to<Time>(const std::string &input) {
     const std::map<std::string, float> units {
         {"s", 1000000.f},
         {"ms", 1000.f},
         {"us", 1.f}
     };
-    dst = lms::Time::fromMicros(parseUnitHelper(src, units));
-    return true;
-}
+    return lms::Time::fromMicros(parseUnitHelper(input, units));
+}*/
 
 }  // namespace lms

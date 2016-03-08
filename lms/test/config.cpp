@@ -15,7 +15,7 @@ protected:
         "text = YES\n"
         "flagF = false\n"
         "#AnotherComment\n"
-        "flagT=1\r\n"
+        "flagT=true\r\n"
         "\n"
         "ids = 1, 2,\\\n"
         "3, 4\n"
@@ -48,22 +48,22 @@ TEST_F(ConfigTest, hasKey) {
 }
 
 TEST_F(ConfigTest, getInt) {
-    ASSERT_EQ(300, config.get<int>("width"));
+    ASSERT_EQ(300, config.get<int>("width", 0));
 
     // default value
     ASSERT_EQ(10, emptyConfig.get<int>("width", 10));
 }
 
 TEST_F(ConfigTest, getString) {
-    ASSERT_EQ(std::string("YES"), config.get<std::string>("text"));
+    ASSERT_EQ(std::string("YES"), config.get<std::string>("text", ""));
 
     // default value
     ASSERT_EQ(std::string("NO"), emptyConfig.get<std::string>("text", "NO"));
 }
 
 TEST_F(ConfigTest, getBool) {
-    ASSERT_FALSE(config.get<bool>("flagF"));
-    ASSERT_TRUE(config.get<bool>("flagT"));
+    ASSERT_FALSE(config.get<bool>("flagF", false));
+    ASSERT_TRUE(config.get<bool>("flagT", false));
 
     // default value
     ASSERT_FALSE(emptyConfig.get<bool>("flagF", false));
@@ -71,7 +71,7 @@ TEST_F(ConfigTest, getBool) {
 }
 
 TEST_F(ConfigTest, getFloat) {
-    ASSERT_FLOAT_EQ(7.52, config.get<float>("speed"));
+    ASSERT_FLOAT_EQ(7.52, config.get<float>("speed", 0));
 
     // default value
     ASSERT_FLOAT_EQ(3.2, emptyConfig.get<float>("speed", 3.2));
@@ -79,20 +79,25 @@ TEST_F(ConfigTest, getFloat) {
 
 TEST_F(ConfigTest, getArrayInt) {
     typedef std::vector<int> V;
-    ASSERT_EQ(V({1, 2, 3, 4}), config.getArray<int>("ids"));
+    ASSERT_EQ(V({1, 2, 3, 4}), config.getArray<V::value_type>("ids", {}));
 
     // default value
-    ASSERT_EQ(V(), emptyConfig.getArray<int>("ids"));
+    ASSERT_EQ(V(), emptyConfig.getArray<V::value_type>("ids", {}));
+
+    // default value
+    ASSERT_EQ(V({1,2}), emptyConfig.getArray<V::value_type>("ids", V({1,2})));
 }
 
 TEST_F(ConfigTest, getArrayString) {
     typedef std::vector<std::string> V;
     ASSERT_EQ(V({"Ben", "Charles", "David"}),
-        config.getArray<std::string>("users"));
+              config.getArray<V::value_type>("users", {}));
 
     // default value
-    ASSERT_EQ(V(), emptyConfig.getArray<std::string>("users"));
+    ASSERT_EQ(V(), emptyConfig.getArray<V::value_type>("users", {}));
 }
+
+/* TODO uncomment when supported again
 
 TEST_F(ConfigTest, getTime) {
     ASSERT_EQ(lms::Time::fromMillis(12010), config.get<lms::Time>("duration"));
@@ -106,3 +111,4 @@ TEST_F(ConfigTest, getAngle) {
     ASSERT_FLOAT_EQ(180, config.get<lms::Angle>("angle").toDeg());
     ASSERT_FLOAT_EQ(M_PI, config.get<lms::Angle>("angle").toRad());
 }
+*/

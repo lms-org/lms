@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <math.h>
+#include "lms/internal/string.h"
 
 namespace lms {
 
@@ -45,25 +46,25 @@ float Angle::toDeg() const {
     return rad * 180 / M_PI;
 }
 
-template<>
-bool parse<Distance>(const std::string &src, Distance &dst) {
+/*template<>
+Distance Config::get<Distance>(const std::string &key, const Distance &defaultValue) const {
+    std::string input = get<std::string>(key, "");
     const std::map<std::string, float> units {
         {"m", 1.f},
         {"cm", 0.01f},
         {"mm", 0.001f}
     };
-    dst = Distance(parseUnitHelper(src, units));
-    return true;
+    return Distance(parseUnitHelper(input, units));
 }
 
 template<>
-bool parse<Angle>(const std::string &src, Angle &dst) {
+Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue) const {
+    std::string input = get<std::string>(key, "");
     const std::map<std::string, float> units {
         {"rad", 1.f},
         {"deg", M_PI / 180}
     };
-    dst = Angle(parseUnitHelper(src, units));
-    return true;
-}
+    return Angle(parseUnitHelper(input, units));
+}*/
 
 }  // namespace lms

@@ -3,6 +3,10 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
+#include <stdexcept>
+
+#include "../type.h"
 
 namespace lms {
 namespace internal {
@@ -89,6 +93,52 @@ template<size_t N>
 constexpr size_t lenOf(const char (&)[N]) {
     return N - 1;
 }
+
+/**
+ * @brief Similar to boost::lexical_cast this cast operation parses
+ * a string to any type.
+ *
+ * This function is specialized for some common types for
+ * faster parsing.
+ *
+ * This function throws an exception when parsing fails.
+ */
+template<typename T>
+T string_cast_to(const std::string & input) {
+    std::istringstream iss(input);
+    T result;
+    iss >> result;
+    if(! iss) {
+        throw std::invalid_argument("Could not parse input as " + typeName<T>());
+    }
+    return result;
+}
+
+template<> std::string string_cast_to<std::string>(const std::string &input);
+template<> int string_cast_to<int>(const std::string &input);
+template<> bool string_cast_to<bool>(const std::string &input);
+template<> float string_cast_to<float>(const std::string &input);
+template<> double string_cast_to<double>(const std::string &input);
+
+/**
+ * @brief Similar to boost::lexical_cast this cast converts any type
+ * to string.
+ *
+ * This function is specialized for some common types for faster
+ * stringification.
+ */
+template<typename T>
+std::string string_cast_from(const T & input) {
+    std::ostringstream oss;
+    oss << input;
+    return oss.str();
+}
+
+template<> std::string string_cast_from<std::string>(const std::string &input);
+template<> std::string string_cast_from<bool>(const bool &input);
+template<> std::string string_cast_from<int>(const int &input);
+template<> std::string string_cast_from<float>(const float &input);
+template<> std::string string_cast_from<double>(const double &input);
 
 } // namespace internal
 } // namespace lms

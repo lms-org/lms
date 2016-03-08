@@ -195,8 +195,7 @@ private:
  */
 std::ostream& operator <<(std::ostream &stream, const Time &t);
 
-template<>
-bool parse<Time>(const std::string &src, Time &dst);
+//template<> Time string_cast_to<Time>(const std::string &input);
 
 }  // namespace lms
 

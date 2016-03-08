@@ -6,6 +6,7 @@
 #include "lms/internal/os.h"
 #include "lms/internal/wrapper.h"
 #include "lms/definitions.h"
+#include "lms/internal/string.h"
 
 namespace lms {
 namespace internal {

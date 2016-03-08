@@ -98,5 +98,55 @@ std::string versionCodeToString(uint32_t versionCode) {
             std::to_string(patch);
 }
 
+template<> std::string string_cast_to<std::string>(const std::string &input) {
+    return input;
+}
+
+template<> int string_cast_to<int>(const std::string &input) {
+    return std::stoi(input);
+}
+
+template<> bool string_cast_to<bool>(const std::string &input) {
+    if(input == "true") {
+        return true;
+    } else if(input == "false") {
+        return false;
+    } else {
+        throw std::invalid_argument("Invalid value for bool");
+    }
+}
+
+template<> float string_cast_to<float>(const std::string &input) {
+    return std::stof(input);
+}
+
+template<> double string_cast_to<double>(const std::string &input) {
+    return std::stod(input);
+}
+
+template<> std::string string_cast_from<std::string>(const std::string &input) {
+    return input;
+}
+
+template<> std::string string_cast_from<bool>(const bool &input) {
+    if(input) {
+        return "true";
+    } else {
+        return "false";
+    }
+}
+
+template<> std::string string_cast_from<int>(const int &input) {
+    return std::to_string(input);
+}
+
+template<> std::string string_cast_from<float>(const float &input) {
+    return std::to_string(input);
+}
+
+template<> std::string string_cast_from<double>(const double &input) {
+    return std::to_string(input);
+}
+
 } // namespace internal
 } // namespace lms

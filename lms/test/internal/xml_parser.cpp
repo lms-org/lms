@@ -56,9 +56,9 @@ TEST(xml_parser, parseModuleConfig) {
     lms::Config config;
     lms::internal::parseModuleConfig(doc.child("config"), config, "");
 
-    EXPECT_EQ(400, config.get<int>("size.width"));
-    EXPECT_FLOAT_EQ(300.10, config.get<float>("size.height"));
-    EXPECT_TRUE(config.get<bool>("flag"));
+    EXPECT_EQ(400, config.get<int>("size.width", 0));
+    EXPECT_FLOAT_EQ(300.10, config.get<float>("size.height", 0));
+    EXPECT_TRUE(config.get<bool>("flag", false));
     EXPECT_EQ(std::vector<std::string>({"A","B","C"}),
-              config.getArray<std::string>("size.deep.down"));
+              config.getArray<std::string>("size.deep.down", {"A","B","C"}));
 }

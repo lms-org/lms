@@ -44,14 +44,14 @@ private:
 /**
  * @brief Specialization for distance used in lms::Config parsing
  */
-template<>
-bool parse<Distance>(const std::string &src, Distance &dst);
+//template<>
+//Distance Config::get<Distance>(const std::string &key, const Distance &defaultValue) const;
 
 /**
  * @brief Specialization for angles used in lms::Config parsing
  */
-template<>
-bool parse<Angle>(const std::string &src, Angle &dst);
+//template<>
+//Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue) const;
 
 }  // namespace lms
 
