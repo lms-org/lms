@@ -8,7 +8,6 @@
 
 #include "internal/datamanager.h"
 #include "config.h"
-#include "messaging.h"
 #include "data_channel.h"
 #include "deprecated.h"
 #include "lms/definitions.h"
@@ -19,6 +18,7 @@
 
 namespace lms {
 
+class Messaging;
 namespace internal {
 class DataManager;
 }

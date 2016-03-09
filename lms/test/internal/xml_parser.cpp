@@ -41,12 +41,12 @@ TEST(xml_parser, preprocessXML) {
 TEST(xml_parser, parseModuleConfig) {
     std::string configNode(
             "<config>"
-            "<size>"
-            "<width>400</width>"
-            "<height>300.10</height>"
-            "<deep><down>A,B,C</down></deep>"
-            "</size>"
-            "<flag>true</flag>"
+            "<group name=\"size\">"
+            "<int name=\"width\">400</int>"
+            "<float name=\"height\">300.10</float>"
+            "<group name=\"deep\"><string name=\"down\">A B\n C\tD</string></group>"
+            "</group>"
+            "<bool name=\"flag\">true</bool>"
             "</config>");
 
     pugi::xml_document doc;
@@ -59,6 +59,6 @@ TEST(xml_parser, parseModuleConfig) {
     EXPECT_EQ(400, config.get<int>("size.width", 0));
     EXPECT_FLOAT_EQ(300.10, config.get<float>("size.height", 0));
     EXPECT_TRUE(config.get<bool>("flag", false));
-    EXPECT_EQ(std::vector<std::string>({"A","B","C"}),
-              config.getArray<std::string>("size.deep.down", {"A","B","C"}));
+    EXPECT_EQ(std::vector<std::string>({"A","B","C","D"}),
+              config.getArray<std::string>("size.deep.down", {}));
 }

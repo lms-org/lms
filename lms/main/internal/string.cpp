@@ -36,6 +36,16 @@ std::vector<std::string> split(const std::string &string, char splitter) {
     return split(string.c_str(), string.length(), splitter);
 }
 
+std::vector<std::string> splitWhitespace(const std::string &string) {
+    std::vector<std::string> result;
+    std::istringstream iss(string);
+    std::string token;
+    while(iss >> token) {
+        result.push_back(token);
+    }
+    return result;
+}
+
 std::string dirname(std::string path) {
     if(path.empty()) {
         return ".";

@@ -31,6 +31,8 @@ std::vector<std::string> split(const char *string, int strLength, char splitter)
 
 std::vector<std::string> split(const std::string &string, char splitter);
 
+std::vector<std::string> splitWhitespace(const std::string &string);
+
 /**
  * @brief Returns the directory of a path without trailing slash.
  *

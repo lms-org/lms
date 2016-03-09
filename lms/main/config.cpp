@@ -34,7 +34,7 @@ struct Config::Private {
             return defaultValue;
         } else {
             std::vector<T> result;
-            for(const auto& parts : lms::internal::split(it->second, ',')) {
+            for(const auto& parts : lms::internal::splitWhitespace(it->second)) {
                 result.push_back(internal::string_cast_to<T>(lms::internal::trim(parts)));
             }
             return result;
@@ -46,7 +46,7 @@ struct Config::Private {
         std::ostringstream oss;
         for(auto it = value.begin(); it != value.end(); it++) {
             if(it != value.begin()) {
-                oss << ",";
+                oss << " ";
             }
             oss << internal::string_cast_from(*it);
         }

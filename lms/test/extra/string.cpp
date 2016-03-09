@@ -35,6 +35,19 @@ TEST(string, split) {
     ASSERT_EQ(V(), split("", ';'));
 }
 
+TEST(string, splitWhitespace) {
+    using lms::internal::splitWhitespace;
+    typedef std::vector<std::string> V;
+
+    // split at spaces
+    ASSERT_EQ(V({"1", "2", "3"}), splitWhitespace("1 2 3"));
+
+    ASSERT_EQ(V({"1", "2", "3"}), splitWhitespace("1    2   3"));
+
+    // split at tabs and new lines
+    ASSERT_EQ(V({"1", "2", "3", "4"}), splitWhitespace("1\t2\r3\n4"));
+}
+
 TEST(string, dirname) {
     using lms::internal::dirname;
 

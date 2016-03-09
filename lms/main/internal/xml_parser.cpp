@@ -122,21 +122,18 @@ void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag, const std::string &a
 
 void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key) {
-    // if node has no children
-    if(node.type() == pugi::node_pcdata) {
-        config.set<std::string>(key, trim(node.value()));
-    } else if(node.type() == pugi::node_element) {
-        std::string newKey;
-
-        for(pugi::xml_node subnode : node.children()) {
-            if(key.empty()) {
-                newKey = subnode.name();
-            } else if(subnode.type() == pugi::node_element) {
-                newKey = key + "." + subnode.name();
-            } else {
-                newKey = key;
+    for(auto subnode : node.children()) {
+        if(subnode.type() == pugi::node_element) {
+            std::string newKey = subnode.attribute("name").as_string();
+            if(! key.empty()) {
+                newKey = key + "." + newKey;
             }
-            parseModuleConfig(subnode, config, newKey);
+
+            if(std::strcmp("group", subnode.name()) == 0) {
+                parseModuleConfig(subnode, config, newKey);
+            } else {
+                config.set<std::string>(newKey, trim(subnode.child_value()));
+            }
         }
     }
 }
