@@ -1,16 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
-project(LightWeightModularSystem)
+project(LMS)
+
+option(BUILD_TESTS "Build tests" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(TestCpp11)
-
-if(APPLE)
-    # /bin suffix is needed on OS X
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-else()
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-endif()
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 include(CMakeData.txt)
 
@@ -30,17 +24,13 @@ if(LMS_STANDALONE)
     endif()
 endif()
 
+add_subdirectory(external)
+
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/lms")
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/CMakeSharedHeaders.txt" "")
 configure_file(include/lms/definitions.h.in
     include/lms/definitions.h
     ESCAPE_QUOTES)
-
-#include pugixml headers (hpp-files)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
-include_directories(include)
-include_directories(pugixml-1.7/src)
-include_directories(tclap-1.2.1/include)
 
 set (HEADERS
     "${CMAKE_CURRENT_BINARY_DIR}/include/lms/definitions.h"
@@ -104,61 +94,61 @@ set (HEADERS
 )
 
 set (SOURCE
-    "main/module.cpp"
-    "main/internal/datamanager.cpp"
-    "main/internal/executionmanager.cpp"
-    "main/internal/framework.cpp"
-    "main/internal/signalhandler.cpp"
-    "main/internal/argumenthandler.cpp"
-    "main/internal/profiler.cpp"
-    "main/messaging.cpp"
-    "main/internal/clock.cpp"
-    "main/internal/xml_parser.cpp"
-    "main/config.cpp"
-    "main/internal/execution_type.cpp"
-    "main/internal/module_wrapper.cpp"
-    "main/service.cpp"
-    "main/internal/service_wrapper.cpp"
-    "main/internal/runtime.cpp"
-    "main/internal/file_monitor.cpp"
-    "main/internal/debug_server.cpp"
-    "main/internal/watch_dog.cpp"
-    "main/internal/wrapper.cpp"
-    "main/internal/loader.cpp"
-    "main/endian.cpp"
-    "main/unit.cpp"
+    "src/module.cpp"
+    "src/internal/datamanager.cpp"
+    "src/internal/executionmanager.cpp"
+    "src/internal/framework.cpp"
+    "src/internal/signalhandler.cpp"
+    "src/internal/argumenthandler.cpp"
+    "src/internal/profiler.cpp"
+    "src/messaging.cpp"
+    "src/internal/clock.cpp"
+    "src/internal/xml_parser.cpp"
+    "src/config.cpp"
+    "src/internal/execution_type.cpp"
+    "src/internal/module_wrapper.cpp"
+    "src/service.cpp"
+    "src/internal/service_wrapper.cpp"
+    "src/internal/runtime.cpp"
+    "src/internal/file_monitor.cpp"
+    "src/internal/debug_server.cpp"
+    "src/internal/watch_dog.cpp"
+    "src/internal/wrapper.cpp"
+    "src/internal/loader.cpp"
+    "src/endian.cpp"
+    "src/unit.cpp"
 
-    "main/logging/level.cpp"
-    "main/logging/logger.cpp"
-    "main/logging/context.cpp"
-    "main/logging/event.cpp"
-    "main/logging/console_sink.cpp"
-    "main/logging/file_sink.cpp"
-    "main/logging/threshold_filter.cpp"
-    "main/logging/debug_server_sink.cpp"
+    "src/logging/level.cpp"
+    "src/logging/logger.cpp"
+    "src/logging/context.cpp"
+    "src/logging/event.cpp"
+    "src/logging/console_sink.cpp"
+    "src/logging/file_sink.cpp"
+    "src/logging/threshold_filter.cpp"
+    "src/logging/debug_server_sink.cpp"
 
-    "main/type.cpp"
-    "main/internal/string.cpp"
-    "main/time.cpp"
-    "main/internal/os.cpp"
-    "main/internal/dot_exporter.cpp"
+    "src/type.cpp"
+    "src/internal/string.cpp"
+    "src/time.cpp"
+    "src/internal/os.cpp"
+    "src/internal/dot_exporter.cpp"
 )
 
 # Add system-specific source
 if(UNIX)
     message(STATUS "Use Unix specific sources")
     set (SOURCE ${SOURCE}
-        "main/internal/backtrace_formatter_unix.cpp"
-        "main/internal/signalhandler_unix.cpp"
-        "main/internal/file_monitor_unix.cpp"
+        "src/internal/backtrace_formatter_unix.cpp"
+        "src/internal/signalhandler_unix.cpp"
+        "src/internal/file_monitor_unix.cpp"
     )
 elseif(WIN32)
     message(STATUS "Use Win32 specific sources")
     set (SOURCE ${SOURCE}
-        "main/loader_win.cpp"
-        "main/internal/backtrace_formatter_win.cpp"
-        "main/signalhandler_win.cpp"
-        "main/extra/file_monitor_win.cpp"
+        "src/loader_win.cpp"
+        "src/internal/backtrace_formatter_win.cpp"
+        "src/signalhandler_win.cpp"
+        "src/extra/file_monitor_win.cpp"
     )
 else()
     message(FATAL_ERROR "OS is probably not supported")
@@ -174,14 +164,13 @@ add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
 )
+target_include_directories(lmscore PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
+target_include_directories(lmscore PUBLIC include)
+target_include_directories(lmscore PRIVATE external/pugixml-1.7/src)
+target_include_directories(lmscore PRIVATE external/tclap-1.2.1/include)
 
 # Compile xml-parser pugixml
-add_library(pugixml STATIC         
-    "pugixml-1.7/src/pugixml.cpp"
-    "pugixml-1.7/src/pugixml.hpp"
-    "pugixml-1.7/src/pugiconfig.hpp"
-)
-set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
 target_link_libraries(lmscore PRIVATE pugixml)
 
 # System specific link
@@ -192,6 +181,17 @@ endif()
 
 # LMS executable
 add_executable(lms
-    main/main.cpp
+    src/main.cpp
 )
 target_link_libraries(lms PRIVATE lmscore)
+if(APPLE)
+    # /bin suffix is needed on OS X
+    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+else()
+    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+endif()
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
