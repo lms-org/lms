@@ -159,15 +159,16 @@ if(POLICY CMP0042)
     cmake_policy(SET CMP0042 NEW)
 endif()
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+include_directories(include)
+include_directories(external/pugixml-1.7/src)
+include_directories(external/tclap-1.2.1/include)
+
 # LMS core library
 add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
 )
-target_include_directories(lmscore PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
-target_include_directories(lmscore PUBLIC include)
-target_include_directories(lmscore PRIVATE external/pugixml-1.7/src)
-target_include_directories(lmscore PRIVATE external/tclap-1.2.1/include)
 
 # Compile xml-parser pugixml
 
