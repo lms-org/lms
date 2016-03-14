@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(LMS C CXX)
 
 option(BUILD_TESTS "Build tests" OFF)
+option(COVERAGE "Enable test coverage" OFF)
 
 find_package(Threads REQUIRED)
 
@@ -28,6 +29,10 @@ if(LMS_STANDALONE)
 
     if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"))
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic")
+        if(COVERAGE)
+            message(STATUS "Enable test coverage")
+            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -O0")
+        endif()
     endif()
 endif()
 

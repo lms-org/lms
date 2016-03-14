@@ -8,5 +8,7 @@ compiler:
 script:
 - mkdir build
 - cd build
-- cmake .. -DBUILD_TESTS=ON && make
+- cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON && make
 - test/lmstest
+after_success:
+- bash <(curl -s https://codecov.io/bash)
