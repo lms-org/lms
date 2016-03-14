@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
-project(LMS)
+project(LMS C CXX)
 
 option(BUILD_TESTS "Build tests" OFF)
+
+find_package(Threads REQUIRED)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+include_directories(include)
+include_directories(external/pugixml-1.7/src)
+include_directories(external/tclap-1.2.1/include)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(TestCpp11)
@@ -159,11 +166,6 @@ if(POLICY CMP0042)
     cmake_policy(SET CMP0042 NEW)
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
-include_directories(include)
-include_directories(external/pugixml-1.7/src)
-include_directories(external/tclap-1.2.1/include)
-
 # LMS core library
 add_library (lmscore SHARED
     ${HEADERS}
@@ -177,8 +179,9 @@ target_link_libraries(lmscore PRIVATE pugixml)
 # System specific link
 # http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
 if(UNIX)
-    target_link_libraries(lmscore PRIVATE dl pthread)
+    target_link_libraries(lmscore PRIVATE dl)
 endif()
+target_link_libraries(lmscore PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 # LMS executable
 add_executable(lms
@@ -194,5 +197,6 @@ endif()
 
 if(BUILD_TESTS)
     enable_testing()
+    include_directories(external/googletest/googletest/include)
     add_subdirectory(test)
 endif()
