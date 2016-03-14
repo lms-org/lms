@@ -29,10 +29,6 @@ if(LMS_STANDALONE)
 
     if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"))
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic")
-        if(COVERAGE)
-            message(STATUS "Enable test coverage")
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -O0")
-        endif()
     endif()
 endif()
 
@@ -176,6 +172,12 @@ add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
 )
+
+if(COVERAGE)
+    message(STATUS "Enable test coverage")
+    set_target_properties(lmscore PROPERTIES COMPILE_FLAGS "-fprofile-arcs -ftest-coverage -O0")
+    set_target_properties(lmscore PROPERTIES LINK_FLAGS "-fprofile-arcs")
+endif()
 
 # Compile xml-parser pugixml
 
