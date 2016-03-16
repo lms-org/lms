@@ -43,44 +43,50 @@ configure_file(include/lms/definitions.h.in
 set (HEADERS
     "${CMAKE_CURRENT_BINARY_DIR}/include/lms/definitions.h"
 
-    "include/lms/internal/framework.h"
-    "include/lms/internal/signalhandler.h"
-    "include/lms/internal/colors.h"
-    "include/lms/internal/datamanager.h"
-    "include/lms/internal/argumenthandler.h"
     "include/lms/logger.h"
-    "include/lms/internal/executionmanager.h"
     "include/lms/module.h"
-    "include/lms/internal/loader.h"
     "include/lms/lms_exports.h"
     "include/lms/messaging.h"
     "include/lms/serializable.h"
     "include/lms/internal/clock.h"
     "include/lms/deprecated.h"
-    "include/lms/internal/xml_parser.h"
-    "include/lms/internal/module_wrapper.h"
-    "include/lms/internal/profiler.h"
     "include/lms/config.h"
     "include/lms/data_channel.h"
     "include/lms/inheritance.h"
-    "include/lms/internal/data_channel_internal.h"
-    "include/lms/internal/runtime.h"
-    "include/lms/execution_type.h"
-    "include/lms/service.h"
-    "include/lms/internal/service_wrapper.h"
     "include/lms/service_handle.h"
     "include/lms/type_result.h"
     "include/lms/any.h"
+    "include/lms/execution_type.h"
+    "include/lms/service.h"
+    "include/lms/endian.h"
+    "include/lms/unit.h"
+    "include/lms/interface.h"
+    "include/lms/life_cycle.h"
+    "include/lms/type.h"
+    "include/lms/time.h"
+    "include/lms/internal/os.h"
+
+    "include/lms/internal/framework.h"
+    "include/lms/internal/signalhandler.h"
+    "include/lms/internal/colors.h"
+    "include/lms/internal/datamanager.h"
+    "include/lms/internal/argumenthandler.h"
+    "include/lms/internal/executionmanager.h"
+    "include/lms/internal/loader.h"
+    "include/lms/internal/xml_parser.h"
+    "include/lms/internal/module_wrapper.h"
+    "include/lms/internal/profiler.h"
+    "include/lms/internal/data_channel_internal.h"
+    "include/lms/internal/runtime.h"
+    "include/lms/internal/service_wrapper.h"
     "include/lms/internal/file_monitor.h"
     "include/lms/internal/dag.h"
     "include/lms/internal/debug_server.h"
     "include/lms/internal/watch_dog.h"
     "include/lms/internal/wrapper.h"
-
-    "include/lms/endian.h"
-    "include/lms/unit.h"
-    "include/lms/interface.h"
-    "include/lms/life_cycle.h"
+    "include/lms/internal/string.h"
+    "include/lms/internal/backtrace_formatter.h"
+    "include/lms/internal/dot_exporter.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -92,30 +98,24 @@ set (HEADERS
     "include/lms/logging/file_sink.h"
     "include/lms/logging/threshold_filter.h"
     "include/lms/logging/debug_server_sink.h"
-
-    "include/lms/type.h"
-    "include/lms/internal/string.h"
-    "include/lms/time.h"
-    "include/lms/internal/backtrace_formatter.h"
-    "include/lms/internal/os.h"
-    "include/lms/internal/dot_exporter.h"
 )
 
 set (SOURCE
     "src/module.cpp"
+    "src/messaging.cpp"
+    "src/config.cpp"
+    "src/service.cpp"
+    "src/endian.cpp"
+    "src/unit.cpp"
+    "src/type.cpp"
+    "src/time.cpp"
+
     "src/internal/datamanager.cpp"
     "src/internal/executionmanager.cpp"
     "src/internal/framework.cpp"
     "src/internal/signalhandler.cpp"
     "src/internal/argumenthandler.cpp"
     "src/internal/profiler.cpp"
-    "src/messaging.cpp"
-    "src/internal/clock.cpp"
-    "src/internal/xml_parser.cpp"
-    "src/config.cpp"
-    "src/internal/execution_type.cpp"
-    "src/internal/module_wrapper.cpp"
-    "src/service.cpp"
     "src/internal/service_wrapper.cpp"
     "src/internal/runtime.cpp"
     "src/internal/file_monitor.cpp"
@@ -123,8 +123,16 @@ set (SOURCE
     "src/internal/watch_dog.cpp"
     "src/internal/wrapper.cpp"
     "src/internal/loader.cpp"
-    "src/endian.cpp"
-    "src/unit.cpp"
+    "src/internal/backtrace_formatter.cpp"
+    "src/internal/loader.cpp"
+    "src/internal/signalhandler.cpp"
+    "src/internal/execution_type.cpp"
+    "src/internal/module_wrapper.cpp"
+    "src/internal/clock.cpp"
+    "src/internal/xml_parser.cpp"
+    "src/internal/string.cpp"
+    "src/internal/os.cpp"
+    "src/internal/dot_exporter.cpp"
 
     "src/logging/level.cpp"
     "src/logging/logger.cpp"
@@ -134,33 +142,7 @@ set (SOURCE
     "src/logging/file_sink.cpp"
     "src/logging/threshold_filter.cpp"
     "src/logging/debug_server_sink.cpp"
-
-    "src/type.cpp"
-    "src/internal/string.cpp"
-    "src/time.cpp"
-    "src/internal/os.cpp"
-    "src/internal/dot_exporter.cpp"
 )
-
-# Add system-specific source
-if(UNIX)
-    message(STATUS "Use Unix specific sources")
-    set (SOURCE ${SOURCE}
-        "src/internal/backtrace_formatter_unix.cpp"
-        "src/internal/signalhandler_unix.cpp"
-        "src/internal/file_monitor_unix.cpp"
-    )
-elseif(WIN32)
-    message(STATUS "Use Win32 specific sources")
-    set (SOURCE ${SOURCE}
-        "src/loader_win.cpp"
-        "src/internal/backtrace_formatter_win.cpp"
-        "src/signalhandler_win.cpp"
-        "src/extra/file_monitor_win.cpp"
-    )
-else()
-    message(FATAL_ERROR "OS is probably not supported")
-endif()
 
 if(POLICY CMP0042)
     # Set new MACOSX_RPATH policy on OS X

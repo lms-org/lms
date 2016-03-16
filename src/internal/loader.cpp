@@ -1,6 +1,8 @@
+#ifndef _WIN32
 #include <dlfcn.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#endif
 
 #include "lms/internal/loader.h"
 #include "lms/internal/os.h"
@@ -12,6 +14,12 @@ namespace lms {
 namespace internal {
 
 void Loader::addSearchPath(std::string const& path, int recursion) {
+#ifdef _WIN32
+
+    // TODO implementation for Win32
+    logger.error("addSearchPath") << "Not implemented";
+    
+#else
     constexpr size_t LIB_LEN = lenOf("lib");
 
     std::vector<std::string> list;
@@ -37,9 +45,17 @@ void Loader::addSearchPath(std::string const& path, int recursion) {
             addSearchPath(childPath, recursion - 1);
         }
     }
+#endif   
 }
 
 bool Loader::load(Wrapper *wrapper) {
+#ifdef _WIN32
+
+    // TODO implementation for Win32
+    logger.error("load") << "Not implemented";
+    return false;
+
+#else
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
@@ -106,6 +122,7 @@ bool Loader::load(Wrapper *wrapper) {
     wrapper->load(conv.target());
 
     return true;
+#endif
 }
 
 }  // namespace internal

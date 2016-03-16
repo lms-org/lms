@@ -13,3 +13,8 @@ message(STATUS "Compile LMS tests")
 add_executable(lmstest ${TESTS})
 target_link_libraries(lmstest PRIVATE lmscore gtest gtest_main)
 add_test(LMS lmstest)
+
+if(COVERAGE)
+    set_target_properties(lmstest PROPERTIES COMPILE_FLAGS "-fprofile-arcs -ftest-coverage -O0")
+    set_target_properties(lmstest PROPERTIES LINK_FLAGS "-fprofile-arcs")
+endif()

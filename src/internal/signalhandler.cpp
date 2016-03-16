@@ -1,5 +1,8 @@
 #include <lms/internal/signalhandler.h>
 #include <iostream>
+#ifndef _WIN32
+#include <csignal>
+#endif
 
 namespace lms {
 namespace internal {
@@ -48,6 +51,36 @@ void SignalHandler::handlerForAllSignals(int signal) {
         listener->signal(signal);
     }
 }
+
+#ifdef _WIN32
+
+void SignalHandler::platform_registerSignal(int signalCode) {
+    std::cout << "Signalhandler is not yet implemented on Windows." << std::endl;
+}
+
+void SignalHandler::platform_unregisterSignal(int signalCode) {
+    std::cout << "Signalhandler is not yet implemented on Windows." << std::endl;
+}
+
+#else
+
+void SignalHandler::platform_registerSignal(int signalCode) {
+    signal(signalCode, handlerForAllSignals);
+
+    // initialize signal action struct
+//  struct sigaction action;
+//  action.sa_handler = handlerForAllSignals;
+//  sigemptyset(&action.sa_mask);
+//  action.sa_flags = SA_RESTART;
+//  sigaction(signalCode, &action, NULL);
+}
+
+void SignalHandler::platform_unregisterSignal(int signalCode) {
+    //TODO Not sure if we really should set it to the DFL-one. Comment needed!
+    signal(signalCode, SIG_DFL);
+}
+
+#endif
 
 }  // namespace internal
 }  // namespace lms
