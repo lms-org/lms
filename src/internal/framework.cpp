@@ -23,6 +23,7 @@
 #include "lms/internal/os.h"
 #include "lms/logging/debug_server_sink.h"
 #include "lms/internal/dot_exporter.h"
+#include "lms/internal/viz.h"
 
 namespace lms {
 namespace internal {
@@ -334,7 +335,7 @@ bool Framework::exportGraphsHelper(bool isExecOrData) {
         if(isExecOrData) {
             rt.second->executionManager().writeDAG(dot, rt.first);
         } else {
-            rt.second->dataManager().writeDAG(dot, rt.first);
+            dumpModuleChannelGraph(rt.second->executionManager().getModuleChannelGraph(), dot, rt.first);
         }
         dot.endSubgraph();
     }

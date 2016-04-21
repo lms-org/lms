@@ -4,28 +4,16 @@
 namespace lms {
 namespace internal {
 
-int ModuleWrapper::getChannelPriority(const std::string &name) const {
-    std::map<std::string, int>::const_iterator it = channelPriorities.find(name);
-
-    if(it != channelPriorities.end()) {
-        return it->second;
-    } else {
-        return 0;
-    }
-}
-
-std::string ModuleWrapper::getChannelMapping(const std::string &mapFrom) const {
-    auto it = channelMapping.find(mapFrom);
-
+std::pair<std::string, int> ModuleWrapper::mapChannel(const std::string &name) const {
+    auto it = channelMapping.find(name);
     if(it != channelMapping.end()) {
         return it->second;
     } else {
-        return mapFrom;
+        return std::make_pair(name, 0);
     }
 }
 
 void ModuleWrapper::update(ModuleWrapper && other) {
-    this->channelPriorities = other.channelPriorities;
     this->channelMapping = other.channelMapping;
 
     // preserve location of existing ModuleConfigs

@@ -156,7 +156,7 @@ bool Runtime::enableModules() {
     }
 
     if(m_argumentHandler.argRunLevel == RunLevel::ENABLE) {
-        m_executionManager.getDataManager().printMapping();
+        //m_executionManager.getDataManager().printMapping();
         m_executionManager.validate();
         m_executionManager.printCycleList();
     }

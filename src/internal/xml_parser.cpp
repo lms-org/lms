@@ -1,6 +1,7 @@
 #include "lms/internal/xml_parser.h"
 #include "lms/internal/os.h"
 #include "lms/internal/string.h"
+#include "lms/internal/module_wrapper.h"
 
 namespace lms {
 namespace internal {
@@ -381,11 +382,8 @@ void XmlParser::parseModules(pugi::xml_node node,
         }
 
         if(fromAttr && toAttr) {
-            module->channelMapping[fromAttr.value()] = toAttr.value();
-
-            if(priorityAttr) {
-                module->channelPriorities[toAttr.value()] = priorityAttr.as_int();
-            }
+            int priority = priorityAttr ? priorityAttr.as_int() : 0;
+            module->channelMapping[fromAttr.value()] = std::make_pair(toAttr.value(), priority);
         }
     }
 
@@ -399,14 +397,10 @@ void XmlParser::parseModules(pugi::xml_node node,
             continue;
         }
 
-        if(mapToAttr) {
-            module->channelMapping[nameAttr.value()] = mapToAttr.value();
-        }
+        std::string mapTo = mapToAttr ? mapToAttr.value() : nameAttr.value();
+        int priority = priorityAttr ? priorityAttr.as_int() : 0;
 
-        if(priorityAttr) {
-            std::string mapTo = mapToAttr ? mapToAttr.value() : nameAttr.value();
-            module->channelPriorities[mapTo] = priorityAttr.as_int();
-        }
+        module->channelMapping[nameAttr.value()] = std::make_pair(mapTo, priority);
     }
 
     // parse all config

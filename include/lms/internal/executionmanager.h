@@ -19,6 +19,7 @@
 #include "lms/messaging.h"
 #include "dag.h"
 #include "watch_dog.h"
+#include "module_channel_graph.h"
 
 namespace lms {
 namespace internal {
@@ -152,6 +153,8 @@ public:
     bool useConfig();
 
     void writeDAG(DotExporter &dot, const std::string &prefix);
+
+    ModuleChannelGraph<Module*>& getModuleChannelGraph();
 private:
     std::string m_runtimeName;
     logging::Logger logger;
@@ -185,6 +188,7 @@ private:
      */
     ModuleList enabledModules;
 
+    ModuleChannelGraph<Module*> moduleChannelGraph;
     DAG<Module*> cycleList;
     DAG<Module*> cycleListTmp;
     std::vector<Module*> sortedCycleList;
@@ -209,8 +213,6 @@ private:
      * improve it.
      */
     void sort();
-    void sortModules();
-    void addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent);
 };
 
 }  // namespace internal

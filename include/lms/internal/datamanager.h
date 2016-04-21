@@ -9,17 +9,13 @@
 #include <typeinfo>
 #include <type_traits>
 
-#include <lms/logger.h>
-#include <lms/type.h>
-#include <lms/serializable.h>
-#include "module_wrapper.h"
-#include "lms/data_channel.h"
+#include "../logger.h"
+#include "../type.h"
+#include "../serializable.h"
+#include "../data_channel.h"
 
 namespace lms {
 namespace internal {
-
-class ExecutionManager;
-class DotExporter;
 
 /**
  * @brief The DataManager manages the creation, access and deletion of
@@ -33,15 +29,13 @@ class DotExporter;
  * @author Hans Kirchner
  */
 class DataManager {
-    friend class ExecutionManager;
 public:
     typedef std::unordered_map<std::string, std::shared_ptr<DataChannelInternal>> ChannelMap;
 private:
     logging::Logger logger;
-    ExecutionManager &execMgr;
     ChannelMap channels;
 public:
-    DataManager(Runtime &runtime, ExecutionManager &execMgr);
+    DataManager();
 
     /**
      * @brief Do not allow copies of a data manager instance.
@@ -57,9 +51,7 @@ public:
      * @brief Helper function that returns initialized data channel objects.
      */
     template<typename T>
-    std::shared_ptr<DataChannelInternal> accessChannel(std::shared_ptr<ModuleWrapper> module,
-                                                       const std::string &reqName) {
-        std::string name = module->getChannelMapping(reqName);
+    std::shared_ptr<DataChannelInternal> accessChannel(const std::string &name) {
         std::shared_ptr<DataChannelInternal> &channel = channels[name];
 
         //initChannelIfNeeded<T>(channel);
@@ -109,13 +101,8 @@ public:
      * @return const data channel (only reading)
      */
     template<typename T>
-    ReadDataChannel<T> readChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
-        std::shared_ptr<DataChannelInternal> channel = accessChannel<T>(module, reqName);
-        if (!channel->isReaderOrWriter(module)) {
-            channel->readers.push_back(module);
-            invalidateExecutionManager();
-        }
-        return channel;
+    ReadDataChannel<T> readChannel(const std::string &name) {
+        return accessChannel<T>(name);
     }
 
     /**
@@ -127,22 +114,9 @@ public:
      * @return data channel (reading and writing)
      */
     template<typename T>
-    WriteDataChannel<T> writeChannel(std::shared_ptr<ModuleWrapper> module, const std::string &reqName) {
-        std::shared_ptr<DataChannelInternal> channel = accessChannel<T>(module, reqName);
-        if (!channel->isReaderOrWriter(module)) {
-            channel->writers.push_back(module);
-            invalidateExecutionManager();
-        }
-        return channel;
+    WriteDataChannel<T> writeChannel(const std::string &name) {
+        return accessChannel<T>(name);
     }
-
-    void writeDAG(DotExporter &dot, const std::string &prefix);
-
-    /**
-     * @brief Print all channels with their corresponding readers
-     * and writers to stdout.
-     */
-    void printMapping();
 
     /**
      * @brief Delete all data channels
@@ -150,8 +124,6 @@ public:
     void reset();
 
 private:
-    Runtime &m_runtime;
-
     /**
      * @brief Return the internal data channel mapping. THIS IS NOT
      * INTENDED TO BE USED IN MODULES.
@@ -159,23 +131,6 @@ private:
      * @return datachannel map
      */
     const ChannelMap &getChannels() const;
-
-    /**
-     * @brief Release all channels
-     *
-     * This should be called in lms::Module::deinitialize.
-     *
-     * @param module the module to look for
-     */
-    void releaseChannelsOf(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Invoke invalidate() on the execution manager instance.
-     *
-     * This cannot be implemented in this header due to cycling header
-     * referencing.
-     */
-    void invalidateExecutionManager();
 };
 
 }  // namespace internal

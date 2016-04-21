@@ -111,4 +111,20 @@ namespace lms{
     std::shared_ptr<internal::ServiceWrapper> Module::getServiceWrapper(std::string const& name) {
         return m_wrapper->getServiceWrapper(name);
     }
+
+    std::string Module::mapChannel(const std::string &channelName) {
+        return m_wrapper->mapChannel(channelName).first;
+    }
+
+    void Module::gainReadAccess(const std::string &channelName) {
+        auto mapped = m_wrapper->mapChannel(channelName);
+        m_executionManager->getModuleChannelGraph().readChannel(mapped.first, this, mapped.second);
+        m_executionManager->invalidate();
+    }
+
+    void Module::gainWriteAccess(const std::string &channelName) {
+        auto mapped = m_wrapper->mapChannel(channelName);
+        m_executionManager->getModuleChannelGraph().writeChannel(mapped.first, this, mapped.second);
+        m_executionManager->invalidate();
+    }
 }

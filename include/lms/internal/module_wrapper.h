@@ -51,20 +51,15 @@ public:
     /**
      * @brief Used for transparent datachannel mapping. Maps requested
      * datachannels to the real ones.
-     */
-    std::map<std::string, std::string> channelMapping;
-
-    /**
-     * @brief Priority that is used if more than one module is writing
+     *
+     * Priority that is used if more than one module is writing
      * into a single datachannel.
      *
      * Modules with higher priority will be executed earlier.
      */
-    std::map<std::string, int> channelPriorities;
+    std::map<std::string, std::pair<std::string, int>> channelMapping;
 
-    int getChannelPriority(const std::string &name) const;
-
-    std::string getChannelMapping(const std::string &mapFrom) const;
+    std::pair<std::string, int> mapChannel(const std::string &name) const;
 
     /**
      * @brief The module can only be executed on the specified thread.

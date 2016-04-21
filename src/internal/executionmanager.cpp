@@ -15,6 +15,7 @@
 #include "lms/internal/dot_exporter.h"
 #include "lms/internal/runtime.h"
 #include "lms/internal/framework.h"
+#include "lms/internal/viz.h"
 
 namespace lms {
 namespace internal {
@@ -23,7 +24,7 @@ ExecutionManager::ExecutionManager(Profiler &profiler, Runtime &runtime)
     : m_runtimeName(runtime.name()),
       logger(runtime.name() + ".ExecutionManager"), m_numThreads(1),
       m_multithreading(false),
-      valid(false), dataManager(runtime, *this),
+      valid(false), dataManager(),
       m_messaging(), m_cycleCounter(-1), running(true),
       m_profiler(profiler), m_runtime(runtime) {
 }
@@ -48,7 +49,7 @@ void ExecutionManager::disableAllModules() {
 
     for(ModuleList::reverse_iterator it = available.rbegin();
         it != available.rend(); ++it) {
-        dataManager.releaseChannelsOf(it->second);
+        //dataManager.releaseChannelsOf(it->second);
         it->second->unload();
     }
 
@@ -330,7 +331,7 @@ bool ExecutionManager::disableModule(const std::string &name) {
 
     enabledModules.erase(it);
 
-    dataManager.releaseChannelsOf(it->second);
+    //dataManager.releaseChannelsOf(it->second);
 
     invalidate();
     return true;
@@ -394,69 +395,15 @@ void ExecutionManager::printCycleList() {
     printCycleList(cycleList);
 }
 
-void ExecutionManager::sort(){
-    cycleList.clear();
+void ExecutionManager::sort() {
     logger.debug("sort") << "No. of enabled modules: " << enabledModules.size();
+
     //add modules to the list
-    for(auto it : enabledModules){
+    cycleList = moduleChannelGraph.generateDAG();
+    for(auto it : enabledModules) {
         cycleList.node(it.second->instance());
     }
-    sortModules();
 }
-
-void ExecutionManager::sortModules(){
-    //find modules that use the same data-channel
-    for(const std::pair<std::string,std::shared_ptr<DataChannelInternal>> &pair : dataManager.getChannels()){
-        //create one list
-        std::vector<std::shared_ptr<ModuleWrapper>> all;
-        for(std::shared_ptr<ModuleWrapper> r1 : pair.second->readers){
-            all.push_back(r1);
-        }
-        for(std::shared_ptr<ModuleWrapper> w1 : pair.second->writers){
-            all.push_back(w1);
-        }
-
-        //don't do size -1!
-        for(size_t i = 0; i < all.size(); i++) {
-            std::shared_ptr<ModuleWrapper> mw1 = all[i];
-            int prio1 = mw1->getChannelPriority(pair.first);
-
-            for(size_t k = i+1; k < all.size(); k++) {
-                std::shared_ptr<ModuleWrapper> mw2 = all[k];
-                int prio2 = mw2->getChannelPriority(pair.first);
-
-                if(prio1 < prio2) {
-                    addModuleDependency(mw1,mw2);
-                } else if(prio2 < prio1) {
-                    addModuleDependency(mw2,mw1);
-                } else if(prio1 == prio2) {
-                    //check if it's reader vs writer
-                    bool mw1Write = false;
-                    bool mw2Write = false;
-
-                    for(std::shared_ptr<ModuleWrapper> r1 : pair.second->writers){
-                        if(r1->name() == mw1->name()){
-                            mw1Write = true;
-                        }else if(r1->name() == mw2->name()){
-                            mw2Write = true;
-                        }
-                    }
-                    if(mw1Write && !mw2Write){
-                        addModuleDependency(mw2,mw1);
-                    }else if(!mw1Write && mw2Write){
-                        addModuleDependency(mw1,mw2);
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-void ExecutionManager::addModuleDependency(std::shared_ptr<ModuleWrapper> dependent, std::shared_ptr<ModuleWrapper> independent){
-    cycleList.edge(independent->instance(), dependent->instance());
-}
-
 
 Profiler& ExecutionManager::profiler() {
     return m_profiler;
@@ -491,25 +438,15 @@ bool ExecutionManager::useConfig() {
 
 void ExecutionManager::writeDAG(DotExporter &dot, const std::string &prefix) {
     cycleList.removeTransitiveEdges();
-
-    for(auto const& pair : cycleList) {
-        dot.label(pair.first->getName());
-        dot.node(prefix + "_" + pair.first->getName());
-    }
-
-    dot.reset();
-
-    for(auto const& pair : cycleList) {
-        std::string from = pair.first->getName();
-
-        for(auto const& to : pair.second) {
-            dot.edge(prefix + "_" + to->getName(), prefix + "_" + from);
-        }
-    }
+    dumpDAG(cycleList, dot, prefix);
 }
 
 WatchDog & ExecutionManager::dog() {
     return m_dog;
+}
+
+ModuleChannelGraph<Module *> &ExecutionManager::getModuleChannelGraph() {
+    return moduleChannelGraph;
 }
 
 }  // namespace internal

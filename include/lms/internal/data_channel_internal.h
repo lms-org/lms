@@ -167,39 +167,6 @@ public:
     virtual ~DataChannelInternal() {}
 
     std::string name;
-
-    /**
-     * @brief readers reading modules
-     */
-    std::vector<std::shared_ptr<ModuleWrapper>> readers;
-    /**
-     * @brief writers writing modules
-     */
-    std::vector<std::shared_ptr<ModuleWrapper>> writers;
-
-    bool isReader(std::shared_ptr<ModuleWrapper> module) const{
-        return std::find(readers.begin(),readers.end(),module) != readers.end();
-    }
-
-    bool isWriter(std::shared_ptr<ModuleWrapper> module) const{
-        return std::find(writers.begin(),writers.end(),module) != writers.end();
-    }
-
-    bool isReaderOrWriter(std::shared_ptr<ModuleWrapper> module) const{
-        return isReader(module) || isWriter(module);
-    }
-
-    bool hasReader() const{
-        return readers.size() > 0;
-    }
-
-    /**
-     * @brief hasWriter
-     * @return
-     */
-    bool hasWriter() const{
-        return writers.size() > 0;
-    }
 };
 
 }  // namespace internal

@@ -87,6 +87,8 @@ set (HEADERS
     "include/lms/internal/string.h"
     "include/lms/internal/backtrace_formatter.h"
     "include/lms/internal/dot_exporter.h"
+    "include/lms/internal/module_channel_graph.h"
+    "include/lms/internal/viz.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -133,6 +135,7 @@ set (SOURCE
     "src/internal/string.cpp"
     "src/internal/os.cpp"
     "src/internal/dot_exporter.cpp"
+    "src/internal/viz.cpp"
 
     "src/logging/level.cpp"
     "src/logging/logger.cpp"

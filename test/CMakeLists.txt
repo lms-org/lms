@@ -6,6 +6,7 @@ set(TESTS
     time.cpp
     logging/threshold_filter.cpp
     internal/dag.cpp
+    internal/module_channel_graph.cpp
     endian.cpp
 )
 

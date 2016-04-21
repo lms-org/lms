@@ -21,6 +21,7 @@ namespace lms {
 class Messaging;
 namespace internal {
 class DataManager;
+class ExecutionManager;
 }
 
 /**
@@ -289,7 +290,8 @@ protected:
      */
     template<typename T>
     ReadDataChannel<T> readChannel(const std::string &name) {
-        return m_datamanager->readChannel<T>(m_wrapper, name);
+        gainReadAccess(name);
+        return m_datamanager->readChannel<T>(mapChannel(name));
     }
 
     /**
@@ -301,7 +303,8 @@ protected:
      */
     template<typename T>
     WriteDataChannel<T> writeChannel(const std::string &name) {
-        return m_datamanager->writeChannel<T>(m_wrapper, name);
+        gainWriteAccess(name);
+        return m_datamanager->writeChannel<T>(mapChannel(name));
     }
 
     /**
@@ -329,6 +332,10 @@ private:
     internal::DataManager* m_datamanager;
     Messaging* m_messaging;
     internal::ExecutionManager* m_executionManager;
+
+    std::string mapChannel(const std::string &channelName);
+    void gainReadAccess(const std::string &channelName);
+    void gainWriteAccess(const std::string &channelName);
 };
 
 }  // namespace lms
