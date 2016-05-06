@@ -8,6 +8,7 @@ set(TESTS
     internal/dag.cpp
     internal/module_channel_graph.cpp
     endian.cpp
+    datamanager.cpp
 )
 
 message(STATUS "Compile LMS tests")

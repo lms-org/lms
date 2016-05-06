@@ -6,9 +6,8 @@
 #include <memory>
 #include <map>
 
-#include "internal/datamanager.h"
+#include "datamanager.h"
 #include "config.h"
-#include "data_channel.h"
 #include "deprecated.h"
 #include "lms/definitions.h"
 #include "service_handle.h"
@@ -19,9 +18,10 @@
 namespace lms {
 
 class Messaging;
-namespace internal {
 class DataManager;
+namespace internal {
 class ExecutionManager;
+class ModuleWrapper;
 }
 
 /**
@@ -329,7 +329,7 @@ private:
     std::shared_ptr<internal::ServiceWrapper> getServiceWrapper(std::string const& name);
 
     std::shared_ptr<internal::ModuleWrapper> m_wrapper;
-    internal::DataManager* m_datamanager;
+    DataManager* m_datamanager;
     Messaging* m_messaging;
     internal::ExecutionManager* m_executionManager;
 

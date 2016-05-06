@@ -3,8 +3,6 @@
 #include "lms/internal/module_wrapper.h"
 #include <lms/module.h>
 #include <lms/lms_exports.h>
-#include "lms/internal/datamanager.h"
-#include "lms/config.h"
 #include "lms/internal/runtime.h"
 #include "lms/internal/framework.h"
 

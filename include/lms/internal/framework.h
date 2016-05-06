@@ -1,7 +1,7 @@
 #ifndef LMS_FRAMEWORK_H
 #define LMS_FRAMEWORK_H
 
-#include "datamanager.h"
+#include "../datamanager.h"
 #include "signalhandler.h"
 #include "argumenthandler.h"
 #include "executionmanager.h"

@@ -4,7 +4,7 @@
 #include "lms/logger.h"
 #include "executionmanager.h"
 #include "profiler.h"
-#include "datamanager.h"
+#include "../datamanager.h"
 #include "argumenthandler.h"
 #include "clock.h"
 #include "lms/execution_type.h"

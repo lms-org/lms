@@ -12,7 +12,7 @@
 
 #include "lms/module.h"
 #include "loader.h"
-#include "datamanager.h"
+#include "../datamanager.h"
 #include "executionmanager.h"
 #include "lms/logger.h"
 #include "profiler.h"
@@ -20,11 +20,11 @@
 #include "dag.h"
 #include "watch_dog.h"
 #include "module_channel_graph.h"
+#include "module_wrapper.h"
 
 namespace lms {
-namespace internal {
-
 class DataManager;
+namespace internal {
 
 class ExecutionManager {
 private:

@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include "lms/internal/xml_parser.h"
 #include "lms/internal/os.h"
 #include "lms/internal/string.h"
