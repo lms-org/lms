@@ -86,6 +86,9 @@ set (HEADERS
     "include/lms/internal/dot_exporter.h"
     "include/lms/internal/module_channel_graph.h"
     "include/lms/internal/viz.h"
+    "include/lms/internal/line_separated_reader.h"
+    "include/lms/internal/daemon.h"
+    "include/lms/internal/master.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -133,6 +136,9 @@ set (SOURCE
     "src/internal/os.cpp"
     "src/internal/dot_exporter.cpp"
     "src/internal/viz.cpp"
+    "src/internal/line_separated_reader.cpp"
+    "src/internal/daemon.cpp"
+    "src/internal/master.cpp"
 
     "src/logging/level.cpp"
     "src/logging/logger.cpp"
