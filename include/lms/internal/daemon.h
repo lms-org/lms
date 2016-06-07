@@ -11,5 +11,5 @@ namespace internal {
  */
 bool daemonize();
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms

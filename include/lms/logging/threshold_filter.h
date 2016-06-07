@@ -61,11 +61,10 @@ public:
 private:
     Level m_defaultThreshold;
 
-    std::map<std::string,Level> m_mappings;
+    std::map<std::string, Level> m_mappings;
 };
 
 } // namespace logging
 } // namespace lms
 
 #endif /* LMS_LOGGING_THRESHOLD_FILTER_H */
-

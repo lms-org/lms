@@ -16,7 +16,8 @@ namespace internal {
  *
  * Clock will measure:
  * - loop condition
- * - loop body, including the calls to beforeLoopIteration and afterLoopIteration
+ * - loop body, including the calls to beforeLoopIteration and
+ *afterLoopIteration
  * - the call to sleep (usually included in afterLoopIteration)
  */
 class Clock {
@@ -84,6 +85,7 @@ public:
      * of the main loop's body.
      */
     void beforeLoopIteration();
+
 private:
     logging::Logger logger;
 
@@ -99,7 +101,7 @@ private:
     Time overflowTime;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_CLOCK_H */

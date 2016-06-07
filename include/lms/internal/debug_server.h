@@ -17,24 +17,23 @@ public:
     DebugServer();
     ~DebugServer();
 
-    enum class MessageType : std::uint8_t {
-        LOGGING = 1, PROFILING = 2
-    };
+    enum class MessageType : std::uint8_t { LOGGING = 1, PROFILING = 2 };
 
     class Datagram {
     public:
         Datagram(MessageType type, uint32_t messageLen);
-        uint8_t* data();
+        uint8_t *data();
 
-        const uint8_t* internal() const;
+        const uint8_t *internal() const;
         size_t size() const;
+
     private:
         // 32 bit length + 8 bit message type
         static constexpr size_t HEADER_LEN = sizeof(uint32_t) + sizeof(uint8_t);
         std::vector<uint8_t> m_data;
     };
 
-    bool useUnix(std::string const& path);
+    bool useUnix(std::string const &path);
 
     bool useIPv4(uint16_t port);
 
@@ -44,7 +43,8 @@ public:
 
     void startThread();
 
-    void broadcast(Datagram const& datagram);
+    void broadcast(Datagram const &datagram);
+
 private:
     void enableReuseAddr(int sock);
 
@@ -55,8 +55,7 @@ private:
     void enableNonBlock(int sock);
 
     struct Client {
-        Client() : valid(false), buffer(4096),
-                   bufferUsed(0), outOffset(0) {}
+        Client() : valid(false), buffer(4096), bufferUsed(0), outOffset(0) {}
 
         int sockfd;
         bool valid;
@@ -81,11 +80,11 @@ private:
     void processWrites();
     void processReads();
     void processServer(int sockfd);
-    void processClient(Client & client);
+    void processClient(Client &client);
     void processOutqueue(Client &client);
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_INTERNAL_DEBUG_SERVER_H

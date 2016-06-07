@@ -29,7 +29,7 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    Event(Context &ctx, Level level, const std::string& tag)
+    Event(Context &ctx, Level level, const std::string &tag)
         : tag(tag), level(level), ctx(ctx) {}
 
     /**
@@ -62,9 +62,7 @@ public:
     /**
      * @brief The logging message.
      */
-    std::string messageText() const {
-        return messageStream.str();
-    }
+    std::string messageText() const { return messageStream.str(); }
 
     /**
      * @brief The logging message stream.
@@ -77,15 +75,16 @@ public:
 /**
  * @brief Make the Event appendable.
  */
-std::unique_ptr<Event> operator << (std::unique_ptr<Event> message,
-                                         std::ostream& (*pf) (std::ostream&));
+std::unique_ptr<Event> operator<<(std::unique_ptr<Event> message,
+                                  std::ostream &(*pf)(std::ostream &));
 
 /**
  * @brief Make the Event appendable.
  */
 template <typename T>
-std::unique_ptr<Event> operator << (std::unique_ptr<Event> message, T const& value) {
-    if(message) {
+std::unique_ptr<Event> operator<<(std::unique_ptr<Event> message,
+                                  T const &value) {
+    if (message) {
         message->messageStream << value;
     }
 
@@ -96,4 +95,3 @@ std::unique_ptr<Event> operator << (std::unique_ptr<Event> message, T const& val
 } // namespace lms
 
 #endif /* LMS_LOGGING_EVENT_H */
-

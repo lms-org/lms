@@ -10,10 +10,11 @@ void Messaging::send(const std::string &command, const std::string &content) {
     sendQueue[command].push_back(content);
 }
 
-const std::list<std::string>& Messaging::receive(const std::string &command) const {
+const std::list<std::string> &
+Messaging::receive(const std::string &command) const {
     MessageQueue::const_iterator it = receiveQueue.find(command);
 
-    if(it != receiveQueue.end()) {
+    if (it != receiveQueue.end()) {
         return it->second;
     } else {
         // we cannot create an empty list here because
@@ -27,4 +28,4 @@ void Messaging::resetQueue() {
     sendQueue.clear();
 }
 
-}  // namespace lms
+} // namespace lms

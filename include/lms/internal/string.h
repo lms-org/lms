@@ -18,7 +18,8 @@ namespace internal {
  * of the string.
  * @return trimmed string
  */
-std::string trim(const std::string& str, const std::string &delims = " \t\n\r\f\v");
+std::string trim(const std::string &str,
+                 const std::string &delims = " \t\n\r\f\v");
 
 /**
  * @brief split
@@ -27,7 +28,8 @@ std::string trim(const std::string& str, const std::string &delims = " \t\n\r\f\
  * @param splitter
  * @return
  */
-std::vector<std::string> split(const char *string, int strLength, char splitter);
+std::vector<std::string> split(const char *string, int strLength,
+                               char splitter);
 
 std::vector<std::string> split(const std::string &string, char splitter);
 
@@ -61,7 +63,7 @@ bool isAbsolute(const std::string &path);
  * @param str line
  * @return the same input stream as given
  */
-std::istream& safeGetline(std::istream& is, std::string& str);
+std::istream &safeGetline(std::istream &is, std::string &str);
 
 /**
  * @brief Check if a string starts with another string.
@@ -69,7 +71,7 @@ std::istream& safeGetline(std::istream& is, std::string& str);
  * @param prefix prefix to look for
  * @return true if str starts with prefix
  */
-bool startsWith(std::string const& str, std::string const& prefix);
+bool startsWith(std::string const &str, std::string const &prefix);
 
 /**
  * @brief Check if a string ends with another string
@@ -77,7 +79,7 @@ bool startsWith(std::string const& str, std::string const& prefix);
  * @param suffix suffix to look for
  * @return true if str ends with suffix
  */
-bool endsWith(std::string const& str, std::string const& suffix);
+bool endsWith(std::string const &str, std::string const &suffix);
 
 std::string versionCodeToString(uint32_t versionCode);
 
@@ -91,10 +93,7 @@ std::string versionCodeToString(uint32_t versionCode);
  *
  * @return length of string literal
  */
-template<size_t N>
-constexpr size_t lenOf(const char (&)[N]) {
-    return N - 1;
-}
+template <size_t N> constexpr size_t lenOf(const char(&)[N]) { return N - 1; }
 
 /**
  * @brief Similar to boost::lexical_cast this cast operation parses
@@ -105,22 +104,22 @@ constexpr size_t lenOf(const char (&)[N]) {
  *
  * This function throws an exception when parsing fails.
  */
-template<typename T>
-T string_cast_to(const std::string & input) {
+template <typename T> T string_cast_to(const std::string &input) {
     std::istringstream iss(input);
     T result;
     iss >> result;
-    if(! iss) {
-        throw std::invalid_argument("Could not parse input as " + typeName<T>());
+    if (!iss) {
+        throw std::invalid_argument("Could not parse input as " +
+                                    typeName<T>());
     }
     return result;
 }
 
-template<> std::string string_cast_to<std::string>(const std::string &input);
-template<> int string_cast_to<int>(const std::string &input);
-template<> bool string_cast_to<bool>(const std::string &input);
-template<> float string_cast_to<float>(const std::string &input);
-template<> double string_cast_to<double>(const std::string &input);
+template <> std::string string_cast_to<std::string>(const std::string &input);
+template <> int string_cast_to<int>(const std::string &input);
+template <> bool string_cast_to<bool>(const std::string &input);
+template <> float string_cast_to<float>(const std::string &input);
+template <> double string_cast_to<double>(const std::string &input);
 
 /**
  * @brief Similar to boost::lexical_cast this cast converts any type
@@ -129,18 +128,17 @@ template<> double string_cast_to<double>(const std::string &input);
  * This function is specialized for some common types for faster
  * stringification.
  */
-template<typename T>
-std::string string_cast_from(const T & input) {
+template <typename T> std::string string_cast_from(const T &input) {
     std::ostringstream oss;
     oss << input;
     return oss.str();
 }
 
-template<> std::string string_cast_from<std::string>(const std::string &input);
-template<> std::string string_cast_from<bool>(const bool &input);
-template<> std::string string_cast_from<int>(const int &input);
-template<> std::string string_cast_from<float>(const float &input);
-template<> std::string string_cast_from<double>(const double &input);
+template <> std::string string_cast_from<std::string>(const std::string &input);
+template <> std::string string_cast_from<bool>(const bool &input);
+template <> std::string string_cast_from<int>(const int &input);
+template <> std::string string_cast_from<float>(const float &input);
+template <> std::string string_cast_from<double>(const double &input);
 
 } // namespace internal
 } // namespace lms

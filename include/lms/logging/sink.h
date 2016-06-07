@@ -34,4 +34,3 @@ public:
 } // namespace lms
 
 #endif /* LMS_LOGGING_SINK_H */
-

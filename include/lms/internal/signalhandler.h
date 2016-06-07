@@ -19,7 +19,7 @@ public:
      * @brief Return the sigleton instance or create one and return it.
      * @return the singleton instance
      */
-    static SignalHandler& getInstance();
+    static SignalHandler &getInstance();
 
     /**
      * @brief Listener interface with a single method
@@ -35,8 +35,9 @@ public:
         virtual void signal(int signal) = 0;
     };
 
-    SignalHandler& addListener(int signal, Listener *listener);
-    SignalHandler& removeListener(int signal, Listener *listener);
+    SignalHandler &addListener(int signal, Listener *listener);
+    SignalHandler &removeListener(int signal, Listener *listener);
+
 private:
     static SignalHandler instance;
 
@@ -45,7 +46,7 @@ private:
      */
     SignalHandler() {}
 
-    std::map<int, std::vector<Listener*>> listeners;
+    std::map<int, std::vector<Listener *>> listeners;
 
     /**
      * @brief Argument for sigaction() in signal.h
@@ -59,7 +60,7 @@ private:
      *
      * We will not allow any copies of our singleton.
      */
-    SignalHandler(const SignalHandler&);
+    SignalHandler(const SignalHandler &);
 
     /**
      * @brief Platform-dependant signal registration function
@@ -74,7 +75,7 @@ private:
     void platform_unregisterSignal(int signalCode);
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_SIGNAL_HANDLER_H */

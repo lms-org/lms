@@ -5,18 +5,14 @@
 namespace lms {
 namespace logging {
 
-void ConsoleSink::printTime(bool time) {
-    m_time = time;
-}
+void ConsoleSink::printTime(bool time) { m_time = time; }
 
-void ConsoleSink::printColored(bool colored) {
-    m_colored = colored;
-}
+void ConsoleSink::printColored(bool colored) { m_colored = colored; }
 
 void ConsoleSink::sink(const Event &message) {
     std::lock_guard<std::mutex> lck(mtx);
 
-    if(m_time) {
+    if (m_time) {
         // get time now
         time_t rawtime;
         std::time(&rawtime);
@@ -28,11 +24,11 @@ void ConsoleSink::sink(const Event &message) {
 
         m_out << buffer << " ";
     }
-    if(m_colored) {
+    if (m_colored) {
         m_out << levelColor(message.level);
     }
     m_out << levelName(message.level) << " " << message.tag;
-    if(m_colored) {
+    if (m_colored) {
         m_out << lms::internal::COLOR_WHITE;
     }
     m_out << " " << message.messageText() << std::endl;
@@ -40,4 +36,3 @@ void ConsoleSink::sink(const Event &message) {
 
 } // namespace logging
 } // namespace lms
-

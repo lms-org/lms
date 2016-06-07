@@ -41,20 +41,18 @@ namespace lms {
  */
 class Config {
 public:
-    friend void swap(Config& first, Config& second) {
+    friend void swap(Config &first, Config &second) {
         std::swap(first.dptr, second.dptr);
     }
 
     Config();
     ~Config();
 
-    Config(const Config&);
+    Config(const Config &);
 
-    Config(Config &&other) : dptr(other.dptr) {
-        other.dptr = nullptr;
-    }
+    Config(Config &&other) : dptr(other.dptr) { other.dptr = nullptr; }
 
-    Config& operator= (Config other) {
+    Config &operator=(Config other) {
         swap(*this, other);
         return *this;
     }
@@ -67,7 +65,8 @@ public:
      * - Comment lines start with '#'.
      * - Key-value pairs can continue to the next line if the line ends
      *   with '\' (backslash). This is especially useful for lists.
-     * - Each value in a list needs to be separated by a comma to the next value.
+     * - Each value in a list needs to be separated by a comma to the next
+     *value.
      *
      * **Example code**
      *
@@ -106,10 +105,9 @@ public:
      * @param key the key to set
      * @param value the value to set
      */
-    template<typename T>
-    void set(const std::string &key, const T &value);
+    template <typename T> void set(const std::string &key, const T &value);
 
-    template<typename T>
+    template <typename T>
     void setArray(const std::string &key, const std::vector<T> &value);
 
     /**
@@ -126,7 +124,7 @@ public:
      * returned
      * @return value of type T
      */
-    template<typename T>
+    template <typename T>
     T get(const std::string &key, const T &defaultValue) const;
 
     /**
@@ -138,8 +136,9 @@ public:
      * @param key config key to look for
      * @param list values will be push_back'ed there
      */
-    template<typename T>
-    std::vector<T> getArray(const std::string &key, const std::vector<T> &defaultValue) const;
+    template <typename T>
+    std::vector<T> getArray(const std::string &key,
+                            const std::vector<T> &defaultValue) const;
 
     /**
      * @brief Check if the given key is available.
@@ -163,36 +162,63 @@ public:
      * empty() will return true afterwards.
      */
     void clear();
+
 private:
     struct Private;
     Private *dptr;
-    inline Private* dfunc() { return dptr; }
-    inline const Private* dfunc() const { return dptr; }
+    inline Private *dfunc() { return dptr; }
+    inline const Private *dfunc() const { return dptr; }
 };
 
 // Template specializations get<T>
-template<> std::string Config::get<std::string>(const std::string &key, const std::string &defaultValue) const;
-template<> int Config::get<int>(const std::string &key, const int &defaultValue) const;
-template<> float Config::get<float>(const std::string &key, const float &defaultValue) const;
-template<> bool Config::get<bool>(const std::string &key, const bool &defaultValue) const;
+template <>
+std::string Config::get<std::string>(const std::string &key,
+                                     const std::string &defaultValue) const;
+template <>
+int Config::get<int>(const std::string &key, const int &defaultValue) const;
+template <>
+float Config::get<float>(const std::string &key,
+                         const float &defaultValue) const;
+template <>
+bool Config::get<bool>(const std::string &key, const bool &defaultValue) const;
 
 // Template specializations set<T>
-template<> void Config::set<std::string>(const std::string &key, const std::string &value);
-template<> void Config::set<int>(const std::string &key, const int &value);
-template<> void Config::set<float>(const std::string &key, const float &value);
-template<> void Config::set<bool>(const std::string &key, const bool &value);
+template <>
+void Config::set<std::string>(const std::string &key, const std::string &value);
+template <> void Config::set<int>(const std::string &key, const int &value);
+template <> void Config::set<float>(const std::string &key, const float &value);
+template <> void Config::set<bool>(const std::string &key, const bool &value);
 
 // Template specializations getArray<T>
-template<> std::vector<std::string> Config::getArray<std::string>(const std::string &key, const std::vector<std::string> &defaultValue) const;
-template<> std::vector<int> Config::getArray<int>(const std::string &key, const std::vector<int> &defaultValue) const;
-template<> std::vector<float> Config::getArray<float>(const std::string &key, const std::vector<float> &defaultValue) const;
-template<> std::vector<bool> Config::getArray<bool>(const std::string &key, const std::vector<bool> &defaultValue) const;
+template <>
+std::vector<std::string> Config::getArray<std::string>(
+    const std::string &key, const std::vector<std::string> &defaultValue) const;
+template <>
+std::vector<int>
+Config::getArray<int>(const std::string &key,
+                      const std::vector<int> &defaultValue) const;
+template <>
+std::vector<float>
+Config::getArray<float>(const std::string &key,
+                        const std::vector<float> &defaultValue) const;
+template <>
+std::vector<bool>
+Config::getArray<bool>(const std::string &key,
+                       const std::vector<bool> &defaultValue) const;
 
 // Template specializations setArray<T>
-template<> void Config::setArray<std::string>(const std::string &key, const std::vector<std::string> &value);
-template<> void Config::setArray<int>(const std::string &key, const std::vector<int> &value);
-template<> void Config::setArray<float>(const std::string &key, const std::vector<float> &value);
-template<> void Config::setArray<bool>(const std::string &key, const std::vector<bool> &value);
+template <>
+void Config::setArray<std::string>(const std::string &key,
+                                   const std::vector<std::string> &value);
+template <>
+void Config::setArray<int>(const std::string &key,
+                           const std::vector<int> &value);
+template <>
+void Config::setArray<float>(const std::string &key,
+                             const std::vector<float> &value);
+template <>
+void Config::setArray<bool>(const std::string &key,
+                            const std::vector<bool> &value);
 
 } // namespace lms
 

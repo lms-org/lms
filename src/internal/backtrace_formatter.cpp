@@ -14,50 +14,51 @@ namespace internal {
 
 void printStacktrace() {
 #ifdef _WIN32
-    
+
     // http://stackoverflow.com/questions/5693192/win32-backtrace-from-c-code
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb204633(v=vs.85).aspx
 
-    unsigned int   i;
-    void         * stack[ 100 ];
+    unsigned int i;
+    void *stack[100];
     unsigned short frames;
-    SYMBOL_INFO  * symbol;
-    HANDLE         process;
+    SYMBOL_INFO *symbol;
+    HANDLE process;
 
     process = GetCurrentProcess();
 
-    SymInitialize( process, NULL, TRUE );
+    SymInitialize(process, NULL, TRUE);
 
-    frames               = CaptureStackBackTrace( 0, 100, stack, NULL );
-    symbol               = ( SYMBOL_INFO * )calloc( sizeof( SYMBOL_INFO ) + 256 * sizeof( char ), 1 );
-    symbol->MaxNameLen   = 255;
-    symbol->SizeOfStruct = sizeof( SYMBOL_INFO );
+    frames = CaptureStackBackTrace(0, 100, stack, NULL);
+    symbol = (SYMBOL_INFO *)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
+    symbol->MaxNameLen = 255;
+    symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
 
     std::cerr << "\nBacktrace\n";
 
-    for( i = 0; i < frames; i++ ) {
-        SymFromAddr( process, ( DWORD64 )( stack[ i ] ), 0, symbol );
+    for (i = 0; i < frames; i++) {
+        SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
 
-        std::cerr << "[bt]: (" << (frames  - i - 1) << ") " << symbol->Name << " " << symbol->Address << "\n";
+        std::cerr << "[bt]: (" << (frames - i - 1) << ") " << symbol->Name
+                  << " " << symbol->Address << "\n";
     }
-    
+
     std::cerr << std::endl;
 
-    free( symbol );    
-    
+    free(symbol);
+
 #else
 
     // http://linux.die.net/man/3/backtrace
 
     const size_t BUFFER_SIZE = 256;
-    void* buffer[BUFFER_SIZE];
+    void *buffer[BUFFER_SIZE];
 
     // Get the backtrace.
     std::cerr << "\n\033[31mBacktrace:\033[0m" << std::endl;
-    int size = backtrace (buffer, BUFFER_SIZE);
+    int size = backtrace(buffer, BUFFER_SIZE);
 
     /* Now generate nicely formatted output.  */
-    char** messages = backtrace_symbols (buffer, size);
+    char **messages = backtrace_symbols(buffer, size);
 
     for (int i = 1; i < size && messages != NULL; ++i) {
         char *mangled_name = 0, *offset_begin = 0, *offset_end = 0;
@@ -90,15 +91,14 @@ void printStacktrace() {
             // otherwise, print the whole line
             std::cerr << "[bt]: (" << i << ") " << messages[i] << std::endl;
         }
-
     }
 
     std::cerr << std::endl;
 
-    free (messages);
+    free(messages);
 
 #endif
 }
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms

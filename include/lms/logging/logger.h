@@ -34,7 +34,8 @@ public:
      * @param parent all logging messages will be delegated to the context
      * @threshold minimum logging level
      */
-    Logger(Context *context, const std::string &name, Level threshold = Level::ALL);
+    Logger(Context *context, const std::string &name,
+           Level threshold = Level::ALL);
 
     /**
      * @brief Create a new logger with the default context and the given name.
@@ -47,25 +48,25 @@ public:
      * @brief Log a debug message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<Event> debug(const std::string& tag = "");
+    std::unique_ptr<Event> debug(const std::string &tag = "");
 
     /**
      * @brief Log an info message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<Event> info(const std::string& tag = "");
+    std::unique_ptr<Event> info(const std::string &tag = "");
 
     /**
      * @brief Log a warning message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<Event> warn(const std::string& tag = "");
+    std::unique_ptr<Event> warn(const std::string &tag = "");
 
     /**
      * @brief Log an error message.
      * @see log(lvl, tag)
      */
-    std::unique_ptr<Event> error(const std::string& tag = "");
+    std::unique_ptr<Event> error(const std::string &tag = "");
 
     /**
      * @brief Start a timer with the specified name.
@@ -112,7 +113,7 @@ public:
      * @param tag logging tag
      * @return an appendable logging message that will be automatically flushed
      */
-    std::unique_ptr<Event> log(Level lvl, const std::string& tag = "");
+    std::unique_ptr<Event> log(Level lvl, const std::string &tag = "");
 
     /**
      * @brief Delegate all logging outputs to the logging context.
@@ -128,6 +129,7 @@ public:
      * Minimum logging level.
      */
     Level threshold;
+
 private:
     std::map<std::string, lms::Time> m_timestampCache;
 };
@@ -136,4 +138,3 @@ private:
 } // namespace lms
 
 #endif /* LMS_LOGGING_LOGGER_H */
-

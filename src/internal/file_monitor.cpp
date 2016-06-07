@@ -1,42 +1,42 @@
 #include <lms/internal/file_monitor.h>
 
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
-    // TODO
+// TODO
 #else
-    #include <unistd.h>
+#include <unistd.h>
 #endif
 
-//http://www.ibm.com/developerworks/linux/library/l-ubuntu-inotify/index.html
+// http://www.ibm.com/developerworks/linux/library/l-ubuntu-inotify/index.html
 
 namespace lms {
 namespace extra {
 
 FileMonitor::FileMonitor() {
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
-    // TODO
+// TODO
 #else
     fd = inotify_init1(IN_NONBLOCK);
-    //fd = inotify_init();
+// fd = inotify_init();
 #endif
 }
 
 FileMonitor::~FileMonitor() {
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
-    // TODO
+// TODO
 #else
     close(fd);
 #endif
 }
 
-FileMonitor::operator bool () const {
+FileMonitor::operator bool() const {
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
     // TODO
     return true;
@@ -47,10 +47,10 @@ FileMonitor::operator bool () const {
 
 bool FileMonitor::watch(const std::string &path) {
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
     time_t lastMod;
-    if(lastModified(path, lastMod)) {
+    if (lastModified(path, lastMod)) {
         files.push_back(std::make_pair(path, lastMod));
         return true;
     }
@@ -63,7 +63,7 @@ bool FileMonitor::watch(const std::string &path) {
 
 void FileMonitor::unwatchAll() {
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
     files.clear();
 #else
@@ -74,13 +74,13 @@ void FileMonitor::unwatchAll() {
 
 bool FileMonitor::hasChangedFiles() {
 #ifdef _WIN32
-    // TODO
+// TODO
 #elif __APPLE__
     bool changes = false;
-    for(File& file : files) {
+    for (File &file : files) {
         time_t newLastMod;
-        if(lastModified(file.first, newLastMod)) {
-            if(newLastMod != file.second) {
+        if (lastModified(file.first, newLastMod)) {
+            if (newLastMod != file.second) {
                 changes = true;
                 file.second = newLastMod;
             }
@@ -99,26 +99,26 @@ bool FileMonitor::hasChangedFiles() {
 
     int retval = select(fd + 1, &rfds, NULL, NULL, &tv);
 
-    if(retval == -1) {
+    if (retval == -1) {
         perror("hasChangedFiles");
-    } else if(retval == 0) {
-        //printf("select returned 0\n");
+    } else if (retval == 0) {
+        // printf("select returned 0\n");
     } else if (retval > 0) {
-        if(FD_ISSET(fd, &rfds)) {
+        if (FD_ISSET(fd, &rfds)) {
             char buf[BUF_SIZE];
             int len = 0;
             inotify_event *evt;
             char *p;
 
-            while((len = read(fd, buf, BUF_SIZE)) > 0) {
-                if(len == 0) {
+            while ((len = read(fd, buf, BUF_SIZE)) > 0) {
+                if (len == 0) {
                     printf("read returned 0\n");
                 }
 
-                for (p = buf; p < buf + len; ) {
-                    evt = (inotify_event *) p;
+                for (p = buf; p < buf + len;) {
+                    evt = (inotify_event *)p;
 
-                    if(checkEvent(evt)) {
+                    if (checkEvent(evt)) {
                         return true;
                     }
 
@@ -133,9 +133,9 @@ bool FileMonitor::hasChangedFiles() {
 }
 
 #ifdef __APPLE__
-bool FileMonitor::lastModified(const std::string& path, time_t& t) {
+bool FileMonitor::lastModified(const std::string &path, time_t &t) {
     struct stat fileStats;
-    if(stat(path.c_str(), &fileStats) == 0) {
+    if (stat(path.c_str(), &fileStats) == 0) {
         t = fileStats.st_mtime;
         return true;
     }
@@ -151,5 +151,5 @@ bool FileMonitor::checkEvent(inotify_event *evt) {
 }
 #endif
 
-}  // namespace extra
-}  // namespace lms
+} // namespace extra
+} // namespace lms

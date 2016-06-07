@@ -31,33 +31,32 @@ enum class RunLevel {
 
 bool runLevelByName(const std::string &str, RunLevel &runLevel);
 
-std::ostream& operator << (std::ostream &out, RunLevel runLevel);
+std::ostream &operator<<(std::ostream &out, RunLevel runLevel);
 
 class ThreadsConstraint : public TCLAP::Constraint<std::string> {
 public:
-    std::string description() const {
-        return "integer|auto";
-    }
+    std::string description() const { return "integer|auto"; }
 
-    std::string shortID() const {
-        return description();
-    }
+    std::string shortID() const { return description(); }
 
     bool check(const std::string &value) const {
         return value == "auto" || isNumber(value);
     }
+
 private:
-    bool isNumber(const std::string& s) const {
-        return !s.empty() && std::find_if(s.begin(),
-            s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+    bool isNumber(const std::string &s) const {
+        return !s.empty() &&
+               std::find_if(s.begin(), s.end(),
+                            [](char c) { return !std::isdigit(c); }) == s.end();
     }
 };
 
 /**
- * @brief The ArgumentHandler class used to parse the command line arguments and stores them
+ * @brief The ArgumentHandler class used to parse the command line arguments and
+ * stores them
  */
 class ArgumentHandler {
- public:
+public:
     /**
      * @brief Construct an argument handler with all
      * arguments to default.
@@ -65,11 +64,12 @@ class ArgumentHandler {
     ArgumentHandler();
 
     /**
-     * @brief Parse the given command line arguments and store the values in the members.
+     * @brief Parse the given command line arguments and store the values in the
+     * members.
      * @param argc Number of arguments
      * @param argv List of argument strings
      */
-    void parseArguments(int argc, char* const*argv);
+    void parseArguments(int argc, char *const *argv);
 
     std::string argLoadConfiguration;
     RunLevel argRunLevel;
@@ -92,11 +92,12 @@ class ArgumentHandler {
     bool argEnableDebugServer;
     std::string argDebugServerBind;
     std::string configPath;
+
 private:
-    std::string slug(std::string const& tag);
+    std::string slug(std::string const &tag);
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_ARGUMENT_HANDLER_H */

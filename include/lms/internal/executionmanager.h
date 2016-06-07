@@ -29,8 +29,8 @@ namespace internal {
 class ExecutionManager {
 private:
     typedef std::map<std::string, std::shared_ptr<ModuleWrapper>> ModuleList;
-public:
 
+public:
     ExecutionManager(Profiler &profiler, Runtime &runtime);
     ~ExecutionManager();
 
@@ -69,8 +69,8 @@ public:
      * @param name name of the module that should be enabled
      * @param minLogLevel minimum logging level
      */
-    bool enableModule(const std::string &name, logging::Level minLogLevel
-                      = logging::Level::ALL);
+    bool enableModule(const std::string &name,
+                      logging::Level minLogLevel = logging::Level::ALL);
 
     /**
      * @brief Disable module with the given name, remove it from the
@@ -125,15 +125,15 @@ public:
      */
     bool enabledMultithreading() const;
 
-    WatchDog & dog();
+    WatchDog &dog();
 
-    DataManager& getDataManager();
+    DataManager &getDataManager();
 
     void printCycleList();
 
-    Profiler& profiler();
+    Profiler &profiler();
 
-    Messaging& messaging();
+    Messaging &messaging();
 
     /**
      * @brief Invoke configsChanged() of all enabled modules.
@@ -149,12 +149,13 @@ public:
     typedef std::pair<std::string, logging::Level> ModuleToEnable;
     typedef std::vector<ModuleToEnable> EnableConfig;
 
-    EnableConfig& config();
+    EnableConfig &config();
     bool useConfig();
 
     void writeDAG(DotExporter &dot, const std::string &prefix);
 
-    ModuleChannelGraph<Module*>& getModuleChannelGraph();
+    ModuleChannelGraph<Module *> &getModuleChannelGraph();
+
 private:
     std::string m_runtimeName;
     logging::Logger logger;
@@ -180,20 +181,20 @@ private:
     void threadFunction(int threadNum);
     void stopRunning();
 
-    Profiler& m_profiler;
-    Runtime & m_runtime;
+    Profiler &m_profiler;
+    Runtime &m_runtime;
 
     /**
      * @brief enabledModules contains all loaded Modules
      */
     ModuleList enabledModules;
 
-    ModuleChannelGraph<Module*> moduleChannelGraph;
-    DAG<Module*> cycleList;
-    DAG<Module*> cycleListTmp;
-    std::vector<Module*> sortedCycleList;
+    ModuleChannelGraph<Module *> moduleChannelGraph;
+    DAG<Module *> cycleList;
+    DAG<Module *> cycleListTmp;
+    std::vector<Module *> sortedCycleList;
 
-    void printCycleList(DAG<Module*> &list);
+    void printCycleList(DAG<Module *> &list);
 
     /**
      * @brief available contains all Modules which can be loaded
@@ -215,7 +216,7 @@ private:
     void sort();
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_EXECUTION_MANAGER_H */

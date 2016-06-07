@@ -68,4 +68,3 @@ std::string levelColor(Level lvl);
 } // namespace lms
 
 #endif /* LMS_LOGGING_LEVEL_H */
-

@@ -9,7 +9,7 @@ namespace internal {
  */
 void printStacktrace();
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
-#endif  // LMS_INTERNAL_BACKTRACE_FORMATTER_H
+#endif // LMS_INTERNAL_BACKTRACE_FORMATTER_H

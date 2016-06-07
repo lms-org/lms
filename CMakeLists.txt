@@ -195,3 +195,6 @@ if(BUILD_TESTS)
     include_directories(external/googletest/googletest/include)
     add_subdirectory(test)
 endif()
+
+add_custom_target(format clang-format -i ${HEADERS} ${SOURCE}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

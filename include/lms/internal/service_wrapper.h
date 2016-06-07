@@ -22,19 +22,20 @@ public:
     void defaultLogLevel(logging::Level level);
     logging::Level defaultLogLevel() const;
 
-    Framework* framework();
-    Service* instance();
-    std::mutex& mutex();
+    Framework *framework();
+    Service *instance();
+    std::mutex &mutex();
 
-    Config& getConfig(std::string const& name);
-    const Config& getConfig(std::string const& name) const;
+    Config &getConfig(std::string const &name);
+    const Config &getConfig(std::string const &name) const;
     bool checkHashCode(size_t hashCode);
 
-    void update(ServiceWrapper && other);
+    void update(ServiceWrapper &&other);
 
-    void load(LifeCycle* instance) override;
+    void load(LifeCycle *instance) override;
     void unload() override;
     std::string interfaceFunction() const override;
+
 private:
     Framework *m_framework;
     std::map<std::string, Config> m_configs;
@@ -44,7 +45,7 @@ private:
     std::mutex m_mutex;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_SERVICE_WRAPPER_H

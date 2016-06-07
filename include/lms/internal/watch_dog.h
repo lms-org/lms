@@ -14,8 +14,9 @@ public:
     ~WatchDog();
 
     void watch(lms::Time maxExecTime);
-    void beginModule(std::string const& module);
+    void beginModule(std::string const &module);
     void endModule();
+
 private:
     logging::Logger logger;
 
@@ -29,7 +30,7 @@ private:
     pthread_t m_executionThread;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_INTERNAL_WATCH_DOG_H

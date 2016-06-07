@@ -79,20 +79,18 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags);
  * @param key Initial config parameter key
  * @param config ModuleConfig object to put the parsed key-value pairs into.
  */
-void parseModuleConfig(pugi::xml_node node,  Config &config,
+void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key = "");
 
 class XmlParser {
 public:
-    XmlParser(Framework &framework, Runtime* runtime, ArgumentHandler const& args);
+    XmlParser(Framework &framework, Runtime *runtime,
+              ArgumentHandler const &args);
 
-    enum class LoadConfigFlag {
-        LOAD_EVERYTHING,
-        ONLY_MODULE_CONFIG
-    };
+    enum class LoadConfigFlag { LOAD_EVERYTHING, ONLY_MODULE_CONFIG };
 
-    std::vector<std::string> const& errors() const;
-    std::vector<std::string> const& files() const;
+    std::vector<std::string> const &errors() const;
+    std::vector<std::string> const &files() const;
 
     /**
      * @brief Parse the given XML node as <modulesToEnable>
@@ -105,7 +103,7 @@ public:
      * @brief Parse the given XML node as <logging>
      * @return filter instance
      */
-    logging::ThresholdFilter* parseLogging(pugi::xml_node node);
+    logging::ThresholdFilter *parseLogging(pugi::xml_node node);
 
     /**
      * @brief Parse the given XML node as <execution>
@@ -115,7 +113,7 @@ public:
     void parseExecution(pugi::xml_node node, Runtime *runtime);
 
     void parseInclude(pugi::xml_node node, const std::string &currentFile,
-                       LoadConfigFlag flag);
+                      LoadConfigFlag flag);
 
     void parseModules(pugi::xml_node node, const std::string &currentFile,
                       LoadConfigFlag flag);
@@ -126,18 +124,21 @@ public:
     void parseFile(const std::string &file, LoadConfigFlag flag);
 
     void parseRuntime(pugi::xml_node node, const std::string &currentFile,
-                                 LoadConfigFlag flag);
+                      LoadConfigFlag flag);
 
     /**
      * @brief parseConfig parses the framework-config
      */
-    void parseConfig(XmlParser::LoadConfigFlag flag, const std::string &argLoadConfig, std::string const& configPath);
+    void parseConfig(XmlParser::LoadConfigFlag flag,
+                     const std::string &argLoadConfig,
+                     std::string const &configPath);
 
     std::unique_ptr<logging::ThresholdFilter> filter();
+
 private:
-    Framework & m_framework;
-    Runtime* m_runtime;
-    ArgumentHandler const& m_args;
+    Framework &m_framework;
+    Runtime *m_runtime;
+    ArgumentHandler const &m_args;
 
     std::unique_ptr<logging::ThresholdFilter> m_filter;
     std::vector<std::string> m_errors;
@@ -157,8 +158,7 @@ private:
      * @param attrValue
      * @param expectedValue
      */
-    void errorInvalidAttr(pugi::xml_node node,
-                          pugi::xml_attribute attr,
+    void errorInvalidAttr(pugi::xml_node node, pugi::xml_attribute attr,
                           const std::string &expectedValue);
 
     void errorInvalidNodeContent(pugi::xml_node, const std::string &expected);
@@ -171,7 +171,7 @@ private:
     void errorUnknownNode(pugi::xml_node node);
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_XML_PARSER_H */

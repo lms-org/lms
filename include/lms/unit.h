@@ -14,7 +14,8 @@ namespace lms {
  * @param units map of all units and their conversion factor to the SI unit
  * @return SI value
  */
-float parseUnitHelper(std::string const& str, std::map<std::string, float> const& units);
+float parseUnitHelper(std::string const &str,
+                      std::map<std::string, float> const &units);
 
 /**
  * @brief Wrapper type of a float denoting a distance.
@@ -24,6 +25,7 @@ public:
     Distance();
     Distance(float meters);
     float toSI() const;
+
 private:
     float meters;
 };
@@ -37,6 +39,7 @@ public:
     Angle(float rad);
     float toRad() const;
     float toDeg() const;
+
 private:
     float rad;
 };
@@ -44,15 +47,17 @@ private:
 /**
  * @brief Specialization for distance used in lms::Config parsing
  */
-//template<>
-//Distance Config::get<Distance>(const std::string &key, const Distance &defaultValue) const;
+// template<>
+// Distance Config::get<Distance>(const std::string &key, const Distance
+// &defaultValue) const;
 
 /**
  * @brief Specialization for angles used in lms::Config parsing
  */
-//template<>
-//Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue) const;
+// template<>
+// Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue)
+// const;
 
-}  // namespace lms
+} // namespace lms
 
 #endif // LMS_UNIT_H

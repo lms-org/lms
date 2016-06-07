@@ -29,6 +29,6 @@ public:
     virtual void lmsDeserialize(std::istream &is) = 0;
 };
 
-}  // namespace lms
+} // namespace lms
 
 #endif /* LMS_SERIALIZABLE_H */

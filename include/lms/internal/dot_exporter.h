@@ -29,16 +29,12 @@ public:
     /**
      * @brief Node shape types.
      */
-    enum class Shape {
-        BOX, OVAL, CIRCLE
-    };
+    enum class Shape { BOX, OVAL, CIRCLE };
 
     /**
      * @brief Error types returned by lastError().
      */
-    enum class Error {
-        OK, STACK_EMPTY, UNEXPECTED_STACK_TOP
-    };
+    enum class Error { OK, STACK_EMPTY, UNEXPECTED_STACK_TOP };
 
     /**
      * @brief Create a dot exporter on an std::ostream. The stream is not
@@ -126,12 +122,11 @@ public:
      * @brief Reset the value returned by lastError() to OK.
      */
     void resetError();
+
 private:
     void indent();
 
-    enum class StackType {
-        GRAPH, DIGRAPH, SUBGRAPH
-    };
+    enum class StackType { GRAPH, DIGRAPH, SUBGRAPH };
 
     std::ostream &m_os;
     std::stack<StackType> m_stack;
@@ -141,11 +136,11 @@ private:
     Shape m_shape;
 };
 
-std::ostream& operator << (std::ostream& os, DotExporter::Shape type);
+std::ostream &operator<<(std::ostream &os, DotExporter::Shape type);
 
-std::ostream& operator << (std::ostream& os, DotExporter::Error error);
+std::ostream &operator<<(std::ostream &os, DotExporter::Error error);
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_INTERNAL_DOT_EXPORTER_H

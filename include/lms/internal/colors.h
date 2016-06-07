@@ -11,7 +11,7 @@ const std::string COLOR_WHITE("\033[0m");
 const std::string COLOR_PINK("\033[035m");
 const std::string COLOR_BLUE("\033[034m");
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_INTERNAL_COLORS_H */

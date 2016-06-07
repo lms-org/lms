@@ -6,12 +6,13 @@
 
 namespace lms {
 
-float parseUnitHelper(std::string const& str, std::map<std::string, float> const& units) {
+float parseUnitHelper(std::string const &str,
+                      std::map<std::string, float> const &units) {
     float result = 0;
 
-    for(auto const& part : internal::split(str, ' ')) {
+    for (auto const &part : internal::split(str, ' ')) {
         size_t index = part.find_first_not_of("0123456789.-");
-        if(index == std::string::npos) {
+        if (index == std::string::npos) {
             throw std::runtime_error("Can not parse " + str);
         }
 
@@ -19,7 +20,7 @@ float parseUnitHelper(std::string const& str, std::map<std::string, float> const
         float value = ::atof(part.c_str());
         std::map<std::string, float>::const_iterator it = units.find(unit);
 
-        if(it == units.end()) {
+        if (it == units.end()) {
             throw std::runtime_error("Unknown unit in " + str);
         }
 
@@ -33,21 +34,16 @@ Distance::Distance() : meters(0) {}
 
 Distance::Distance(float meters) : meters(meters) {}
 
-float Distance::toSI() const {
-    return meters;
-}
+float Distance::toSI() const { return meters; }
 
 Angle::Angle() : rad(0) {}
 Angle::Angle(float rad) : rad(rad) {}
-float Angle::toRad() const {
-    return rad;
-}
-float Angle::toDeg() const {
-    return rad * 180 / M_PI;
-}
+float Angle::toRad() const { return rad; }
+float Angle::toDeg() const { return rad * 180 / M_PI; }
 
 /*template<>
-Distance Config::get<Distance>(const std::string &key, const Distance &defaultValue) const {
+Distance Config::get<Distance>(const std::string &key, const Distance
+&defaultValue) const {
     std::string input = get<std::string>(key, "");
     const std::map<std::string, float> units {
         {"m", 1.f},
@@ -58,7 +54,8 @@ Distance Config::get<Distance>(const std::string &key, const Distance &defaultVa
 }
 
 template<>
-Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue) const {
+Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue)
+const {
     std::string input = get<std::string>(key, "");
     const std::map<std::string, float> units {
         {"rad", 1.f},
@@ -67,4 +64,4 @@ Angle Config::get<Angle>(const std::string &key, const Angle &defaultValue) cons
     return Angle(parseUnitHelper(input, units));
 }*/
 
-}  // namespace lms
+} // namespace lms

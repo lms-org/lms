@@ -13,13 +13,13 @@ public:
     virtual ~Wrapper();
 
     std::string lib() const;
-    void lib(std::string const& lib);
+    void lib(std::string const &lib);
 
     std::string clazz() const;
-    void clazz(std::string const& clazz);
+    void clazz(std::string const &clazz);
 
     std::string name() const;
-    void name(std::string const& name);
+    void name(std::string const &name);
 
     /**
      * @brief May be called by lms::internal::Loader to
@@ -27,20 +27,21 @@ public:
      *
      * @param instance non-null Module or Service object
      */
-    virtual void load(LifeCycle* instance) =0;
+    virtual void load(LifeCycle *instance) = 0;
 
     /**
      * @brief Free and delete the internal Module or Service
      * object that may be set previously by load().
      */
-    virtual void unload() =0;
+    virtual void unload() = 0;
 
     /**
      * @brief Name of the C function exported in
      * so/dylib/dll files to create Module or
      * Service objects.
      */
-    virtual std::string interfaceFunction() const =0;
+    virtual std::string interfaceFunction() const = 0;
+
 private:
     /**
      * @brief Name of the module or service.
@@ -58,7 +59,7 @@ private:
     std::string m_class;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_INTERNAL_WRAPPER_H

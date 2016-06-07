@@ -4,7 +4,9 @@
 #include <string>
 #include <typeinfo>
 
-/* COPIED FROM: http://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname */
+/* COPIED FROM:
+ * http://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname
+ */
 
 namespace lms {
 
@@ -17,7 +19,7 @@ namespace lms {
  * @param name mangled name
  * @return demangled name if g++ was used
  */
-std::string demangle(const char* name);
+std::string demangle(const char *name);
 
 /**
  * @brief Get the demangled name of a type
@@ -29,8 +31,7 @@ std::string demangle(const char* name);
  * @param t parameter with type T
  * @return demangled name
  */
-template <class T>
-std::string typeName(const T& t) {
+template <class T> std::string typeName(const T &t) {
     return demangle(typeid(t).name());
 }
 
@@ -48,8 +49,7 @@ std::string typeName(const T& t) {
  *
  * @return demangled name
  */
-template <typename T>
-std::string typeName() {
+template <typename T> std::string typeName() {
     return demangle(typeid(T).name());
 }
 

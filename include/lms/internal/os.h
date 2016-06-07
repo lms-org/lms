@@ -26,18 +26,16 @@ std::string username();
  * @param list result list
  * @return
  */
-bool listDir(std::string const& path, std::vector<std::string> &list);
+bool listDir(std::string const &path, std::vector<std::string> &list);
 
-enum class FileType {
-    REGULAR_FILE, DIRECTORY, OTHER, ERROR
-};
+enum class FileType { REGULAR_FILE, DIRECTORY, OTHER, ERROR };
 
 /**
  * @brief Request a file's type.
  * @param path relative or absolute path to a file or directory
  * @return file type
  */
-FileType fileType(std::string const& path);
+FileType fileType(std::string const &path);
 
 /**
  * @brief Returns $HOME on unix systems
@@ -48,9 +46,9 @@ std::string homepath();
 /**
  * @brief Copy a complete folder structure to another location
  */
-void copyTree(std::string const& from, std::string const& to);
+void copyTree(std::string const &from, std::string const &to);
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_INTERNAL_OS_H */

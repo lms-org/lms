@@ -14,6 +14,7 @@ public:
     int useUnix(const std::string &path);
     int useIPv4(int port);
     void start();
+
 private:
     struct Client {
         Client(int fd, const std::string &peer);
@@ -42,12 +43,12 @@ public:
     static MasterClient fromUnix(const std::string &path);
     ~MasterClient();
     int fd() const;
+
 private:
     int m_sockfd;
     MasterClient(int fd);
 };
 
 void connectToMaster(int argc, char *argv[]);
-
 }
 }

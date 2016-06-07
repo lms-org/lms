@@ -61,9 +61,10 @@ public:
      * @brief Calculate the time passed since a reference timestamp
      *
      * @param reference The reference point in time
-     * @return precision time instance representing the time passed since reference
+     * @return precision time instance representing the time passed since
+     *reference
      */
-    static Time since( const Time& reference );
+    static Time since(const Time &reference);
 
     /**
      * @brief Calculate the time passed since this timestamp
@@ -109,29 +110,28 @@ public:
      * @param time scalar value
      * @return constructed time object
      */
-    template<class Scale>
-    static Time from(TimeType time) {
+    template <class Scale> static Time from(TimeType time) {
         return Time(time * (Scale::num * 1000000L / Scale::den));
     }
 
     /**
      * @brief Get time as floating point type
-     * 
+     *
      * To specify the scale, the first template argument should be a std::ratio
      * template type such as std::milli (defaults to unit-scale, i.e. seconds)
-     * 
+     *
      * To specify the used floating point type, the optional second template
      * argument can be specified (defaults to single-precision float type)
-     * 
+     *
      * Example: Return time as double in milliseconds
-     *     
+     *
      *     t.toFloat<std::milli, double>()
-     *     
+     *
      * @return time as floating point value (defaults to float in seconds)
      */
-    template<class Scale = std::ratio<1,1>, typename T = float>
+    template <class Scale = std::ratio<1, 1>, typename T = float>
     T toFloat() const {
-        return T( Scale::den * m_micros ) /  T( Scale::num * 1000000L ); 
+        return T(Scale::den * m_micros) / T(Scale::num * 1000000L);
     }
 
     /**
@@ -143,13 +143,11 @@ public:
      * @return the remaining time (if interrupted) or zero
      */
     Time sleep() const;
-    
+
     /**
      * Cereal save serialization function (using minimal save)
      */
-    template <class Archive>
-    TimeType save_minimal( const Archive& ) const
-    {
+    template <class Archive> TimeType save_minimal(const Archive &) const {
         return m_micros;
     }
 
@@ -157,25 +155,25 @@ public:
      * Cereal load serialization function (using minimal load)
      */
     template <class Archive>
-    void load_minimal( const Archive&, const TimeType& value )
-    {
+    void load_minimal(const Archive &, const TimeType &value) {
         m_micros = value;
     }
 
-    Time operator +(const Time &t) const;
-    Time operator -(const Time &t) const;
-    Time& operator +=(const Time &t);
-    Time& operator -=(const Time &t);
-    Time operator * (int scalar) const;
-    Time operator / (int scalar) const;
-    Time& operator *= (int scalar);
-    Time& operator /= (int scalar);
-    bool operator >(const Time &t) const;
-    bool operator >=(const Time &t) const;
-    bool operator <(const Time &t) const;
-    bool operator <=(const Time &t) const;
-    bool operator ==(const Time &t) const;
-    bool operator !=(const Time &t) const;
+    Time operator+(const Time &t) const;
+    Time operator-(const Time &t) const;
+    Time &operator+=(const Time &t);
+    Time &operator-=(const Time &t);
+    Time operator*(int scalar) const;
+    Time operator/(int scalar) const;
+    Time &operator*=(int scalar);
+    Time &operator/=(int scalar);
+    bool operator>(const Time &t) const;
+    bool operator>=(const Time &t) const;
+    bool operator<(const Time &t) const;
+    bool operator<=(const Time &t) const;
+    bool operator==(const Time &t) const;
+    bool operator!=(const Time &t) const;
+
 private:
     TimeType m_micros;
 
@@ -193,10 +191,10 @@ private:
  * into a stream. The format is "x us", where x is the time
  * in micro seconds.
  */
-std::ostream& operator <<(std::ostream &stream, const Time &t);
+std::ostream &operator<<(std::ostream &stream, const Time &t);
 
-//template<> Time string_cast_to<Time>(const std::string &input);
+// template<> Time string_cast_to<Time>(const std::string &input);
 
-}  // namespace lms
+} // namespace lms
 
 #endif /* LMS_TIME_H */

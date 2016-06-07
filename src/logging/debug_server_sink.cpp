@@ -6,8 +6,8 @@
 namespace lms {
 namespace logging {
 
-DebugServerSink::DebugServerSink(internal::DebugServer *server) : m_server(server) {
-}
+DebugServerSink::DebugServerSink(internal::DebugServer *server)
+    : m_server(server) {}
 
 void DebugServerSink::sink(const Event &message) {
     constexpr std::uint8_t MAX_LEN = std::numeric_limits<std::uint8_t>::max();
@@ -21,16 +21,18 @@ void DebugServerSink::sink(const Event &message) {
     // Format: Level + Tag Size + Tag + Message Size + Message
     uint32_t len = 3 + tagLen + textLen;
 
-    internal::DebugServer::Datagram datagram(internal::DebugServer::MessageType::LOGGING, len);
+    internal::DebugServer::Datagram datagram(
+        internal::DebugServer::MessageType::LOGGING, len);
 
     datagram.data()[0] = static_cast<std::uint8_t>(message.level);
     datagram.data()[1] = tagLen;
     datagram.data()[2] = textLen;
     std::copy(tag.begin(), tag.begin() + tagLen, &datagram.data()[3]);
-    std::copy(text.begin(), text.begin() + textLen, &datagram.data()[3 + tagLen]);
+    std::copy(text.begin(), text.begin() + textLen,
+              &datagram.data()[3 + tagLen]);
 
     m_server->broadcast(datagram);
 }
 
-}  // namespace logging
-}  // namespace lms
+} // namespace logging
+} // namespace lms

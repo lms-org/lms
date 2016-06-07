@@ -20,11 +20,12 @@ public:
      * @param logFile absolute path to a logging file
      */
     FileSink(const std::string &logFile);
+
 private:
     std::ofstream m_ofs;
 };
 
-}  // namespace logging
-}  // namespace lms
+} // namespace logging
+} // namespace lms
 
 #endif /* LMS_LOGGING_FILE_SINK_H */

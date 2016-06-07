@@ -35,10 +35,9 @@ class ModuleWrapper;
  */
 class Module : public LifeCycle {
 public:
-    Module(): logger(""), m_datamanager(nullptr),
-        m_messaging(nullptr) { }
-    virtual ~Module() { }
-	
+    Module() : logger(""), m_datamanager(nullptr), m_messaging(nullptr) {}
+    virtual ~Module() {}
+
     /**
      * @brief Name of the module itself.
      *
@@ -131,7 +130,8 @@ public:
     virtual bool deinitialize();
 
     /**
-     * @brief This method gets called whenever a config changed during execution.
+     * @brief This method gets called whenever a config changed during
+     *execution.
      *
      * A config is usually only changed when the config monitor found changes
      * in the config files.
@@ -147,6 +147,7 @@ public:
      * @return cycle number
      */
     int cycleCounter();
+
 protected:
     /**
      * @brief Returns a handle to a service. The service is locked during the
@@ -162,11 +163,10 @@ protected:
      * }
      * ~~~~~
      */
-    template <class T>
-    ServiceHandle<T> getService(std::string const& name) {
+    template <class T> ServiceHandle<T> getService(std::string const &name) {
         auto wrapper = getServiceWrapper(name);
 
-        if(wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
+        if (wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
             // TODO type check
             return ServiceHandle<T>(wrapper);
         } else {
@@ -179,14 +179,13 @@ protected:
      * @brief Returns the service instance of the given name if available.
      * This does not lock the service and is therefore not thread-safe.
      */
-    template<class T>
-    T* getUnsafeService(std::string const& name) {
+    template <class T> T *getUnsafeService(std::string const &name) {
         auto wrapper = getServiceWrapper(name);
 
-        if(wrapper) {
-            return static_cast<T*>(wrapper->instance());
+        if (wrapper) {
+            return static_cast<T *>(wrapper->instance());
         } else {
-            //TODO throw std::system_error("Service not installed: " + name);
+            // TODO throw std::system_error("Service not installed: " + name);
             return nullptr;
         }
     }
@@ -197,7 +196,7 @@ protected:
      * Send or receive messages between different modules
      * and the core framework.
      */
-    Messaging* messaging() const { return m_messaging; }
+    Messaging *messaging() const { return m_messaging; }
 
     /**
      * @brief Check if --enable-save was given on the command line.
@@ -222,7 +221,7 @@ protected:
      * @param name file name
      * @return absolute path to a file
      */
-    std::string saveLogFile(std::string const& name);
+    std::string saveLogFile(std::string const &name);
 
     /**
      * @brief Return the path to a log file with the given name.
@@ -234,7 +233,7 @@ protected:
      * @param name
      * @return
      */
-    std::string loadLogFile(std::string const& name);
+    std::string loadLogFile(std::string const &name);
 
     /**
      * @brief Return the path to a log directory with a given name.
@@ -247,7 +246,7 @@ protected:
      * @param name directory name
      * @return absolute path to a directory with trailing slash
      */
-    std::string saveLogDir(std::string const& name);
+    std::string saveLogDir(std::string const &name);
 
     /**
      * @brief Return the path to a log directory with a given name.
@@ -259,7 +258,7 @@ protected:
      * @param name
      * @return
      */
-    std::string loadLogDir(std::string const& name);
+    std::string loadLogDir(std::string const &name);
 
     /**
      * @brief A logger instance. Can be used in initialize, cycle
@@ -272,7 +271,7 @@ protected:
      * @param name config's name
      * @return module config
      */
-    const Config& config(const std::string &name = "default");
+    const Config &config(const std::string &name = "default");
 
     /**
      * @brief Check if a config of the given name was loaded.
@@ -288,7 +287,7 @@ protected:
      * @param name channel name
      * @return data channel handle
      */
-    template<typename T>
+    template <typename T>
     ReadDataChannel<T> readChannel(const std::string &name) {
         gainReadAccess(name);
         return m_datamanager->readChannel<T>(mapChannel(name));
@@ -301,7 +300,7 @@ protected:
      * @param name channel name
      * @return data channel handle
      */
-    template<typename T>
+    template <typename T>
     WriteDataChannel<T> writeChannel(const std::string &name) {
         gainWriteAccess(name);
         return m_datamanager->writeChannel<T>(mapChannel(name));
@@ -312,7 +311,7 @@ protected:
      *
      * @return true if pausing was successful, false if runtime was not found
      */
-    bool pauseRuntime(std::string const& name);
+    bool pauseRuntime(std::string const &name);
 
     /**
      * @brief Pause the module's own runtime.
@@ -324,20 +323,22 @@ protected:
      *
      * @return true if resuming was successful, false if runtime was not found.
      */
-    bool resumeRuntime(std::string const& name, bool reset = false);
+    bool resumeRuntime(std::string const &name, bool reset = false);
+
 private:
-    std::shared_ptr<internal::ServiceWrapper> getServiceWrapper(std::string const& name);
+    std::shared_ptr<internal::ServiceWrapper>
+    getServiceWrapper(std::string const &name);
 
     std::shared_ptr<internal::ModuleWrapper> m_wrapper;
-    DataManager* m_datamanager;
-    Messaging* m_messaging;
-    internal::ExecutionManager* m_executionManager;
+    DataManager *m_datamanager;
+    Messaging *m_messaging;
+    internal::ExecutionManager *m_executionManager;
 
     std::string mapChannel(const std::string &channelName);
     void gainReadAccess(const std::string &channelName);
     void gainWriteAccess(const std::string &channelName);
 };
 
-}  // namespace lms
+} // namespace lms
 
 #endif /* LMS_MODULE_H */

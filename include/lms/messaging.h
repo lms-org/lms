@@ -38,7 +38,8 @@ public:
     void send(const std::string &command, const std::string &content = "");
 
     /**
-     * @brief Receive all messages with the given command name that are currently
+     * @brief Receive all messages with the given command name that are
+     *currently
      * queued.
      *
      * This will not delete any of the queued messages.
@@ -46,7 +47,7 @@ public:
      * @param command message identifier
      * @return queued messages (list of message contents)
      */
-    const std::list<std::string>& receive(const std::string &command) const;
+    const std::list<std::string> &receive(const std::string &command) const;
 
     /**
      * @brief Delete all queued messages.
@@ -54,6 +55,7 @@ public:
      * This should be called after each cycle method in the ExecutionManager.
      */
     void resetQueue();
+
 private:
     typedef std::map<std::string, std::list<std::string>> MessageQueue;
 
@@ -69,6 +71,6 @@ private:
     std::mutex mtx;
 };
 
-}  // namespace lms
+} // namespace lms
 
 #endif /* LMS_MESSAGING_H */

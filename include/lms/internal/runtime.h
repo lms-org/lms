@@ -16,11 +16,9 @@ class Framework;
 
 class Runtime {
 public:
-    enum class State {
-        RUNNING, PAUSED
-    };
+    enum class State { RUNNING, PAUSED };
 
-    Runtime(const std::string& name, Framework &framework);
+    Runtime(const std::string &name, Framework &framework);
 
     /**
      * @brief Start an infinite cycle loop asynchronously.
@@ -55,15 +53,16 @@ public:
 
     bool enableModules();
 
-    Profiler& profiler();
-    ExecutionManager& executionManager();
-    DataManager& dataManager();
-    Clock& clock();
-    Framework& framework();
+    Profiler &profiler();
+    ExecutionManager &executionManager();
+    DataManager &dataManager();
+    Clock &clock();
+    Framework &framework();
     std::string name() const;
     ExecutionType executionType() const;
     void executionType(ExecutionType type);
-    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
+    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const &name);
+
 private:
     std::string m_name;
     lms::logging::Logger logger;
@@ -85,7 +84,7 @@ private:
     std::condition_variable m_cond;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_RUNTIME_H

@@ -23,7 +23,8 @@ class Service : public LifeCycle {
 public:
     Service();
 
-    void initBase(internal::ServiceWrapper *wrapper, lms::logging::Level minLogLevel);
+    void initBase(internal::ServiceWrapper *wrapper,
+                  lms::logging::Level minLogLevel);
 
     virtual ~Service() {}
 
@@ -57,18 +58,20 @@ public:
     size_t hashCode() const;
 
     void logLevelChanged(logging::Level level);
+
 protected:
     /**
      * @brief Return a read-only config of the given name.
      * @param name config's name
      * @return module config
      */
-    const Config& config(const std::string &name = "default") const;
+    const Config &config(const std::string &name = "default") const;
     logging::Logger logger;
+
 private:
     internal::ServiceWrapper *m_wrapper;
 };
 
-}  // namespace lms
+} // namespace lms
 
 #endif // LMS_SERVICE_H

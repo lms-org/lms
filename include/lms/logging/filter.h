@@ -25,10 +25,12 @@ public:
     virtual ~Filter() {}
 
     /**
-     * @brief This method will be called for every log message before being sent to a sink.
+     * @brief This method will be called for every log message before being sent
+     * to a sink.
      * @param level logging level
      * @param tag logging tag
-     * @return true if the log message should be sinked, false if the log message
+     * @return true if the log message should be sinked, false if the log
+     * message
      * should be ignored.
      */
     virtual bool decide(Level level, const std::string &tag) = 0;
@@ -38,4 +40,3 @@ public:
 } // namespace lms
 
 #endif /* LMS_LOGGING_FILTER_H */
-

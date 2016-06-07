@@ -27,7 +27,7 @@ public:
      *
      * @return true if succesful, false if not startable
      */
-    virtual bool init() =0;
+    virtual bool init() = 0;
 
     /**
      * @brief This object will be destroyed.
@@ -38,14 +38,14 @@ public:
      * No other life-cycle methods may be called after
      * destroy().
      */
-    virtual void destroy() =0;
+    virtual void destroy() = 0;
 
     /**
      * @brief Any config might have changed by the user.
      */
-    virtual void configsChanged() =0;
+    virtual void configsChanged() = 0;
 };
 
-}  // namespace lms
+} // namespace lms
 
-#endif  // LMS_LIFE_CYCLE_H
+#endif // LMS_LIFE_CYCLE_H

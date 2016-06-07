@@ -10,16 +10,16 @@ namespace internal {
 bool daemonize() {
     // STEP 1: First fork
     pid_t pid = fork();
-    if(pid < 0) {
+    if (pid < 0) {
         exit(EXIT_FAILURE);
     }
-    if(pid != 0) {
+    if (pid != 0) {
         // daemonizing is successful, return to main program
         return false;
     }
 
     // STEP 2: Create new session
-    if(setsid() < 0) {
+    if (setsid() < 0) {
         exit(EXIT_FAILURE);
     }
 
@@ -29,10 +29,10 @@ bool daemonize() {
 
     // STEP 4: Second fork
     pid = fork();
-    if(pid < 0) {
+    if (pid < 0) {
         exit(EXIT_FAILURE);
     }
-    if(pid != 0) {
+    if (pid != 0) {
         exit(EXIT_SUCCESS);
     }
 
@@ -50,6 +50,5 @@ bool daemonize() {
 
     return true;
 }
-
 }
 }

@@ -10,11 +10,13 @@
 namespace lms {
 namespace internal {
 
-void dumpModuleChannelGraph(ModuleChannelGraph<Module*>& graph, DotExporter &dot, const std::string &prefix);
+void dumpModuleChannelGraph(ModuleChannelGraph<Module *> &graph,
+                            DotExporter &dot, const std::string &prefix);
 
-void dumpDAG(const DAG<Module*> &dag, DotExporter &dot, const std::string &prefix);
+void dumpDAG(const DAG<Module *> &dag, DotExporter &dot,
+             const std::string &prefix);
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_INTERNAL_VIZ_H

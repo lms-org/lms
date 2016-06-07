@@ -14,11 +14,11 @@ namespace internal {
  *
  * This implementation is not thread-safe.
  */
-template<typename T>
-class DAG {
+template <typename T> class DAG {
 private:
     typedef std::map<T, std::set<T>> GraphType;
     GraphType m_data;
+
 public:
     /**
      * @brief Add an edge from dependency to node.
@@ -30,8 +30,8 @@ public:
      * @param node target node
      * @param dependency source node
      */
-    void edge(T const& from, T const& to) {
-        if(from != to) {
+    void edge(T const &from, T const &to) {
+        if (from != to) {
             m_data[to].insert(from);
             m_data[from];
         }
@@ -44,9 +44,7 @@ public:
      *
      * @param node node to be created
      */
-    void node(T const& node) {
-        m_data[node];
-    }
+    void node(T const &node) { m_data[node]; }
 
     /**
      * @brief Remove a node and its incoming edges.
@@ -55,17 +53,13 @@ public:
      *
      * @param node node to remove
      */
-    void removeNode(T const& node) {
-        m_data.erase(node);
-    }
+    void removeNode(T const &node) { m_data.erase(node); }
 
     /**
      * @brief Count the number of nodes available in this graph.
      * @return number of nodes
      */
-    size_t countNodes() const {
-        return m_data.size();
-    }
+    size_t countNodes() const { return m_data.size(); }
 
     /**
      * @brief Check if the graph contains an edge.
@@ -73,7 +67,7 @@ public:
      * @param dependency
      * @return
      */
-    bool hasEdge(T const& from, T const& to) const {
+    bool hasEdge(T const &from, T const &to) const {
         typename GraphType::const_iterator it = m_data.find(to);
         return it != m_data.end() && 1 == it->second.count(from);
     }
@@ -86,9 +80,9 @@ public:
      * @param from source node
      * @param to target node
      */
-    void removeEdge(T const& from, T const& to) {
+    void removeEdge(T const &from, T const &to) {
         typename GraphType::iterator it = m_data.find(to);
-        if(it != m_data.end()) {
+        if (it != m_data.end()) {
             it->second.erase(from);
         }
     }
@@ -103,10 +97,10 @@ public:
      * @param predicate a function of type bool (*)(T const&)
      * @return true if a free node was found, false otherwise
      */
-    template<typename PredicateFn>
-    bool hasFree(PredicateFn predicate) const {
-        for(typename GraphType::const_iterator it = m_data.begin(); it != m_data.end(); it++) {
-            if(it->second.empty() && predicate(it->first)) {
+    template <typename PredicateFn> bool hasFree(PredicateFn predicate) const {
+        for (typename GraphType::const_iterator it = m_data.begin();
+             it != m_data.end(); it++) {
+            if (it->second.empty() && predicate(it->first)) {
                 return true;
             }
         }
@@ -119,9 +113,10 @@ public:
      * @return true if a free node was found and result was assigned, false
      * otherwise
      */
-    bool getFree(T& result) const {
-        for(typename GraphType::const_iterator it = m_data.begin(); it != m_data.end(); it++) {
-            if(it->second.empty()) {
+    bool getFree(T &result) const {
+        for (typename GraphType::const_iterator it = m_data.begin();
+             it != m_data.end(); it++) {
+            if (it->second.empty()) {
                 result = it->first;
                 return true;
             }
@@ -135,10 +130,11 @@ public:
      * @param result the found node will be place there
      * @param predicate a function of type bool (*)(T &)
      */
-    template<typename PredicateFn>
-    bool getFree(T& result, PredicateFn predicate) {
-        for(typename GraphType::const_iterator it = m_data.begin(); it != m_data.end(); it++) {
-            if(it->second.empty() && predicate(it->first)) {
+    template <typename PredicateFn>
+    bool getFree(T &result, PredicateFn predicate) {
+        for (typename GraphType::const_iterator it = m_data.begin();
+             it != m_data.end(); it++) {
+            if (it->second.empty() && predicate(it->first)) {
                 result = it->first;
                 return true;
             }
@@ -150,8 +146,8 @@ public:
      * @brief Delete all edges coming from a certain node.
      * @param node source node
      */
-    void removeEdgesFrom(T const& from) {
-        for(auto & pair : m_data) {
+    void removeEdgesFrom(T const &from) {
+        for (auto &pair : m_data) {
             pair.second.erase(from);
         }
     }
@@ -160,9 +156,7 @@ public:
      * @brief Check if the graph contains no nodes or dependencies
      * @return true if graph is empty, false otherwise
      */
-    bool empty() const {
-        return m_data.empty();
-    }
+    bool empty() const { return m_data.empty(); }
 
     /**
      * @brief Check if the dependency graph has any circles or may come
@@ -173,7 +167,7 @@ public:
         DAG copy(*this);
 
         T node;
-        while(copy.getFree(node)) {
+        while (copy.getFree(node)) {
             copy.removeNode(node);
             copy.removeEdgesFrom(node);
         }
@@ -184,9 +178,7 @@ public:
     /**
      * @brief Delete all nodes and edges.
      */
-    void clear() {
-        m_data.clear();
-    }
+    void clear() { m_data.clear(); }
 
     /**
      * @brief Perform a topological sort on the graph.
@@ -200,12 +192,11 @@ public:
      * @return true if sorting was successful, false if the graph contains
      * cycles
      */
-    template<typename ListType>
-    bool topoSort(ListType & result) {
+    template <typename ListType> bool topoSort(ListType &result) {
         DAG copy(*this);
 
         T node;
-        while(copy.getFree(node)) {
+        while (copy.getFree(node)) {
             copy.removeNode(node);
             copy.removeEdgesFrom(node);
             result.push_back(node);
@@ -221,8 +212,8 @@ public:
      * @param to end node
      * @return true if at least one path was found, false otherwise
      */
-    bool hasPath(T const& from, T const& to) const {
-        if(0 == m_data.count(from) || 0 == m_data.count(to)) {
+    bool hasPath(T const &from, T const &to) const {
+        if (0 == m_data.count(from) || 0 == m_data.count(to)) {
             return false;
         }
 
@@ -230,22 +221,22 @@ public:
 
         todo.insert(to);
 
-        while(! todo.empty()) {
-            if(1 == todo.count(from)) {
+        while (!todo.empty()) {
+            if (1 == todo.count(from)) {
                 return true;
             }
 
-            T const& work = *todo.begin();
+            T const &work = *todo.begin();
             auto towork = m_data.find(work);
 
-            if(towork == m_data.end()) {
+            if (towork == m_data.end()) {
                 todo.erase(work);
                 continue;
             }
 
-            for(T const& x : towork->second) {
+            for (T const &x : towork->second) {
                 // if node not yet done then put it todo
-                if(0 == done.count(x)) {
+                if (0 == done.count(x)) {
                     todo.insert(x);
                 }
             }
@@ -270,39 +261,35 @@ public:
         do {
             changed = false;
 
-            for(auto & pair : m_data) {
-                T const& to = pair.first;
+            for (auto &pair : m_data) {
+                T const &to = pair.first;
                 std::set<T> copy(pair.second);
-                for(auto const& from : copy) {
+                for (auto const &from : copy) {
                     pair.second.erase(from);
-                    if(hasPath(from, to)) {
+                    if (hasPath(from, to)) {
                         changed = true;
                     } else {
                         pair.second.insert(from);
                     }
                 }
             }
-        } while(changed);
+        } while (changed);
     }
 
     /**
      * @brief Iterator to the internal data structure.
      * @return read-only begin iterator
      */
-    typename GraphType::const_iterator begin() const {
-        return m_data.begin();
-    }
+    typename GraphType::const_iterator begin() const { return m_data.begin(); }
 
     /**
      * @brief Iterator to the internal data structure.
      * @return  read-only end iterator
      */
-    typename GraphType::const_iterator end() const {
-        return m_data.end();
-    }
+    typename GraphType::const_iterator end() const { return m_data.end(); }
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_INTERNAL_DAG_H

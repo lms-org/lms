@@ -21,9 +21,9 @@ int main(int argc, char *argv[]) {
 
     try {
         lms::internal::connectToMaster(argc, argv);
-    } catch(lms::LmsException &ex) {
+    } catch (lms::LmsException &ex) {
         std::cout << "Start LMS Master Server ..." << std::endl;
-        if(lms::internal::daemonize()) {
+        if (lms::internal::daemonize()) {
             // This is inside the daemon
             lms::internal::MasterServer server;
             server.useUnix("/tmp/lms.sock");

@@ -28,7 +28,7 @@ public:
      *
      * @param arguments parsed command line arguments
      */
-    Framework(const ArgumentHandler& arguments);
+    Framework(const ArgumentHandler &arguments);
 
     /**
      * @brief Destroy execution manager.
@@ -37,30 +37,31 @@ public:
 
     void registerRuntime(Runtime *runtime);
 
-    Runtime* getRuntimeByName(std::string const& name);
+    Runtime *getRuntimeByName(std::string const &name);
 
-    bool hasRuntime(std::string const& name);
+    bool hasRuntime(std::string const &name);
 
-    ArgumentHandler const& getArgumentHandler();
+    ArgumentHandler const &getArgumentHandler();
 
     void exportGraphs();
 
-    Profiler& profiler();
+    Profiler &profiler();
 
-    Loader& moduleLoader();
+    Loader &moduleLoader();
 
-    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
+    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const &name);
 
     void installService(std::shared_ptr<ServiceWrapper> service);
     void reloadService(std::shared_ptr<ServiceWrapper> service);
 
     bool isDebug() const;
 
-    std::string loadLogObject(std::string const& name, bool isDir);
-    std::string saveLogObject(std::string const& name, bool isDir);
+    std::string loadLogObject(std::string const &name, bool isDir);
+    std::string saveLogObject(std::string const &name, bool isDir);
     bool isEnableLoad() const;
     bool isEnableSave() const;
     std::string loadPath() const;
+
 private:
     bool exportGraphsHelper(bool isExecOrData);
 
@@ -93,7 +94,7 @@ private:
     DebugServer m_debugServer;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_FRAMEWORK_H */

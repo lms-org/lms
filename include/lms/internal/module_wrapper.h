@@ -34,19 +34,20 @@ class ModuleWrapper : public Wrapper {
      * equals to nullptr
      */
     std::unique_ptr<Module> m_moduleInstance;
+
 public:
-    ModuleWrapper(Runtime *runtime) : m_runtime(runtime), m_enabled(false),
-        m_moduleInstance(nullptr) {}
+    ModuleWrapper(Runtime *runtime)
+        : m_runtime(runtime), m_enabled(false), m_moduleInstance(nullptr) {}
 
     bool enabled() const;
 
-    Module* instance() const;
+    Module *instance() const;
 
-    void load(LifeCycle* instance) override;
+    void load(LifeCycle *instance) override;
     void unload() override;
 
-    Runtime* runtime() const;
-    void runtime(Runtime* runtime);
+    Runtime *runtime() const;
+    void runtime(Runtime *runtime);
 
     /**
      * @brief Used for transparent datachannel mapping. Maps requested
@@ -65,20 +66,21 @@ public:
      * @brief The module can only be executed on the specified thread.
      *
      * - ONLY_MAIN_THREAD: The module will only be executed on the main thread.
-     * - NEVER_MAIN_THREAD: The module will never be executed on the main thread.
+     * - NEVER_MAIN_THREAD: The module will never be executed on the main
+     *thread.
      */
     ExecutionType executionType;
 
     std::map<std::string, Config> configs;
 
-    void update(ModuleWrapper && other);
+    void update(ModuleWrapper &&other);
 
-    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const& name);
+    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const &name);
 
     std::string interfaceFunction() const override;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif // LMS_MODULE_WRAPPER_H

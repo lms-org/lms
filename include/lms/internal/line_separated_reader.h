@@ -9,7 +9,8 @@ namespace internal {
 class LineReader {
 public:
     LineReader(int fd);
-    bool readLine(std::string& line);
+    bool readLine(std::string &line);
+
 private:
     int fd;
     std::vector<char> buffer;
@@ -26,11 +27,11 @@ private:
 class LineWriter {
 public:
     LineWriter(int fd);
-    void writeLine(const std::string& line);
+    void writeLine(const std::string &line);
     void writeLine();
+
 private:
     int fd;
 };
-
 }
 }

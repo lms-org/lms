@@ -48,29 +48,31 @@ public:
      */
     void markEnd(const std::string &label);
 
-    enum Type : std::uint8_t {
-        BEGIN = 0, END, MAPPING
-    };
+    enum Type : std::uint8_t { BEGIN = 0, END, MAPPING };
 
     class ProfilingListener {
     public:
         virtual ~ProfilingListener() {}
-        virtual void onMarker(Type type, lms::Time now, std::string const& label) =0;
+        virtual void onMarker(Type type, lms::Time now,
+                              std::string const &label) = 0;
     };
 
     void appendListener(ProfilingListener *listener);
+
 private:
-    void mark(Type type, const std::string& label);
+    void mark(Type type, const std::string &label);
 
     std::vector<std::unique_ptr<ProfilingListener>> m_listeners;
 };
 
 class FileProfiler : public Profiler::ProfilingListener {
 public:
-    FileProfiler(std::string const& file);
+    FileProfiler(std::string const &file);
     ~FileProfiler();
 
-    void onMarker(Profiler::Type type, lms::Time now, std::string const& label) override;
+    void onMarker(Profiler::Type type, lms::Time now,
+                  std::string const &label) override;
+
 private:
     std::ofstream m_stream;
 
@@ -85,12 +87,14 @@ class DebugServerProfiler : public Profiler::ProfilingListener {
 public:
     DebugServerProfiler(DebugServer *server);
 
-    void onMarker(Profiler::Type type, lms::Time now, std::string const& label) override;
+    void onMarker(Profiler::Type type, lms::Time now,
+                  std::string const &label) override;
+
 private:
-    DebugServer * m_server;
+    DebugServer *m_server;
 };
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms
 
 #endif /* LMS_PROFILER_H */

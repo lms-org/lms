@@ -4,49 +4,46 @@ namespace lms {
 namespace internal {
 
 Clock::Clock()
-    : logger("lms.Clock"), loopTime(Time::ZERO),
-      m_enabledSleep(false), m_enabledSlowWarning(false),
-      m_enabledCompensate(false), firstIteration(true),
-      overflowTime(Time::ZERO) {
-}
+    : logger("lms.Clock"), loopTime(Time::ZERO), m_enabledSleep(false),
+      m_enabledSlowWarning(false), m_enabledCompensate(false),
+      firstIteration(true), overflowTime(Time::ZERO) {}
 
-void Clock::cycleTime(Time cycleTime) {
-    this->loopTime = cycleTime;
-}
+void Clock::cycleTime(Time cycleTime) { this->loopTime = cycleTime; }
 
-Time Clock::cycleTime() const {
-    return this->loopTime;
-}
+Time Clock::cycleTime() const { return this->loopTime; }
 
 void Clock::beforeLoopIteration() {
-    if(! firstIteration) {
+    if (!firstIteration) {
         Time deltaWork = Time::now() - beforeWorkTimestamp;
 
-        if(m_enabledSlowWarning && deltaWork > loopTime && loopTime > lms::Time::ZERO) {
+        if (m_enabledSlowWarning && deltaWork > loopTime &&
+            loopTime > lms::Time::ZERO) {
             float ratio = deltaWork.toFloat() / loopTime.toFloat();
             int percentage = int((ratio - 1) * 100);
             logger.warn() << "Cycle was too slow: " << deltaWork << " (+ "
-                << percentage << "%)";
+                          << percentage << "%)";
         }
 
         // compute time that should be slept
         Time computedSleep = loopTime - deltaWork - overflowTime;
 
-        if(computedSleep > Time::ZERO) {
-            //PrecisionTime beforeSleep = PrecisionTime::now();
-            if(m_enabledSleep) {
+        if (computedSleep > Time::ZERO) {
+            // PrecisionTime beforeSleep = PrecisionTime::now();
+            if (m_enabledSleep) {
                 computedSleep.sleep();
             }
-            //PrecisionTime actualSleep = PrecisionTime::now() - beforeSleep;
+            // PrecisionTime actualSleep = PrecisionTime::now() - beforeSleep;
 
-            //logger.info("sleep") << "Computed " << computedSleep << " Actual " << actualSleep;
+            // logger.info("sleep") << "Computed " << computedSleep << " Actual
+            // " <<
+            // actualSleep;
         }
 
-        if(m_enabledCompensate) {
+        if (m_enabledCompensate) {
             overflowTime += (Time::now() - beforeWorkTimestamp) - loopTime;
         }
 
-        //logger.info("overflow") << " Overflow " << overflowTime;
+        // logger.info("overflow") << " Overflow " << overflowTime;
     }
 
     firstIteration = false;
@@ -54,29 +51,17 @@ void Clock::beforeLoopIteration() {
     beforeWorkTimestamp = Time::now();
 }
 
-void Clock::enabledSleep(bool flag) {
-    m_enabledSleep = flag;
-}
+void Clock::enabledSleep(bool flag) { m_enabledSleep = flag; }
 
-bool Clock::enabledSleep() const {
-    return m_enabledSleep;
-}
+bool Clock::enabledSleep() const { return m_enabledSleep; }
 
-void Clock::enabledSlowWarning(bool flag) {
-    m_enabledSlowWarning = flag;
-}
+void Clock::enabledSlowWarning(bool flag) { m_enabledSlowWarning = flag; }
 
-bool Clock::enabledSlowWarning() const {
-    return m_enabledSlowWarning;
-}
+bool Clock::enabledSlowWarning() const { return m_enabledSlowWarning; }
 
-bool Clock::enabledCompensate() const {
-    return m_enabledCompensate;
-}
+bool Clock::enabledCompensate() const { return m_enabledCompensate; }
 
-void Clock::enabledCompensate(bool flag) {
-    m_enabledCompensate = flag;
-}
+void Clock::enabledCompensate(bool flag) { m_enabledCompensate = flag; }
 
-}  // namespace internal
-}  // namespace lms
+} // namespace internal
+} // namespace lms

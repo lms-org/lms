@@ -6,36 +6,29 @@ namespace lms {
 
 Service::Service() : logger("") {}
 
-bool Service::init() {
-    return true;
-}
+bool Service::init() { return true; }
 
-void Service::destroy() {
-}
+void Service::destroy() {}
 
-void Service::configsChanged() {
-}
+void Service::configsChanged() {}
 
-void Service::initBase(internal::ServiceWrapper *wrapper, lms::logging::Level minLogLevel) {
+void Service::initBase(internal::ServiceWrapper *wrapper,
+                       lms::logging::Level minLogLevel) {
     m_wrapper = wrapper;
     logger.name = wrapper->name();
     logger.threshold = minLogLevel;
 }
 
-const Config& Service::config(const std::string &name) const{
+const Config &Service::config(const std::string &name) const {
     return m_wrapper->getConfig(name);
 }
 
-std::string Service::getName() const {
-    return m_wrapper->name();
-}
+std::string Service::getName() const { return m_wrapper->name(); }
 
-size_t Service::hashCode() const {
-    return typeid(this).hash_code();
-}
+size_t Service::hashCode() const { return typeid(this).hash_code(); }
 
 void Service::logLevelChanged(logging::Level level) {
     logger.threshold = level;
 }
 
-}  // namespace lms
+} // namespace lms

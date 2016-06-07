@@ -21,14 +21,13 @@ class LoggingFilter;
  */
 class Context {
 public:
-
     /**
      * @brief Return default logging context for this process.
      *
      * The context object is lazy-initialized. It will be created the
      * first time this method is called.
      */
-    static Context& getDefault();
+    static Context &getDefault();
 
     /**
      * @brief Create a new context with no filters and no sinks.
@@ -38,12 +37,12 @@ public:
     /**
      * @brief Do not allow copy constructing.
      */
-    Context(Context const&) = delete;
+    Context(Context const &) = delete;
 
     /**
      * @brief Do not allow copy assignments.
      */
-    Context& operator=(Context const&) = delete;
+    Context &operator=(Context const &) = delete;
 
     /**
      * @brief Add a new logging sink.
@@ -76,7 +75,7 @@ public:
      * @brief Return the installed logging filter.
      * @return installed logging filter, or nullptr if none is installed
      */
-    Filter* filter() const;
+    Filter *filter() const;
 
     /**
      * @brief Check if a filter was previously installed.
@@ -90,6 +89,7 @@ public:
      * @param message logging event
      */
     void processMessage(const Event &message);
+
 private:
     std::vector<std::unique_ptr<Sink>> m_sinks;
     std::unique_ptr<Filter> m_filter;
@@ -99,4 +99,3 @@ private:
 } // namespace lms
 
 #endif /* LMS_LOGGING_CONTEXT_H */
-
