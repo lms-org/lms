@@ -1,5 +1,5 @@
 {
 "name": "lms",
 "description":"lms framework TODO",
-"includes":["lms/include"]
+"includes":["include"]
 }
