@@ -19,8 +19,4 @@ config/
 *.autosave
 CMakeLists.txt.user
 doku/html
-lms/external/libraries/*
-!lms/external/libraries/CMakeLists.txt
-lms/external/modules/*
-!lms/external/modules/CMakeLists.txt
-lms/include/lms/definitions.h
+include/lms/definitions.h
