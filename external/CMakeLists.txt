@@ -5,4 +5,10 @@ add_library(pugixml STATIC
 )
 set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE 1)
 
-add_subdirectory(googletest)
+if(BUILD_TESTS)
+#file(GLOB RESULT googletest)
+#list(LENGTH ${RESULT} RES_LEN)
+#if(RES_LEN GREATER 0)
+    add_subdirectory(googletest)
+#endif()
+endif()
