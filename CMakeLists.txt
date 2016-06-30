@@ -16,28 +16,26 @@ include(TestCpp11)
 
 include(CMakeData.txt)
 
-if(NOT DEFINED LMS_STANDALONE)
+#if(NOT DEFINED LMS_STANDALONE)
     # LMS is standalone by default.
     # LMS_STANDALONE is set to FALSE in config repos.
-    set(LMS_STANDALONE TRUE)
-endif()
+    #set(LMS_STANDALONE TRUE)
+#endif()
 
-if(LMS_STANDALONE)
-    set(LMS_DIR_CONFIGS "")
-    set(LMS_DIR_MODULES "")
-    set(LMS_DIR_EXTERNAL "")
+#LMS is standalone
+set(LMS_DIR_CONFIGS "")
+set(LMS_DIR_MODULES "")
+set(LMS_DIR_EXTERNAL "")
 
-    if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"))
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic")
-    endif()
+if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"))
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic")
 endif()
 
 add_subdirectory(external)
 
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/lms")
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/CMakeSharedHeaders.txt" "")
+#create definitions.h
 configure_file(include/lms/definitions.h.in
-    include/lms/definitions.h
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/lms/definitions.h"
     ESCAPE_QUOTES)
 
 set (HEADERS

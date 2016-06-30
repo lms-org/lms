@@ -124,7 +124,7 @@ Framework::Framework(const ArgumentHandler &arguments)
         }
     }
 #ifndef LMS_STANDALONE
-    m_serviceLoader.addSearchPath(LMS_SERVICES, 0);
+//    m_serviceLoader.addSearchPath(LMS_SERVICES, 0);
 #endif
 
     // parse framework config
@@ -183,7 +183,7 @@ Framework::Framework(const ArgumentHandler &arguments)
             }
         }
 #ifndef LMS_STANDALONE
-        m_moduleLoader.addSearchPath(LMS_MODULES, 0);
+//        m_moduleLoader.addSearchPath(LMS_MODULES, 0);
 #endif
 
         // enable modules after they were made available
