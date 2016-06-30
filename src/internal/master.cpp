@@ -13,6 +13,7 @@
 #include "lms/internal/master.h"
 #include "lms/exception.h"
 #include "lms/definitions.h"
+#include "lms/internal/string.h"
 #include "tclap/CmdLine.h"
 
 namespace lms {
@@ -155,15 +156,22 @@ void MasterServer::start() {
             if (FD_ISSET(client.fd, &fds)) {
                 std::string line;
                 bool hadLines = false;
+                bool exit = false;
                 while (client.reader.readLine(line)) {
                     hadLines = true;
                     if (line[line.length() - 1] == '\r') {
                         line = line.substr(0, line.length() - 1);
                     }
-                    processClient(client, line);
+                    ClientResult res = processClient(client, line);
+                    if (res == ClientResult::exit) {
+                        exit = true;
+                        break;
+                    }
                 }
 
-                if (!hadLines) {
+                if (!hadLines || exit) {
+                    ::shutdown(client.fd, SHUT_RD);
+                    ::close(client.fd);
                     // disconnected
                     m_clients.erase(it);
                     --it;
@@ -173,8 +181,20 @@ void MasterServer::start() {
     }
 }
 
-void MasterServer::processClient(Client &client, const std::string &message) {
-    if (message == "clients") {
+MasterServer::ClientResult
+MasterServer::processClient(Client &client, const std::string &commandLine) {
+    std::vector<std::string> args = lms::internal::splitWhitespace(commandLine);
+    std::string message;
+    if (args.size() >= 1) {
+        message = args[0];
+    }
+    args.erase(args.begin());
+
+    if (message == "exit") {
+        client.writer.writeLine("Exiting ...");
+        client.writer.writeLine();
+        return ClientResult::exit;
+    } else if (message == "clients") {
         for (const Client &cl : m_clients) {
             client.writer.writeLine(std::to_string(cl.fd) + "\t" + cl.peer);
         }
@@ -192,11 +212,22 @@ void MasterServer::processClient(Client &client, const std::string &message) {
         }
         m_running = false;
     } else if (message == "tcpip") {
-        int err = useIPv4(3344);
-        client.writer.writeLine(std::string("TCPIP Server at ") +
-                                std::to_string(err));
+        int port = args.size() >= 1 ? atoi(args[0].c_str()) : 3344;
+        int err = useIPv4(port);
+        if (err != 0) {
+            client.writer.writeLine("TCPIP server failed to start");
+        } else {
+            client.writer.writeLine(std::string("TCPIP Server on port ") +
+                                    std::to_string(port));
+        }
+        client.writer.writeLine();
     } else if (message == "run") {
+    } else {
+        client.writer.writeLine("Unknown command");
+        client.writer.writeLine();
     }
+
+    return ClientResult::ok;
 }
 
 MasterClient::MasterClient(int fd) : m_sockfd(fd) {}
@@ -232,7 +263,7 @@ void readUntilEnd(lms::internal::LineReader &reader) {
 }
 
 void connectToMaster(int argc, char *argv[]) {
-    TCLAP::CmdLine cmd("LMS Client", ' ', LMS_VERSION_STRING);
+    /*TCLAP::CmdLine cmd("LMS Client", ' ', LMS_VERSION_STRING);
     TCLAP::SwitchArg pidSwitch("", "pid", "Get process ID of master server",
                                cmd);
     TCLAP::SwitchArg infoSwitch("", "info", "Get version of master server",
@@ -244,14 +275,23 @@ void connectToMaster(int argc, char *argv[]) {
     TCLAP::ValueArg<std::string> runArg("r", "run",
                                         "Start a runtime with config", false,
                                         "", "configfile", cmd);
-    cmd.parse(argc, argv);
+    cmd.parse(argc, argv);*/
 
     lms::internal::MasterClient client =
         lms::internal::MasterClient::fromUnix("/tmp/lms.sock");
     lms::internal::LineReader reader(client.fd());
     lms::internal::LineWriter writer(client.fd());
 
-    if (shutdownSwitch.getValue()) {
+    std::string command = argv[1];
+    for (int i = 2; i < argc; i++) {
+        command += " ";
+        command += argv[i];
+    }
+
+    writer.writeLine(command);
+    readUntilEnd(reader);
+
+    /*if (shutdownSwitch.getValue()) {
         writer.writeLine("shutdown");
     } else if (pidSwitch.getValue()) {
         writer.writeLine("pid");
@@ -264,7 +304,7 @@ void connectToMaster(int argc, char *argv[]) {
         readUntilEnd(reader);
     } else if (runArg.isSet()) {
         writer.writeLine("run " + runArg.getValue());
-    }
+    }*/
 }
 
 /*void interactive() {

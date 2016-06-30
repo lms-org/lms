@@ -34,8 +34,10 @@ private:
     std::vector<int> m_runtimes;
     bool m_running;
 
+    enum class ClientResult { ok, exit };
+
     void enableNonBlock(int sock);
-    void processClient(Client &client, const std::string &message);
+    ClientResult processClient(Client &client, const std::string &message);
 };
 
 class MasterClient {
