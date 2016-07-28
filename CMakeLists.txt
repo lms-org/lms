@@ -35,7 +35,7 @@ add_subdirectory(external)
 
 #create definitions.h
 configure_file(include/lms/definitions.h.in
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/lms/definitions.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/lms/definitions.h"
     ESCAPE_QUOTES)
 
 set (HEADERS
