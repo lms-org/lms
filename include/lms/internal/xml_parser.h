@@ -4,15 +4,49 @@
 #include <vector>
 #include <string>
 #include <exception>
+#include <map>
+#include <stack>
 
 #include "pugixml.hpp"
 #include "lms/config.h"
-#include "lms/logger.h"
-#include "clock.h"
-#include "framework.h"
+#include "lms/logging/level.h"
+#include "lms/time.h"
 
 namespace lms {
 namespace internal {
+
+struct ModuleInfo {
+    std::string name;
+    std::string lib;
+    std::string clazz;
+    bool mainThread = false;
+    std::map<std::string, std::pair<std::string, int>> channelMapping;
+    std::map<std::string, lms::Config> configs;
+    lms::logging::Level log;
+};
+
+struct ServiceInfo {
+    std::string name;
+    std::string lib;
+    std::string clazz;
+    std::map<std::string, lms::Config> configs;
+    lms::logging::Level log;
+};
+
+struct ClockInfo {
+    lms::Time cycle;
+    bool sleep = false;
+    bool sleepCompensate = false;
+    lms::Time watchDog;
+    bool watchDogEnabled = false;
+    bool slowWarnings = false;
+};
+
+struct RuntimeInfo {
+    ClockInfo clock;
+    std::vector<ModuleInfo> modules;
+    std::vector<ServiceInfo> services;
+};
 
 /**
  * @brief Traverse an XML node and evaluate <if> tags with the given condition.
@@ -84,72 +118,40 @@ void parseModuleConfig(pugi::xml_node node, Config &config,
 
 class XmlParser {
 public:
-    XmlParser(Framework &framework, Runtime *runtime,
-              ArgumentHandler const &args);
-
-    enum class LoadConfigFlag { LOAD_EVERYTHING, ONLY_MODULE_CONFIG };
+    XmlParser(RuntimeInfo &info);
 
     std::vector<std::string> const &errors() const;
     std::vector<std::string> const &files() const;
-
-    /**
-     * @brief Parse the given XML node as <modulesToEnable>
-     * @param node node to parse
-     * @param modulesToLoadLists parsed enable modules will be put into this map
-     */
-    void parseModulesToEnable(pugi::xml_node node);
-
-    /**
-     * @brief Parse the given XML node as <logging>
-     * @return filter instance
-     */
-    logging::ThresholdFilter *parseLogging(pugi::xml_node node);
 
     /**
      * @brief Parse the given XML node as <execution>
      * @param rootNode
      * @param clock
      */
-    void parseExecution(pugi::xml_node node, Runtime *runtime);
+    bool parseClock(pugi::xml_node node, ClockInfo &info);
 
-    void parseInclude(pugi::xml_node node, const std::string &currentFile,
-                      LoadConfigFlag flag);
+    bool parseInclude(pugi::xml_node node);
 
-    void parseModules(pugi::xml_node node, const std::string &currentFile,
-                      LoadConfigFlag flag);
+    bool parseModule(pugi::xml_node node, ModuleInfo &info);
 
-    void parseService(pugi::xml_node node, const std::string &currentFile,
-                      LoadConfigFlag flag);
+    bool parseService(pugi::xml_node node, ServiceInfo &info);
 
-    void parseFile(const std::string &file, LoadConfigFlag flag);
-
-    void parseRuntime(pugi::xml_node node, const std::string &currentFile,
-                      LoadConfigFlag flag);
-
-    /**
-     * @brief parseConfig parses the framework-config
-     */
-    void parseConfig(XmlParser::LoadConfigFlag flag,
-                     const std::string &argLoadConfig,
-                     std::string const &configPath);
-
-    std::unique_ptr<logging::ThresholdFilter> filter();
+    bool parseFile(std::istream &is, const std::string &file);
+    bool parseFile(const std::string &file);
 
 private:
-    Framework &m_framework;
-    Runtime *m_runtime;
-    ArgumentHandler const &m_args;
-
-    std::unique_ptr<logging::ThresholdFilter> m_filter;
     std::vector<std::string> m_errors;
     std::vector<std::string> m_files;
+    std::stack<std::string> m_filestack;
+
+    RuntimeInfo &runtime;
 
     /**
      * @brief Add parse error: An xml node misses a required attribute.
      * @param node
      * @param attr
      */
-    void errorMissingAttr(pugi::xml_node node, pugi::xml_attribute attr);
+    bool errorMissingAttr(pugi::xml_node node, pugi::xml_attribute attr);
 
     /**
      * @brief Add parse error: An xml node has an invalid attribute value.
@@ -158,17 +160,17 @@ private:
      * @param attrValue
      * @param expectedValue
      */
-    void errorInvalidAttr(pugi::xml_node node, pugi::xml_attribute attr,
+    bool errorInvalidAttr(pugi::xml_node node, pugi::xml_attribute attr,
                           const std::string &expectedValue);
 
     void errorInvalidNodeContent(pugi::xml_node, const std::string &expected);
 
-    void errorFile(const std::string &file);
+    bool errorFile(const std::string &file);
 
-    void errorPugiParseResult(const std::string &file,
+    bool errorPugiParseResult(const std::string &file,
                               const pugi::xml_parse_result &result);
 
-    void errorUnknownNode(pugi::xml_node node);
+    bool errorUnknownNode(pugi::xml_node node);
 };
 
 } // namespace internal

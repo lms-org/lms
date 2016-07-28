@@ -1,12 +1,26 @@
 #include <cstring>
+#include <algorithm>
+#include <fstream>
 
 #include "lms/internal/xml_parser.h"
 #include "lms/internal/os.h"
 #include "lms/internal/string.h"
-#include "lms/internal/module_wrapper.h"
 
 namespace lms {
 namespace internal {
+
+template<typename T>
+struct PutOnStack {
+    std::stack<T> &stack;
+
+    PutOnStack(std::stack<T> &stack, const T &obj) : stack(stack) {
+        stack.push(obj);
+    }
+
+    ~PutOnStack() {
+        stack.pop();
+    }
+};
 
 bool evaluateSet(const std::string &condition,
                  const std::vector<std::string> &flags) {
@@ -104,27 +118,7 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
     }
 }
 
-XmlParser::XmlParser(Framework &framework, Runtime *runtime,
-                     const ArgumentHandler &args)
-    : m_framework(framework), m_runtime(runtime), m_args(args) {}
-
-void XmlParser::parseConfig(XmlParser::LoadConfigFlag flag,
-                            const std::string &argLoadConfig,
-                            std::string const &configPath) {
-    std::string path = configPath;
-    if (argLoadConfig.empty()) {
-        path += "/framework_conf.xml";
-    } else {
-        path += "/" + argLoadConfig + ".xml";
-    }
-
-    if (fileType(path) == FileType::REGULAR_FILE) {
-        parseFile(path, flag);
-        return;
-    } else {
-        errorFile(path);
-    }
-}
+XmlParser::XmlParser(RuntimeInfo &info) : runtime(info) {}
 
 void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key) {
@@ -144,238 +138,105 @@ void parseModuleConfig(pugi::xml_node node, Config &config,
     }
 }
 
-void XmlParser::parseModulesToEnable(pugi::xml_node node) {
-    ExecutionManager::EnableConfig &config =
-        m_runtime->executionManager().config();
+bool XmlParser::parseClock(pugi::xml_node node, ClockInfo &info) {
+    std::string clockUnit;
+    std::int64_t clockValue = 0;
 
-    lms::logging::Level defaultModuleLevel = lms::logging::Level::ALL;
+    pugi::xml_attribute sleepAttr = node.attribute("sleep");
+    pugi::xml_attribute compensateAttr = node.attribute("compensate");
+    pugi::xml_attribute unitAttr = node.attribute("unit");
+    pugi::xml_attribute valueAttr = node.attribute("value");
+    pugi::xml_attribute watchDog = node.attribute("watchDog");
 
-    // get attribute "logLevel" of node <modulesToLoad>
-    // its value will be the default for logLevel of <module>
-    pugi::xml_attribute globalLogLevelAttr = node.attribute("logLevel");
-    if (globalLogLevelAttr) {
-        lms::logging::levelFromName(globalLogLevelAttr.value(),
-                                    defaultModuleLevel);
-    }
+    info.slowWarnings = true;
 
-    for (pugi::xml_node moduleNode : node.children("module")) {
-        // parse module content
-        std::pair<std::string, logging::Level> mod;
-        mod.first = moduleNode.child_value();
-
-        // get the attribute "logLevel"
-        pugi::xml_attribute logLevelAttr = moduleNode.attribute("logLevel");
-        if (logLevelAttr) {
-            lms::logging::levelFromName(logLevelAttr.value(), mod.second);
-        } else {
-            mod.second = defaultModuleLevel;
-        }
-
-        config.push_back(mod);
-    }
-}
-
-logging::ThresholdFilter *XmlParser::parseLogging(pugi::xml_node node) {
-    logging::Level defaultThreshold = logging::Level::ALL;
-
-    pugi::xml_attribute levelAttr = node.attribute("logLevel");
-    logging::levelFromName(levelAttr.as_string("ALL"), defaultThreshold);
-
-    logging::ThresholdFilter *filter =
-        new logging::ThresholdFilter(defaultThreshold);
-
-    for (pugi::xml_node filterNode : node.children("filter")) {
-        pugi::xml_attribute tagPrefixAttr = filterNode.attribute("tagPrefix");
-        pugi::xml_attribute logLevelAttr = filterNode.attribute("logLevel");
-
-        if (!tagPrefixAttr) {
-            errorMissingAttr(filterNode, tagPrefixAttr);
-        }
-
-        if (!logLevelAttr) {
-            errorMissingAttr(filterNode, logLevelAttr);
-        }
-
-        logging::Level level;
-        logging::levelFromName(logLevelAttr.as_string(), level);
-        filter->addPrefix(tagPrefixAttr.as_string(), level);
-    }
-
-    return filter;
-}
-
-void XmlParser::parseExecution(pugi::xml_node node, Runtime *runtime) {
-    pugi::xml_node clockNode = node.child("clock");
-    pugi::xml_node mainThreadNode = node.child("mainThread");
-    pugi::xml_node pausedNode = node.child("paused");
-
-    Clock &clock = runtime->clock();
-
-    if (clockNode) {
-        std::string clockUnit;
-        std::int64_t clockValue = 0;
-
-        pugi::xml_attribute sleepAttr = clockNode.attribute("sleep");
-        pugi::xml_attribute compensateAttr = clockNode.attribute("compensate");
-        pugi::xml_attribute unitAttr = clockNode.attribute("unit");
-        pugi::xml_attribute valueAttr = clockNode.attribute("value");
-        pugi::xml_attribute watchDog = clockNode.attribute("watchDog");
-
-        clock.enabledSlowWarning(true);
-
-        if (sleepAttr) {
-            clock.enabledSleep(sleepAttr.as_bool());
-        } else {
-            // if not enabled attribute is given then the clock is considered
-            // to be disabled
-            clock.enabledSleep(false);
-        }
-
-        if (valueAttr) {
-            clockValue = valueAttr.as_llong();
-        } else {
-            clock.enabledSlowWarning(false);
-            errorMissingAttr(clockNode, valueAttr);
-        }
-
-        if (unitAttr) {
-            clockUnit = unitAttr.value();
-        } else {
-            clock.enabledSlowWarning(false);
-            errorMissingAttr(clockNode, unitAttr);
-        }
-
-        if (compensateAttr) {
-            clock.enabledCompensate(compensateAttr.as_bool());
-        } else {
-            clock.enabledCompensate(false);
-        }
-
-        if (clockUnit == "hz") {
-            clock.cycleTime(Time::fromMicros(1000000 / clockValue));
-        } else if (clockUnit == "ms") {
-            clock.cycleTime(Time::fromMillis(clockValue));
-        } else if (clockUnit == "us") {
-            clock.cycleTime(Time::fromMicros(clockValue));
-        } else {
-            clock.enabledSlowWarning(false);
-            errorInvalidAttr(clockNode, unitAttr, "ms/us/hz");
-        }
-
-        if (watchDog) {
-            WatchDog &dog = runtime->executionManager().dog();
-
-            if (clockUnit == "hz") {
-                dog.watch(Time::fromMicros(1000000 / watchDog.as_llong()));
-            } else if (clockUnit == "ms") {
-                dog.watch(Time::fromMillis(watchDog.as_llong()));
-            } else if (clockUnit == "us") {
-                dog.watch(Time::fromMicros(watchDog.as_llong()));
-            } else {
-                errorInvalidAttr(clockNode, watchDog, "ms/us/hz");
-            }
-        }
-    }
-
-    if (mainThreadNode) {
-        runtime->executionType(ExecutionType::ONLY_MAIN_THREAD);
-    }
-
-    if (pausedNode) {
-        runtime->pause();
-    }
-}
-
-void XmlParser::parseInclude(pugi::xml_node node,
-                             const std::string &currentFile,
-                             LoadConfigFlag flag) {
-    pugi::xml_attribute srcAttr = node.attribute("src");
-
-    if (srcAttr) {
-        std::string includePath = srcAttr.value();
-        if (isAbsolute(includePath)) {
-            // if absolute then start from configs dir
-            includePath = LMS_CONFIGS + includePath;
-        } else {
-            // otherwise go from current file's directory
-            includePath = dirname(currentFile) + "/" + includePath;
-        }
-        parseFile(includePath, flag);
+    if (sleepAttr) {
+        info.sleep = sleepAttr.as_bool();
     } else {
-        errorMissingAttr(node, srcAttr);
+        // if not enabled attribute is given then the clock is considered
+        // to be disabled
+        info.sleep = false;
     }
+
+    if (valueAttr) {
+        clockValue = valueAttr.as_llong();
+    } else {
+        info.slowWarnings = false;
+        return errorMissingAttr(node, valueAttr);
+    }
+
+    if (unitAttr) {
+        clockUnit = unitAttr.value();
+    } else {
+        info.slowWarnings = false;
+        return errorMissingAttr(node, unitAttr);
+    }
+
+    if (compensateAttr) {
+        info.sleepCompensate = compensateAttr.as_bool();
+    } else {
+        info.sleepCompensate = false;
+    }
+
+    if (clockUnit == "hz") {
+        info.cycle = Time::fromMicros(1000000 / clockValue);
+    } else if (clockUnit == "ms") {
+        info.cycle = Time::fromMillis(clockValue);
+    } else if (clockUnit == "us") {
+        info.cycle = Time::fromMicros(clockValue);
+    } else {
+        info.slowWarnings = false;
+        return errorInvalidAttr(node, unitAttr, "ms/us/hz");
+    }
+
+    if (watchDog) {
+        info.watchDogEnabled = true;
+        if (clockUnit == "hz") {
+            info.watchDog = Time::fromMicros(1000000 / watchDog.as_llong());
+        } else if (clockUnit == "ms") {
+            info.watchDog = Time::fromMillis(watchDog.as_llong());
+        } else if (clockUnit == "us") {
+            info.watchDog = Time::fromMicros(watchDog.as_llong());
+        } else {
+            info.watchDogEnabled = false;
+            return errorInvalidAttr(node, watchDog, "ms/us/hz");
+        }
+    }
+
+    return true;
 }
 
-void XmlParser::parseRuntime(pugi::xml_node node,
-                             const std::string &currentFile,
-                             LoadConfigFlag flag) {
+bool XmlParser::parseInclude(pugi::xml_node node) {
     pugi::xml_attribute srcAttr = node.attribute("src");
-    pugi::xml_attribute nameAttr = node.attribute("name");
 
-    if (srcAttr && nameAttr) {
-        std::string includePath = srcAttr.value();
-        if (isAbsolute(includePath)) {
-            // if absolute then start from configs dir
-            includePath = LMS_CONFIGS + includePath;
-        } else {
-            // otherwise go from current file's directory
-            includePath = dirname(currentFile) + "/" + includePath;
-        }
+    if(! srcAttr) return errorMissingAttr(node, srcAttr);
 
-        Runtime *temp = m_runtime;
-        if (flag == LoadConfigFlag::LOAD_EVERYTHING) {
-            m_runtime = new Runtime(nameAttr.value(), m_framework);
-            m_framework.registerRuntime(m_runtime);
-        } else if (m_framework.hasRuntime(nameAttr.value())) {
-            // reload configs && runtime is installed
-            m_runtime = m_framework.getRuntimeByName(nameAttr.value());
-        } else {
-            std::cout << "Runtime is not available: " << nameAttr.value()
-                      << std::endl;
-        }
-        parseFile(includePath, flag);
-        m_runtime = temp;
-    } else if (!srcAttr) {
-        errorMissingAttr(node, srcAttr);
-    } else if (!nameAttr) {
-        errorMissingAttr(node, nameAttr);
-    }
+    std::string includePath = dirname(m_filestack.top()) + "/" + srcAttr.value();
+    parseFile(includePath);
+    return true;
 }
 
-void XmlParser::parseModules(pugi::xml_node node,
-                             const std::string &currentFile,
-                             LoadConfigFlag flag) {
-    std::shared_ptr<ModuleWrapper> module =
-        std::make_shared<ModuleWrapper>(m_runtime);
-
+bool XmlParser::parseModule(pugi::xml_node node, ModuleInfo &info) {
     pugi::xml_attribute nameAttr = node.attribute("name");
     pugi::xml_attribute libAttr = node.attribute("lib");
     pugi::xml_attribute classAttr = node.attribute("class");
     pugi::xml_attribute mainThreadAttr = node.attribute("mainThread");
+    pugi::xml_attribute logLevelAttr = node.attribute("log");
 
-    if (nameAttr) {
-        module->name(nameAttr.as_string());
-    } else {
-        errorMissingAttr(node, nameAttr);
-    }
+    if(! nameAttr) return errorMissingAttr(node, nameAttr);
+    if(! libAttr) return errorMissingAttr(node, libAttr);
+    if(! classAttr) return errorMissingAttr(node, classAttr);
 
-    if (libAttr) {
-        module->lib(libAttr.as_string());
-    } else {
-        errorMissingAttr(node, libAttr);
-    }
+    info.name = nameAttr.as_string();
+    info.lib = libAttr.as_string();
+    info.clazz = classAttr.as_string();
+    info.mainThread = mainThreadAttr.as_bool();
 
-    if (classAttr) {
-        module->clazz(classAttr.as_string());
-    } else {
-        errorMissingAttr(node, classAttr);
+    logging::Level defaultLevel = logging::Level::ALL;
+    if (logLevelAttr) {
+        logging::levelFromName(logLevelAttr.as_string(), defaultLevel);
     }
-
-    if (mainThreadAttr.as_bool()) {
-        module->executionType = ExecutionType::ONLY_MAIN_THREAD;
-    } else {
-        module->executionType = ExecutionType::NEVER_MAIN_THREAD;
-    }
+    info.log = defaultLevel;
 
     // parse all channel mappings
     // TODO This now deprecated in favor for channelHint
@@ -384,19 +245,12 @@ void XmlParser::parseModules(pugi::xml_node node,
         pugi::xml_attribute toAttr = mappingNode.attribute("to");
         pugi::xml_attribute priorityAttr = mappingNode.attribute("priority");
 
-        if (!fromAttr) {
-            errorMissingAttr(mappingNode, fromAttr);
-        }
+        if (!fromAttr) return errorMissingAttr(mappingNode, fromAttr);
+        if (!toAttr) return errorMissingAttr(mappingNode, toAttr);
 
-        if (!toAttr) {
-            errorMissingAttr(mappingNode, toAttr);
-        }
-
-        if (fromAttr && toAttr) {
-            int priority = priorityAttr ? priorityAttr.as_int() : 0;
-            module->channelMapping[fromAttr.value()] =
-                std::make_pair(toAttr.value(), priority);
-        }
+        int priority = priorityAttr ? priorityAttr.as_int() : 0;
+        info.channelMapping[fromAttr.value()] =
+            std::make_pair(toAttr.value(), priority);
     }
 
     for (pugi::xml_node channelNode : node.children("channelHint")) {
@@ -404,15 +258,12 @@ void XmlParser::parseModules(pugi::xml_node node,
         pugi::xml_attribute mapToAttr = channelNode.attribute("mapTo");
         pugi::xml_attribute priorityAttr = channelNode.attribute("priority");
 
-        if (!nameAttr) {
-            errorMissingAttr(channelNode, nameAttr);
-            continue;
-        }
+        if (!nameAttr) return errorMissingAttr(channelNode, nameAttr);
 
         std::string mapTo = mapToAttr ? mapToAttr.value() : nameAttr.value();
         int priority = priorityAttr ? priorityAttr.as_int() : 0;
 
-        module->channelMapping[nameAttr.value()] =
+        info.channelMapping[nameAttr.value()] =
             std::make_pair(mapTo, priority);
     }
 
@@ -420,17 +271,6 @@ void XmlParser::parseModules(pugi::xml_node node,
     for (pugi::xml_node configNode : node.children("config")) {
         pugi::xml_attribute srcAttr = configNode.attribute("src");
         pugi::xml_attribute nameAttr = configNode.attribute("name");
-        pugi::xml_attribute userAttr = configNode.attribute("user");
-
-        if (userAttr) {
-            std::vector<std::string> allowedUsers =
-                split(std::string(userAttr.value()), ',');
-
-            if (std::find(allowedUsers.begin(), allowedUsers.end(),
-                          m_args.argUser) == allowedUsers.end()) {
-                continue;
-            }
-        }
 
         std::string name = "default";
         if (nameAttr) {
@@ -438,83 +278,47 @@ void XmlParser::parseModules(pugi::xml_node node,
         }
 
         if (srcAttr) {
-            std::string lconfPath = srcAttr.value();
+            std::string lconfPath = dirname(m_filestack.top()) + "/" + srcAttr.value();
 
-            if (isAbsolute(lconfPath)) {
-                lconfPath = LMS_CONFIGS + lconfPath;
-            } else {
-                lconfPath = dirname(currentFile) + "/" + lconfPath;
-            }
-
-            bool loadResult = module->configs[name].loadFromFile(lconfPath);
+            bool loadResult = info.configs[name].loadFromFile(lconfPath);
             if (!loadResult) {
-                errorFile(lconfPath);
+                return errorFile(lconfPath);
             } else {
                 m_files.push_back(lconfPath);
             }
         } else {
             // if there was no src attribut then parse the tag's content
-            parseModuleConfig(configNode, module->configs[name], "");
+            parseModuleConfig(configNode, info.configs[name], "");
         }
     }
 
-    if (flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
-        m_runtime->executionManager().installModule(module);
-    } else {
-        m_runtime->executionManager().bufferModule(module);
-    }
+    return true;
 }
 
-void XmlParser::parseService(pugi::xml_node node,
-                             const std::string &currentFile,
-                             LoadConfigFlag flag) {
-    std::shared_ptr<ServiceWrapper> service =
-        std::make_shared<ServiceWrapper>(&m_framework);
-
+bool XmlParser::parseService(pugi::xml_node node, ServiceInfo &info) {
     pugi::xml_attribute nameAttr = node.attribute("name");
     pugi::xml_attribute libAttr = node.attribute("lib");
     pugi::xml_attribute classAttr = node.attribute("class");
-    pugi::xml_attribute logLevelAttr = node.attribute("logLevel");
+    pugi::xml_attribute logLevelAttr = node.attribute("log");
 
-    if (nameAttr) {
-        service->name(nameAttr.as_string());
-    } else {
-        errorMissingAttr(node, nameAttr);
-    }
+    if(! nameAttr) return errorMissingAttr(node, nameAttr);
+    if(! libAttr) return errorMissingAttr(node, libAttr);
+    if(! classAttr) return errorMissingAttr(node, classAttr);
 
-    if (libAttr) {
-        service->lib(libAttr.as_string());
-    } else {
-        errorMissingAttr(node, libAttr);
-    }
-
-    if (classAttr) {
-        service->clazz(classAttr.as_string());
-    } else {
-        errorMissingAttr(node, classAttr);
-    }
+    info.name = nameAttr.as_string();
+    info.lib = libAttr.as_string();
+    info.clazz = classAttr.as_string();
 
     logging::Level defaultLevel = logging::Level::ALL;
     if (logLevelAttr) {
         logging::levelFromName(logLevelAttr.as_string(), defaultLevel);
     }
-    service->defaultLogLevel(defaultLevel);
+    info.log = defaultLevel;
 
     // parse all config
     for (pugi::xml_node configNode : node.children("config")) {
         pugi::xml_attribute srcAttr = configNode.attribute("src");
         pugi::xml_attribute nameAttr = configNode.attribute("name");
-        pugi::xml_attribute userAttr = configNode.attribute("user");
-
-        if (userAttr) {
-            std::vector<std::string> allowedUsers =
-                split(std::string(userAttr.value()), ',');
-
-            if (std::find(allowedUsers.begin(), allowedUsers.end(),
-                          m_args.argUser) == allowedUsers.end()) {
-                continue;
-            }
-        }
 
         std::string name = "default";
         if (nameAttr) {
@@ -522,15 +326,9 @@ void XmlParser::parseService(pugi::xml_node node,
         }
 
         if (srcAttr) {
-            std::string lconfPath = srcAttr.value();
+            std::string lconfPath = dirname(m_filestack.top()) + "/"  + srcAttr.value();
 
-            if (isAbsolute(lconfPath)) {
-                lconfPath = LMS_CONFIGS + lconfPath;
-            } else {
-                lconfPath = dirname(currentFile) + "/" + lconfPath;
-            }
-
-            bool loadResult = service->getConfig(name).loadFromFile(lconfPath);
+            bool loadResult = info.configs[name].loadFromFile(lconfPath);
             if (!loadResult) {
                 errorFile(lconfPath);
             } else {
@@ -538,74 +336,77 @@ void XmlParser::parseService(pugi::xml_node node,
             }
         } else {
             // if there was no src attribut then parse the tag's content
-            parseModuleConfig(configNode, service->getConfig(name), "");
+            parseModuleConfig(configNode, info.configs[name], "");
         }
     }
 
-    if (flag != LoadConfigFlag::ONLY_MODULE_CONFIG) {
-        m_runtime->framework().installService(service);
-    } else {
-        m_runtime->framework().reloadService(service);
-    }
+    return true;
 }
 
-void XmlParser::parseFile(const std::string &file, LoadConfigFlag flag) {
-    std::ifstream ifs(file);
-
-    if (!ifs.is_open()) {
-        errorFile(file);
-        return;
-    }
-
+bool XmlParser::parseFile(std::istream &is, const std::string &file) {
+    PutOnStack<std::string> put(m_filestack, file);
     m_files.push_back(file);
 
     pugi::xml_document doc;
-    pugi::xml_parse_result result = doc.load(ifs);
+    pugi::xml_parse_result result = doc.load(is);
     if (!result) {
-        errorPugiParseResult(file, result);
-        return;
+        return errorPugiParseResult(file, result);
     }
 
-    pugi::xml_node rootNode = doc.child("framework");
-    preprocessXML(rootNode, m_args.argFlags);
+    pugi::xml_node rootNode = doc.child("lms");
+    preprocessXML(rootNode, {});
 
     for (pugi::xml_node node : rootNode.children()) {
-        if (std::string("execution") == node.name()) {
-            parseExecution(node, m_runtime);
-        } else if (std::string("logging") == node.name()) {
-            m_filter.reset(parseLogging(node));
-        } else if (std::string("modulesToEnable") == node.name()) {
-            parseModulesToEnable(node);
+        if (std::string("clock") == node.name()) {
+            if(!parseClock(node, runtime.clock)) return false;
         } else if (std::string("module") == node.name()) {
-            parseModules(node, file, flag);
+            ModuleInfo module;
+            if(parseModule(node, module)) {
+                runtime.modules.push_back(module);
+            }
         } else if (std::string("include") == node.name()) {
-            parseInclude(node, file, flag);
-        } else if (std::string("runtime") == node.name()) {
-            parseRuntime(node, file, flag);
+            parseInclude(node);
         } else if (std::string("service") == node.name()) {
-            parseService(node, file, flag);
+            ServiceInfo service;
+            if(parseService(node, service)) {
+                runtime.services.push_back(service);
+            }
         } else {
             errorUnknownNode(node);
         }
     }
+
+    return true;
+}
+
+bool XmlParser::parseFile(const std::string &file) {
+    std::ifstream ifs(file);
+
+    if (!ifs.is_open()) {
+        return errorFile(file);
+    }
+
+    return parseFile(ifs, file);
 }
 
 std::vector<std::string> const &XmlParser::files() const { return m_files; }
 
 std::vector<std::string> const &XmlParser::errors() const { return m_errors; }
 
-void XmlParser::errorMissingAttr(pugi::xml_node node,
+bool XmlParser::errorMissingAttr(pugi::xml_node node,
                                  pugi::xml_attribute attr) {
     m_errors.push_back(std::string("Missing attribute ") + attr.name() +
                        " in node " + node.path());
+    return false;
 }
 
-void XmlParser::errorInvalidAttr(pugi::xml_node node, pugi::xml_attribute attr,
+bool XmlParser::errorInvalidAttr(pugi::xml_node node, pugi::xml_attribute attr,
                                  const std::string &expectedValue) {
     m_errors.push_back(std::string("Invalid value for attribute ") +
                        attr.name() + " in node " + node.path() +
                        ", Value is \"" + attr.value() + "\" but expected \"" +
                        expectedValue + "\"");
+    return false;
 }
 
 void XmlParser::errorInvalidNodeContent(pugi::xml_node node,
@@ -615,23 +416,22 @@ void XmlParser::errorInvalidNodeContent(pugi::xml_node node,
                        "\", expected \"" + expected + "\"");
 }
 
-void XmlParser::errorFile(const std::string &file) {
+bool XmlParser::errorFile(const std::string &file) {
     m_errors.push_back("Could not open file " + file);
+    return false;
 }
 
-void XmlParser::errorPugiParseResult(const std::string &file,
+bool XmlParser::errorPugiParseResult(const std::string &file,
                                      const pugi::xml_parse_result &result) {
     m_errors.push_back(std::string() + "Failed to parse " + file + " as XML: " +
                        std::to_string(result.offset) + " " +
                        result.description());
+    return false;
 }
 
-void XmlParser::errorUnknownNode(pugi::xml_node node) {
+bool XmlParser::errorUnknownNode(pugi::xml_node node) {
     m_errors.push_back("Unknown node " + node.path());
-}
-
-std::unique_ptr<logging::ThresholdFilter> XmlParser::filter() {
-    return std::move(m_filter);
+    return false;
 }
 
 } // namespace internal

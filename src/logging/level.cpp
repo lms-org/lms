@@ -23,17 +23,17 @@ std::string levelName(Level lvl) {
 }
 
 bool levelFromName(const std::string &name, Level &level) {
-    if (name == "ALL")
+    if (name == "ALL" || name == "all")
         level = Level::ALL;
-    else if (name == "DEBUG")
+    else if (name == "DEBUG" || name == "debug")
         level = Level::DEBUG;
-    else if (name == "INFO")
+    else if (name == "INFO" || name == "info")
         level = Level::INFO;
-    else if (name == "WARN")
+    else if (name == "WARN" || name == "warn")
         level = Level::WARN;
-    else if (name == "ERROR")
+    else if (name == "ERROR" || name == "error")
         level = Level::ERROR;
-    else if (name == "OFF")
+    else if (name == "OFF" || name == "off")
         level = Level::OFF;
     else
         return false;
