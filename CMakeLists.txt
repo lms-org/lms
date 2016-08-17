@@ -181,12 +181,13 @@ add_executable(lms
     src/main.cpp
 )
 target_link_libraries(lms PRIVATE lmscore)
-if(APPLE)
+#lpm handles it
+#if(APPLE)
     # /bin suffix is needed on OS X
-    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-else()
-    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-endif()
+#    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+#else()
+#    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+#endif()
 
 if(BUILD_TESTS)
     enable_testing()
