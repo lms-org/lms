@@ -2,6 +2,8 @@
 #define LMS_LOADER_H
 
 #include "lms/logger.h"
+#include "xml_parser.h"
+#include "lms/module.h"
 
 namespace lms {
 namespace internal {
@@ -22,16 +24,21 @@ public:
      * @param path Directory to search in
      * @param recursion
      */
-    void addSearchPath(std::string const &path, int recursion = 0);
+    void addSearchPath(std::string const &path);
 
+    Module* loadModule(const ModuleInfo &info);
+
+    Service* loadService(const ServiceInfo &info);
+private:
     /**
      * @brief Open a so/dylib/dll file and load the wrapper with an instance.
      * @param wrapper Wrapper object to load
      * @return true if successful, false otherwise
      */
-    bool load(Wrapper *wrapper);
+    LifeCycle* load(const std::string &libname, const std::string &function);
 
-private:
+    bool exists(const std::string &fileName);
+
     /**
      * Cast from one type to a totally other one.
      *
@@ -50,7 +57,7 @@ private:
     };
 
     logging::Logger logger;
-    std::map<std::string, std::string> m_pathMapping;
+    std::vector<std::string> m_paths;
 };
 
 } // namespace internal

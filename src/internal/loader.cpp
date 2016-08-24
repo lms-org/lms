@@ -13,57 +13,52 @@
 namespace lms {
 namespace internal {
 
-void Loader::addSearchPath(std::string const &path, int recursion) {
-#ifdef _WIN32
-
-    // TODO implementation for Win32
-    logger.error("addSearchPath") << "Not implemented";
-
-#else
-    constexpr size_t LIB_LEN = lenOf("lib");
-
-    std::vector<std::string> list;
-    listDir(path, list);
-
-    for (std::string const &child : list) {
-        std::string childPath = path + "/" + child;
-        FileType type = fileType(childPath);
-
-        if (type == FileType::REGULAR_FILE && startsWith(child, "lib") &&
-#ifdef __APPLE__
-            // Shared objects may end in .so or .dylib on OS X
-            (endsWith(child, ".so") || endsWith(child, ".dylib"))
-#else
-            endsWith(child, ".so")
-#endif
-                ) {
-            size_t dotIndex = child.find_last_of('.');
-
-            m_pathMapping[child.substr(LIB_LEN, dotIndex - LIB_LEN)] =
-                childPath;
-        } else if (type == FileType::DIRECTORY && recursion > 0) {
-            addSearchPath(childPath, recursion - 1);
-        }
-    }
-#endif
+bool Loader::exists(const std::string &fileName) {
+    std::ifstream infile(fileName);
+    return infile.good();
 }
 
-bool Loader::load(Wrapper *wrapper) {
+void Loader::addSearchPath(std::string const &path) {
+    m_paths.push_back(path);
+}
+
+Module* Loader::loadModule(const ModuleInfo &info) {
+    return static_cast<Module*>(load(info.lib, std::string("lms_module_") + info.clazz));
+}
+
+Service* Loader::loadService(const ServiceInfo &info) {
+    return static_cast<Service*>(load(info.lib, std::string("lms_service_") + info.clazz));
+}
+
+LifeCycle* Loader::load(const std::string &libname, const std::string &function) {
 #ifdef _WIN32
 
     // TODO implementation for Win32
     logger.error("load") << "Not implemented";
-    return false;
+    return nullptr;
 
 #else
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
-    std::string libpath = m_pathMapping[wrapper->lib()];
+    bool foundLib = false;
+    std::string libpath;
 
-    if (libpath.empty()) {
-        logger.error("load") << "Could not find " << wrapper->name();
-        return false;
+    for(const std::string &path : m_paths) {
+        if(exists(libpath = path + "/" + libname + ".so")) {
+            foundLib = true;
+            break;
+        }
+#if __APPLE__
+        if(exists(libpath = path + "/" + libname + ".dylib")) {
+            foundLib = true;
+            break;
+        }
+#endif
+    }
+
+    if (!foundLib) {
+        LMS_EXCEPTION(std::string("Could not find lib ") + libname);
     }
 
     // open dynamic library (*.so file)
@@ -71,10 +66,7 @@ bool Loader::load(Wrapper *wrapper) {
 
     // check for errors while opening
     if (lib == NULL) {
-        logger.error("load")
-            << "Could not open dynamic lib: " << wrapper->name();
-        logger.error("load") << "Message: " << dlerror();
-        return false;
+        LMS_EXCEPTION(std::string("Could not open dynamic lib ") + libpath + ": " + dlerror());
     }
 
     // clear error code
@@ -84,7 +76,7 @@ bool Loader::load(Wrapper *wrapper) {
     getLmsVersion.src = dlsym(lib, "lms_version");
     char *err;
     if ((err = dlerror()) != NULL) {
-        logger.warn("load") << "Lib " << wrapper->name()
+        logger.warn("load") << "Lib " << libpath
                             << " does not provide lms_version()";
     } else {
         constexpr uint32_t MAJOR_MASK = LMS_VERSION(0xff, 0, 0);
@@ -94,11 +86,10 @@ bool Loader::load(Wrapper *wrapper) {
 
         if ((libVersion & MAJOR_MASK) != (LMS_VERSION_CODE & MAJOR_MASK) ||
             (LMS_VERSION_CODE & MINOR_MASK) < (libVersion & MINOR_MASK)) {
-            logger.error("load")
-                << "Lib " << wrapper->name() << " has bad version. "
-                << "LMS Version " << LMS_VERSION_STRING
-                << ", Lib was compiled for " << versionCodeToString(libVersion);
-            return false;
+
+            LMS_EXCEPTION(std::string("Lib ") + libpath + " has bad version. "
+                          + "LMS Version " + LMS_VERSION_STRING
+                          + ", Lib was compiled for " + versionCodeToString(libVersion));
         }
     }
 
@@ -111,20 +102,15 @@ bool Loader::load(Wrapper *wrapper) {
     // We use it here to convert a void* to a function pointer.
     // The function has this signature: void* function_name();
     UnionHack<void *, LifeCycle *(*)()> conv;
-    std::string getterFunc = wrapper->interfaceFunction();
-    conv.src = dlsym(lib, getterFunc.c_str());
+    conv.src = dlsym(lib, function.c_str());
 
     // check for errors while calling dlsym
     if ((err = dlerror()) != NULL) {
-        logger.error("load") << "Could not get symbol " << getterFunc;
-        logger.error("load") << err;
-        return false;
+        LMS_EXCEPTION(std::string("Could not get symbol ") + function + ": " + err);
     }
 
     // call the interface function -> should return a newly created object
-    wrapper->load(conv.target());
-
-    return true;
+    return conv.target();
 #endif
 }
 
