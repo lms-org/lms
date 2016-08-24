@@ -20,66 +20,18 @@
 #include "dag.h"
 #include "watch_dog.h"
 #include "module_channel_graph.h"
-#include "module_wrapper.h"
 
 namespace lms {
 class DataManager;
 namespace internal {
 
 class ExecutionManager {
-private:
-    typedef std::map<std::string, std::shared_ptr<ModuleWrapper>> ModuleList;
-
 public:
-    ExecutionManager(Profiler &profiler, Runtime &runtime);
+    ExecutionManager(Profiler &profiler, Framework &runtime);
     ~ExecutionManager();
 
     /**cycle modules */
     void loop();
-
-    /**
-     * @brief Add a new module to the list of available modules.
-     */
-    bool installModule(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Append the given module to a list of new modules. After the
-     * next cycle the module will be added to the available list or an existing
-     * module may be updated. Use updateOrInstall() for this.
-     *
-     * This method is thread-safe.
-     *
-     * @param mod module to install or update
-     */
-    void bufferModule(std::shared_ptr<ModuleWrapper> mod);
-
-    /**
-     * @brief Update or install previously buffered modules.
-     */
-    void updateOrInstall();
-
-    /**
-     * @brief Disable all modules that are currently enabled.
-     */
-    void disableAllModules();
-
-    /**
-     * @brief Enable module with the given name, add it to the cycle-queue.
-     *
-     * @param name name of the module that should be enabled
-     * @param minLogLevel minimum logging level
-     */
-    bool enableModule(const std::string &name,
-                      logging::Level minLogLevel = logging::Level::ALL);
-
-    /**
-     * @brief Disable module with the given name, remove it from the
-     * cycle-queue.
-     *
-     * @param name name of the module that should be disabled
-     * @return true if disabling was successful, false otherwise
-     */
-    bool disableModule(const std::string &name);
 
     /**
      * @brief Calling this method will cause the
@@ -93,7 +45,7 @@ public:
      *
      * Sorts the modules in the cycle-list.
      */
-    void validate();
+    void validate(const std::map<std::string, std::shared_ptr<Module>> &enabledModules);
 
     /**
      * @brief Set the thread pool size.
@@ -146,18 +98,11 @@ public:
      */
     int cycleCounter();
 
-    typedef std::pair<std::string, logging::Level> ModuleToEnable;
-    typedef std::vector<ModuleToEnable> EnableConfig;
-
-    EnableConfig &config();
-    bool useConfig();
-
     void writeDAG(DotExporter &dot, const std::string &prefix);
 
     ModuleChannelGraph<Module *> &getModuleChannelGraph();
 
 private:
-    std::string m_runtimeName;
     logging::Logger logger;
 
     int m_numThreads;
@@ -165,7 +110,6 @@ private:
 
     bool valid;
 
-    DataManager dataManager;
     Messaging m_messaging;
     WatchDog m_dog;
 
@@ -182,12 +126,7 @@ private:
     void stopRunning();
 
     Profiler &m_profiler;
-    Runtime &m_runtime;
-
-    /**
-     * @brief enabledModules contains all loaded Modules
-     */
-    ModuleList enabledModules;
+    Framework &m_runtime;
 
     ModuleChannelGraph<Module *> moduleChannelGraph;
     DAG<Module *> cycleList;
@@ -195,25 +134,6 @@ private:
     std::vector<Module *> sortedCycleList;
 
     void printCycleList(DAG<Module *> &list);
-
-    /**
-     * @brief available contains all Modules which can be loaded
-     */
-    ModuleList available;
-
-    EnableConfig m_configs;
-
-    std::mutex updateMutex;
-    ModuleList update;
-
-    /**
-     * @brief Call this method for sorting the cycleList.
-     *
-     * As this method isn't called often I won't care about performance but
-     * readability. If you have to call this method often you might have to
-     * improve it.
-     */
-    void sort();
 };
 
 } // namespace internal

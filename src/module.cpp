@@ -1,9 +1,7 @@
 #include <string>
 
-#include "lms/internal/module_wrapper.h"
 #include <lms/module.h>
 #include <lms/lms_exports.h>
-#include "lms/internal/runtime.h"
 #include "lms/internal/framework.h"
 
 namespace lms {
@@ -17,100 +15,82 @@ bool Module::deinitialize() { return true; }
 
 void Module::configsChanged() {}
 
-bool Module::initializeBase(std::shared_ptr<internal::ModuleWrapper> wrapper,
-                            logging::Level minLogLevel) {
+bool Module::initBase(const internal::ModuleInfo &info, internal::Framework *fw) {
+    m_info = info;
+    m_fw = fw;
+    m_datamanager = &(fw->dataManager());
 
-    m_datamanager = &wrapper->runtime()->dataManager();
-    m_executionManager = &wrapper->runtime()->executionManager();
-    m_messaging = &m_executionManager->messaging();
-    m_wrapper = wrapper;
-
-    logger.name = wrapper->runtime()->name() + "." + wrapper->name();
-    logger.threshold = minLogLevel;
+    logger.name = info.name;
+    logger.threshold = info.log;
 
     return true;
 }
 
-lms_EXPORT std::string Module::getName() const { return m_wrapper->name(); }
+lms_EXPORT std::string Module::getName() const { return m_info.name; }
 
-lms_EXPORT ExecutionType Module::getExecutionType() const {
-    return m_wrapper->executionType;
+lms_EXPORT bool Module::isMainThread() const {
+    return m_info.mainThread;
 }
 
 lms_EXPORT const Config &Module::config(const std::string &name) {
-    return m_wrapper->configs[name];
+    return m_info.configs[name];
 }
 
 lms_EXPORT bool Module::hasConfig(const std::string &name) {
-    return m_wrapper->configs.find(name) != m_wrapper->configs.end();
+    return m_info.configs.find(name) != m_info.configs.end();
 }
 
-int Module::cycleCounter() { return m_executionManager->cycleCounter(); }
-
-bool Module::pauseRuntime(std::string const &name) {
-    if (!m_wrapper->runtime()->framework().hasRuntime(name)) {
-        return false;
-    }
-
-    m_wrapper->runtime()->framework().getRuntimeByName(name)->pause();
-    return true;
-}
-
-void Module::pauseRuntime() { return m_wrapper->runtime()->pause(); }
-
-bool Module::resumeRuntime(std::string const &name, bool reset) {
-    if (!m_wrapper->runtime()->framework().hasRuntime(name)) {
-        return false;
-    }
-
-    m_wrapper->runtime()->framework().getRuntimeByName(name)->resume(reset);
-    return true;
-}
+int Module::cycleCounter() { return m_fw->executionManager().cycleCounter(); }
 
 bool Module::isEnableSave() const {
-    return m_wrapper->runtime()->framework().isEnableSave();
+    return m_fw->isEnableSave();
 }
 
 bool Module::isEnableLoad() const {
-    return m_wrapper->runtime()->framework().isEnableLoad();
+    return m_fw->isEnableLoad();
 }
 
 std::string Module::saveLogFile(std::string const &name) {
-    return m_wrapper->runtime()->framework().saveLogObject(name, false);
+    return m_fw->saveLogObject(name, false);
 }
 
 std::string Module::loadLogFile(std::string const &name) {
-    return m_wrapper->runtime()->framework().loadLogObject(name, false);
+    return m_fw->loadLogObject(name, false);
 }
 
 std::string Module::saveLogDir(std::string const &name) {
-    return m_wrapper->runtime()->framework().saveLogObject(name, true);
+    return m_fw->saveLogObject(name, true);
 }
 
 std::string Module::loadLogDir(std::string const &name) {
-    return m_wrapper->runtime()->framework().loadLogObject(name, true);
+    return m_fw->loadLogObject(name, true);
 }
 
-std::shared_ptr<internal::ServiceWrapper>
-Module::getServiceWrapper(std::string const &name) {
-    return m_wrapper->getServiceWrapper(name);
+std::shared_ptr<Service>
+Module::_getService(std::string const &name) {
+    return m_fw->getService(name);
 }
 
 std::string Module::mapChannel(const std::string &channelName) {
-    return m_wrapper->mapChannel(channelName).first;
+    return m_info.mapChannel(channelName).first;
 }
 
 void Module::gainReadAccess(const std::string &channelName) {
-    auto mapped = m_wrapper->mapChannel(channelName);
-    m_executionManager->getModuleChannelGraph().readChannel(mapped.first, this,
+    auto mapped = m_info.mapChannel(channelName);
+    m_fw->executionManager().getModuleChannelGraph().readChannel(mapped.first, this,
                                                             mapped.second);
-    m_executionManager->invalidate();
+    m_fw->executionManager().invalidate();
 }
 
 void Module::gainWriteAccess(const std::string &channelName) {
-    auto mapped = m_wrapper->mapChannel(channelName);
-    m_executionManager->getModuleChannelGraph().writeChannel(mapped.first, this,
+    auto mapped = m_info.mapChannel(channelName);
+    m_fw->executionManager().getModuleChannelGraph().writeChannel(mapped.first, this,
                                                              mapped.second);
-    m_executionManager->invalidate();
+    m_fw->executionManager().invalidate();
 }
+
+Messaging* Module::messaging() const {
+    LMS_EXCEPTION("Messaging is currently not implemented"); // TODO
+}
+
 }

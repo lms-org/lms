@@ -1,6 +1,4 @@
 #include "lms/service.h"
-#include "lms/internal/service_wrapper.h"
-#include "lms/internal/runtime.h"
 
 namespace lms {
 
@@ -12,23 +10,20 @@ void Service::destroy() {}
 
 void Service::configsChanged() {}
 
-void Service::initBase(internal::ServiceWrapper *wrapper,
-                       lms::logging::Level minLogLevel) {
-    m_wrapper = wrapper;
-    logger.name = wrapper->name();
-    logger.threshold = minLogLevel;
+void Service::initBase(const lms::internal::ServiceInfo &info) {
+    this->info = info;
+    logger.name = info.name;
+    logger.threshold = info.log;
 }
 
 const Config &Service::config(const std::string &name) const {
-    return m_wrapper->getConfig(name);
+    return info.configs.at(name);
 }
 
-std::string Service::getName() const { return m_wrapper->name(); }
+std::string Service::getName() const { return info.name; }
 
-size_t Service::hashCode() const { return typeid(this).hash_code(); }
-
-void Service::logLevelChanged(logging::Level level) {
-    logger.threshold = level;
+std::mutex& Service::getMutex() {
+    return mutex;
 }
 
 } // namespace lms

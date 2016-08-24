@@ -37,6 +37,11 @@ public:
     virtual ~LmsException() {}
 };
 
+class XmlParserException : public LmsException {
+public:
+    XmlParserException(const std::string &message) : LmsException(message) {}
+};
+
 } // namespace lms
 
 #endif // LMS_EXCEPTION_H

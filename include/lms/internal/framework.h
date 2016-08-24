@@ -9,7 +9,6 @@
 #include "clock.h"
 #include "pugixml.hpp"
 #include "file_monitor.h"
-#include "runtime.h"
 #include "debug_server.h"
 
 namespace lms {
@@ -28,31 +27,16 @@ public:
      *
      * @param arguments parsed command line arguments
      */
-    Framework(const ArgumentHandler &arguments);
+    Framework(const std::string &mainConfigFilePath);
 
     /**
      * @brief Destroy execution manager.
      */
     ~Framework();
 
-    void registerRuntime(Runtime *runtime);
-
-    Runtime *getRuntimeByName(std::string const &name);
-
-    bool hasRuntime(std::string const &name);
-
-    ArgumentHandler const &getArgumentHandler();
-
-    void exportGraphs();
-
     Profiler &profiler();
 
-    Loader &moduleLoader();
-
-    std::shared_ptr<ServiceWrapper> getServiceWrapper(std::string const &name);
-
-    void installService(std::shared_ptr<ServiceWrapper> service);
-    void reloadService(std::shared_ptr<ServiceWrapper> service);
+    std::shared_ptr<Service> getService(std::string const &name);
 
     bool isDebug() const;
 
@@ -62,36 +46,43 @@ public:
     bool isEnableSave() const;
     std::string loadPath() const;
 
+    /**
+     * @brief Synchronously execute a single cycle of this runtime.
+     * @return true if cycle got executed, false if runtime is paused
+     */
+    bool cycle();
+
+    void start();
+
+    DataManager& dataManager();
+    ExecutionManager &executionManager();
+
 private:
-    bool exportGraphsHelper(bool isExecOrData);
+    void updateSystem(const RuntimeInfo &info);
+
+    ExecutionManager m_executionManager;
+    DataManager m_dataManager;
+    Clock m_clock;
 
     logging::Logger logger;
 
-    ArgumentHandler argumentHandler;
     Profiler m_profiler;
-    Loader m_moduleLoader;
-    Loader m_serviceLoader;
+    Loader m_loader;
 
     extra::FileMonitor configMonitor;
 
+    std::string mainConfigFilePath;
+
     bool m_running;
 
-    std::map<std::string, std::unique_ptr<Runtime>> runtimes;
-    std::map<std::string, std::shared_ptr<ServiceWrapper>> services;
+    std::map<std::string, std::shared_ptr<Service>> services;
+    std::map<std::string, std::shared_ptr<Module>> modules;
 
     std::string configPath;
-
-    /**
-     * @brief signal called by the system (Segfaults etc)
-     * @param s
-     */
-    void signal(int s);
 
     static constexpr std::uint32_t MODE = 0775;
     std::string m_loadLogPath;
     std::string m_saveLogPath;
-
-    DebugServer m_debugServer;
 };
 
 } // namespace internal

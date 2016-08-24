@@ -222,6 +222,7 @@ MasterServer::processClient(Client &client, const std::string &commandLine) {
         }
         client.writer.writeLine();
     } else if (message == "run") {
+
     } else {
         client.writer.writeLine("Unknown command");
         client.writer.writeLine();

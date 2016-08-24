@@ -5,25 +5,24 @@
 #include <mutex>
 
 #include "service.h"
-#include "internal/service_wrapper.h"
 
 namespace lms {
 
 template <class T> class ServiceHandle {
 public:
-    ServiceHandle(std::shared_ptr<internal::ServiceWrapper> wrapper)
-        : m_wrapper(wrapper), m_lock(wrapper->mutex()), m_valid(true) {}
+    ServiceHandle(std::shared_ptr<Service> service)
+        : m_service(service), m_lock(service->getMutex()), m_valid(true) {}
 
     ServiceHandle() : m_valid(false) {}
 
-    T *operator->() { return static_cast<T *>(m_wrapper->instance()); }
+    T *operator->() { return static_cast<T *>(m_service); }
 
     operator bool() const { return m_valid; }
 
     bool isValid() const { return m_valid; }
 
 private:
-    std::shared_ptr<internal::ServiceWrapper> m_wrapper;
+    std::shared_ptr<Service> m_service;
     std::unique_lock<std::mutex> m_lock;
     bool m_valid;
 };

@@ -6,22 +6,22 @@
 #include <memory>
 #include <map>
 
+#include "service.h"
 #include "datamanager.h"
 #include "config.h"
 #include "deprecated.h"
 #include "lms/definitions.h"
 #include "service_handle.h"
-#include "execution_type.h"
 #include "interface.h"
 #include "life_cycle.h"
+#include "internal/xml_parser.h"
 
 namespace lms {
 
 class Messaging;
 class DataManager;
 namespace internal {
-class ExecutionManager;
-class ModuleWrapper;
+class Framework;
 }
 
 /**
@@ -35,7 +35,7 @@ class ModuleWrapper;
  */
 class Module : public LifeCycle {
 public:
-    Module() : logger(""), m_datamanager(nullptr), m_messaging(nullptr) {}
+    Module() : logger("") {}
     virtual ~Module() {}
 
     /**
@@ -53,15 +53,14 @@ public:
      *
      * Do not call this inside a module!
      */
-    bool initializeBase(std::shared_ptr<internal::ModuleWrapper> loaderEntry,
-                        logging::Level minLogLevel);
+    bool initBase(const internal::ModuleInfo &info, internal::Framework *fw);
 
     /**
      * @brief Check if this module is executed on the main thread or another
      * thread.
      * @return ONLY_MAIN_THREAD or NEVER_MAIN_THREAD
      */
-    ExecutionType getExecutionType() const;
+    bool isMainThread() const;
 
     /**
      * @brief Informs a module of the start of its
@@ -164,11 +163,11 @@ protected:
      * ~~~~~
      */
     template <class T> ServiceHandle<T> getService(std::string const &name) {
-        auto wrapper = getServiceWrapper(name);
+        auto service = _getService(name);
 
-        if (wrapper /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
+        if (service /*&& wrapper->checkHashCode(typeid(T).hash_code())*/) {
             // TODO type check
-            return ServiceHandle<T>(wrapper);
+            return ServiceHandle<T>(service);
         } else {
             // return invalid handle
             return ServiceHandle<T>();
@@ -180,10 +179,10 @@ protected:
      * This does not lock the service and is therefore not thread-safe.
      */
     template <class T> T *getUnsafeService(std::string const &name) {
-        auto wrapper = getServiceWrapper(name);
+        auto service = _getService(name);
 
-        if (wrapper) {
-            return static_cast<T *>(wrapper->instance());
+        if (service) {
+            return static_cast<T *>(service.get());
         } else {
             // TODO throw std::system_error("Service not installed: " + name);
             return nullptr;
@@ -196,7 +195,7 @@ protected:
      * Send or receive messages between different modules
      * and the core framework.
      */
-    Messaging *messaging() const { return m_messaging; }
+    Messaging *messaging() const;
 
     /**
      * @brief Check if --enable-save was given on the command line.
@@ -326,13 +325,12 @@ protected:
     bool resumeRuntime(std::string const &name, bool reset = false);
 
 private:
-    std::shared_ptr<internal::ServiceWrapper>
-    getServiceWrapper(std::string const &name);
+    std::shared_ptr<Service>
+    _getService(std::string const &name);
 
-    std::shared_ptr<internal::ModuleWrapper> m_wrapper;
-    DataManager *m_datamanager;
-    Messaging *m_messaging;
-    internal::ExecutionManager *m_executionManager;
+    lms::internal::Framework *m_fw;
+    lms::DataManager *m_datamanager;
+    lms::internal::ModuleInfo m_info;
 
     std::string mapChannel(const std::string &channelName);
     void gainReadAccess(const std::string &channelName);

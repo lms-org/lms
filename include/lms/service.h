@@ -8,6 +8,7 @@
 #include "lms/definitions.h"
 #include "interface.h"
 #include "life_cycle.h"
+#include "lms/internal/xml_parser.h"
 
 namespace lms {
 
@@ -23,8 +24,7 @@ class Service : public LifeCycle {
 public:
     Service();
 
-    void initBase(internal::ServiceWrapper *wrapper,
-                  lms::logging::Level minLogLevel);
+    void initBase(const lms::internal::ServiceInfo &info);
 
     virtual ~Service() {}
 
@@ -52,13 +52,7 @@ public:
      */
     std::string getName() const;
 
-    /**
-     * @brief TODO This method is currently not rather useful.
-     */
-    size_t hashCode() const;
-
-    void logLevelChanged(logging::Level level);
-
+    std::mutex& getMutex();
 protected:
     /**
      * @brief Return a read-only config of the given name.
@@ -69,7 +63,8 @@ protected:
     logging::Logger logger;
 
 private:
-    internal::ServiceWrapper *m_wrapper;
+    std::mutex mutex;
+    lms::internal::ServiceInfo info;
 };
 
 } // namespace lms

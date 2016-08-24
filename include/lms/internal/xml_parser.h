@@ -23,6 +23,15 @@ struct ModuleInfo {
     std::map<std::string, std::pair<std::string, int>> channelMapping;
     std::map<std::string, lms::Config> configs;
     lms::logging::Level log;
+
+    std::pair<std::string, int> mapChannel(const std::string &name) const {
+        auto it = channelMapping.find(name);
+        if (it != channelMapping.end()) {
+            return it->second;
+        } else {
+            return std::make_pair(name, 0);
+        }
+    }
 };
 
 struct ServiceInfo {
