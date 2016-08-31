@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "lms/internal/dag.h"
+#include "internal/dag.h"
 
 TEST(DAG, edge) {
     lms::internal::DAG<int> g;

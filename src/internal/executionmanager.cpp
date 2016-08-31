@@ -4,9 +4,9 @@
 #include <memory>
 #include <algorithm>
 
-#include "lms/internal/executionmanager.h"
-#include "lms/internal/framework.h"
-#include "lms/internal/viz.h"
+#include "executionmanager.h"
+#include "framework.h"
+#include "viz.h"
 
 namespace lms {
 namespace internal {

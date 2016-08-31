@@ -2,9 +2,9 @@
 #include <algorithm>
 #include <fstream>
 
-#include "lms/internal/xml_parser.h"
-#include "lms/internal/os.h"
-#include "lms/internal/string.h"
+#include "xml_parser.h"
+#include "os.h"
+#include "string.h"
 
 namespace lms {
 namespace internal {

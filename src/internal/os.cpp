@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "lms/internal/os.h"
+#include "os.h"
 
 namespace lms {
 namespace internal {

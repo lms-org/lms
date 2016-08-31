@@ -1,4 +1,4 @@
-#include "lms/internal/debug_server.h"
+#include "debug_server.h"
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>

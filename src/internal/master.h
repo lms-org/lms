@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "lms/internal/line_separated_reader.h"
+#include "line_separated_reader.h"
 
 namespace lms {
 namespace internal {

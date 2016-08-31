@@ -4,10 +4,10 @@
 #include <sys/stat.h>
 #endif
 
-#include "lms/internal/loader.h"
-#include "lms/internal/os.h"
+#include "loader.h"
+#include "os.h"
 #include "lms/definitions.h"
-#include "lms/internal/string.h"
+#include "string.h"
 
 namespace lms {
 namespace internal {

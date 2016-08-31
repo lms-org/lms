@@ -1,4 +1,4 @@
-#include <lms/internal/signalhandler.h>
+#include "signalhandler.h"
 #include <iostream>
 #ifndef _WIN32
 #include <csignal>

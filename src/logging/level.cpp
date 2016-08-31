@@ -1,5 +1,5 @@
 #include "lms/logging/level.h"
-#include "lms/internal/colors.h"
+#include "../internal/colors.h"
 
 namespace lms {
 namespace logging {

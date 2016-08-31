@@ -3,9 +3,9 @@
 #include <unistd.h>
 #include <cstring>
 
-#include "lms/internal/framework.h"
-#include "lms/internal/master.h"
-#include "lms/internal/daemon.h"
+#include "internal/framework.h"
+#include "internal/master.h"
+#include "internal/daemon.h"
 
 /**
  * @brief Parse command line arguments, show help and start

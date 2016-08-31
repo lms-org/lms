@@ -1,4 +1,4 @@
-#include "lms/internal/dot_exporter.h"
+#include "dot_exporter.h"
 
 namespace lms {
 namespace internal {

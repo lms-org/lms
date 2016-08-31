@@ -1,5 +1,5 @@
-#include <lms/internal/framework.h>
-#include <lms/internal/executionmanager.h>
+#include "framework.h"
+#include "executionmanager.h"
 #include <pugixml.hpp>
 #include <fstream>
 #include <csignal>
@@ -11,18 +11,18 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "lms/internal/backtrace_formatter.h"
+#include "backtrace_formatter.h"
 #include "lms/logger.h"
 #include "lms/time.h"
 #include "lms/config.h"
-#include "lms/internal/string.h"
-#include "lms/internal/xml_parser.h"
-#include "lms/internal/colors.h"
+#include "string.h"
+#include "xml_parser.h"
+#include "colors.h"
 #include "lms/definitions.h"
-#include "lms/internal/os.h"
-#include "lms/logging/debug_server_sink.h"
-#include "lms/internal/dot_exporter.h"
-#include "lms/internal/viz.h"
+#include "os.h"
+#include "debug_server_sink.h"
+#include "dot_exporter.h"
+#include "viz.h"
 
 namespace lms {
 namespace internal {

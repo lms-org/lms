@@ -2,9 +2,9 @@
 #include <vector>
 #include <algorithm>
 
-#include "lms/internal/argumenthandler.h"
-#include "lms/internal/os.h"
-#include "lms/internal/string.h"
+#include "argumenthandler.h"
+#include "os.h"
+#include "string.h"
 #include "lms/definitions.h"
 
 #include "tclap/CmdLine.h"

@@ -1,7 +1,7 @@
 #ifndef LMS_LOGGING_DEBUG_SERVER_SINK_H
 #define LMS_LOGGING_DEBUG_SERVER_SINK_H
 
-#include "sink.h"
+#include <lms/logging/sink.h>
 #include "../internal/debug_server.h"
 
 namespace lms {

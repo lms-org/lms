@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include <lms/config.h>
-#include <lms/internal/string.h>
+#include "internal/string.h"
 
 namespace lms {
 

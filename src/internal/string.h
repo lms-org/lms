@@ -6,7 +6,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "../type.h"
+#include "lms/type.h"
 
 namespace lms {
 namespace internal {

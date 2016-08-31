@@ -1,11 +1,11 @@
 #ifndef LMS_FRAMEWORK_H
 #define LMS_FRAMEWORK_H
 
-#include "../datamanager.h"
+#include "lms/datamanager.h"
 #include "signalhandler.h"
 #include "argumenthandler.h"
 #include "executionmanager.h"
-#include "../logger.h"
+#include "lms/logger.h"
 #include "clock.h"
 #include "pugixml.hpp"
 #include "file_monitor.h"

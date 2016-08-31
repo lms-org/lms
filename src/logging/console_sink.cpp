@@ -1,5 +1,5 @@
 #include <lms/logger.h>
-#include <lms/internal/colors.h>
+#include "../internal/colors.h"
 #include <ctime>
 
 namespace lms {

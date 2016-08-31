@@ -1,7 +1,7 @@
 #include <algorithm>
 
-#include "lms/internal/profiler.h"
-#include "lms/internal/debug_server.h"
+#include "profiler.h"
+#include "debug_server.h"
 #include "lms/endian.h"
 
 namespace lms {

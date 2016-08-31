@@ -1,5 +1,5 @@
-#include "lms/internal/watch_dog.h"
-#include "lms/internal/backtrace_formatter.h"
+#include "watch_dog.h"
+#include "backtrace_formatter.h"
 #include <pthread.h>
 #include <signal.h>
 

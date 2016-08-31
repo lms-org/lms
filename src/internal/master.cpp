@@ -10,10 +10,10 @@
 #include <string>
 #include <iostream>
 
-#include "lms/internal/master.h"
+#include "master.h"
 #include "lms/exception.h"
 #include "lms/definitions.h"
-#include "lms/internal/string.h"
+#include "string.h"
 #include "tclap/CmdLine.h"
 
 namespace lms {

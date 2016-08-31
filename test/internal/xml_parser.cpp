@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "lms/internal/xml_parser.h"
+#include "internal/xml_parser.h"
 
 TEST(xml_parser, preprocessXML) {
     std::string XMLwithIF(

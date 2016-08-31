@@ -8,12 +8,11 @@
 #include "lms/definitions.h"
 #include "interface.h"
 #include "life_cycle.h"
-#include "lms/internal/xml_parser.h"
 
 namespace lms {
 
 namespace internal {
-class ServiceWrapper;
+class ServiceInfo;
 }
 
 /**
@@ -23,10 +22,13 @@ class ServiceWrapper;
 class Service : public LifeCycle {
 public:
     Service();
+    virtual ~Service();
+
+    // Disallow copying
+    Service(Service const&) = delete;
+    Service& operator=(Service const&) = delete;
 
     void initBase(const lms::internal::ServiceInfo &info);
-
-    virtual ~Service() {}
 
     /**
      * @brief Initialize a service. Must be overridden in subclasses.
@@ -63,8 +65,10 @@ protected:
     logging::Logger logger;
 
 private:
-    std::mutex mutex;
-    lms::internal::ServiceInfo info;
+    struct Private;
+    Private *dptr;
+    inline Private *dfunc() { return dptr; }
+    inline const Private *dfunc() const { return dptr; }
 };
 
 } // namespace lms

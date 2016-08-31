@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <lms/internal/module_channel_graph.h>
+#include "internal/module_channel_graph.h"
 
 TEST(ModuleChannelGraph, readChannel) {
     using MCG = lms::internal::ModuleChannelGraph<int>;

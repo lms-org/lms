@@ -1,4 +1,4 @@
-#include "lms/internal/viz.h"
+#include "viz.h"
 
 namespace lms {
 namespace internal {

@@ -14,14 +14,13 @@
 #include "service_handle.h"
 #include "interface.h"
 #include "life_cycle.h"
-#include "internal/xml_parser.h"
 
 namespace lms {
 
 class Messaging;
-class DataManager;
 namespace internal {
 class Framework;
+class ModuleInfo;
 }
 
 /**
@@ -35,8 +34,12 @@ class Framework;
  */
 class Module : public LifeCycle {
 public:
-    Module() : logger("") {}
-    virtual ~Module() {}
+    Module();
+    virtual ~Module();
+
+    // Disallow copying
+    Module(Module const&) = delete;
+    Module& operator=(Module const&) = delete;
 
     /**
      * @brief Name of the module itself.
@@ -289,7 +292,7 @@ protected:
     template <typename T>
     ReadDataChannel<T> readChannel(const std::string &name) {
         gainReadAccess(name);
-        return m_datamanager->readChannel<T>(mapChannel(name));
+        return datamanager().readChannel<T>(mapChannel(name));
     }
 
     /**
@@ -302,7 +305,7 @@ protected:
     template <typename T>
     WriteDataChannel<T> writeChannel(const std::string &name) {
         gainWriteAccess(name);
-        return m_datamanager->writeChannel<T>(mapChannel(name));
+        return datamanager().writeChannel<T>(mapChannel(name));
     }
 
     /**
@@ -328,13 +331,16 @@ private:
     std::shared_ptr<Service>
     _getService(std::string const &name);
 
-    lms::internal::Framework *m_fw;
-    lms::DataManager *m_datamanager;
-    lms::internal::ModuleInfo m_info;
+    struct Private;
+    Private *dptr;
+    inline Private *dfunc() { return dptr; }
+    inline const Private *dfunc() const { return dptr; }
 
     std::string mapChannel(const std::string &channelName);
     void gainReadAccess(const std::string &channelName);
     void gainWriteAccess(const std::string &channelName);
+
+    DataManager &datamanager();
 };
 
 } // namespace lms

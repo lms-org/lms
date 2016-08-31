@@ -1,4 +1,4 @@
-#include <lms/internal/string.h>
+#include "string.h"
 #include <string>
 #include <vector>
 #include <iostream>

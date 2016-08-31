@@ -2,7 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <math.h>
-#include "lms/internal/string.h"
+#include "internal/string.h"
 
 namespace lms {
 

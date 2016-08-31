@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "lms/internal/string.h"
+#include "internal/string.h"
 #include "gtest/gtest.h"
 
 TEST(string, trim) {

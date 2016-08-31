@@ -1,4 +1,4 @@
-#include "lms/logging/debug_server_sink.h"
+#include "debug_server_sink.h"
 #include "lms/logging/event.h"
 #include <limits>
 #include <algorithm>

@@ -5,7 +5,7 @@
 #include "dot_exporter.h"
 #include "module_channel_graph.h"
 #include "dag.h"
-#include "../module.h"
+#include <lms/module.h>
 
 namespace lms {
 namespace internal {

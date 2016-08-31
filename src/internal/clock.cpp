@@ -1,4 +1,4 @@
-#include "lms/internal/clock.h"
+#include "clock.h"
 
 namespace lms {
 namespace internal {
