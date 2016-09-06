@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(LMS C CXX)
 
+#conan setup
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 option(BUILD_TESTS "Build tests" OFF)
 option(COVERAGE "Enable test coverage" OFF)
 
@@ -15,12 +19,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(TestCpp11)
 
 include(CMakeData.txt)
-
-#if(NOT DEFINED LMS_STANDALONE)
-    # LMS is standalone by default.
-    # LMS_STANDALONE is set to FALSE in config repos.
-    #set(LMS_STANDALONE TRUE)
-#endif()
 
 #LMS is standalone
 set(LMS_DIR_CONFIGS "")
@@ -164,26 +162,17 @@ target_link_libraries(lmscore PRIVATE pugixml)
 if(UNIX)
     target_link_libraries(lmscore PRIVATE dl)
 endif()
-target_link_libraries(lmscore PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(lmscore PRIVATE ${CMAKE_THREAD_LIBS_INIT} ${CONAN_LIBS})
 
 # LMS executable
 add_executable(lms
     src/main.cpp
 )
 target_link_libraries(lms PRIVATE lmscore)
-#lpm handles it
-#if(APPLE)
-    # /bin suffix is needed on OS X
-#    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-#else()
-#    set_target_properties(lms PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-#endif()
 
-if(BUILD_TESTS)
-    enable_testing()
-    include_directories(external/googletest/googletest/include)
-    add_subdirectory(test)
-endif()
+#testing
+enable_testing()
+add_subdirectory(test)
 
 add_custom_target(format clang-format -i ${HEADERS} ${SOURCE}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

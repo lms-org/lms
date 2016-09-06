@@ -14,7 +14,7 @@ set(TESTS
 message(STATUS "Compile LMS tests")
 add_executable(lmstest ${TESTS})
 target_include_directories(lmstest PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../src")
-target_link_libraries(lmstest PRIVATE lmscore gtest gtest_main)
+target_link_libraries(lmstest PRIVATE lmscore ${CONAN_LIBS})
 add_test(LMS lmstest)
 
 if(COVERAGE)

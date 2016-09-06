@@ -17,6 +17,7 @@ config/
 *.md~
 .metadata
 *.autosave
+*.pyc
 CMakeLists.txt.user
 doku/html
 include/lms/definitions.h
