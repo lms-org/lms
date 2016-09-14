@@ -6,6 +6,9 @@ compiler:
 - clang
 
 install:
+#install ssl
+- pip install ssl
+
 # Download conan
 - wget http://downloads.conan.io/latest_debian -O conan.deb
 - sudo dpkg -i conan.deb
