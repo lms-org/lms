@@ -8,6 +8,9 @@ compiler:
 install:
 #install ssl
 - python --version
+- sudo apt-get -qq update
+- sudo apt-get install python
+- python --version
 
 # Download conan
 - wget http://downloads.conan.io/latest_debian -O conan.deb
