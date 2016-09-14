@@ -13,7 +13,7 @@ install:
 - conan remote add lms http://mineforce.de:9300
 
 # Automatic detection of your arch, compiler, etc
-- conan install --build
+- conan install --build=missing
 
 script:
 - mkdir build
