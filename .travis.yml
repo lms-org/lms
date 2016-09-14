@@ -7,7 +7,7 @@ compiler:
 
 install:
 #install ssl
-- pip install ssl
+- python --version
 
 # Download conan
 - wget http://downloads.conan.io/latest_debian -O conan.deb
