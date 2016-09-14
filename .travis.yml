@@ -20,7 +20,7 @@ install:
 script:
 - mkdir build
 - cd build
-- conan install --build=missing
+- conan install .. --build=missing
 - cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON && make
 - test/lmstest
 after_success:
