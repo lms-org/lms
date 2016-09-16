@@ -7,16 +7,10 @@ compiler:
 
 install:
 # Download conan
-- wget http://downloads.conan.io/latest_debian -O conan.deb
-- sudo dpkg -i conan.deb
-- rm conan.deb
-
-# Automatic detection of your arch, compiler, etc
+- pip install conan
 - conan remote add lms http://mineforce.de:9300
 - conan install --build=missing
 
-# Download conan
-#- pip install conan
 
 
 script:
