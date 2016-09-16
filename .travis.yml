@@ -6,14 +6,16 @@ compiler:
 - clang
 
 install:
-#install ssl
-#- python --version
-#- sudo apt-get -qq update
-#- sudo apt-get install python
-#- python --version
+# Download conan
+- wget http://downloads.conan.io/latest_debian -O conan.deb
+- sudo dpkg -i conan.deb
+- rm conan.deb
+
+# Automatic detection of your arch, compiler, etc
+- conan install
 
 # Download conan
-- pip install conan
+#- pip install conan
 - conan remote add lms http://mineforce.de:9300
 
 
@@ -22,6 +24,6 @@ script:
 - cd build
 - conan install .. --build=missing
 - cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON && make
-- test/lmstest
+- bin/lmstest
 after_success:
 - bash <(curl -s https://codecov.io/bash)
