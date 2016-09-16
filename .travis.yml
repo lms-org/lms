@@ -13,7 +13,7 @@ install:
 
 # Automatic detection of your arch, compiler, etc
 - conan remote add lms http://mineforce.de:9300
-- conan install
+- conan install --build=missing
 
 # Download conan
 #- pip install conan
