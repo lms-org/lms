@@ -169,8 +169,11 @@ target_link_libraries(lms PRIVATE lmscore)
 
 #testing
 if(EXISTS test)#TODO better handling
+    message(STATUS "enabling tests")
     enable_testing()
     add_subdirectory(test)
+else(EXISTS test)
+    message(STATUS "disabling tests")
 endif()
 
 
