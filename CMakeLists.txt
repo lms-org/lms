@@ -16,7 +16,7 @@ include_directories(external/pugixml-1.7/src)
 include_directories(external/tclap-1.2.1/include)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(TestCpp11)
+#include(TestCpp11) #TODO what happend to this file?
 
 include(CMakeData.txt)
 
@@ -169,8 +169,11 @@ add_executable(lms
 target_link_libraries(lms PRIVATE lmscore)
 
 #testing
-enable_testing()
-add_subdirectory(test)
+if(EXISTS test)#TODO better handling
+    enable_testing()
+    add_subdirectory(test)
+endif()
+
 
 add_custom_target(format clang-format -i ${HEADERS} ${SOURCE}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
