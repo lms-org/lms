@@ -13,10 +13,9 @@ find_package(Threads REQUIRED)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(include)
 include_directories(external/pugixml-1.7/src)
-include_directories(external/tclap-1.2.1/include)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-#include(TestCpp11) #TODO what happend to this file?
+include(TestCpp11)
 
 include(CMakeData.txt)
 
