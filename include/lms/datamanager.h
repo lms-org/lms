@@ -335,11 +335,10 @@ public:
 
     T &operator*() { return *this->get(); }
 
-    bool deserialize(std::istream &is) {
-        if (this->m_internal->main &&
-            this->m_internal->main->isSerializable()) {
+    bool deserialize(std::istream &is,Serializable::Type type = Serializable::Type::BINARY) {
+        if (this->isSerializable(type)) {
             Serializable *data = this->m_internal->main->getSerializable();
-            data->lmsDeserialize(is);
+            data->lmsDeserialize(is); //TODO type
             return true;
         } else {
             return false;
