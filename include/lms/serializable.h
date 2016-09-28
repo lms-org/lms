@@ -56,32 +56,16 @@ public:
     /**
      * @brief Serialize the object into the given output stream.
      * @param os output stream to write in
-     */
-    virtual void lmsSerialize(std::ostream &os)const =0;
-
-    /**
-     * @brief Serialize the object into the given output stream.
-     * @param os output stream to write in
      * @param type serialization type
      */
-    virtual void lmsSerialize(std::ostream &os,Type type){// const = 0;
-        lmsSerialize(os); //TODO
-    }
-
-    /**
-     * @brief Deserialize the object from the given input stream.
-     * @param is input stream to read from
-     */
-    virtual void lmsDeserialize(std::istream &is) = 0;
+    virtual void lmsSerialize(std::ostream &os,Type type = Type::BINARY)const =0;
 
     /**
      * @brief Deserialize the object from the given input stream.
      * @param is input stream to read from
      * @param type serialization type
      */
-    virtual void lmsDeserialize(std::istream &is,Type type){
-        lmsDeserialize(is); //TODO
-    }
+    virtual void lmsDeserialize(std::istream &is,Type type = Type::BINARY) =0;
 };
 
 } // namespace lms
