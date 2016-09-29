@@ -21,3 +21,4 @@ config/
 CMakeLists.txt.user
 doku/html
 include/lms/definitions.h
+conanbuildinfo.txt

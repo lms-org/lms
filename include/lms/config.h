@@ -128,6 +128,21 @@ public:
     T get(const std::string &key, const T &defaultValue) const;
 
     /**
+     * @brief Return the value by the given config key.
+     *
+     * If the key is not found the default constructor
+     * of T is invoked the that object is returned.
+     *
+     * If you want to check if a key is in the config file
+     * use `hasKey()`.
+     *
+     * @param key the key to look for
+     * @return value of type T
+     */
+    template <typename T>
+    T get(const std::string &key) const;
+
+    /**
      * @brief Retrieve a config value and split it at commas.
      *
      * The found values will be pushed to the given list. The list is not

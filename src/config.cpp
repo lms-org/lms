@@ -22,6 +22,12 @@ struct Config::Private {
         }
     }
 
+    template <typename T>
+    T get(const std::string &key) const{
+        T def;
+        return get(key,def);
+    }
+
     template <typename T> void set(const std::string &key, const T &value) {
         properties[key] = internal::string_cast_from<T>(value);
     }
