@@ -50,6 +50,12 @@ struct Config::Private {
     }
 
     template <typename T>
+    std::vector<T> getArray(const std::string &key) const{
+        std::vector<T> def;
+        return getArray(key,def);
+    }
+
+    template <typename T>
     void setArray(const std::string &key, const std::vector<T> &value) {
         std::ostringstream oss;
         for (auto it = value.begin(); it != value.end(); it++) {

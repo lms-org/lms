@@ -156,6 +156,18 @@ public:
                             const std::vector<T> &defaultValue) const;
 
     /**
+     * @brief Retrieve a config value and split it at commas.
+     *
+     * The found values will be pushed to the given list. The list is not
+     * cleared before writing any values to it.
+     *
+     * @param key config key to look for
+     * @param list values will be push_back'ed there
+     */
+    template <typename T>
+    std::vector<T> getArray(const std::string &key) const;
+
+    /**
      * @brief Check if the given key is available.
      *
      * @param key the key to look for
