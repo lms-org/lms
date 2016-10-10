@@ -12,10 +12,16 @@ find_package(Threads REQUIRED)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(include)
-include_directories(external/pugixml-1.7/src)
+include_directories(${ProtobufIncludePath})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(TestCpp11)
+
+# Protobuf
+find_package(Protobuf REQUIRED)
+file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/messages/*.proto")
+PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${ProtoFiles})
 
 include(CMakeData.txt)
 
@@ -72,12 +78,13 @@ set (HEADERS
     "src/internal/dot_exporter.h"
     "src/internal/module_channel_graph.h"
     "src/internal/viz.h"
-    "src/internal/line_separated_reader.h"
     "src/internal/daemon.h"
     "src/internal/master.h"
     "src/internal/clock.h"
     "src/internal/os.h"
     "src/internal/debug_server_sink.h"
+    "src/internal/protobuf_sink.h"
+    "src/internal/protobuf_socket.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -119,10 +126,11 @@ set (SOURCE
     "src/internal/os.cpp"
     "src/internal/dot_exporter.cpp"
     "src/internal/viz.cpp"
-    "src/internal/line_separated_reader.cpp"
     "src/internal/daemon.cpp"
     "src/internal/master.cpp"
     "src/internal/debug_server_sink.cpp"
+    "src/internal/protobuf_sink.cpp"
+    "src/internal/protobuf_socket.cpp"
 
     "src/logging/level.cpp"
     "src/logging/logger.cpp"
@@ -142,6 +150,7 @@ endif()
 add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
+    ${ProtoSources} ${ProtoHeaders}
 )
 
 if(COVERAGE)
@@ -152,7 +161,7 @@ endif()
 
 # Compile xml-parser pugixml
 
-target_link_libraries(lmscore PRIVATE pugixml)
+target_link_libraries(lmscore PRIVATE pugixml ${PROTOBUF_LIBRARY})
 
 # System specific link
 # http://www.openguru.com/2009/04/cmake-detecting-platformoperating.html
