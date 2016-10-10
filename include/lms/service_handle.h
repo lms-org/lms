@@ -15,7 +15,7 @@ public:
 
     ServiceHandle() : m_valid(false) {}
 
-    T *operator->() { return static_cast<T *>(m_service); }
+    T *operator->() { return static_cast<T *>(m_service.get()); }
 
     operator bool() const { return m_valid; }
 

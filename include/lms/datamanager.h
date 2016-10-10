@@ -32,6 +32,7 @@ enum class TypeResult { INVALID, SUBTYPE, SUPERTYPE, SAME };
  * Nevertheless you should not derive from this class.
  */
 struct Any final {
+    //TODO add bytebuffer
     void operator*() {
         LMS_EXCEPTION(
             "Cannot call operator* for lms::Any: Any is afraid of stars");
@@ -201,11 +202,20 @@ public:
         TypeResult r = checkType<L>();
         return r == TypeResult::SAME || r == TypeResult::SUBTYPE;
     }
-    bool serialize(std::ostream &os) const {
+    /**
+     * @brief isSerializable
+     * @param type Serializable type, by default BINARY
+     * @return true if the datachannel is Serializable
+     */
+    bool isSerializable(Serializable::Type type = Serializable::Type::BINARY) const{
+        return m_internal->main && m_internal->main->isSerializable(); //TODO use type in isSerializable()
+    }
+
+    bool serialize(std::ostream &os,Serializable::Type type = Serializable::Type::BINARY) const {
         // if we would use dynamic_cast here, we hcould remove the serializable
         // flag of data channels, but that is not necessarily faster or better
 
-        if (m_internal->main && m_internal->main->isSerializable()) {
+        if (isSerializable(type)) {
             const Serializable *data = m_internal->main->getSerializable();
             data->lmsSerialize(os);
             return true;
@@ -325,11 +335,10 @@ public:
 
     T &operator*() { return *this->get(); }
 
-    bool deserialize(std::istream &is) {
-        if (this->m_internal->main &&
-            this->m_internal->main->isSerializable()) {
+    bool deserialize(std::istream &is,Serializable::Type type = Serializable::Type::BINARY) {
+        if (this->isSerializable(type)) {
             Serializable *data = this->m_internal->main->getSerializable();
-            data->lmsDeserialize(is);
+            data->lmsDeserialize(is); //TODO type
             return true;
         } else {
             return false;

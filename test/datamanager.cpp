@@ -19,12 +19,14 @@ struct DerivedChannelType : public lms::Inheritance, public ChannelType {
 struct SerialChannelType : public lms::Serializable {
     int i;
 
-    void lmsSerialize(std::ostream &os) const override {
+    void lmsSerialize(std::ostream &os,Type type) const override {
+        (void)type;
         os << i;
     }
 
-    virtual void lmsDeserialize(std::istream &os) override {
-        os >> i;
+    virtual void lmsDeserialize(std::istream &is,Type type) override {
+        (void)type;
+        is >> i;
     }
 };
 
