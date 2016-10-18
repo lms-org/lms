@@ -72,7 +72,7 @@ void Framework::updateSystem(const RuntimeInfo &info) {
                 return;
             }
 
-            it->second = service;
+            services[serviceInfo.name] = service;
         } else {
             // already loaded
             it->second->initBase(serviceInfo);
@@ -100,7 +100,7 @@ void Framework::updateSystem(const RuntimeInfo &info) {
                 return;
             }
 
-            it->second = module;
+            modules[moduleInfo.name] = module;
         } else {
             it->second->initBase(moduleInfo, this);
             it->second->configsChanged();
