@@ -44,12 +44,12 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
     std::string libpath;
 
     for(const std::string &path : m_paths) {
-        if(exists(libpath = path + "/" + libname + ".so")) {
+        if(exists(libpath = path + "/lib" + libname + ".so")) {
             foundLib = true;
             break;
         }
 #if __APPLE__
-        if(exists(libpath = path + "/" + libname + ".dylib")) {
+        if(exists(libpath = path + "/lib" + libname + ".dylib")) {
             foundLib = true;
             break;
         }
