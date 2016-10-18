@@ -57,6 +57,9 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
     }
 
     if (!foundLib) {
+        for(const auto &path : m_paths) {
+            logger.debug("LMS_PATH") << path;
+        }
         LMS_EXCEPTION(std::string("Could not find lib ") + libname);
     }
 
