@@ -16,6 +16,7 @@ class LMSConan(ConanFile):
     def package(self):
         self.copy("*.h", dst="include", src="include")
         self.copy("*.so", dst="lib")
+        self.copy("*/lms", dst=".")
 
     def package_info(self):
         self.cpp_info.libs = ["lmscore"]
