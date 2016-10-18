@@ -107,4 +107,18 @@ DataManager &Module::datamanager() {
     return dfunc()->m_fw->dataManager();
 }
 
+bool Module::pauseRuntime(std::string const &name) {
+    logger.error() << "Not implemented";
+    return false;
+}
+
+void Module::pauseRuntime() {
+    logger.error() << "Not implemented";
+}
+
+bool Module::resumeRuntime(std::string const &name, bool reset) {
+    logger.error() << "Not implemented";
+    return false;
+}
+
 }
