@@ -150,7 +150,7 @@ endif()
 add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
-    "${CMAKE_CURRENT_BINARY_DIR}/messages.pb.cc"
+    "include/messages.pb.cc"
     ${ProtoSources} ${ProtoHeaders}
 )
 

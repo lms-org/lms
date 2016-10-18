@@ -228,6 +228,7 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         for(const auto &rt : m_runtimes) {
             lms::ProcessListResponse_Process *process = res.add_processes();
             process->set_pid(rt.pid);
+            process->set_config_file(rt.config_file);
         }
         client.sock.writeMessage(res);
         }
@@ -239,6 +240,10 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         runFramework(client, message.run());
         return ClientResult::attached;
         break;
+    case lms::Request::kAttach:
+        client.isAttached = true;
+        client.attachedRuntime = atoi(message.attach().id().c_str());
+        return ClientResult::attached;
     }
 
     /*} else if (message == "tcpip") {
@@ -295,7 +300,7 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         // close writing ends of pipes
         close(fd[1]);
 
-        Runtime rt{childpid, fd[0]};
+        Runtime rt{childpid, fd[0], options.config_file()};
         client.isAttached = true;
         client.attachedRuntime = childpid;
         m_runtimes.push_back(rt);
@@ -354,8 +359,9 @@ void connectToMaster(int argc, char *argv[]) {
 
             lms::ClientListResponse res;
             socket.readMessage(res);
+            std::cout << "FD \tPEER\n";
             for(int i = 0; i < res.clients_size(); i++) {
-                std::cout << res.clients(i).fd() << " " << res.clients(i).peer() << "\n";
+                std::cout << res.clients(i).fd() << " \t" << res.clients(i).peer() << "\n";
             }
         } else if(strcmp(argv[1], "ps") == 0) {
             req.mutable_list_processes();
@@ -363,8 +369,9 @@ void connectToMaster(int argc, char *argv[]) {
 
             lms::ProcessListResponse res;
             socket.readMessage(res);
+            std::cout << "ID \tCONFIG\n";
             for(int i = 0; i < res.processes_size(); i++) {
-                std::cout << res.processes(i).pid() << "\n";
+                std::cout << res.processes(i).pid() << " \t" << res.processes(i).config_file() << "\n";
             }
         } else if(strcmp(argv[1], "shutdown") == 0) {
             req.mutable_shutdown();
@@ -380,16 +387,33 @@ void connectToMaster(int argc, char *argv[]) {
             }
 
             if(argc >= 3) {
-                *run->mutable_config_file() = argv[2];
+                run->set_config_file(argv[2]);;
                 socket.writeMessage(req);
             } else {
-                std::cout << "Requires argument\n";
+                std::cout << "Requires argument: lms run <configfile>\n";
             }
 
             LogEvent event;
             while(true) {
                 socket.readMessage(event);
-                std::cout << event.tag()  << " " << event.text() << std::endl;
+                std::cout << event.tag() << " " << event.text() << std::endl;
+            }
+        } else if(strcmp(argv[1], "attach") == 0) {
+            lms::Request_Attach *attach = req.mutable_attach();
+
+            if(argc >= 3) {
+                attach->set_id(argv[2]);
+                socket.writeMessage(req);
+            } else {
+                std::cout << "Requires argument: lms attach <id> \n";
+            }
+
+            LogEvent event;
+            while(true) {
+                if(!socket.readMessage(event)) {
+                    break;
+                }
+                std::cout << event.tag() << " " << event.text() << std::endl;
             }
         } else {
             std::cout << "Unknown command\n";
@@ -402,6 +426,7 @@ void connectToMaster(int argc, char *argv[]) {
         std::cout << "  clients - List all clients connected to server\n";
         std::cout << "  shutdown - Shutdown server\n";
         std::cout << "  run <file> - Start runtime using XML config file\n";
+        std::cout << "  ps - List all running runtimes\n";
     }
 }
 

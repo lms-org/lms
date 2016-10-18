@@ -34,6 +34,7 @@ private:
     struct Runtime {
         pid_t pid;
         ProtobufSocket sock;
+        std::string config_file;
     };
 
     std::vector<Server> m_servers;

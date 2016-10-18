@@ -22,4 +22,4 @@ class LMSConan(ConanFile):
         
     def imports(self):
         self.copy("protoc", "bin", "bin")
-        self.run('./bin/protoc ../messages/messages.proto --proto_path=../messages --cpp_out="."')
+        self.run('./bin/protoc ../messages/messages.proto --proto_path=../messages --cpp_out="../include"')

@@ -9,6 +9,12 @@ message Request {
         repeated string include_paths = 2;
 	}
 	message ListProcesses {}
+	message Attach {
+	    optional string id = 1;
+	}
+	message Kill {
+	    optional string id = 1;
+	}
 
 	oneof content {
 		Info info = 1;
@@ -16,6 +22,8 @@ message Request {
 		ListClients list_clients = 3;
 		Run run = 4;
 		ListProcesses list_processes = 5;
+		Attach attach = 6;
+		Kill kill = 7;
 	}
 }
 
