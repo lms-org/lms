@@ -384,11 +384,14 @@ void connectToMaster(int argc, char *argv[]) {
             lms::Request_Run *run = req.mutable_run();
 
             char *lms_path = std::getenv("LMS_PATH");
+            std::cout<<"Adding LMS_PATH: ";
             if (lms_path != nullptr && lms_path[0] != '\0') {
                 for (auto const &path : split(lms_path, ':')) {
                     *run->add_include_paths() = path;
+                    std::cout << path<<",";
                 }
             }
+            std::cout << std::endl;
 
             if(argc >= 3) {
                 run->set_config_file(argv[2]);;
