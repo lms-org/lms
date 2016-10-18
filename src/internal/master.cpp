@@ -10,11 +10,16 @@
 #include <string>
 #include <iostream>
 
+#include "messages.pb.h"
+#include "protobuf_socket.h"
+#include "protobuf_sink.h"
+
 #include "master.h"
 #include "lms/exception.h"
 #include "lms/definitions.h"
 #include "string.h"
 #include "tclap/CmdLine.h"
+#include "framework.h"
 
 namespace lms {
 namespace internal {
@@ -48,7 +53,7 @@ void enableReuseAddr(int sock) {
 }
 
 MasterServer::Client::Client(int fd, const std::string &peer)
-    : fd(fd), reader(fd), writer(fd), peer(peer) {}
+    : sock(fd), peer(peer), isAttached(false) {}
 
 MasterServer::Server::Server(int fd) : fd(fd) {}
 
@@ -127,9 +132,13 @@ void MasterServer::start() {
             FD_SET(server.fd, &fds);
             maxFD = std::max(maxFD, server.fd);
         }
-        for (const Client &client : m_clients) {
-            FD_SET(client.fd, &fds);
-            maxFD = std::max(maxFD, client.fd);
+        for (const auto &client : m_clients) {
+            FD_SET(client.sock.getFD(), &fds);
+            maxFD = std::max(maxFD, client.sock.getFD());
+        }
+        for(const Runtime &runtime : m_runtimes) {
+            FD_SET(runtime.sock.getFD(), &fds);
+            maxFD = std::max(runtime.sock.getFD(), maxFD);
         }
 
         timeval timeout;
@@ -147,34 +156,44 @@ void MasterServer::start() {
                 sockaddr_storage peer;
                 socklen_t peerLen = sizeof peer;
                 int clientfd = accept(server.fd, (sockaddr *)&peer, &peerLen);
-                enableNonBlock(clientfd);
+                //enableNonBlock(clientfd);
                 m_clients.push_back(Client(clientfd, getPeer(peer)));
             }
         }
         for (auto it = m_clients.begin(); it != m_clients.end(); ++it) {
             auto &client = *it;
-            if (FD_ISSET(client.fd, &fds)) {
-                std::string line;
+            if (FD_ISSET(client.sock.getFD(), &fds)) {
                 bool hadLines = false;
                 bool exit = false;
-                while (client.reader.readLine(line)) {
-                    hadLines = true;
-                    if (line[line.length() - 1] == '\r') {
-                        line = line.substr(0, line.length() - 1);
-                    }
-                    ClientResult res = processClient(client, line);
+
+                lms::Request req;
+                bool readRes = client.sock.readMessage(req);
+
+                if(readRes) {
+                    ClientResult res = processClient(client, req);
                     if (res == ClientResult::exit) {
                         exit = true;
-                        break;
                     }
+                } else {
+                    exit = true;
                 }
 
-                if (!hadLines || exit) {
-                    ::shutdown(client.fd, SHUT_RD);
-                    ::close(client.fd);
-                    // disconnected
+                if(exit) {
+                    client.sock.close();
                     m_clients.erase(it);
                     --it;
+                }
+            }
+        }
+        for(Runtime &runtime : m_runtimes) {
+            if(FD_ISSET(runtime.sock.getFD(), &fds)) {
+                for(auto &client : m_clients) {
+                    if(client.isAttached && client.attachedRuntime == runtime.pid) {
+                        // forward log events to attached clients
+                        LogEvent event;
+                        runtime.sock.readMessage(event);
+                        client.sock.writeMessage(event);
+                    }
                 }
             }
         }
@@ -182,36 +201,47 @@ void MasterServer::start() {
 }
 
 MasterServer::ClientResult
-MasterServer::processClient(Client &client, const std::string &commandLine) {
-    std::vector<std::string> args = lms::internal::splitWhitespace(commandLine);
-    std::string message;
-    if (args.size() >= 1) {
-        message = args[0];
-    }
-    args.erase(args.begin());
-
-    if (message == "exit") {
-        client.writer.writeLine("Exiting ...");
-        client.writer.writeLine();
-        return ClientResult::exit;
-    } else if (message == "clients") {
-        for (const Client &cl : m_clients) {
-            client.writer.writeLine(std::to_string(cl.fd) + "\t" + cl.peer);
+MasterServer::processClient(Client &client, const lms::Request &message) {
+    switch(message.content_case()) {
+    case lms::Request::kInfo:
+        {
+        lms::InfoResponse res;
+        res.set_version(LMS_VERSION_CODE);
+        res.set_pid(getpid());
+        client.sock.writeMessage(res);
         }
-        client.writer.writeLine();
-    } else if (message == "info") {
-        client.writer.writeLine("LMS " LMS_VERSION_STRING);
-        client.writer.writeLine();
-    } else if (message == "pid") {
-        client.writer.writeLine(std::to_string(getpid()));
-        client.writer.writeLine();
-    } else if (message == "shutdown") {
-        for (Client &cl : m_clients) {
-            cl.writer.writeLine("Shutdown, initiated by " + client.peer);
-            cl.writer.writeLine();
+        break;
+    case lms::Request::kListClients:
+        {
+        lms::ClientListResponse res;
+        for (const auto &cl : m_clients) {
+            lms::ClientListResponse_Client *client = res.add_clients();
+            client->set_fd(cl.sock.getFD());
+            client->set_peer(cl.peer);
         }
+        client.sock.writeMessage(res);
+        }
+        break;
+    case lms::Request::kListProcesses:
+        {
+        lms::ProcessListResponse res;
+        for(const auto &rt : m_runtimes) {
+            lms::ProcessListResponse_Process *process = res.add_processes();
+            process->set_pid(rt.pid);
+        }
+        client.sock.writeMessage(res);
+        }
+        break;
+    case lms::Request::kShutdown:
         m_running = false;
-    } else if (message == "tcpip") {
+        break;
+    case lms::Request::kRun:
+        runFramework(client, message.run());
+        return ClientResult::attached;
+        break;
+    }
+
+    /*} else if (message == "tcpip") {
         int port = args.size() >= 1 ? atoi(args[0].c_str()) : 3344;
         int err = useIPv4(port);
         if (err != 0) {
@@ -222,13 +252,54 @@ MasterServer::processClient(Client &client, const std::string &commandLine) {
         }
         client.writer.writeLine();
     } else if (message == "run") {
-
+        runFramework(args[0]);
+        client.writer.writeLine("Started: yeah");
+        //client.writer.writeLine();
     } else {
         client.writer.writeLine("Unknown command");
         client.writer.writeLine();
+    }*/
+
+    return ClientResult::exit;
+}
+
+void MasterServer::runFramework(Client &client, const Request_Run &options) {
+    pid_t childpid;
+    int fd[2];
+    socketpair(AF_UNIX, SOCK_STREAM, 0, fd);
+
+    // FORK
+    if((childpid = fork()) == -1) {
+        printf("Fork failed");
+        return;
     }
 
-    return ClientResult::ok;
+    if(childpid == 0) {
+        // init framework
+
+        // close other end of socket
+        close(fd[0]);
+
+        logging::Context &ctx = logging::Context::getDefault();
+        ctx.appendSink(new ProtobufSink(fd[1]));
+
+        lms::internal::Framework fw(options.config_file());
+        for(int i = 0; i < options.include_paths_size(); i++) {
+            fw.addSearchPath(options.include_paths(i));
+        }
+        fw.start();
+        exit(0);
+    } else {
+        // master server
+
+        // close writing ends of pipes
+        close(fd[1]);
+
+        Runtime rt{childpid, fd[0]};
+        client.isAttached = true;
+        client.attachedRuntime = childpid;
+        m_runtimes.push_back(rt);
+    }
 }
 
 MasterClient::MasterClient(int fd) : m_sockfd(fd) {}
@@ -254,58 +325,84 @@ MasterClient MasterClient::fromUnix(const std::string &path) {
 
 int MasterClient::fd() const { return m_sockfd; }
 
-void readUntilEnd(lms::internal::LineReader &reader) {
-    std::string line;
-    while (reader.readLine(line)) {
-        if (line.empty())
-            return;
-        std::cout << line << std::endl;
-    }
-}
-
 void connectToMaster(int argc, char *argv[]) {
-    /*TCLAP::CmdLine cmd("LMS Client", ' ', LMS_VERSION_STRING);
-    TCLAP::SwitchArg pidSwitch("", "pid", "Get process ID of master server",
-                               cmd);
-    TCLAP::SwitchArg infoSwitch("", "info", "Get version of master server",
-                                cmd);
-    TCLAP::SwitchArg connSwitch(
-        "", "clients", "Get all clients connected to master server", cmd);
-    TCLAP::SwitchArg shutdownSwitch("", "shutdown", "Shutdown master server",
-                                    cmd);
-    TCLAP::ValueArg<std::string> runArg("r", "run",
-                                        "Start a runtime with config", false,
-                                        "", "configfile", cmd);
-    cmd.parse(argc, argv);*/
-
     lms::internal::MasterClient client =
         lms::internal::MasterClient::fromUnix("/tmp/lms.sock");
-    lms::internal::LineReader reader(client.fd());
-    lms::internal::LineWriter writer(client.fd());
+    lms::internal::ProtobufSocket socket(client.fd());
 
-    std::string command = argv[1];
-    for (int i = 2; i < argc; i++) {
-        command += " ";
-        command += argv[i];
+    lms::Request req;
+
+    if(argc >= 2) {
+        if(strcmp(argv[1], "version") == 0) {
+            req.mutable_info();
+            socket.writeMessage(req);
+
+            lms::InfoResponse res;
+            socket.readMessage(res);
+            std::cout << "Client: " << LMS_VERSION_STRING << "\n";
+            std::cout << "Server: " << versionCodeToString(res.version()) << "\n";
+        } else if(strcmp(argv[1], "pid") == 0) {
+            req.mutable_info();
+            socket.writeMessage(req);
+
+            lms::InfoResponse res;
+            socket.readMessage(res);
+            std::cout << res.pid() << std::endl;
+        } else if(strcmp(argv[1], "clients") == 0) {
+            req.mutable_list_clients();
+            socket.writeMessage(req);
+
+            lms::ClientListResponse res;
+            socket.readMessage(res);
+            for(int i = 0; i < res.clients_size(); i++) {
+                std::cout << res.clients(i).fd() << " " << res.clients(i).peer() << "\n";
+            }
+        } else if(strcmp(argv[1], "ps") == 0) {
+            req.mutable_list_processes();
+            socket.writeMessage(req);
+
+            lms::ProcessListResponse res;
+            socket.readMessage(res);
+            for(int i = 0; i < res.processes_size(); i++) {
+                std::cout << res.processes(i).pid() << "\n";
+            }
+        } else if(strcmp(argv[1], "shutdown") == 0) {
+            req.mutable_shutdown();
+            socket.writeMessage(req);
+        } else if(strcmp(argv[1], "run") == 0) {
+            lms::Request_Run *run = req.mutable_run();
+
+            char *lms_path = std::getenv("LMS_PATH");
+            if (lms_path != nullptr && lms_path[0] != '\0') {
+                for (auto const &path : split(lms_path, ':')) {
+                    *run->add_include_paths() = path;
+                }
+            }
+
+            if(argc >= 3) {
+                *run->mutable_config_file() = argv[2];
+                socket.writeMessage(req);
+            } else {
+                std::cout << "Requires argument\n";
+            }
+
+            LogEvent event;
+            while(true) {
+                socket.readMessage(event);
+                std::cout << event.tag()  << " " << event.text() << std::endl;
+            }
+        } else {
+            std::cout << "Unknown command\n";
+        }
+    } else {
+        std::cout << "LMS - Help\n\n";
+        std::cout << "Commands\n";
+        std::cout << "  version - Show version info of client and server\n";
+        std::cout << "  pid - Print process id of server\n";
+        std::cout << "  clients - List all clients connected to server\n";
+        std::cout << "  shutdown - Shutdown server\n";
+        std::cout << "  run <file> - Start runtime using XML config file\n";
     }
-
-    writer.writeLine(command);
-    readUntilEnd(reader);
-
-    /*if (shutdownSwitch.getValue()) {
-        writer.writeLine("shutdown");
-    } else if (pidSwitch.getValue()) {
-        writer.writeLine("pid");
-        readUntilEnd(reader);
-    } else if (infoSwitch.getValue()) {
-        writer.writeLine("info");
-        readUntilEnd(reader);
-    } else if (connSwitch.getValue()) {
-        writer.writeLine("clients");
-        readUntilEnd(reader);
-    } else if (runArg.isSet()) {
-        writer.writeLine("run " + runArg.getValue());
-    }*/
 }
 
 /*void interactive() {

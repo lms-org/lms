@@ -1,5 +1,4 @@
-#ifndef LMS_FRAMEWORK_H
-#define LMS_FRAMEWORK_H
+#pragma once
 
 #include "lms/datamanager.h"
 #include "signalhandler.h"
@@ -19,7 +18,7 @@ namespace internal {
  *
  * Create an object of this class and you will start the framwork.
  */
-class Framework : public SignalHandler::Listener {
+class Framework {
 public:
     /**
      * @brief Instantiate the framework, initiate datamanager and
@@ -39,6 +38,8 @@ public:
     std::shared_ptr<Service> getService(std::string const &name);
 
     bool isDebug() const;
+
+    void addSearchPath(const std::string &path);
 
     std::string loadLogObject(std::string const &name, bool isDir);
     std::string saveLogObject(std::string const &name, bool isDir);
@@ -87,5 +88,3 @@ private:
 
 } // namespace internal
 } // namespace lms
-
-#endif /* LMS_FRAMEWORK_H */

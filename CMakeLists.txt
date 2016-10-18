@@ -19,9 +19,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(TestCpp11)
 
 # Protobuf
-find_package(Protobuf REQUIRED)
-file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/messages/*.proto")
-PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${ProtoFiles})
+#find_package(Protobuf REQUIRED)
+#file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/messages/*.proto")
+#PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${ProtoFiles})
 
 include(CMakeData.txt)
 
@@ -150,6 +150,7 @@ endif()
 add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
+    "${CMAKE_CURRENT_BINARY_DIR}/messages.pb.cc"
     ${ProtoSources} ${ProtoHeaders}
 )
 

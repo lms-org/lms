@@ -1,0 +1,60 @@
+package lms;
+
+message Request {
+	message Info {}
+	message Shutdown {}
+	message ListClients {}
+	message Run {
+		optional string config_file = 1;
+        repeated string include_paths = 2;
+	}
+	message ListProcesses {}
+
+	oneof content {
+		Info info = 1;
+		Shutdown shutdown = 2;
+		ListClients list_clients = 3;
+		Run run = 4;
+		ListProcesses list_processes = 5;
+	}
+}
+
+message InfoResponse {
+    optional int32 version = 1;
+    optional int32 pid = 2;
+}
+
+message ClientListResponse {
+    message Client {
+        optional int32 fd = 1;
+        optional string peer = 2;
+    }
+
+    repeated Client clients = 1;
+}
+
+message ProcessListResponse {
+    message Process {
+        optional int32 pid = 1;
+        optional string config_file = 2;
+    }
+    
+    repeated Process processes = 1;
+}
+
+message LogEvent {
+    optional Level level = 1;
+    optional string tag = 2;
+    optional string text = 3;
+    
+    enum Level {
+        // must be compatible to lms::logging:Level
+        ALL = 0;
+        DEBUG = 1;
+        INFO = 2;
+        WARN = 3;
+        ERROR = 4;
+        OFF = 255;
+    }
+}
+

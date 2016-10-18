@@ -2,6 +2,7 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #include <memory>
 
@@ -63,6 +64,14 @@ bool ProtobufSocket::readMessage(google::protobuf::Message &message) {
     }
 
     return true;
+}
+
+int ProtobufSocket::getFD() const {
+    return fd;
+}
+
+void ProtobufSocket::close() {
+    ::close(fd);
 }
 
 }  // namespace internal
