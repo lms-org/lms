@@ -2,8 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
-#include "line_separated_reader.h"
+#include "protobuf_socket.h"
+#include "messages.pb.h"
 
 namespace lms {
 namespace internal {
@@ -18,10 +20,10 @@ public:
 private:
     struct Client {
         Client(int fd, const std::string &peer);
-        int fd;
-        LineReader reader;
-        LineWriter writer;
+        ProtobufSocket sock;
         std::string peer;
+        bool isAttached;
+        pid_t attachedRuntime;
     };
 
     struct Server {
@@ -29,15 +31,21 @@ private:
         int fd;
     };
 
+    struct Runtime {
+        pid_t pid;
+        ProtobufSocket sock;
+    };
+
     std::vector<Server> m_servers;
     std::vector<Client> m_clients;
-    std::vector<int> m_runtimes;
+    std::vector<Runtime> m_runtimes;
     bool m_running;
 
-    enum class ClientResult { ok, exit };
+    enum class ClientResult { exit, attached };
 
     void enableNonBlock(int sock);
-    ClientResult processClient(Client &client, const std::string &message);
+    ClientResult processClient(Client &client, const lms::Request &message);
+    void runFramework(Client &client, const Request_Run &options);
 };
 
 class MasterClient {

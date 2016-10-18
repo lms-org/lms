@@ -7,6 +7,9 @@
 #include "internal/master.h"
 #include "internal/daemon.h"
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
 /**
  * @brief Parse command line arguments, show help and start
  * the framework.
@@ -34,6 +37,21 @@ int main(int argc, char *argv[]) {
             lms::internal::connectToMaster(argc, argv);
         }
     }
+
+    /*int fv[2];
+    socketpair(AF_UNIX, SOCK_STREAM, 0, fv);
+
+    lms::Request req;
+    req.set_type(lms::Request_MessageType_RUN);
+
+    lms::internal::ProtobufWrapper writer(fv[0]);
+    writer.writeMessage(req);
+
+    lms::internal::ProtobufWrapper reader(fv[1]);
+    lms::Request res;
+    reader.readMessage(res);
+
+    printf("%d\n", res.type());*/
 
     return EXIT_SUCCESS;
 }
