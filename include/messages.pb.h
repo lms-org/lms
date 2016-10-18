@@ -41,7 +41,7 @@ class Request_ListClients;
 class Request_Run;
 class Request_ListProcesses;
 class Request_Attach;
-class Request_Kill;
+class Request_Stop;
 class InfoResponse;
 class ClientListResponse;
 class ClientListResponse_Client;
@@ -535,14 +535,14 @@ class Request_Attach : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Request_Kill : public ::google::protobuf::Message {
+class Request_Stop : public ::google::protobuf::Message {
  public:
-  Request_Kill();
-  virtual ~Request_Kill();
+  Request_Stop();
+  virtual ~Request_Stop();
 
-  Request_Kill(const Request_Kill& from);
+  Request_Stop(const Request_Stop& from);
 
-  inline Request_Kill& operator=(const Request_Kill& from) {
+  inline Request_Stop& operator=(const Request_Stop& from) {
     CopyFrom(from);
     return *this;
   }
@@ -556,17 +556,17 @@ class Request_Kill : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Request_Kill& default_instance();
+  static const Request_Stop& default_instance();
 
-  void Swap(Request_Kill* other);
+  void Swap(Request_Stop* other);
 
   // implements Message ----------------------------------------------
 
-  Request_Kill* New() const;
+  Request_Stop* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Request_Kill& from);
-  void MergeFrom(const Request_Kill& from);
+  void CopyFrom(const Request_Stop& from);
+  void MergeFrom(const Request_Stop& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -600,22 +600,32 @@ class Request_Kill : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
-  // @@protoc_insertion_point(class_scope:lms.Request.Kill)
+  // optional bool kill = 2;
+  inline bool has_kill() const;
+  inline void clear_kill();
+  static const int kKillFieldNumber = 2;
+  inline bool kill() const;
+  inline void set_kill(bool value);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Stop)
  private:
   inline void set_has_id();
   inline void clear_has_id();
+  inline void set_has_kill();
+  inline void clear_has_kill();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* id_;
+  bool kill_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static Request_Kill* default_instance_;
+  static Request_Stop* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -649,7 +659,7 @@ class Request : public ::google::protobuf::Message {
     kRun = 4,
     kListProcesses = 5,
     kAttach = 6,
-    kKill = 7,
+    kStop = 7,
     CONTENT_NOT_SET = 0,
   };
 
@@ -687,7 +697,7 @@ class Request : public ::google::protobuf::Message {
   typedef Request_Run Run;
   typedef Request_ListProcesses ListProcesses;
   typedef Request_Attach Attach;
-  typedef Request_Kill Kill;
+  typedef Request_Stop Stop;
 
   // accessors -------------------------------------------------------
 
@@ -745,14 +755,14 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_Attach* release_attach();
   inline void set_allocated_attach(::lms::Request_Attach* attach);
 
-  // optional .lms.Request.Kill kill = 7;
-  inline bool has_kill() const;
-  inline void clear_kill();
-  static const int kKillFieldNumber = 7;
-  inline const ::lms::Request_Kill& kill() const;
-  inline ::lms::Request_Kill* mutable_kill();
-  inline ::lms::Request_Kill* release_kill();
-  inline void set_allocated_kill(::lms::Request_Kill* kill);
+  // optional .lms.Request.Stop stop = 7;
+  inline bool has_stop() const;
+  inline void clear_stop();
+  static const int kStopFieldNumber = 7;
+  inline const ::lms::Request_Stop& stop() const;
+  inline ::lms::Request_Stop* mutable_stop();
+  inline ::lms::Request_Stop* release_stop();
+  inline void set_allocated_stop(::lms::Request_Stop* stop);
 
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
@@ -763,7 +773,7 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_run();
   inline void set_has_list_processes();
   inline void set_has_attach();
-  inline void set_has_kill();
+  inline void set_has_stop();
 
   inline bool has_content();
   void clear_content();
@@ -780,7 +790,7 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_Run* run_;
     ::lms::Request_ListProcesses* list_processes_;
     ::lms::Request_Attach* attach_;
-    ::lms::Request_Kill* kill_;
+    ::lms::Request_Stop* stop_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1608,61 +1618,61 @@ inline void Request_Attach::set_allocated_id(::std::string* id) {
 
 // -------------------------------------------------------------------
 
-// Request_Kill
+// Request_Stop
 
 // optional string id = 1;
-inline bool Request_Kill::has_id() const {
+inline bool Request_Stop::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Request_Kill::set_has_id() {
+inline void Request_Stop::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Request_Kill::clear_has_id() {
+inline void Request_Stop::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Request_Kill::clear_id() {
+inline void Request_Stop::clear_id() {
   if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     id_->clear();
   }
   clear_has_id();
 }
-inline const ::std::string& Request_Kill::id() const {
-  // @@protoc_insertion_point(field_get:lms.Request.Kill.id)
+inline const ::std::string& Request_Stop::id() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Stop.id)
   return *id_;
 }
-inline void Request_Kill::set_id(const ::std::string& value) {
+inline void Request_Stop::set_id(const ::std::string& value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     id_ = new ::std::string;
   }
   id_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.Request.Kill.id)
+  // @@protoc_insertion_point(field_set:lms.Request.Stop.id)
 }
-inline void Request_Kill::set_id(const char* value) {
+inline void Request_Stop::set_id(const char* value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     id_ = new ::std::string;
   }
   id_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.Request.Kill.id)
+  // @@protoc_insertion_point(field_set_char:lms.Request.Stop.id)
 }
-inline void Request_Kill::set_id(const char* value, size_t size) {
+inline void Request_Stop::set_id(const char* value, size_t size) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     id_ = new ::std::string;
   }
   id_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.Request.Kill.id)
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Stop.id)
 }
-inline ::std::string* Request_Kill::mutable_id() {
+inline ::std::string* Request_Stop::mutable_id() {
   set_has_id();
   if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     id_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.Request.Kill.id)
+  // @@protoc_insertion_point(field_mutable:lms.Request.Stop.id)
   return id_;
 }
-inline ::std::string* Request_Kill::release_id() {
+inline ::std::string* Request_Stop::release_id() {
   clear_has_id();
   if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
@@ -1672,7 +1682,7 @@ inline ::std::string* Request_Kill::release_id() {
     return temp;
   }
 }
-inline void Request_Kill::set_allocated_id(::std::string* id) {
+inline void Request_Stop::set_allocated_id(::std::string* id) {
   if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete id_;
   }
@@ -1683,7 +1693,31 @@ inline void Request_Kill::set_allocated_id(::std::string* id) {
     clear_has_id();
     id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.Request.Kill.id)
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Stop.id)
+}
+
+// optional bool kill = 2;
+inline bool Request_Stop::has_kill() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Request_Stop::set_has_kill() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Request_Stop::clear_has_kill() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Request_Stop::clear_kill() {
+  kill_ = false;
+  clear_has_kill();
+}
+inline bool Request_Stop::kill() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Stop.kill)
+  return kill_;
+}
+inline void Request_Stop::set_kill(bool value) {
+  set_has_kill();
+  kill_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Stop.kill)
 }
 
 // -------------------------------------------------------------------
@@ -1948,46 +1982,46 @@ inline void Request::set_allocated_attach(::lms::Request_Attach* attach) {
   }
 }
 
-// optional .lms.Request.Kill kill = 7;
-inline bool Request::has_kill() const {
-  return content_case() == kKill;
+// optional .lms.Request.Stop stop = 7;
+inline bool Request::has_stop() const {
+  return content_case() == kStop;
 }
-inline void Request::set_has_kill() {
-  _oneof_case_[0] = kKill;
+inline void Request::set_has_stop() {
+  _oneof_case_[0] = kStop;
 }
-inline void Request::clear_kill() {
-  if (has_kill()) {
-    delete content_.kill_;
+inline void Request::clear_stop() {
+  if (has_stop()) {
+    delete content_.stop_;
     clear_has_content();
   }
 }
-inline const ::lms::Request_Kill& Request::kill() const {
-  return has_kill() ? *content_.kill_
-                      : ::lms::Request_Kill::default_instance();
+inline const ::lms::Request_Stop& Request::stop() const {
+  return has_stop() ? *content_.stop_
+                      : ::lms::Request_Stop::default_instance();
 }
-inline ::lms::Request_Kill* Request::mutable_kill() {
-  if (!has_kill()) {
+inline ::lms::Request_Stop* Request::mutable_stop() {
+  if (!has_stop()) {
     clear_content();
-    set_has_kill();
-    content_.kill_ = new ::lms::Request_Kill;
+    set_has_stop();
+    content_.stop_ = new ::lms::Request_Stop;
   }
-  return content_.kill_;
+  return content_.stop_;
 }
-inline ::lms::Request_Kill* Request::release_kill() {
-  if (has_kill()) {
+inline ::lms::Request_Stop* Request::release_stop() {
+  if (has_stop()) {
     clear_has_content();
-    ::lms::Request_Kill* temp = content_.kill_;
-    content_.kill_ = NULL;
+    ::lms::Request_Stop* temp = content_.stop_;
+    content_.stop_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline void Request::set_allocated_kill(::lms::Request_Kill* kill) {
+inline void Request::set_allocated_stop(::lms::Request_Stop* stop) {
   clear_content();
-  if (kill) {
-    set_has_kill();
-    content_.kill_ = kill;
+  if (stop) {
+    set_has_stop();
+    content_.stop_ = stop;
   }
 }
 

@@ -12,8 +12,9 @@ message Request {
 	message Attach {
 	    optional string id = 1;
 	}
-	message Kill {
+	message Stop {
 	    optional string id = 1;
+	    optional bool kill = 2;
 	}
 
 	oneof content {
@@ -23,7 +24,7 @@ message Request {
 		Run run = 4;
 		ListProcesses list_processes = 5;
 		Attach attach = 6;
-		Kill kill = 7;
+		Stop stop = 7;
 	}
 }
 

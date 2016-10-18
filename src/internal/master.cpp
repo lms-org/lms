@@ -244,6 +244,10 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         client.isAttached = true;
         client.attachedRuntime = atoi(message.attach().id().c_str());
         return ClientResult::attached;
+    case lms::Request::kStop:
+        int signal = message.stop().kill() ? SIGKILL : SIGINT;
+        kill(atoi(message.stop().id().c_str()), signal);
+        break;
     }
 
     /*} else if (message == "tcpip") {
@@ -415,6 +419,16 @@ void connectToMaster(int argc, char *argv[]) {
                 }
                 std::cout << event.tag() << " " << event.text() << std::endl;
             }
+        } else if(strcmp(argv[1], "kill") == 0) {
+            lms::Request_Stop *stop = req.mutable_stop();
+
+            if(argc >= 3) {
+                stop->set_id(argv[2]);
+                stop->set_kill(true);
+                socket.writeMessage(req);
+            } else {
+                std::cout << "Requires argument: lms kill <id>\n";
+            }
         } else {
             std::cout << "Unknown command\n";
         }
@@ -427,6 +441,8 @@ void connectToMaster(int argc, char *argv[]) {
         std::cout << "  shutdown - Shutdown server\n";
         std::cout << "  run <file> - Start runtime using XML config file\n";
         std::cout << "  ps - List all running runtimes\n";
+        std::cout << "  attach <id> - Attach to running runtime\n";
+        std::cout << "  kill <id> - Kill runtime\n";
     }
 }
 
