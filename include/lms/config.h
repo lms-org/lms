@@ -140,7 +140,9 @@ public:
      * @return value of type T
      */
     template <typename T>
-    T get(const std::string &key) const;
+    T get(const std::string &key) const {
+        return get(key, T());
+    }
 
     /**
      * @brief Retrieve a config value and split it at commas.
