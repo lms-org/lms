@@ -30,14 +30,14 @@ void Framework::start() {
             XmlParser parser(runtime);
             parser.parseFile(mainConfigFilePath);
 
+            for (auto error : parser.errors()) {
+                logger.error("XML") << error;
+            }
+
             try {
                 updateSystem(runtime);
             } catch(std::exception const &ex) {
                 logger.error() << lms::typeName(ex) << ": " <<  ex.what();
-            }
-
-            for (auto error : parser.errors()) {
-                logger.error() << error;
             }
 
             for (auto file : parser.files()) {
