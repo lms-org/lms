@@ -396,7 +396,7 @@ std::vector<std::string> const &XmlParser::errors() const { return m_errors; }
 bool XmlParser::errorMissingAttr(pugi::xml_node node,
                                  pugi::xml_attribute attr) {
     m_errors.push_back(std::string("Missing attribute ") + attr.name() +
-                       " in node " + node.path());
+                       " in node " + node.path() + " in file " + m_filestack.top());
     return false;
 }
 
