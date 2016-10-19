@@ -167,7 +167,9 @@ public:
      * @param list values will be push_back'ed there
      */
     template <typename T>
-    std::vector<T> getArray(const std::string &key) const;
+    std::vector<T> getArray(const std::string &key) const {
+        return getArray(key, std::vector<T>());
+    }
 
     /**
      * @brief Check if the given key is available.

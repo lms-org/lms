@@ -41,7 +41,7 @@ struct Config::Private {
         } else {
             std::vector<T> result;
             for (const auto &parts :
-                 lms::internal::splitWhitespace(it->second)) {
+                 lms::internal::split(it->second, ',')) {
                 result.push_back(
                     internal::string_cast_to<T>(lms::internal::trim(parts)));
             }
