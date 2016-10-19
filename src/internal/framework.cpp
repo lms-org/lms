@@ -51,8 +51,15 @@ void Framework::start() {
 }
 
 void Framework::updateSystem(const RuntimeInfo &info) {
+    if(isDebug()) {
+        logger.debug() << "updateSystem()";
+    }
+
     // Update or load services
     for (const ServiceInfo &serviceInfo : info.services) {
+        if(isDebug()) {
+            logger.debug() << "Loading service " << serviceInfo.name;
+        }
         auto it = services.find(serviceInfo.name);
         if (it == services.end()) {
             // Not loaded yet
@@ -82,6 +89,9 @@ void Framework::updateSystem(const RuntimeInfo &info) {
 
     // Update or load modules
     for (const ModuleInfo &moduleInfo : info.modules) {
+        if(isDebug()) {
+            logger.debug() << "Loading service " << moduleInfo.name;
+        }
         auto it = modules.find(moduleInfo.name);
         if (it == modules.end()) {
             // Not yet loaded
