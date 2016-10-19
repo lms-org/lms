@@ -36,12 +36,16 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
     logger.error("load") << "Not implemented";
     return nullptr;
 
-#else
+#endif
     // for information on dlopen, dlsym, dlerror and dlclose
     // see here: http://linux.die.net/man/3/dlclose
 
     bool foundLib = false;
     std::string libpath;
+
+    if(m_paths.size() == 0){
+        logger.error("LMS_PATH")<<"no path to modules given!";
+    }
 
     for(const std::string &path : m_paths) {
         if(exists(libpath = path + "/lib" + libname + ".so")) {
@@ -113,7 +117,6 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
 
     // call the interface function -> should return a newly created object
     return conv.target();
-#endif
 }
 
 } // namespace internal
