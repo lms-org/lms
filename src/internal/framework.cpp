@@ -45,7 +45,9 @@ void Framework::start() {
             }
         }
 
-        cycle();
+        if(!cycle()) {
+            m_running = false;
+        }
         firstRun = false;
     }
 }
@@ -145,6 +147,11 @@ Framework::~Framework() {
 }
 
 bool Framework::cycle() {
+    if(modules.size() == 0) {
+        logger.error() << "No modules enabled. Check your config file. Shutting down ...";
+        return false;
+    }
+
     m_clock.beforeLoopIteration();
     executionManager().validate(modules);
     m_executionManager.loop();
