@@ -147,6 +147,12 @@ float Config::get<float>(const std::string &key,
     return dfunc()->get(key, defaultValue);
 }
 
+template<>
+double Config::get<double>(const std::string &key,
+                         const double &defaultValue) const {
+    return dfunc()->get(key, defaultValue);
+}
+
 template <>
 bool Config::get<bool>(const std::string &key, const bool &defaultValue) const {
     return dfunc()->get(key, defaultValue);
@@ -169,6 +175,10 @@ void Config::set<float>(const std::string &key, const float &value) {
 }
 
 template <> void Config::set<bool>(const std::string &key, const bool &value) {
+    dfunc()->set(key, value);
+}
+
+template <> void Config::set<double>(const std::string &key, const double &value) {
     dfunc()->set(key, value);
 }
 
@@ -201,6 +211,13 @@ Config::getArray<bool>(const std::string &key,
     return dfunc()->getArray(key, defaultValue);
 }
 
+template <>
+std::vector<double>
+Config::getArray<double>(const std::string &key,
+                       const std::vector<double> &defaultValue) const {
+    return dfunc()->getArray(key, defaultValue);
+}
+
 // Template specializations setArray<T>
 template <>
 void Config::setArray<std::string>(const std::string &key,
@@ -223,6 +240,12 @@ void Config::setArray<float>(const std::string &key,
 template <>
 void Config::setArray<bool>(const std::string &key,
                             const std::vector<bool> &value) {
+    dfunc()->setArray(key, value);
+}
+
+template <>
+void Config::setArray<double>(const std::string &key,
+                            const std::vector<double> &value) {
     dfunc()->setArray(key, value);
 }
 

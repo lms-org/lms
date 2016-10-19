@@ -206,6 +206,9 @@ int Config::get<int>(const std::string &key, const int &defaultValue) const;
 template <>
 float Config::get<float>(const std::string &key,
                          const float &defaultValue) const;
+template<>
+double Config::get<double>(const std::string &key,
+                         const double &defaultValue) const;
 template <>
 bool Config::get<bool>(const std::string &key, const bool &defaultValue) const;
 
@@ -214,6 +217,7 @@ template <>
 void Config::set<std::string>(const std::string &key, const std::string &value);
 template <> void Config::set<int>(const std::string &key, const int &value);
 template <> void Config::set<float>(const std::string &key, const float &value);
+template <> void Config::set<double>(const std::string &key, const double &value);
 template <> void Config::set<bool>(const std::string &key, const bool &value);
 
 // Template specializations getArray<T>
@@ -232,6 +236,10 @@ template <>
 std::vector<bool>
 Config::getArray<bool>(const std::string &key,
                        const std::vector<bool> &defaultValue) const;
+template <>
+std::vector<double>
+Config::getArray<double>(const std::string &key,
+                       const std::vector<double> &defaultValue) const;
 
 // Template specializations setArray<T>
 template <>
@@ -246,6 +254,9 @@ void Config::setArray<float>(const std::string &key,
 template <>
 void Config::setArray<bool>(const std::string &key,
                             const std::vector<bool> &value);
+template <>
+void Config::setArray<double>(const std::string &key,
+                            const std::vector<double> &value);
 
 } // namespace lms
 
