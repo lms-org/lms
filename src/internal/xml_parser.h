@@ -127,7 +127,7 @@ void parseModuleConfig(pugi::xml_node node, Config &config,
 
 class XmlParser {
 public:
-    XmlParser(RuntimeInfo &info);
+    XmlParser(RuntimeInfo &info, const std::vector<std::string> &flags = {});
 
     std::vector<std::string> const &errors() const;
     std::vector<std::string> const &files() const;
@@ -152,6 +152,7 @@ private:
     std::vector<std::string> m_errors;
     std::vector<std::string> m_files;
     std::stack<std::string> m_filestack;
+    std::vector<std::string> m_flags;
 
     RuntimeInfo &runtime;
 

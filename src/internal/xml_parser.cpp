@@ -118,7 +118,7 @@ void preprocessXML(pugi::xml_node node, const std::vector<std::string> &flags) {
     }
 }
 
-XmlParser::XmlParser(RuntimeInfo &info) : runtime(info) {}
+XmlParser::XmlParser(RuntimeInfo &info, const std::vector<std::string> &flags) : runtime(info), m_flags(flags) {}
 
 void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key) {

@@ -124,7 +124,7 @@ template <> bool string_cast_to<bool>(const std::string &input) {
     } else if (input == "false") {
         return false;
     } else {
-        throw std::invalid_argument("Invalid value for bool");
+        throw std::invalid_argument("Invalid value for bool: " + input);
     }
 }
 

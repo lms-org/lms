@@ -38,8 +38,10 @@ public:
     std::shared_ptr<Service> getService(std::string const &name);
 
     bool isDebug() const;
+    void setDebug(bool debug);
 
     void addSearchPath(const std::string &path);
+    void addFlag(const std::string &flag);
 
     std::string loadLogObject(std::string const &name, bool isDir);
     std::string saveLogObject(std::string const &name, bool isDir);
@@ -75,11 +77,13 @@ private:
     std::string mainConfigFilePath;
 
     bool m_running;
+    bool is_debug;
 
     std::map<std::string, std::shared_ptr<Service>> services;
     std::map<std::string, std::shared_ptr<Module>> modules;
 
     std::string configPath;
+    std::vector<std::string> flags;
 
     static constexpr std::uint32_t MODE = 0775;
     std::string m_loadLogPath;

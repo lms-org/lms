@@ -8,7 +8,7 @@ namespace internal {
 
 Framework::Framework(const std::string &mainConfigFilePath)
     : m_executionManager(m_profiler, *this), logger("lms.Framework"),
-      mainConfigFilePath(mainConfigFilePath), m_running(false) {
+      mainConfigFilePath(mainConfigFilePath), m_running(false), is_debug(false) {
 
     // start();
 }
@@ -27,7 +27,7 @@ void Framework::start() {
             logger.info() << "Reload configs";
             configMonitor.unwatchAll();
             RuntimeInfo runtime;
-            XmlParser parser(runtime);
+            XmlParser parser(runtime, flags);
             parser.parseFile(mainConfigFilePath);
 
             for (auto error : parser.errors()) {
@@ -165,7 +165,11 @@ std::shared_ptr<Service> Framework::getService(std::string const &name) {
 }
 
 bool Framework::isDebug() const {
-    return true; /* TODO make this configurable */
+    return is_debug; /* TODO make this configurable */
+}
+
+void Framework::setDebug(bool debug) {
+    this->is_debug = debug;
 }
 
 DataManager &Framework::dataManager() { return m_dataManager; }
@@ -203,6 +207,10 @@ std::string Framework::saveLogObject(std::string const &name, bool isDir) {
 bool Framework::isEnableLoad() const { return false; /* TODO */ }
 
 bool Framework::isEnableSave() const { return false; /* TODO */ }
+
+void Framework::addFlag(const std::string &flag) {
+    flags.push_back(flag);
+}
 
 }  // namespace internal
 }  // namespace lms

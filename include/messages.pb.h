@@ -48,8 +48,30 @@ class ClientListResponse;
 class ClientListResponse_Client;
 class ProcessListResponse;
 class ProcessListResponse_Process;
+class ModuleListResponse;
+class ModuleListResponse_Access;
+class ModuleListResponse_AccessList;
 class LogEvent;
 
+enum ModuleListResponse_Permission {
+  ModuleListResponse_Permission_READ = 1,
+  ModuleListResponse_Permission_WRITE = 2
+};
+bool ModuleListResponse_Permission_IsValid(int value);
+const ModuleListResponse_Permission ModuleListResponse_Permission_Permission_MIN = ModuleListResponse_Permission_READ;
+const ModuleListResponse_Permission ModuleListResponse_Permission_Permission_MAX = ModuleListResponse_Permission_WRITE;
+const int ModuleListResponse_Permission_Permission_ARRAYSIZE = ModuleListResponse_Permission_Permission_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ModuleListResponse_Permission_descriptor();
+inline const ::std::string& ModuleListResponse_Permission_Name(ModuleListResponse_Permission value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ModuleListResponse_Permission_descriptor(), value);
+}
+inline bool ModuleListResponse_Permission_Parse(
+    const ::std::string& name, ModuleListResponse_Permission* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ModuleListResponse_Permission>(
+    ModuleListResponse_Permission_descriptor(), name, value);
+}
 enum LogEvent_Level {
   LogEvent_Level_ALL = 0,
   LogEvent_Level_DEBUG = 1,
@@ -363,10 +385,35 @@ class Request_Run : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& include_paths() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_include_paths();
 
+  // repeated string flags = 3;
+  inline int flags_size() const;
+  inline void clear_flags();
+  static const int kFlagsFieldNumber = 3;
+  inline const ::std::string& flags(int index) const;
+  inline ::std::string* mutable_flags(int index);
+  inline void set_flags(int index, const ::std::string& value);
+  inline void set_flags(int index, const char* value);
+  inline void set_flags(int index, const char* value, size_t size);
+  inline ::std::string* add_flags();
+  inline void add_flags(const ::std::string& value);
+  inline void add_flags(const char* value);
+  inline void add_flags(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& flags() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_flags();
+
+  // optional bool debug = 4;
+  inline bool has_debug() const;
+  inline void clear_debug();
+  static const int kDebugFieldNumber = 4;
+  inline bool debug() const;
+  inline void set_debug(bool value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
   inline void clear_has_config_file();
+  inline void set_has_debug();
+  inline void clear_has_debug();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -374,6 +421,8 @@ class Request_Run : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::std::string* config_file_;
   ::google::protobuf::RepeatedPtrField< ::std::string> include_paths_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> flags_;
+  bool debug_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -1331,6 +1380,288 @@ class ProcessListResponse : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class ModuleListResponse_Access : public ::google::protobuf::Message {
+ public:
+  ModuleListResponse_Access();
+  virtual ~ModuleListResponse_Access();
+
+  ModuleListResponse_Access(const ModuleListResponse_Access& from);
+
+  inline ModuleListResponse_Access& operator=(const ModuleListResponse_Access& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ModuleListResponse_Access& default_instance();
+
+  void Swap(ModuleListResponse_Access* other);
+
+  // implements Message ----------------------------------------------
+
+  ModuleListResponse_Access* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ModuleListResponse_Access& from);
+  void MergeFrom(const ModuleListResponse_Access& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string module = 1;
+  inline bool has_module() const;
+  inline void clear_module();
+  static const int kModuleFieldNumber = 1;
+  inline const ::std::string& module() const;
+  inline void set_module(const ::std::string& value);
+  inline void set_module(const char* value);
+  inline void set_module(const char* value, size_t size);
+  inline ::std::string* mutable_module();
+  inline ::std::string* release_module();
+  inline void set_allocated_module(::std::string* module);
+
+  // optional .lms.ModuleListResponse.Permission permission = 2;
+  inline bool has_permission() const;
+  inline void clear_permission();
+  static const int kPermissionFieldNumber = 2;
+  inline ::lms::ModuleListResponse_Permission permission() const;
+  inline void set_permission(::lms::ModuleListResponse_Permission value);
+
+  // optional int32 priority = 3;
+  inline bool has_priority() const;
+  inline void clear_priority();
+  static const int kPriorityFieldNumber = 3;
+  inline ::google::protobuf::int32 priority() const;
+  inline void set_priority(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:lms.ModuleListResponse.Access)
+ private:
+  inline void set_has_module();
+  inline void clear_has_module();
+  inline void set_has_permission();
+  inline void clear_has_permission();
+  inline void set_has_priority();
+  inline void clear_has_priority();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* module_;
+  int permission_;
+  ::google::protobuf::int32 priority_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ModuleListResponse_Access* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ModuleListResponse_AccessList : public ::google::protobuf::Message {
+ public:
+  ModuleListResponse_AccessList();
+  virtual ~ModuleListResponse_AccessList();
+
+  ModuleListResponse_AccessList(const ModuleListResponse_AccessList& from);
+
+  inline ModuleListResponse_AccessList& operator=(const ModuleListResponse_AccessList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ModuleListResponse_AccessList& default_instance();
+
+  void Swap(ModuleListResponse_AccessList* other);
+
+  // implements Message ----------------------------------------------
+
+  ModuleListResponse_AccessList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ModuleListResponse_AccessList& from);
+  void MergeFrom(const ModuleListResponse_AccessList& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .lms.ModuleListResponse.Access accessList = 1;
+  inline int accesslist_size() const;
+  inline void clear_accesslist();
+  static const int kAccessListFieldNumber = 1;
+  inline const ::lms::ModuleListResponse_Access& accesslist(int index) const;
+  inline ::lms::ModuleListResponse_Access* mutable_accesslist(int index);
+  inline ::lms::ModuleListResponse_Access* add_accesslist();
+  inline const ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >&
+      accesslist() const;
+  inline ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >*
+      mutable_accesslist();
+
+  // @@protoc_insertion_point(class_scope:lms.ModuleListResponse.AccessList)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access > accesslist_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ModuleListResponse_AccessList* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ModuleListResponse : public ::google::protobuf::Message {
+ public:
+  ModuleListResponse();
+  virtual ~ModuleListResponse();
+
+  ModuleListResponse(const ModuleListResponse& from);
+
+  inline ModuleListResponse& operator=(const ModuleListResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ModuleListResponse& default_instance();
+
+  void Swap(ModuleListResponse* other);
+
+  // implements Message ----------------------------------------------
+
+  ModuleListResponse* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ModuleListResponse& from);
+  void MergeFrom(const ModuleListResponse& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef ModuleListResponse_Access Access;
+  typedef ModuleListResponse_AccessList AccessList;
+
+  typedef ModuleListResponse_Permission Permission;
+  static const Permission READ = ModuleListResponse_Permission_READ;
+  static const Permission WRITE = ModuleListResponse_Permission_WRITE;
+  static inline bool Permission_IsValid(int value) {
+    return ModuleListResponse_Permission_IsValid(value);
+  }
+  static const Permission Permission_MIN =
+    ModuleListResponse_Permission_Permission_MIN;
+  static const Permission Permission_MAX =
+    ModuleListResponse_Permission_Permission_MAX;
+  static const int Permission_ARRAYSIZE =
+    ModuleListResponse_Permission_Permission_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Permission_descriptor() {
+    return ModuleListResponse_Permission_descriptor();
+  }
+  static inline const ::std::string& Permission_Name(Permission value) {
+    return ModuleListResponse_Permission_Name(value);
+  }
+  static inline bool Permission_Parse(const ::std::string& name,
+      Permission* value) {
+    return ModuleListResponse_Permission_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:lms.ModuleListResponse)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ModuleListResponse* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class LogEvent : public ::google::protobuf::Message {
  public:
   LogEvent();
@@ -1613,6 +1944,84 @@ inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 Request_Run::mutable_include_paths() {
   // @@protoc_insertion_point(field_mutable_list:lms.Request.Run.include_paths)
   return &include_paths_;
+}
+
+// repeated string flags = 3;
+inline int Request_Run::flags_size() const {
+  return flags_.size();
+}
+inline void Request_Run::clear_flags() {
+  flags_.Clear();
+}
+inline const ::std::string& Request_Run::flags(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.flags)
+  return flags_.Get(index);
+}
+inline ::std::string* Request_Run::mutable_flags(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Request.Run.flags)
+  return flags_.Mutable(index);
+}
+inline void Request_Run::set_flags(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:lms.Request.Run.flags)
+  flags_.Mutable(index)->assign(value);
+}
+inline void Request_Run::set_flags(int index, const char* value) {
+  flags_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Run.flags)
+}
+inline void Request_Run::set_flags(int index, const char* value, size_t size) {
+  flags_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Run.flags)
+}
+inline ::std::string* Request_Run::add_flags() {
+  return flags_.Add();
+}
+inline void Request_Run::add_flags(const ::std::string& value) {
+  flags_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:lms.Request.Run.flags)
+}
+inline void Request_Run::add_flags(const char* value) {
+  flags_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:lms.Request.Run.flags)
+}
+inline void Request_Run::add_flags(const char* value, size_t size) {
+  flags_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:lms.Request.Run.flags)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+Request_Run::flags() const {
+  // @@protoc_insertion_point(field_list:lms.Request.Run.flags)
+  return flags_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+Request_Run::mutable_flags() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Request.Run.flags)
+  return &flags_;
+}
+
+// optional bool debug = 4;
+inline bool Request_Run::has_debug() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Request_Run::set_has_debug() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Request_Run::clear_has_debug() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Request_Run::clear_debug() {
+  debug_ = false;
+  clear_has_debug();
+}
+inline bool Request_Run::debug() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.debug)
+  return debug_;
+}
+inline void Request_Run::set_debug(bool value) {
+  set_has_debug();
+  debug_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Run.debug)
 }
 
 // -------------------------------------------------------------------
@@ -2494,6 +2903,173 @@ ProcessListResponse::mutable_processes() {
 
 // -------------------------------------------------------------------
 
+// ModuleListResponse_Access
+
+// optional string module = 1;
+inline bool ModuleListResponse_Access::has_module() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ModuleListResponse_Access::set_has_module() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ModuleListResponse_Access::clear_has_module() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ModuleListResponse_Access::clear_module() {
+  if (module_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    module_->clear();
+  }
+  clear_has_module();
+}
+inline const ::std::string& ModuleListResponse_Access::module() const {
+  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.Access.module)
+  return *module_;
+}
+inline void ModuleListResponse_Access::set_module(const ::std::string& value) {
+  set_has_module();
+  if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    module_ = new ::std::string;
+  }
+  module_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.ModuleListResponse.Access.module)
+}
+inline void ModuleListResponse_Access::set_module(const char* value) {
+  set_has_module();
+  if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    module_ = new ::std::string;
+  }
+  module_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.ModuleListResponse.Access.module)
+}
+inline void ModuleListResponse_Access::set_module(const char* value, size_t size) {
+  set_has_module();
+  if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    module_ = new ::std::string;
+  }
+  module_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.ModuleListResponse.Access.module)
+}
+inline ::std::string* ModuleListResponse_Access::mutable_module() {
+  set_has_module();
+  if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    module_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.ModuleListResponse.Access.module)
+  return module_;
+}
+inline ::std::string* ModuleListResponse_Access::release_module() {
+  clear_has_module();
+  if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = module_;
+    module_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ModuleListResponse_Access::set_allocated_module(::std::string* module) {
+  if (module_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete module_;
+  }
+  if (module) {
+    set_has_module();
+    module_ = module;
+  } else {
+    clear_has_module();
+    module_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.ModuleListResponse.Access.module)
+}
+
+// optional .lms.ModuleListResponse.Permission permission = 2;
+inline bool ModuleListResponse_Access::has_permission() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ModuleListResponse_Access::set_has_permission() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ModuleListResponse_Access::clear_has_permission() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ModuleListResponse_Access::clear_permission() {
+  permission_ = 1;
+  clear_has_permission();
+}
+inline ::lms::ModuleListResponse_Permission ModuleListResponse_Access::permission() const {
+  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.Access.permission)
+  return static_cast< ::lms::ModuleListResponse_Permission >(permission_);
+}
+inline void ModuleListResponse_Access::set_permission(::lms::ModuleListResponse_Permission value) {
+  assert(::lms::ModuleListResponse_Permission_IsValid(value));
+  set_has_permission();
+  permission_ = value;
+  // @@protoc_insertion_point(field_set:lms.ModuleListResponse.Access.permission)
+}
+
+// optional int32 priority = 3;
+inline bool ModuleListResponse_Access::has_priority() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ModuleListResponse_Access::set_has_priority() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ModuleListResponse_Access::clear_has_priority() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ModuleListResponse_Access::clear_priority() {
+  priority_ = 0;
+  clear_has_priority();
+}
+inline ::google::protobuf::int32 ModuleListResponse_Access::priority() const {
+  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.Access.priority)
+  return priority_;
+}
+inline void ModuleListResponse_Access::set_priority(::google::protobuf::int32 value) {
+  set_has_priority();
+  priority_ = value;
+  // @@protoc_insertion_point(field_set:lms.ModuleListResponse.Access.priority)
+}
+
+// -------------------------------------------------------------------
+
+// ModuleListResponse_AccessList
+
+// repeated .lms.ModuleListResponse.Access accessList = 1;
+inline int ModuleListResponse_AccessList::accesslist_size() const {
+  return accesslist_.size();
+}
+inline void ModuleListResponse_AccessList::clear_accesslist() {
+  accesslist_.Clear();
+}
+inline const ::lms::ModuleListResponse_Access& ModuleListResponse_AccessList::accesslist(int index) const {
+  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.AccessList.accessList)
+  return accesslist_.Get(index);
+}
+inline ::lms::ModuleListResponse_Access* ModuleListResponse_AccessList::mutable_accesslist(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.ModuleListResponse.AccessList.accessList)
+  return accesslist_.Mutable(index);
+}
+inline ::lms::ModuleListResponse_Access* ModuleListResponse_AccessList::add_accesslist() {
+  // @@protoc_insertion_point(field_add:lms.ModuleListResponse.AccessList.accessList)
+  return accesslist_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >&
+ModuleListResponse_AccessList::accesslist() const {
+  // @@protoc_insertion_point(field_list:lms.ModuleListResponse.AccessList.accessList)
+  return accesslist_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >*
+ModuleListResponse_AccessList::mutable_accesslist() {
+  // @@protoc_insertion_point(field_mutable_list:lms.ModuleListResponse.AccessList.accessList)
+  return &accesslist_;
+}
+
+// -------------------------------------------------------------------
+
+// ModuleListResponse
+
+// -------------------------------------------------------------------
+
 // LogEvent
 
 // optional .lms.LogEvent.Level level = 1;
@@ -2682,6 +3258,11 @@ inline void LogEvent::set_allocated_text(::std::string* text) {
 namespace google {
 namespace protobuf {
 
+template <> struct is_proto_enum< ::lms::ModuleListResponse_Permission> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::lms::ModuleListResponse_Permission>() {
+  return ::lms::ModuleListResponse_Permission_descriptor();
+}
 template <> struct is_proto_enum< ::lms::LogEvent_Level> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::lms::LogEvent_Level>() {

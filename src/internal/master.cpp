@@ -303,8 +303,12 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         ctx.appendSink(new ProtobufSink(fd[1]));
 
         lms::internal::Framework fw(options.config_file());
+        fw.setDebug(options.debug());
         for(int i = 0; i < options.include_paths_size(); i++) {
             fw.addSearchPath(options.include_paths(i));
+        }
+        for(int i = 0; i < options.flags_size(); i++) {
+            fw.addFlag(options.flags(i));
         }
         fw.start();
         exit(0);
@@ -412,25 +416,35 @@ void connectToMaster(int argc, char *argv[]) {
             req.mutable_shutdown();
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "run") == 0) {
+            TCLAP::CmdLine cmd("lms run", ' ', LMS_VERSION_STRING);
+            TCLAP::UnlabeledValueArg<std::string> configArg(
+                "config", "XML config path", true, "lms.xml", "XML Config", cmd);
+            TCLAP::MultiArg<std::string> loadPathsArg(
+                "p", "path", "Add additional load path", false, "Path", cmd);
+            TCLAP::MultiArg<std::string> flagsArg(
+                "f", "flag", "Add flag for XML config", false, "Flag", cmd);
+            TCLAP::SwitchArg debugSwitch(
+                "", "debug", "Make a ridiculous number of debug outputs", cmd, false);
+            cmd.parse(argc-1, argv+1);
+
             lms::Request_Run *run = req.mutable_run();
+            run->set_config_file(configArg.getValue());
+            for(const auto& path : loadPathsArg) {
+                *run->add_include_paths() = path;
+            }
+            for(const auto& flag : flagsArg) {
+                *run->add_flags() = flag;
+            }
+            run->set_debug(debugSwitch.getValue());
 
             char *lms_path = std::getenv("LMS_PATH");
-            std::cout<<"Adding LMS_PATH: ";
             if (lms_path != nullptr && lms_path[0] != '\0') {
                 for (auto const &path : split(lms_path, ':')) {
                     *run->add_include_paths() = path;
-                    std::cout << path<<",";
                 }
             }
-            std::cout << std::endl;
 
-            if(argc >= 3) {
-                run->set_config_file(argv[2]);;
-                socket.writeMessage(req);
-            } else {
-                std::cout << "Requires argument: lms run <configfile>\n";
-            }
-
+            socket.writeMessage(req);
             streamLogs(socket);
         } else if(strcmp(argv[1], "attach") == 0) {
             lms::Request_Attach *attach = req.mutable_attach();

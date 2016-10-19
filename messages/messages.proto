@@ -7,6 +7,8 @@ message Request {
 	message Run {
 		optional string config_file = 1;
         repeated string include_paths = 2;
+        repeated string flags = 3;
+        optional bool debug = 4;
 	}
 	message ListProcesses {}
 	message Attach {
@@ -60,16 +62,16 @@ message ModuleListResponse {
 	}
 
 	message Access {
-		string module = 1;
-		Permission permission = 2;
-		int priority = 3;
+		optional string module = 1;
+		optional Permission permission = 2;
+		optional int32 priority = 3;
 	}
 
 	message AccessList {
 		repeated Access accessList = 1;
 	}
 
-	map<string, AccessList> graph = 1;
+	//map<string,AccessList> graph = 1;
 }
 
 message LogEvent {
