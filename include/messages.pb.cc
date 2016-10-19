@@ -31,6 +31,7 @@ struct RequestOneofInstance {
   const ::lms::Request_ListProcesses* list_processes_;
   const ::lms::Request_Attach* attach_;
   const ::lms::Request_Stop* stop_;
+  const ::lms::Request_ModuleList* module_list_;
 }* Request_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* Request_Info_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -53,6 +54,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Request_Stop_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Request_Stop_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Request_ModuleList_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Request_ModuleList_reflection_ = NULL;
 const ::google::protobuf::Descriptor* InfoResponse_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   InfoResponse_reflection_ = NULL;
@@ -83,7 +87,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       "messages.proto");
   GOOGLE_CHECK(file != NULL);
   Request_descriptor_ = file->message_type(0);
-  static const int Request_offsets_[8] = {
+  static const int Request_offsets_[9] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, info_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, shutdown_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, list_clients_),
@@ -91,6 +95,7 @@ void protobuf_AssignDesc_messages_2eproto() {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, list_processes_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, attach_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, stop_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, module_list_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, content_),
   };
   Request_reflection_ =
@@ -209,6 +214,20 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_Stop));
+  Request_ModuleList_descriptor_ = Request_descriptor_->nested_type(7);
+  static const int Request_ModuleList_offsets_[1] = {
+  };
+  Request_ModuleList_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Request_ModuleList_descriptor_,
+      Request_ModuleList::default_instance_,
+      Request_ModuleList_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_ModuleList, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_ModuleList, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Request_ModuleList));
   InfoResponse_descriptor_ = file->message_type(1);
   static const int InfoResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfoResponse, version_),
@@ -334,6 +353,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Request_Stop_descriptor_, &Request_Stop::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Request_ModuleList_descriptor_, &Request_ModuleList::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     InfoResponse_descriptor_, &InfoResponse::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ClientListResponse_descriptor_, &ClientListResponse::default_instance());
@@ -367,6 +388,8 @@ void protobuf_ShutdownFile_messages_2eproto() {
   delete Request_Attach_reflection_;
   delete Request_Stop::default_instance_;
   delete Request_Stop_reflection_;
+  delete Request_ModuleList::default_instance_;
+  delete Request_ModuleList_reflection_;
   delete InfoResponse::default_instance_;
   delete InfoResponse_reflection_;
   delete ClientListResponse::default_instance_;
@@ -388,7 +411,7 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\003lms\"\324\003\n\007Request\022!\n\004inf"
+    "\n\016messages.proto\022\003lms\"\222\004\n\007Request\022!\n\004inf"
     "o\030\001 \001(\0132\021.lms.Request.InfoH\000\022)\n\010shutdown"
     "\030\002 \001(\0132\025.lms.Request.ShutdownH\000\0220\n\014list_"
     "clients\030\003 \001(\0132\030.lms.Request.ListClientsH"
@@ -396,21 +419,23 @@ void protobuf_AddDesc_messages_2eproto() {
     "st_processes\030\005 \001(\0132\032.lms.Request.ListPro"
     "cessesH\000\022%\n\006attach\030\006 \001(\0132\023.lms.Request.A"
     "ttachH\000\022!\n\004stop\030\007 \001(\0132\021.lms.Request.Stop"
-    "H\000\032\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListClients\0321\n"
-    "\003Run\022\023\n\013config_file\030\001 \001(\t\022\025\n\rinclude_pat"
-    "hs\030\002 \003(\t\032\017\n\rListProcesses\032\024\n\006Attach\022\n\n\002i"
-    "d\030\001 \001(\t\032 \n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004kill\030\002 \001("
-    "\010B\t\n\007content\",\n\014InfoResponse\022\017\n\007version\030"
-    "\001 \001(\005\022\013\n\003pid\030\002 \001(\005\"i\n\022ClientListResponse"
-    "\022/\n\007clients\030\001 \003(\0132\036.lms.ClientListRespon"
-    "se.Client\032\"\n\006Client\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030"
-    "\002 \001(\t\"w\n\023ProcessListResponse\0223\n\tprocesse"
-    "s\030\001 \003(\0132 .lms.ProcessListResponse.Proces"
-    "s\032+\n\007Process\022\013\n\003pid\030\001 \001(\005\022\023\n\013config_file"
-    "\030\002 \001(\t\"\217\001\n\010LogEvent\022\"\n\005level\030\001 \001(\0162\023.lms"
-    ".LogEvent.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001"
-    "(\t\"D\n\005Level\022\007\n\003ALL\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020"
-    "\002\022\010\n\004WARN\020\003\022\t\n\005ERROR\020\004\022\010\n\003OFF\020\377\001", 912);
+    "H\000\022.\n\013module_list\030\010 \001(\0132\027.lms.Request.Mo"
+    "duleListH\000\032\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListCl"
+    "ients\0321\n\003Run\022\023\n\013config_file\030\001 \001(\t\022\025\n\rinc"
+    "lude_paths\030\002 \003(\t\032\017\n\rListProcesses\032\024\n\006Att"
+    "ach\022\n\n\002id\030\001 \001(\t\032 \n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004k"
+    "ill\030\002 \001(\010\032\014\n\nModuleListB\t\n\007content\",\n\014In"
+    "foResponse\022\017\n\007version\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005"
+    "\"i\n\022ClientListResponse\022/\n\007clients\030\001 \003(\0132"
+    "\036.lms.ClientListResponse.Client\032\"\n\006Clien"
+    "t\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030\002 \001(\t\"w\n\023ProcessLi"
+    "stResponse\0223\n\tprocesses\030\001 \003(\0132 .lms.Proc"
+    "essListResponse.Process\032+\n\007Process\022\013\n\003pi"
+    "d\030\001 \001(\005\022\023\n\013config_file\030\002 \001(\t\"\217\001\n\010LogEven"
+    "t\022\"\n\005level\030\001 \001(\0162\023.lms.LogEvent.Level\022\013\n"
+    "\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\"D\n\005Level\022\007\n\003ALL"
+    "\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020\002\022\010\n\004WARN\020\003\022\t\n\005ERR"
+    "OR\020\004\022\010\n\003OFF\020\377\001", 974);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -422,6 +447,7 @@ void protobuf_AddDesc_messages_2eproto() {
   Request_ListProcesses::default_instance_ = new Request_ListProcesses();
   Request_Attach::default_instance_ = new Request_Attach();
   Request_Stop::default_instance_ = new Request_Stop();
+  Request_ModuleList::default_instance_ = new Request_ModuleList();
   InfoResponse::default_instance_ = new InfoResponse();
   ClientListResponse::default_instance_ = new ClientListResponse();
   ClientListResponse_Client::default_instance_ = new ClientListResponse_Client();
@@ -436,6 +462,7 @@ void protobuf_AddDesc_messages_2eproto() {
   Request_ListProcesses::default_instance_->InitAsDefaultInstance();
   Request_Attach::default_instance_->InitAsDefaultInstance();
   Request_Stop::default_instance_->InitAsDefaultInstance();
+  Request_ModuleList::default_instance_->InitAsDefaultInstance();
   InfoResponse::default_instance_->InitAsDefaultInstance();
   ClientListResponse::default_instance_->InitAsDefaultInstance();
   ClientListResponse_Client::default_instance_->InitAsDefaultInstance();
@@ -1969,6 +1996,180 @@ void Request_Stop::Swap(Request_Stop* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
+#endif  // !_MSC_VER
+
+Request_ModuleList::Request_ModuleList()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:lms.Request.ModuleList)
+}
+
+void Request_ModuleList::InitAsDefaultInstance() {
+}
+
+Request_ModuleList::Request_ModuleList(const Request_ModuleList& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:lms.Request.ModuleList)
+}
+
+void Request_ModuleList::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Request_ModuleList::~Request_ModuleList() {
+  // @@protoc_insertion_point(destructor:lms.Request.ModuleList)
+  SharedDtor();
+}
+
+void Request_ModuleList::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Request_ModuleList::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Request_ModuleList::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Request_ModuleList_descriptor_;
+}
+
+const Request_ModuleList& Request_ModuleList::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
+  return *default_instance_;
+}
+
+Request_ModuleList* Request_ModuleList::default_instance_ = NULL;
+
+Request_ModuleList* Request_ModuleList::New() const {
+  return new Request_ModuleList;
+}
+
+void Request_ModuleList::Clear() {
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Request_ModuleList::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:lms.Request.ModuleList)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+  handle_unusual:
+    if (tag == 0 ||
+        ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+      goto success;
+    }
+    DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+  }
+success:
+  // @@protoc_insertion_point(parse_success:lms.Request.ModuleList)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:lms.Request.ModuleList)
+  return false;
+#undef DO_
+}
+
+void Request_ModuleList::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:lms.Request.ModuleList)
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:lms.Request.ModuleList)
+}
+
+::google::protobuf::uint8* Request_ModuleList::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Request.ModuleList)
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Request.ModuleList)
+  return target;
+}
+
+int Request_ModuleList::ByteSize() const {
+  int total_size = 0;
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Request_ModuleList::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Request_ModuleList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Request_ModuleList*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Request_ModuleList::MergeFrom(const Request_ModuleList& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Request_ModuleList::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Request_ModuleList::CopyFrom(const Request_ModuleList& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Request_ModuleList::IsInitialized() const {
+
+  return true;
+}
+
+void Request_ModuleList::Swap(Request_ModuleList* other) {
+  if (other != this) {
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Request_ModuleList::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Request_ModuleList_descriptor_;
+  metadata.reflection = Request_ModuleList_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
 const int Request::kInfoFieldNumber;
 const int Request::kShutdownFieldNumber;
 const int Request::kListClientsFieldNumber;
@@ -1976,6 +2177,7 @@ const int Request::kRunFieldNumber;
 const int Request::kListProcessesFieldNumber;
 const int Request::kAttachFieldNumber;
 const int Request::kStopFieldNumber;
+const int Request::kModuleListFieldNumber;
 #endif  // !_MSC_VER
 
 Request::Request()
@@ -1992,6 +2194,7 @@ void Request::InitAsDefaultInstance() {
   Request_default_oneof_instance_->list_processes_ = const_cast< ::lms::Request_ListProcesses*>(&::lms::Request_ListProcesses::default_instance());
   Request_default_oneof_instance_->attach_ = const_cast< ::lms::Request_Attach*>(&::lms::Request_Attach::default_instance());
   Request_default_oneof_instance_->stop_ = const_cast< ::lms::Request_Stop*>(&::lms::Request_Stop::default_instance());
+  Request_default_oneof_instance_->module_list_ = const_cast< ::lms::Request_ModuleList*>(&::lms::Request_ModuleList::default_instance());
 }
 
 Request::Request(const Request& from)
@@ -2069,6 +2272,10 @@ void Request::clear_content() {
     }
     case kStop: {
       delete content_.stop_;
+      break;
+    }
+    case kModuleList: {
+      delete content_.module_list_;
       break;
     }
     case CONTENT_NOT_SET: {
@@ -2181,6 +2388,19 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(66)) goto parse_module_list;
+        break;
+      }
+
+      // optional .lms.Request.ModuleList module_list = 8;
+      case 8: {
+        if (tag == 66) {
+         parse_module_list:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_module_list()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2252,6 +2472,12 @@ void Request::SerializeWithCachedSizes(
       7, this->stop(), output);
   }
 
+  // optional .lms.Request.ModuleList module_list = 8;
+  if (has_module_list()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->module_list(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2309,6 +2535,13 @@ void Request::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         7, this->stop(), target);
+  }
+
+  // optional .lms.Request.ModuleList module_list = 8;
+  if (has_module_list()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        8, this->module_list(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2372,6 +2605,13 @@ int Request::ByteSize() const {
           this->stop());
       break;
     }
+    // optional .lms.Request.ModuleList module_list = 8;
+    case kModuleList: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->module_list());
+      break;
+    }
     case CONTENT_NOT_SET: {
       break;
     }
@@ -2428,6 +2668,10 @@ void Request::MergeFrom(const Request& from) {
     }
     case kStop: {
       mutable_stop()->::lms::Request_Stop::MergeFrom(from.stop());
+      break;
+    }
+    case kModuleList: {
+      mutable_module_list()->::lms::Request_ModuleList::MergeFrom(from.module_list());
       break;
     }
     case CONTENT_NOT_SET: {

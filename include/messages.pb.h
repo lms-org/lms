@@ -42,6 +42,7 @@ class Request_Run;
 class Request_ListProcesses;
 class Request_Attach;
 class Request_Stop;
+class Request_ModuleList;
 class InfoResponse;
 class ClientListResponse;
 class ClientListResponse_Client;
@@ -629,6 +630,75 @@ class Request_Stop : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_ModuleList : public ::google::protobuf::Message {
+ public:
+  Request_ModuleList();
+  virtual ~Request_ModuleList();
+
+  Request_ModuleList(const Request_ModuleList& from);
+
+  inline Request_ModuleList& operator=(const Request_ModuleList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_ModuleList& default_instance();
+
+  void Swap(Request_ModuleList* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_ModuleList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_ModuleList& from);
+  void MergeFrom(const Request_ModuleList& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:lms.Request.ModuleList)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_ModuleList* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request : public ::google::protobuf::Message {
  public:
   Request();
@@ -660,6 +730,7 @@ class Request : public ::google::protobuf::Message {
     kListProcesses = 5,
     kAttach = 6,
     kStop = 7,
+    kModuleList = 8,
     CONTENT_NOT_SET = 0,
   };
 
@@ -698,6 +769,7 @@ class Request : public ::google::protobuf::Message {
   typedef Request_ListProcesses ListProcesses;
   typedef Request_Attach Attach;
   typedef Request_Stop Stop;
+  typedef Request_ModuleList ModuleList;
 
   // accessors -------------------------------------------------------
 
@@ -764,6 +836,15 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_Stop* release_stop();
   inline void set_allocated_stop(::lms::Request_Stop* stop);
 
+  // optional .lms.Request.ModuleList module_list = 8;
+  inline bool has_module_list() const;
+  inline void clear_module_list();
+  static const int kModuleListFieldNumber = 8;
+  inline const ::lms::Request_ModuleList& module_list() const;
+  inline ::lms::Request_ModuleList* mutable_module_list();
+  inline ::lms::Request_ModuleList* release_module_list();
+  inline void set_allocated_module_list(::lms::Request_ModuleList* module_list);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
  private:
@@ -774,6 +855,7 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_list_processes();
   inline void set_has_attach();
   inline void set_has_stop();
+  inline void set_has_module_list();
 
   inline bool has_content();
   void clear_content();
@@ -791,6 +873,7 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_ListProcesses* list_processes_;
     ::lms::Request_Attach* attach_;
     ::lms::Request_Stop* stop_;
+    ::lms::Request_ModuleList* module_list_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1722,6 +1805,10 @@ inline void Request_Stop::set_kill(bool value) {
 
 // -------------------------------------------------------------------
 
+// Request_ModuleList
+
+// -------------------------------------------------------------------
+
 // Request
 
 // optional .lms.Request.Info info = 1;
@@ -2022,6 +2109,49 @@ inline void Request::set_allocated_stop(::lms::Request_Stop* stop) {
   if (stop) {
     set_has_stop();
     content_.stop_ = stop;
+  }
+}
+
+// optional .lms.Request.ModuleList module_list = 8;
+inline bool Request::has_module_list() const {
+  return content_case() == kModuleList;
+}
+inline void Request::set_has_module_list() {
+  _oneof_case_[0] = kModuleList;
+}
+inline void Request::clear_module_list() {
+  if (has_module_list()) {
+    delete content_.module_list_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_ModuleList& Request::module_list() const {
+  return has_module_list() ? *content_.module_list_
+                      : ::lms::Request_ModuleList::default_instance();
+}
+inline ::lms::Request_ModuleList* Request::mutable_module_list() {
+  if (!has_module_list()) {
+    clear_content();
+    set_has_module_list();
+    content_.module_list_ = new ::lms::Request_ModuleList;
+  }
+  return content_.module_list_;
+}
+inline ::lms::Request_ModuleList* Request::release_module_list() {
+  if (has_module_list()) {
+    clear_has_content();
+    ::lms::Request_ModuleList* temp = content_.module_list_;
+    content_.module_list_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request::set_allocated_module_list(::lms::Request_ModuleList* module_list) {
+  clear_content();
+  if (module_list) {
+    set_has_module_list();
+    content_.module_list_ = module_list;
   }
 }
 

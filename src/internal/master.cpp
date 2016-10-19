@@ -432,6 +432,9 @@ void connectToMaster(int argc, char *argv[]) {
             } else {
                 std::cout << "Requires argument: lms kill <id>\n";
             }
+        } else if(strcmp(argv[1], "modules") == 0) {
+            lms::Request_ModuleList *modules = req.mutable_module_list();
+            socket.writeMessage(req);
         } else {
             std::cout << "Unknown command\n";
         }

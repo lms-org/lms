@@ -16,6 +16,7 @@ message Request {
 	    optional string id = 1;
 	    optional bool kill = 2;
 	}
+	message ModuleList {}
 
 	oneof content {
 		Info info = 1;
@@ -25,6 +26,7 @@ message Request {
 		ListProcesses list_processes = 5;
 		Attach attach = 6;
 		Stop stop = 7;
+		ModuleList module_list = 8;
 	}
 }
 
@@ -49,6 +51,25 @@ message ProcessListResponse {
     }
     
     repeated Process processes = 1;
+}
+
+message ModuleListResponse {
+	enum Permission {
+		READ = 1;
+		WRITE = 2;
+	}
+
+	message Access {
+		string module = 1;
+		Permission permission = 2;
+		int priority = 3;
+	}
+
+	message AccessList {
+		repeated Access accessList = 1;
+	}
+
+	map<string, AccessList> graph = 1;
 }
 
 message LogEvent {
