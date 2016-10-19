@@ -153,6 +153,7 @@ void MasterServer::start() {
 
         for (const Server &server : m_servers) {
             if (FD_ISSET(server.fd, &fds)) {
+                std::cout << "New Client" << std::endl;
                 sockaddr_storage peer;
                 socklen_t peerLen = sizeof peer;
                 int clientfd = accept(server.fd, (sockaddr *)&peer, &peerLen);
@@ -163,6 +164,7 @@ void MasterServer::start() {
         for (auto it = m_clients.begin(); it != m_clients.end(); ++it) {
             auto &client = *it;
             if (FD_ISSET(client.sock.getFD(), &fds)) {
+                std::cout << "Client packet" << std::endl;
                 bool exit = false;
 
                 lms::Request req;
@@ -187,6 +189,7 @@ void MasterServer::start() {
         for(auto it = m_runtimes.begin(); it != m_runtimes.end(); ++it) {
             auto &runtime = *it;
             if(FD_ISSET(runtime.sock.getFD(), &fds)) {
+                std::cout << "Runtime packet" << std::endl;
                 // forward log events to attached clients
                 LogEvent event;
                 if(runtime.sock.readMessage(event)) {

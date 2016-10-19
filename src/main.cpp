@@ -22,6 +22,14 @@ int main(int argc, char *argv[]) {
 
     lms::internal::Framework framework(arguments);*/
 
+   if(argc >= 2 && strcmp("master", argv[1]) == 0) {
+        std::cout << "Starting Master Server with PID: " << getpid() << std::endl;
+        lms::internal::MasterServer server;
+        server.useUnix("/tmp/lms.sock");
+        server.start();
+        exit(0);
+    }
+
     try {
         lms::internal::connectToMaster(argc, argv);
     } catch (lms::LmsException &ex) {
