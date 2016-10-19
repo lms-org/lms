@@ -124,7 +124,13 @@ void parseModuleConfig(pugi::xml_node node, Config &config,
                        const std::string &key) {
     for (auto subnode : node.children()) {
         if (subnode.type() == pugi::node_element) {
-            std::string newKey = subnode.attribute("name").as_string();
+            pugi::xml_attribute nameAttr = subnode.attribute("name");
+            std::string newKey;
+            if(nameAttr) {
+                newKey = nameAttr.as_string();
+            } else {
+                newKey = subnode.name();
+            }
             if (!key.empty()) {
                 newKey = key + "." + newKey;
             }
