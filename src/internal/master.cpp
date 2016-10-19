@@ -163,7 +163,6 @@ void MasterServer::start() {
         for (auto it = m_clients.begin(); it != m_clients.end(); ++it) {
             auto &client = *it;
             if (FD_ISSET(client.sock.getFD(), &fds)) {
-                bool hadLines = false;
                 bool exit = false;
 
                 lms::Request req;
@@ -185,15 +184,22 @@ void MasterServer::start() {
                 }
             }
         }
-        for(Runtime &runtime : m_runtimes) {
+        for(auto it = m_runtimes.begin(); it != m_runtimes.end(); ++it) {
+            auto &runtime = *it;
             if(FD_ISSET(runtime.sock.getFD(), &fds)) {
-                for(auto &client : m_clients) {
-                    if(client.isAttached && client.attachedRuntime == runtime.pid) {
-                        // forward log events to attached clients
-                        LogEvent event;
-                        runtime.sock.readMessage(event);
-                        client.sock.writeMessage(event);
+                // forward log events to attached clients
+                LogEvent event;
+                if(runtime.sock.readMessage(event)) {
+                    for(auto &client : m_clients) {
+                        if(client.isAttached && client.attachedRuntime == runtime.pid) {
+                             client.sock.writeMessage(event);
+                        }
                     }
+                } else {
+                    // close runtime connection
+                    runtime.sock.close();
+                    m_runtimes.erase(it);
+                    it--;
                 }
             }
         }
