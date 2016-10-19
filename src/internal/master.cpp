@@ -419,12 +419,12 @@ void connectToMaster(int argc, char *argv[]) {
                 }
                 std::cout << event.tag() << " " << event.text() << std::endl;
             }
-        } else if(strcmp(argv[1], "kill") == 0) {
+        } else if(strcmp(argv[1], "kill") == 0 || strcmp(argv[1], "stop") == 0) {
             lms::Request_Stop *stop = req.mutable_stop();
 
             if(argc >= 3) {
                 stop->set_id(argv[2]);
-                stop->set_kill(true);
+                stop->set_kill(strcmp(argv[1], "kill") == 0);
                 socket.writeMessage(req);
             } else {
                 std::cout << "Requires argument: lms kill <id>\n";
@@ -442,7 +442,8 @@ void connectToMaster(int argc, char *argv[]) {
         std::cout << "  run <file> - Start runtime using XML config file\n";
         std::cout << "  ps - List all running runtimes\n";
         std::cout << "  attach <id> - Attach to running runtime\n";
-        std::cout << "  kill <id> - Kill runtime\n";
+        std::cout << "  kill <id> - Kill runtime (SIGKILL)\n";
+        std::cout << "  stop <id> - Stop runtime (SIGINT)\n";
     }
 }
 
