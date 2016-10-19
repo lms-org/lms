@@ -92,7 +92,7 @@ void Framework::updateSystem(const RuntimeInfo &info) {
     // Update or load modules
     for (const ModuleInfo &moduleInfo : info.modules) {
         if(isDebug()) {
-            logger.debug() << "Loading service " << moduleInfo.name;
+            logger.debug() << "Loading module " << moduleInfo.name;
         }
         auto it = modules.find(moduleInfo.name);
         if (it == modules.end()) {
@@ -117,6 +117,10 @@ void Framework::updateSystem(const RuntimeInfo &info) {
             it->second->initBase(moduleInfo, this);
             it->second->configsChanged();
         }
+    }
+
+    if(isDebug()) {
+        logger.debug() << "updated system";
     }
 }
 
