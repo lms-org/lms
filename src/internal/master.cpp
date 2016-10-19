@@ -20,6 +20,7 @@
 #include "string.h"
 #include "tclap/CmdLine.h"
 #include "framework.h"
+#include "colors.h"
 
 namespace lms {
 namespace internal {
@@ -343,6 +344,27 @@ MasterClient MasterClient::fromUnix(const std::string &path) {
 
 int MasterClient::fd() const { return m_sockfd; }
 
+void streamLogs(ProtobufSocket &socket) {
+    LogEvent event;
+    while(socket.readMessage(event)) {
+        // get time now
+        time_t rawtime;
+        std::time(&rawtime);
+        struct tm *now = std::localtime(&rawtime);
+
+        // format time to "HH:MM:SS"
+        char buffer[10];
+        std::strftime(buffer, 10, "%T", now);
+
+        std::cout << buffer << " ";
+
+        std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
+        std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
+        std::cout << lms::internal::COLOR_WHITE;
+        std::cout << " " << event.text() << std::endl;
+    }
+}
+
 void connectToMaster(int argc, char *argv[]) {
     lms::internal::MasterClient client =
         lms::internal::MasterClient::fromUnix("/tmp/lms.sock");
@@ -409,11 +431,7 @@ void connectToMaster(int argc, char *argv[]) {
                 std::cout << "Requires argument: lms run <configfile>\n";
             }
 
-            LogEvent event;
-            while(true) {
-                socket.readMessage(event);
-                std::cout << event.tag() << " " << event.text() << std::endl;
-            }
+            streamLogs(socket);
         } else if(strcmp(argv[1], "attach") == 0) {
             lms::Request_Attach *attach = req.mutable_attach();
 
@@ -424,13 +442,7 @@ void connectToMaster(int argc, char *argv[]) {
                 std::cout << "Requires argument: lms attach <id> \n";
             }
 
-            LogEvent event;
-            while(true) {
-                if(!socket.readMessage(event)) {
-                    break;
-                }
-                std::cout << event.tag() << " " << event.text() << std::endl;
-            }
+            streamLogs(socket);
         } else if(strcmp(argv[1], "kill") == 0 || strcmp(argv[1], "stop") == 0) {
             lms::Request_Stop *stop = req.mutable_stop();
 
