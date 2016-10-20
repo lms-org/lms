@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <cstring>
+#include <stdio.h>
 
 #include "internal/framework.h"
 #include "internal/master.h"
@@ -9,6 +10,8 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 /**
  * @brief Parse command line arguments, show help and start
@@ -35,6 +38,16 @@ int main(int argc, char *argv[]) {
     } catch (lms::LmsException &ex) {
         std::cout << "Start LMS Master Server ..." << std::endl;
         if (lms::internal::daemonize()) {
+            int in = open("/dev/null", O_RDONLY);
+            int out = open("/dev/null", O_RDWR);
+            int err = open("/dev/null", O_RDWR);
+            dup2(in, STDIN_FILENO);
+            dup2(out, STDOUT_FILENO);
+            dup2(err, STDERR_FILENO);
+            close(in);
+            close(out);
+            close(err);
+
             // This is inside the daemon
             lms::internal::MasterServer server;
             server.useUnix("/tmp/lms.sock");
