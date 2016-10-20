@@ -228,21 +228,21 @@ protected:
     // Util-method
     template <typename A, bool suppInher> struct InheritanceCallerGet;
 
-    template <typename A> struct InheritanceCallerGet<A, false> {
+    template <typename A> struct InheritanceCallerGet<A, true> {
         static A *call(DataChannel<T> *obj) {
             if (obj->m_internal->main->supportsInheritance()) {
                 return dynamic_cast<A *>(
-                    obj->m_internal->main->getInheritance());
+                    obj->m_internal->main->getInheritance()); // avoid casting to void*
             } else {
-                return static_cast<A *>(obj->m_internal->main->get());
+                return static_cast<A *>(obj->m_internal->main->get()); //casting it to void*!
             }
         }
     };
 
-    template <typename A> struct InheritanceCallerGet<A, true> {
+    template <typename A> struct InheritanceCallerGet<A, false> {
         static A *call(DataChannel<T> *obj) {
             return static_cast<A *>(
-                obj->m_internal->main->get()); // avoid casting to void*
+                obj->m_internal->main->get()); //casting it to void*!
         }
     };
 
@@ -268,7 +268,7 @@ protected:
         if (std::is_same<T, Any>::value) {
             return nullptr;
         }
-        return InheritanceCallerGet<T, std::is_fundamental<T>::value>::call(
+        return InheritanceCallerGet<T, !std::is_fundamental<T>::value>::call(
             this);
     }
 };

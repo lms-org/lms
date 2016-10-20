@@ -22,6 +22,7 @@
 #include "framework.h"
 #include "colors.h"
 
+
 namespace lms {
 namespace internal {
 
@@ -126,6 +127,14 @@ void MasterServer::enableNonBlock(int sock) {
 
 void MasterServer::start() {
     fd_set fds;
+
+    //save cout from master
+    //std::ofstream out("/tmp/master.txt",std::trunc);
+    //old buffer
+    //std::streambuf *coutbuf = std::cout.rdbuf();
+    //save it to file
+    //std::cout.rdbuf(out.rdbuf());
+
     while (m_running) {
         FD_ZERO(&fds);
         int maxFD = 0;
@@ -204,6 +213,8 @@ void MasterServer::start() {
                     runtime.sock.close();
                     m_runtimes.erase(it);
                     it--;
+                    std::cout << "Could not read msg from runtime" << std::endl;
+                    //TODO error handling
                 }
             }
         }
@@ -301,6 +312,12 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
 
         logging::Context &ctx = logging::Context::getDefault();
         ctx.appendSink(new ProtobufSink(fd[1]));
+        //Write to file
+        //std::ofstream fs("/tmp/gangster.txt");
+        //ctx.appendSink(new logging::ConsoleSink(fs));
+
+        //logging::Logger logg("MyLogger");
+        //logg.info("test") << fd[0] << " " << fd[1];
 
         lms::internal::Framework fw(options.config_file());
         fw.setDebug(options.debug());
