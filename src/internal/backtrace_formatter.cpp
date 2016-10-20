@@ -12,7 +12,7 @@
 namespace lms {
 namespace internal {
 
-void printStacktrace() {
+void printStacktrace(std::ostream &os) {
 #ifdef _WIN32
 
     // http://stackoverflow.com/questions/5693192/win32-backtrace-from-c-code
@@ -38,11 +38,11 @@ void printStacktrace() {
     for (i = 0; i < frames; i++) {
         SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
 
-        std::cerr << "[bt]: (" << (frames - i - 1) << ") " << symbol->Name
+        os << "[bt]: (" << (frames - i - 1) << ") " << symbol->Name
                   << " " << symbol->Address << "\n";
     }
 
-    std::cerr << std::endl;
+    os << std::endl;
 
     free(symbol);
 
@@ -54,7 +54,7 @@ void printStacktrace() {
     void *buffer[BUFFER_SIZE];
 
     // Get the backtrace.
-    std::cerr << "\n\033[31mBacktrace:\033[0m" << std::endl;
+    os << "\n\033[31mBacktrace:\033[0m" << std::endl;
     int size = backtrace(buffer, BUFFER_SIZE);
 
     /* Now generate nicely formatted output.  */
@@ -84,16 +84,16 @@ void printStacktrace() {
 
             std::string realName(lms::demangle(mangled_name));
 
-            std::cerr << "[bt]: (" << i << ") " << messages[i] << " : "
+            os << "[bt]: (" << i << ") " << messages[i] << " : "
                       << realName << "+" << offset_begin << offset_end
                       << std::endl;
         } else {
             // otherwise, print the whole line
-            std::cerr << "[bt]: (" << i << ") " << messages[i] << std::endl;
+            os << "[bt]: (" << i << ") " << messages[i] << std::endl;
         }
     }
 
-    std::cerr << std::endl;
+    os << std::endl;
 
     free(messages);
 

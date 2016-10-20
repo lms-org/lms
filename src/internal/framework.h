@@ -9,6 +9,7 @@
 #include "pugixml.hpp"
 #include "file_monitor.h"
 #include "debug_server.h"
+#include "signalhandler.h"
 
 namespace lms {
 namespace internal {
@@ -18,7 +19,7 @@ namespace internal {
  *
  * Create an object of this class and you will start the framwork.
  */
-class Framework {
+class Framework : public SignalHandler::Listener {
 public:
     /**
      * @brief Instantiate the framework, initiate datamanager and
@@ -59,6 +60,8 @@ public:
 
     DataManager& dataManager();
     ExecutionManager &executionManager();
+
+    virtual void signal(int signal);
 
 private:
     void updateSystem(const RuntimeInfo &info);
