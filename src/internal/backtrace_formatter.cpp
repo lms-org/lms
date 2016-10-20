@@ -54,7 +54,7 @@ void printStacktrace(std::ostream &os) {
     void *buffer[BUFFER_SIZE];
 
     // Get the backtrace.
-    os << "\n\033[31mBacktrace:\033[0m" << std::endl;
+    os << "Backtrace:" << std::endl;
     int size = backtrace(buffer, BUFFER_SIZE);
 
     /* Now generate nicely formatted output.  */
