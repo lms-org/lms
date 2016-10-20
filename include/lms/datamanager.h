@@ -268,7 +268,7 @@ protected:
         if (std::is_same<T, Any>::value) {
             return nullptr;
         }
-        return InheritanceCallerGet<T, std::is_fundamental<T>::value>::call(
+        return InheritanceCallerGet<T, !std::is_fundamental<T>::value>::call(
             this);
     }
 };
