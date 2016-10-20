@@ -2,6 +2,10 @@
 #include <sys/stat.h>
 #include <string>
 #include <memory>
+#include <csignal>
+#include <sys/types.h>
+#include <unistd.h>
+#include "backtrace_formatter.h"
 
 namespace lms {
 namespace internal {
@@ -210,6 +214,15 @@ bool Framework::isEnableSave() const { return false; /* TODO */ }
 
 void Framework::addFlag(const std::string &flag) {
     flags.push_back(flag);
+}
+
+void Framework::signal(int signal) {
+    switch(signal) {
+    case SIGSEGV:
+        std::ofstream of(std::string("/tmp/lms-segfault-") + std::to_string(getpid()));
+        printStacktrace(of);
+        break;
+    }
 }
 
 }  // namespace internal

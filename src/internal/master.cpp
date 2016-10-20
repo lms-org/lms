@@ -310,6 +310,9 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         for(int i = 0; i < options.flags_size(); i++) {
             fw.addFlag(options.flags(i));
         }
+
+        SignalHandler::getInstance().addListener(SIGSEGV, &fw);
+
         fw.start();
         exit(0);
     } else {
