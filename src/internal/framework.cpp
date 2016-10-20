@@ -219,7 +219,7 @@ void Framework::addFlag(const std::string &flag) {
 void Framework::signal(int signal) {
     switch(signal) {
     case SIGSEGV:
-        std::ofstream of(std::string("/tmp/lms-segfault-") + std::to_string(getpid()));
+        std::ofstream of(std::string("/tmp/lms-segfault-") + std::to_string(getpid()) + ".txt");
         printStacktrace(of);
         break;
     }
