@@ -65,6 +65,7 @@ public:
 
 private:
     bool updateSystem(const RuntimeInfo &info);
+    void printOverview();
 
     ExecutionManager m_executionManager;
     DataManager m_dataManager;

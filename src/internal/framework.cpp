@@ -47,6 +47,10 @@ void Framework::start() {
                 m_running = false;
             }
 
+            if(isDebug()) {
+                printOverview();
+            }
+
             for (auto file : parser.files()) {
                 configMonitor.watch(file);
             }
@@ -237,6 +241,17 @@ void Framework::signal(int signal) {
     case SIGINT:
         m_running = false;
         break;
+    }
+}
+
+void Framework::printOverview() {
+    logger.info("overview") << "Modules (" << modules.size() << ")";
+    for(const auto &module : modules) {
+        logger.info("overview") << "  " << module.first;
+    }
+    logger.info("overview") << "Services (" << services.size() << ")";
+    for(const auto &service : services) {
+        logger.info("overview") << "  " << service.first;
     }
 }
 
