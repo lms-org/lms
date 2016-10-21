@@ -64,7 +64,7 @@ public:
     virtual void signal(int signal);
 
 private:
-    void updateSystem(const RuntimeInfo &info);
+    bool updateSystem(const RuntimeInfo &info);
 
     ExecutionManager m_executionManager;
     DataManager m_dataManager;

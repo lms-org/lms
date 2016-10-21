@@ -39,9 +39,12 @@ void Framework::start() {
             }
 
             try {
-                updateSystem(runtime);
+                if(! updateSystem(runtime)) {
+                    m_running = false;
+                }
             } catch(std::exception const &ex) {
                 logger.error() << lms::typeName(ex) << ": " <<  ex.what();
+                m_running = false;
             }
 
             for (auto file : parser.files()) {
@@ -58,7 +61,7 @@ void Framework::start() {
     logger.info() << "Stopped";
 }
 
-void Framework::updateSystem(const RuntimeInfo &info) {
+bool Framework::updateSystem(const RuntimeInfo &info) {
     if(isDebug()) {
         logger.debug() << "updateSystem()";
     }
@@ -79,12 +82,12 @@ void Framework::updateSystem(const RuntimeInfo &info) {
                 if (!service->init()) {
                     logger.error() << "Service " << serviceInfo.name
                                    << " failed to init()";
-                    return;
+                    return false;
                 }
             } catch (std::exception const &ex) {
                 logger.error() << serviceInfo.name << " throws "
                                << lms::typeName(ex) << " : " << ex.what();
-                return;
+                return false;
             }
 
             services[serviceInfo.name] = service;
@@ -110,12 +113,12 @@ void Framework::updateSystem(const RuntimeInfo &info) {
                 if (!module->init()) {
                     logger.error() << "Module " << moduleInfo.name
                                    << " failed to init()";
-                    return;
+                    return false;
                 }
             } catch (std::exception const &ex) {
                 logger.error() << moduleInfo.name << " throws "
                                << lms::typeName(ex) << " : " << ex.what();
-                return;
+                return false;
             }
 
             modules[moduleInfo.name] = module;
@@ -128,6 +131,8 @@ void Framework::updateSystem(const RuntimeInfo &info) {
     if(isDebug()) {
         logger.debug() << "updated system";
     }
+
+    return true;
 }
 
 Framework::~Framework() {
