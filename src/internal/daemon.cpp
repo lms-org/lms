@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <csignal>
 
+#include <sys/stat.h>
+#include <fcntl.h>
+
 namespace lms {
 namespace internal {
 
@@ -43,10 +46,22 @@ bool daemonize() {
     umask(0);
 
     // STEP 7
+    int in = open("/dev/null", O_RDONLY);
+    int out = open("/dev/null", O_WRONLY);
+    int err = open("/dev/null", O_WRONLY);
+
     int x;
     for (x = sysconf(_SC_OPEN_MAX); x > 0; x--) {
-        close(x);
+        // close everything except our new descriptors
+        if(x != in && x != out && x != err) close(x);
     }
+
+    dup2(in, STDIN_FILENO);
+    dup2(out, STDOUT_FILENO);
+    dup2(err, STDERR_FILENO);
+    close(in);
+    close(out);
+    close(err);
 
     return true;
 }
