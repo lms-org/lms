@@ -78,6 +78,7 @@ message LogEvent {
     optional Level level = 1;
     optional string tag = 2;
     optional string text = 3;
+    optional bool close_after = 4 [default = false];
     
     enum Level {
         // must be compatible to lms::logging:Level
@@ -89,4 +90,3 @@ message LogEvent {
         OFF = 255;
     }
 }
-

@@ -54,6 +54,8 @@ void Framework::start() {
         }
         firstRun = false;
     }
+
+    logger.info() << "Stopped";
 }
 
 void Framework::updateSystem(const RuntimeInfo &info) {
@@ -219,11 +221,16 @@ void Framework::addFlag(const std::string &flag) {
 void Framework::signal(int signal) {
     switch(signal) {
     case SIGSEGV:
+        {
         std::ofstream of(std::string("/tmp/lms-segfault-") +
                          std::to_string(getpid()) + "-" + std::to_string(std::time(NULL)) + ".txt");
         printStacktrace(of);
         of.close();
         _exit(1);
+        }
+        break;
+    case SIGINT:
+        m_running = false;
         break;
     }
 }

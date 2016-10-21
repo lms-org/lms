@@ -1774,6 +1774,13 @@ class LogEvent : public ::google::protobuf::Message {
   inline ::std::string* release_text();
   inline void set_allocated_text(::std::string* text);
 
+  // optional bool close_after = 4 [default = false];
+  inline bool has_close_after() const;
+  inline void clear_close_after();
+  static const int kCloseAfterFieldNumber = 4;
+  inline bool close_after() const;
+  inline void set_close_after(bool value);
+
   // @@protoc_insertion_point(class_scope:lms.LogEvent)
  private:
   inline void set_has_level();
@@ -1782,14 +1789,17 @@ class LogEvent : public ::google::protobuf::Message {
   inline void clear_has_tag();
   inline void set_has_text();
   inline void clear_has_text();
+  inline void set_has_close_after();
+  inline void clear_has_close_after();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* tag_;
-  ::std::string* text_;
   int level_;
+  bool close_after_;
+  ::std::string* text_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -3247,6 +3257,30 @@ inline void LogEvent::set_allocated_text(::std::string* text) {
     text_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:lms.LogEvent.text)
+}
+
+// optional bool close_after = 4 [default = false];
+inline bool LogEvent::has_close_after() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void LogEvent::set_has_close_after() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void LogEvent::clear_has_close_after() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void LogEvent::clear_close_after() {
+  close_after_ = false;
+  clear_has_close_after();
+}
+inline bool LogEvent::close_after() const {
+  // @@protoc_insertion_point(field_get:lms.LogEvent.close_after)
+  return close_after_;
+}
+inline void LogEvent::set_close_after(bool value) {
+  set_has_close_after();
+  close_after_ = value;
+  // @@protoc_insertion_point(field_set:lms.LogEvent.close_after)
 }
 
 

@@ -205,10 +205,21 @@ void MasterServer::start() {
                 if(runtime.sock.readMessage(event)) {
                     for(auto &client : m_clients) {
                         if(client.isAttached && client.attachedRuntime == runtime.pid) {
-                             client.sock.writeMessage(event);
+                            client.sock.writeMessage(event);
                         }
                     }
                 } else {
+                    LogEvent closeEvent;
+                    closeEvent.set_level(LogEvent::INFO);
+                    closeEvent.set_tag("master");
+                    closeEvent.set_text("Runtime stopped");
+                    closeEvent.set_close_after(true);
+                    for(auto &client : m_clients) {
+                        if(client.isAttached && client.attachedRuntime == runtime.pid) {
+                             client.sock.writeMessage(closeEvent);
+                        }
+                    }
+
                     // close runtime connection
                     runtime.sock.close();
                     m_runtimes.erase(it);
@@ -329,6 +340,7 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         }
 
         SignalHandler::getInstance().addListener(SIGSEGV, &fw);
+        SignalHandler::getInstance().addListener(SIGINT, &fw);
 
         fw.start();
         exit(0);
@@ -386,6 +398,10 @@ void streamLogs(ProtobufSocket &socket) {
         std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
         std::cout << lms::internal::COLOR_WHITE;
         std::cout << " " << event.text() << std::endl;
+
+        if(event.has_close_after() && event.close_after()) {
+            break;
+        }
     }
 }
 

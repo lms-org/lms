@@ -366,10 +366,11 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(ModuleListResponse_AccessList));
   ModuleListResponse_Permission_descriptor_ = ModuleListResponse_descriptor_->enum_type(0);
   LogEvent_descriptor_ = file->message_type(5);
-  static const int LogEvent_offsets_[3] = {
+  static const int LogEvent_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, level_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, tag_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, text_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, close_after_),
   };
   LogEvent_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -509,10 +510,11 @@ void protobuf_AddDesc_messages_2eproto() {
     "ion\022\020\n\010priority\030\003 \001(\005\032@\n\nAccessList\0222\n\na"
     "ccessList\030\001 \003(\0132\036.lms.ModuleListResponse"
     ".Access\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005WRITE"
-    "\020\002\"\217\001\n\010LogEvent\022\"\n\005level\030\001 \001(\0162\023.lms.Log"
-    "Event.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\"D"
-    "\n\005Level\022\007\n\003ALL\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020\002\022\010\n"
-    "\004WARN\020\003\022\t\n\005ERROR\020\004\022\010\n\003OFF\020\377\001", 1228);
+    "\020\002\"\253\001\n\010LogEvent\022\"\n\005level\030\001 \001(\0162\023.lms.Log"
+    "Event.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\022\032"
+    "\n\013close_after\030\004 \001(\010:\005false\"D\n\005Level\022\007\n\003A"
+    "LL\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020\002\022\010\n\004WARN\020\003\022\t\n\005E"
+    "RROR\020\004\022\010\n\003OFF\020\377\001", 1256);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -4947,6 +4949,7 @@ const int LogEvent::Level_ARRAYSIZE;
 const int LogEvent::kLevelFieldNumber;
 const int LogEvent::kTagFieldNumber;
 const int LogEvent::kTextFieldNumber;
+const int LogEvent::kCloseAfterFieldNumber;
 #endif  // !_MSC_VER
 
 LogEvent::LogEvent()
@@ -4971,6 +4974,7 @@ void LogEvent::SharedCtor() {
   level_ = 0;
   tag_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   text_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  close_after_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5012,8 +5016,18 @@ LogEvent* LogEvent::New() const {
 }
 
 void LogEvent::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    level_ = 0;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<LogEvent*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 15) {
+    ZR_(level_, close_after_);
     if (has_tag()) {
       if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         tag_->clear();
@@ -5025,6 +5039,10 @@ void LogEvent::Clear() {
       }
     }
   }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -5088,6 +5106,21 @@ bool LogEvent::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(32)) goto parse_close_after;
+        break;
+      }
+
+      // optional bool close_after = 4 [default = false];
+      case 4: {
+        if (tag == 32) {
+         parse_close_after:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &close_after_)));
+          set_has_close_after();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -5143,6 +5176,11 @@ void LogEvent::SerializeWithCachedSizes(
       3, this->text(), output);
   }
 
+  // optional bool close_after = 4 [default = false];
+  if (has_close_after()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->close_after(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -5181,6 +5219,11 @@ void LogEvent::SerializeWithCachedSizes(
         3, this->text(), target);
   }
 
+  // optional bool close_after = 4 [default = false];
+  if (has_close_after()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->close_after(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -5211,6 +5254,11 @@ int LogEvent::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->text());
+    }
+
+    // optional bool close_after = 4 [default = false];
+    if (has_close_after()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -5249,6 +5297,9 @@ void LogEvent::MergeFrom(const LogEvent& from) {
     if (from.has_text()) {
       set_text(from.text());
     }
+    if (from.has_close_after()) {
+      set_close_after(from.close_after());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5275,6 +5326,7 @@ void LogEvent::Swap(LogEvent* other) {
     std::swap(level_, other->level_);
     std::swap(tag_, other->tag_);
     std::swap(text_, other->text_);
+    std::swap(close_after_, other->close_after_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
