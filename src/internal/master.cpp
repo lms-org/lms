@@ -380,24 +380,26 @@ MasterClient MasterClient::fromUnix(const std::string &path) {
 
 int MasterClient::fd() const { return m_sockfd; }
 
-void streamLogs(ProtobufSocket &socket) {
+void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
     LogEvent event;
     while(socket.readMessage(event)) {
-        // get time now
-        time_t rawtime;
-        std::time(&rawtime);
-        struct tm *now = std::localtime(&rawtime);
+        if(static_cast<logging::Level>(event.level()) >= logLevel) {
+            // get time now
+            time_t rawtime;
+            std::time(&rawtime);
+            struct tm *now = std::localtime(&rawtime);
 
-        // format time to "HH:MM:SS"
-        char buffer[10];
-        std::strftime(buffer, 10, "%T", now);
+            // format time to "HH:MM:SS"
+            char buffer[10];
+            std::strftime(buffer, 10, "%T", now);
 
-        std::cout << buffer << " ";
+            std::cout << buffer << " ";
 
-        std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
-        std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
-        std::cout << lms::internal::COLOR_WHITE;
-        std::cout << " " << event.text() << std::endl;
+            std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
+            std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
+            std::cout << lms::internal::COLOR_WHITE;
+            std::cout << " " << event.text() << std::endl;
+        }
 
         if(event.has_close_after() && event.close_after()) {
             break;
@@ -452,6 +454,10 @@ void connectToMaster(int argc, char *argv[]) {
             req.mutable_shutdown();
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "run") == 0) {
+            std::vector<std::string> logLevels = {"all",  "debug", "info",
+                                                    "warn", "error"};
+            TCLAP::ValuesConstraint<std::string> logConstraint(logLevels);
+
             TCLAP::CmdLine cmd("lms run", ' ', LMS_VERSION_STRING);
             TCLAP::UnlabeledValueArg<std::string> configArg(
                 "config", "XML config path", true, "lms.xml", "XML Config", cmd);
@@ -461,6 +467,9 @@ void connectToMaster(int argc, char *argv[]) {
                 "f", "flag", "Add flag for XML config", false, "Flag", cmd);
             TCLAP::SwitchArg debugSwitch(
                 "", "debug", "Make a ridiculous number of debug outputs", cmd, false);
+            TCLAP::ValueArg<std::string> logArg(
+                "", "log", "Minimum logging level",
+                false, "ALL", &logConstraint, cmd);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -481,7 +490,10 @@ void connectToMaster(int argc, char *argv[]) {
             }
 
             socket.writeMessage(req);
-            streamLogs(socket);
+
+            logging::Level logLevel = logging::Level::ALL;
+            logging::levelFromName(logArg.getValue(), logLevel);
+            streamLogs(socket, logLevel);
         } else if(strcmp(argv[1], "attach") == 0) {
             lms::Request_Attach *attach = req.mutable_attach();
 
@@ -492,7 +504,7 @@ void connectToMaster(int argc, char *argv[]) {
                 std::cout << "Requires argument: lms attach <id> \n";
             }
 
-            streamLogs(socket);
+            streamLogs(socket, logging::Level::ALL);
         } else if(strcmp(argv[1], "kill") == 0 || strcmp(argv[1], "stop") == 0) {
             lms::Request_Stop *stop = req.mutable_stop();
 
