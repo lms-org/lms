@@ -52,15 +52,18 @@ bool daemonize() {
     }
 
     // STEP 8
+    //reopen in,out,error and throw it away.
     int in = open("/dev/null", O_RDONLY);
     int out = open("/dev/null", O_RDWR);
     int err = open("/dev/null", O_RDWR);
     dup2(in, STDIN_FILENO);
     dup2(out, STDOUT_FILENO);
     dup2(err, STDERR_FILENO);
-    close(in);
-    close(out);
-    close(err);
+    // I don't think that we can close them as the next fd will be pointing to 2 causing errors written to it?
+    //TODO investigate
+    //close(in);
+    //close(out);
+    //close(err);
 
     return true;
 }
