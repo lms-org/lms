@@ -360,7 +360,7 @@ bool XmlParser::parseFile(std::istream &is, const std::string &file) {
     }
 
     pugi::xml_node rootNode = doc.child("lms");
-    preprocessXML(rootNode, {});
+    preprocessXML(rootNode, m_flags);
 
     for (pugi::xml_node node : rootNode.children()) {
         if (std::string("clock") == node.name()) {

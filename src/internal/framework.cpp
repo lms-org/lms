@@ -31,6 +31,9 @@ void Framework::start() {
             logger.info() << "Reload configs";
             configMonitor.unwatchAll();
             RuntimeInfo runtime;
+            for(const auto &f: flags) {
+                logger.info("flag") << f;
+            }
             XmlParser parser(runtime, flags);
             parser.parseFile(mainConfigFilePath);
 
