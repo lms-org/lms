@@ -199,7 +199,6 @@ void MasterServer::start() {
         for(auto it = m_runtimes.begin(); it != m_runtimes.end(); ++it) {
             auto &runtime = *it;
             if(FD_ISSET(runtime.sock.getFD(), &fds)) {
-                std::cout << "Runtime packet" << std::endl;
                 // forward log events to attached clients
                 LogEvent event;
                 if(runtime.sock.readMessage(event)) {
