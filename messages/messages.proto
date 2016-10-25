@@ -32,61 +32,73 @@ message Request {
 	}
 }
 
-message InfoResponse {
-    optional int32 version = 1;
-    optional int32 pid = 2;
-}
-
-message ClientListResponse {
-    message Client {
-        optional int32 fd = 1;
-        optional string peer = 2;
+message Response {
+    message Info {
+        optional int32 version = 1;
+        optional int32 pid = 2;
     }
 
-    repeated Client clients = 1;
-}
+    message ClientList {
+        message Client {
+            optional int32 fd = 1;
+            optional string peer = 2;
+        }
 
-message ProcessListResponse {
-    message Process {
-        optional int32 pid = 1;
-        optional string config_file = 2;
+        repeated Client clients = 1;
     }
     
-    repeated Process processes = 1;
-}
-
-message ModuleListResponse {
-	enum Permission {
-		READ = 1;
-		WRITE = 2;
-	}
-
-	message Access {
-		optional string module = 1;
-		optional Permission permission = 2;
-		optional int32 priority = 3;
-	}
-
-	message AccessList {
-		repeated Access accessList = 1;
-	}
-
-	//map<string,AccessList> graph = 1;
-}
-
-message LogEvent {
-    optional Level level = 1;
-    optional string tag = 2;
-    optional string text = 3;
-    optional bool close_after = 4 [default = false];
+    message ProcessList {
+        message Process {
+            optional int32 pid = 1;
+            optional string config_file = 2;
+        }
+        
+        repeated Process processes = 1;
+    }
     
-    enum Level {
-        // must be compatible to lms::logging:Level
-        ALL = 0;
-        DEBUG = 1;
-        INFO = 2;
-        WARN = 3;
-        ERROR = 4;
-        OFF = 255;
+    message ModuleListResponse {
+	    enum Permission {
+		    READ = 1;
+		    WRITE = 2;
+	    }
+
+	    message Access {
+		    optional string module = 1;
+		    optional Permission permission = 2;
+		    optional int32 priority = 3;
+	    }
+
+	    message Channel {
+	        optional string name = 1;
+		    repeated Access access_list = 2;
+	    }
+
+	    repeated Channel channels = 1;
+    }
+    
+    message LogEvent {
+        optional Level level = 1;
+        optional string tag = 2;
+        optional string text = 3;
+        optional bool close_after = 4 [default = false];
+        
+        enum Level {
+            // must be compatible to lms::logging:Level
+            ALL = 0;
+            DEBUG = 1;
+            INFO = 2;
+            WARN = 3;
+            ERROR = 4;
+            OFF = 255;
+        }
+    }
+    
+    oneof content {
+        Info info = 1;
+        ClientList client_list = 2;
+        ProcessList process_list = 3;
+        ModuleListResponse module_list = 4;
+        LogEvent log_event = 5;
     }
 }
+

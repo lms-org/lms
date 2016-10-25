@@ -57,35 +57,45 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Request_ModuleList_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Request_ModuleList_reflection_ = NULL;
-const ::google::protobuf::Descriptor* InfoResponse_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Response_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  InfoResponse_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ClientListResponse_descriptor_ = NULL;
+  Response_reflection_ = NULL;
+struct ResponseOneofInstance {
+  const ::lms::Response_Info* info_;
+  const ::lms::Response_ClientList* client_list_;
+  const ::lms::Response_ProcessList* process_list_;
+  const ::lms::Response_ModuleListResponse* module_list_;
+  const ::lms::Response_LogEvent* log_event_;
+}* Response_default_oneof_instance_ = NULL;
+const ::google::protobuf::Descriptor* Response_Info_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ClientListResponse_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ClientListResponse_Client_descriptor_ = NULL;
+  Response_Info_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ClientList_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ClientListResponse_Client_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProcessListResponse_descriptor_ = NULL;
+  Response_ClientList_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ClientList_Client_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ProcessListResponse_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProcessListResponse_Process_descriptor_ = NULL;
+  Response_ClientList_Client_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ProcessList_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ProcessListResponse_Process_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ModuleListResponse_descriptor_ = NULL;
+  Response_ProcessList_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ProcessList_Process_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ModuleListResponse_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ModuleListResponse_Access_descriptor_ = NULL;
+  Response_ProcessList_Process_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ModuleListResponse_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ModuleListResponse_Access_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ModuleListResponse_AccessList_descriptor_ = NULL;
+  Response_ModuleListResponse_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ModuleListResponse_Access_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ModuleListResponse_AccessList_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* ModuleListResponse_Permission_descriptor_ = NULL;
-const ::google::protobuf::Descriptor* LogEvent_descriptor_ = NULL;
+  Response_ModuleListResponse_Access_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Response_ModuleListResponse_Channel_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  LogEvent_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* LogEvent_Level_descriptor_ = NULL;
+  Response_ModuleListResponse_Channel_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* Response_ModuleListResponse_Permission_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Response_LogEvent_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Response_LogEvent_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* Response_LogEvent_Level_descriptor_ = NULL;
 
 }  // namespace
 
@@ -240,150 +250,174 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ModuleList));
-  InfoResponse_descriptor_ = file->message_type(1);
-  static const int InfoResponse_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfoResponse, version_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfoResponse, pid_),
+  Response_descriptor_ = file->message_type(1);
+  static const int Response_offsets_[6] = {
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Response_default_oneof_instance_, info_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Response_default_oneof_instance_, client_list_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Response_default_oneof_instance_, process_list_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Response_default_oneof_instance_, module_list_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Response_default_oneof_instance_, log_event_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, content_),
   };
-  InfoResponse_reflection_ =
+  Response_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      InfoResponse_descriptor_,
-      InfoResponse::default_instance_,
-      InfoResponse_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfoResponse, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfoResponse, _unknown_fields_),
+      Response_descriptor_,
+      Response::default_instance_,
+      Response_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _unknown_fields_),
+      -1,
+      Response_default_oneof_instance_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _oneof_case_[0]),
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Response));
+  Response_Info_descriptor_ = Response_descriptor_->nested_type(0);
+  static const int Response_Info_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_Info, version_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_Info, pid_),
+  };
+  Response_Info_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Response_Info_descriptor_,
+      Response_Info::default_instance_,
+      Response_Info_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_Info, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_Info, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(InfoResponse));
-  ClientListResponse_descriptor_ = file->message_type(2);
-  static const int ClientListResponse_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse, clients_),
+      sizeof(Response_Info));
+  Response_ClientList_descriptor_ = Response_descriptor_->nested_type(1);
+  static const int Response_ClientList_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList, clients_),
   };
-  ClientListResponse_reflection_ =
+  Response_ClientList_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ClientListResponse_descriptor_,
-      ClientListResponse::default_instance_,
-      ClientListResponse_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse, _unknown_fields_),
+      Response_ClientList_descriptor_,
+      Response_ClientList::default_instance_,
+      Response_ClientList_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ClientListResponse));
-  ClientListResponse_Client_descriptor_ = ClientListResponse_descriptor_->nested_type(0);
-  static const int ClientListResponse_Client_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse_Client, fd_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse_Client, peer_),
+      sizeof(Response_ClientList));
+  Response_ClientList_Client_descriptor_ = Response_ClientList_descriptor_->nested_type(0);
+  static const int Response_ClientList_Client_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList_Client, fd_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList_Client, peer_),
   };
-  ClientListResponse_Client_reflection_ =
+  Response_ClientList_Client_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ClientListResponse_Client_descriptor_,
-      ClientListResponse_Client::default_instance_,
-      ClientListResponse_Client_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse_Client, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientListResponse_Client, _unknown_fields_),
+      Response_ClientList_Client_descriptor_,
+      Response_ClientList_Client::default_instance_,
+      Response_ClientList_Client_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList_Client, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ClientList_Client, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ClientListResponse_Client));
-  ProcessListResponse_descriptor_ = file->message_type(3);
-  static const int ProcessListResponse_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse, processes_),
+      sizeof(Response_ClientList_Client));
+  Response_ProcessList_descriptor_ = Response_descriptor_->nested_type(2);
+  static const int Response_ProcessList_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList, processes_),
   };
-  ProcessListResponse_reflection_ =
+  Response_ProcessList_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ProcessListResponse_descriptor_,
-      ProcessListResponse::default_instance_,
-      ProcessListResponse_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse, _unknown_fields_),
+      Response_ProcessList_descriptor_,
+      Response_ProcessList::default_instance_,
+      Response_ProcessList_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ProcessListResponse));
-  ProcessListResponse_Process_descriptor_ = ProcessListResponse_descriptor_->nested_type(0);
-  static const int ProcessListResponse_Process_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse_Process, pid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse_Process, config_file_),
+      sizeof(Response_ProcessList));
+  Response_ProcessList_Process_descriptor_ = Response_ProcessList_descriptor_->nested_type(0);
+  static const int Response_ProcessList_Process_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList_Process, pid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList_Process, config_file_),
   };
-  ProcessListResponse_Process_reflection_ =
+  Response_ProcessList_Process_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ProcessListResponse_Process_descriptor_,
-      ProcessListResponse_Process::default_instance_,
-      ProcessListResponse_Process_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse_Process, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessListResponse_Process, _unknown_fields_),
+      Response_ProcessList_Process_descriptor_,
+      Response_ProcessList_Process::default_instance_,
+      Response_ProcessList_Process_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList_Process, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProcessList_Process, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ProcessListResponse_Process));
-  ModuleListResponse_descriptor_ = file->message_type(4);
-  static const int ModuleListResponse_offsets_[1] = {
+      sizeof(Response_ProcessList_Process));
+  Response_ModuleListResponse_descriptor_ = Response_descriptor_->nested_type(3);
+  static const int Response_ModuleListResponse_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse, channels_),
   };
-  ModuleListResponse_reflection_ =
+  Response_ModuleListResponse_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ModuleListResponse_descriptor_,
-      ModuleListResponse::default_instance_,
-      ModuleListResponse_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse, _unknown_fields_),
+      Response_ModuleListResponse_descriptor_,
+      Response_ModuleListResponse::default_instance_,
+      Response_ModuleListResponse_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ModuleListResponse));
-  ModuleListResponse_Access_descriptor_ = ModuleListResponse_descriptor_->nested_type(0);
-  static const int ModuleListResponse_Access_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_Access, module_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_Access, permission_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_Access, priority_),
+      sizeof(Response_ModuleListResponse));
+  Response_ModuleListResponse_Access_descriptor_ = Response_ModuleListResponse_descriptor_->nested_type(0);
+  static const int Response_ModuleListResponse_Access_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Access, module_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Access, permission_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Access, priority_),
   };
-  ModuleListResponse_Access_reflection_ =
+  Response_ModuleListResponse_Access_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ModuleListResponse_Access_descriptor_,
-      ModuleListResponse_Access::default_instance_,
-      ModuleListResponse_Access_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_Access, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_Access, _unknown_fields_),
+      Response_ModuleListResponse_Access_descriptor_,
+      Response_ModuleListResponse_Access::default_instance_,
+      Response_ModuleListResponse_Access_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Access, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Access, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ModuleListResponse_Access));
-  ModuleListResponse_AccessList_descriptor_ = ModuleListResponse_descriptor_->nested_type(1);
-  static const int ModuleListResponse_AccessList_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_AccessList, accesslist_),
+      sizeof(Response_ModuleListResponse_Access));
+  Response_ModuleListResponse_Channel_descriptor_ = Response_ModuleListResponse_descriptor_->nested_type(1);
+  static const int Response_ModuleListResponse_Channel_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Channel, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Channel, access_list_),
   };
-  ModuleListResponse_AccessList_reflection_ =
+  Response_ModuleListResponse_Channel_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      ModuleListResponse_AccessList_descriptor_,
-      ModuleListResponse_AccessList::default_instance_,
-      ModuleListResponse_AccessList_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_AccessList, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModuleListResponse_AccessList, _unknown_fields_),
+      Response_ModuleListResponse_Channel_descriptor_,
+      Response_ModuleListResponse_Channel::default_instance_,
+      Response_ModuleListResponse_Channel_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Channel, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ModuleListResponse_Channel, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ModuleListResponse_AccessList));
-  ModuleListResponse_Permission_descriptor_ = ModuleListResponse_descriptor_->enum_type(0);
-  LogEvent_descriptor_ = file->message_type(5);
-  static const int LogEvent_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, level_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, tag_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, text_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, close_after_),
+      sizeof(Response_ModuleListResponse_Channel));
+  Response_ModuleListResponse_Permission_descriptor_ = Response_ModuleListResponse_descriptor_->enum_type(0);
+  Response_LogEvent_descriptor_ = Response_descriptor_->nested_type(4);
+  static const int Response_LogEvent_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, level_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, tag_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, text_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, close_after_),
   };
-  LogEvent_reflection_ =
+  Response_LogEvent_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      LogEvent_descriptor_,
-      LogEvent::default_instance_,
-      LogEvent_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LogEvent, _unknown_fields_),
+      Response_LogEvent_descriptor_,
+      Response_LogEvent::default_instance_,
+      Response_LogEvent_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(LogEvent));
-  LogEvent_Level_descriptor_ = LogEvent_descriptor_->enum_type(0);
+      sizeof(Response_LogEvent));
+  Response_LogEvent_Level_descriptor_ = Response_LogEvent_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -415,23 +449,25 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Request_ModuleList_descriptor_, &Request_ModuleList::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    InfoResponse_descriptor_, &InfoResponse::default_instance());
+    Response_descriptor_, &Response::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ClientListResponse_descriptor_, &ClientListResponse::default_instance());
+    Response_Info_descriptor_, &Response_Info::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ClientListResponse_Client_descriptor_, &ClientListResponse_Client::default_instance());
+    Response_ClientList_descriptor_, &Response_ClientList::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ProcessListResponse_descriptor_, &ProcessListResponse::default_instance());
+    Response_ClientList_Client_descriptor_, &Response_ClientList_Client::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ProcessListResponse_Process_descriptor_, &ProcessListResponse_Process::default_instance());
+    Response_ProcessList_descriptor_, &Response_ProcessList::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ModuleListResponse_descriptor_, &ModuleListResponse::default_instance());
+    Response_ProcessList_Process_descriptor_, &Response_ProcessList_Process::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ModuleListResponse_Access_descriptor_, &ModuleListResponse_Access::default_instance());
+    Response_ModuleListResponse_descriptor_, &Response_ModuleListResponse::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ModuleListResponse_AccessList_descriptor_, &ModuleListResponse_AccessList::default_instance());
+    Response_ModuleListResponse_Access_descriptor_, &Response_ModuleListResponse_Access::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    LogEvent_descriptor_, &LogEvent::default_instance());
+    Response_ModuleListResponse_Channel_descriptor_, &Response_ModuleListResponse_Channel::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Response_LogEvent_descriptor_, &Response_LogEvent::default_instance());
 }
 
 }  // namespace
@@ -456,24 +492,27 @@ void protobuf_ShutdownFile_messages_2eproto() {
   delete Request_Stop_reflection_;
   delete Request_ModuleList::default_instance_;
   delete Request_ModuleList_reflection_;
-  delete InfoResponse::default_instance_;
-  delete InfoResponse_reflection_;
-  delete ClientListResponse::default_instance_;
-  delete ClientListResponse_reflection_;
-  delete ClientListResponse_Client::default_instance_;
-  delete ClientListResponse_Client_reflection_;
-  delete ProcessListResponse::default_instance_;
-  delete ProcessListResponse_reflection_;
-  delete ProcessListResponse_Process::default_instance_;
-  delete ProcessListResponse_Process_reflection_;
-  delete ModuleListResponse::default_instance_;
-  delete ModuleListResponse_reflection_;
-  delete ModuleListResponse_Access::default_instance_;
-  delete ModuleListResponse_Access_reflection_;
-  delete ModuleListResponse_AccessList::default_instance_;
-  delete ModuleListResponse_AccessList_reflection_;
-  delete LogEvent::default_instance_;
-  delete LogEvent_reflection_;
+  delete Response::default_instance_;
+  delete Response_default_oneof_instance_;
+  delete Response_reflection_;
+  delete Response_Info::default_instance_;
+  delete Response_Info_reflection_;
+  delete Response_ClientList::default_instance_;
+  delete Response_ClientList_reflection_;
+  delete Response_ClientList_Client::default_instance_;
+  delete Response_ClientList_Client_reflection_;
+  delete Response_ProcessList::default_instance_;
+  delete Response_ProcessList_reflection_;
+  delete Response_ProcessList_Process::default_instance_;
+  delete Response_ProcessList_Process_reflection_;
+  delete Response_ModuleListResponse::default_instance_;
+  delete Response_ModuleListResponse_reflection_;
+  delete Response_ModuleListResponse_Access::default_instance_;
+  delete Response_ModuleListResponse_Access_reflection_;
+  delete Response_ModuleListResponse_Channel::default_instance_;
+  delete Response_ModuleListResponse_Channel_reflection_;
+  delete Response_LogEvent::default_instance_;
+  delete Response_LogEvent_reflection_;
 }
 
 void protobuf_AddDesc_messages_2eproto() {
@@ -497,24 +536,32 @@ void protobuf_AddDesc_messages_2eproto() {
     "lude_paths\030\002 \003(\t\022\r\n\005flags\030\003 \003(\t\022\r\n\005debug"
     "\030\004 \001(\010\032\017\n\rListProcesses\032\024\n\006Attach\022\n\n\002id\030"
     "\001 \001(\t\032 \n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004kill\030\002 \001(\010\032"
-    "\014\n\nModuleListB\t\n\007content\",\n\014InfoResponse"
-    "\022\017\n\007version\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005\"i\n\022Client"
-    "ListResponse\022/\n\007clients\030\001 \003(\0132\036.lms.Clie"
-    "ntListResponse.Client\032\"\n\006Client\022\n\n\002fd\030\001 "
-    "\001(\005\022\014\n\004peer\030\002 \001(\t\"w\n\023ProcessListResponse"
-    "\0223\n\tprocesses\030\001 \003(\0132 .lms.ProcessListRes"
-    "ponse.Process\032+\n\007Process\022\013\n\003pid\030\001 \001(\005\022\023\n"
-    "\013config_file\030\002 \001(\t\"\335\001\n\022ModuleListRespons"
-    "e\032b\n\006Access\022\016\n\006module\030\001 \001(\t\0226\n\npermissio"
-    "n\030\002 \001(\0162\".lms.ModuleListResponse.Permiss"
-    "ion\022\020\n\010priority\030\003 \001(\005\032@\n\nAccessList\0222\n\na"
-    "ccessList\030\001 \003(\0132\036.lms.ModuleListResponse"
-    ".Access\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005WRITE"
-    "\020\002\"\253\001\n\010LogEvent\022\"\n\005level\030\001 \001(\0162\023.lms.Log"
-    "Event.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\022\032"
-    "\n\013close_after\030\004 \001(\010:\005false\"D\n\005Level\022\007\n\003A"
-    "LL\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020\002\022\010\n\004WARN\020\003\022\t\n\005E"
-    "RROR\020\004\022\010\n\003OFF\020\377\001", 1256);
+    "\014\n\nModuleListB\t\n\007content\"\360\007\n\010Response\022\"\n"
+    "\004info\030\001 \001(\0132\022.lms.Response.InfoH\000\022/\n\013cli"
+    "ent_list\030\002 \001(\0132\030.lms.Response.ClientList"
+    "H\000\0221\n\014process_list\030\003 \001(\0132\031.lms.Response."
+    "ProcessListH\000\0227\n\013module_list\030\004 \001(\0132 .lms"
+    ".Response.ModuleListResponseH\000\022+\n\tlog_ev"
+    "ent\030\005 \001(\0132\026.lms.Response.LogEventH\000\032$\n\004I"
+    "nfo\022\017\n\007version\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005\032b\n\nCli"
+    "entList\0220\n\007clients\030\001 \003(\0132\037.lms.Response."
+    "ClientList.Client\032\"\n\006Client\022\n\n\002fd\030\001 \001(\005\022"
+    "\014\n\004peer\030\002 \001(\t\032p\n\013ProcessList\0224\n\tprocesse"
+    "s\030\001 \003(\0132!.lms.Response.ProcessList.Proce"
+    "ss\032+\n\007Process\022\013\n\003pid\030\001 \001(\005\022\023\n\013config_fil"
+    "e\030\002 \001(\t\032\267\002\n\022ModuleListResponse\022:\n\010channe"
+    "ls\030\001 \003(\0132(.lms.Response.ModuleListRespon"
+    "se.Channel\032k\n\006Access\022\016\n\006module\030\001 \001(\t\022\?\n\n"
+    "permission\030\002 \001(\0162+.lms.Response.ModuleLi"
+    "stResponse.Permission\022\020\n\010priority\030\003 \001(\005\032"
+    "U\n\007Channel\022\014\n\004name\030\001 \001(\t\022<\n\013access_list\030"
+    "\002 \003(\0132\'.lms.Response.ModuleListResponse."
+    "Access\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005WRITE\020"
+    "\002\032\264\001\n\010LogEvent\022+\n\005level\030\001 \001(\0162\034.lms.Resp"
+    "onse.LogEvent.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text"
+    "\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005false\"D\n\005Le"
+    "vel\022\007\n\003ALL\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020\002\022\010\n\004WAR"
+    "N\020\003\022\t\n\005ERROR\020\004\022\010\n\003OFF\020\377\001B\t\n\007content", 1595);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -527,15 +574,17 @@ void protobuf_AddDesc_messages_2eproto() {
   Request_Attach::default_instance_ = new Request_Attach();
   Request_Stop::default_instance_ = new Request_Stop();
   Request_ModuleList::default_instance_ = new Request_ModuleList();
-  InfoResponse::default_instance_ = new InfoResponse();
-  ClientListResponse::default_instance_ = new ClientListResponse();
-  ClientListResponse_Client::default_instance_ = new ClientListResponse_Client();
-  ProcessListResponse::default_instance_ = new ProcessListResponse();
-  ProcessListResponse_Process::default_instance_ = new ProcessListResponse_Process();
-  ModuleListResponse::default_instance_ = new ModuleListResponse();
-  ModuleListResponse_Access::default_instance_ = new ModuleListResponse_Access();
-  ModuleListResponse_AccessList::default_instance_ = new ModuleListResponse_AccessList();
-  LogEvent::default_instance_ = new LogEvent();
+  Response::default_instance_ = new Response();
+  Response_default_oneof_instance_ = new ResponseOneofInstance;
+  Response_Info::default_instance_ = new Response_Info();
+  Response_ClientList::default_instance_ = new Response_ClientList();
+  Response_ClientList_Client::default_instance_ = new Response_ClientList_Client();
+  Response_ProcessList::default_instance_ = new Response_ProcessList();
+  Response_ProcessList_Process::default_instance_ = new Response_ProcessList_Process();
+  Response_ModuleListResponse::default_instance_ = new Response_ModuleListResponse();
+  Response_ModuleListResponse_Access::default_instance_ = new Response_ModuleListResponse_Access();
+  Response_ModuleListResponse_Channel::default_instance_ = new Response_ModuleListResponse_Channel();
+  Response_LogEvent::default_instance_ = new Response_LogEvent();
   Request::default_instance_->InitAsDefaultInstance();
   Request_Info::default_instance_->InitAsDefaultInstance();
   Request_Shutdown::default_instance_->InitAsDefaultInstance();
@@ -545,15 +594,16 @@ void protobuf_AddDesc_messages_2eproto() {
   Request_Attach::default_instance_->InitAsDefaultInstance();
   Request_Stop::default_instance_->InitAsDefaultInstance();
   Request_ModuleList::default_instance_->InitAsDefaultInstance();
-  InfoResponse::default_instance_->InitAsDefaultInstance();
-  ClientListResponse::default_instance_->InitAsDefaultInstance();
-  ClientListResponse_Client::default_instance_->InitAsDefaultInstance();
-  ProcessListResponse::default_instance_->InitAsDefaultInstance();
-  ProcessListResponse_Process::default_instance_->InitAsDefaultInstance();
-  ModuleListResponse::default_instance_->InitAsDefaultInstance();
-  ModuleListResponse_Access::default_instance_->InitAsDefaultInstance();
-  ModuleListResponse_AccessList::default_instance_->InitAsDefaultInstance();
-  LogEvent::default_instance_->InitAsDefaultInstance();
+  Response::default_instance_->InitAsDefaultInstance();
+  Response_Info::default_instance_->InitAsDefaultInstance();
+  Response_ClientList::default_instance_->InitAsDefaultInstance();
+  Response_ClientList_Client::default_instance_->InitAsDefaultInstance();
+  Response_ProcessList::default_instance_->InitAsDefaultInstance();
+  Response_ProcessList_Process::default_instance_->InitAsDefaultInstance();
+  Response_ModuleListResponse::default_instance_->InitAsDefaultInstance();
+  Response_ModuleListResponse_Access::default_instance_->InitAsDefaultInstance();
+  Response_ModuleListResponse_Channel::default_instance_->InitAsDefaultInstance();
+  Response_LogEvent::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_messages_2eproto);
 }
 
@@ -2894,67 +2944,67 @@ void Request::Swap(Request* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int InfoResponse::kVersionFieldNumber;
-const int InfoResponse::kPidFieldNumber;
+const int Response_Info::kVersionFieldNumber;
+const int Response_Info::kPidFieldNumber;
 #endif  // !_MSC_VER
 
-InfoResponse::InfoResponse()
+Response_Info::Response_Info()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.InfoResponse)
+  // @@protoc_insertion_point(constructor:lms.Response.Info)
 }
 
-void InfoResponse::InitAsDefaultInstance() {
+void Response_Info::InitAsDefaultInstance() {
 }
 
-InfoResponse::InfoResponse(const InfoResponse& from)
+Response_Info::Response_Info(const Response_Info& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.InfoResponse)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.Info)
 }
 
-void InfoResponse::SharedCtor() {
+void Response_Info::SharedCtor() {
   _cached_size_ = 0;
   version_ = 0;
   pid_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-InfoResponse::~InfoResponse() {
-  // @@protoc_insertion_point(destructor:lms.InfoResponse)
+Response_Info::~Response_Info() {
+  // @@protoc_insertion_point(destructor:lms.Response.Info)
   SharedDtor();
 }
 
-void InfoResponse::SharedDtor() {
+void Response_Info::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void InfoResponse::SetCachedSize(int size) const {
+void Response_Info::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* InfoResponse::descriptor() {
+const ::google::protobuf::Descriptor* Response_Info::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return InfoResponse_descriptor_;
+  return Response_Info_descriptor_;
 }
 
-const InfoResponse& InfoResponse::default_instance() {
+const Response_Info& Response_Info::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-InfoResponse* InfoResponse::default_instance_ = NULL;
+Response_Info* Response_Info::default_instance_ = NULL;
 
-InfoResponse* InfoResponse::New() const {
-  return new InfoResponse;
+Response_Info* Response_Info::New() const {
+  return new Response_Info;
 }
 
-void InfoResponse::Clear() {
+void Response_Info::Clear() {
 #define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<InfoResponse*>(16)->f) - \
+  &reinterpret_cast<Response_Info*>(16)->f) - \
    reinterpret_cast<char*>(16))
 
 #define ZR_(first, last) do {                              \
@@ -2972,11 +3022,11 @@ void InfoResponse::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool InfoResponse::MergePartialFromCodedStream(
+bool Response_Info::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.InfoResponse)
+  // @@protoc_insertion_point(parse_start:lms.Response.Info)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -3025,17 +3075,17 @@ bool InfoResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.InfoResponse)
+  // @@protoc_insertion_point(parse_success:lms.Response.Info)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.InfoResponse)
+  // @@protoc_insertion_point(parse_failure:lms.Response.Info)
   return false;
 #undef DO_
 }
 
-void InfoResponse::SerializeWithCachedSizes(
+void Response_Info::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.InfoResponse)
+  // @@protoc_insertion_point(serialize_start:lms.Response.Info)
   // optional int32 version = 1;
   if (has_version()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->version(), output);
@@ -3050,12 +3100,12 @@ void InfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.InfoResponse)
+  // @@protoc_insertion_point(serialize_end:lms.Response.Info)
 }
 
-::google::protobuf::uint8* InfoResponse::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_Info::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.InfoResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.Info)
   // optional int32 version = 1;
   if (has_version()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->version(), target);
@@ -3070,11 +3120,11 @@ void InfoResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.InfoResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.Info)
   return target;
 }
 
-int InfoResponse::ByteSize() const {
+int Response_Info::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -3104,10 +3154,10 @@ int InfoResponse::ByteSize() const {
   return total_size;
 }
 
-void InfoResponse::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_Info::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const InfoResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const InfoResponse*>(
+  const Response_Info* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_Info*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -3116,7 +3166,7 @@ void InfoResponse::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void InfoResponse::MergeFrom(const InfoResponse& from) {
+void Response_Info::MergeFrom(const Response_Info& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_version()) {
@@ -3129,24 +3179,24 @@ void InfoResponse::MergeFrom(const InfoResponse& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void InfoResponse::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_Info::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void InfoResponse::CopyFrom(const InfoResponse& from) {
+void Response_Info::CopyFrom(const Response_Info& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool InfoResponse::IsInitialized() const {
+bool Response_Info::IsInitialized() const {
 
   return true;
 }
 
-void InfoResponse::Swap(InfoResponse* other) {
+void Response_Info::Swap(Response_Info* other) {
   if (other != this) {
     std::swap(version_, other->version_);
     std::swap(pid_, other->pid_);
@@ -3156,39 +3206,39 @@ void InfoResponse::Swap(InfoResponse* other) {
   }
 }
 
-::google::protobuf::Metadata InfoResponse::GetMetadata() const {
+::google::protobuf::Metadata Response_Info::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = InfoResponse_descriptor_;
-  metadata.reflection = InfoResponse_reflection_;
+  metadata.descriptor = Response_Info_descriptor_;
+  metadata.reflection = Response_Info_reflection_;
   return metadata;
 }
 
 
-// ===================================================================
+// -------------------------------------------------------------------
 
 #ifndef _MSC_VER
-const int ClientListResponse_Client::kFdFieldNumber;
-const int ClientListResponse_Client::kPeerFieldNumber;
+const int Response_ClientList_Client::kFdFieldNumber;
+const int Response_ClientList_Client::kPeerFieldNumber;
 #endif  // !_MSC_VER
 
-ClientListResponse_Client::ClientListResponse_Client()
+Response_ClientList_Client::Response_ClientList_Client()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(constructor:lms.Response.ClientList.Client)
 }
 
-void ClientListResponse_Client::InitAsDefaultInstance() {
+void Response_ClientList_Client::InitAsDefaultInstance() {
 }
 
-ClientListResponse_Client::ClientListResponse_Client(const ClientListResponse_Client& from)
+Response_ClientList_Client::Response_ClientList_Client(const Response_ClientList_Client& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ClientList.Client)
 }
 
-void ClientListResponse_Client::SharedCtor() {
+void Response_ClientList_Client::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   fd_ = 0;
@@ -3196,12 +3246,12 @@ void ClientListResponse_Client::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ClientListResponse_Client::~ClientListResponse_Client() {
-  // @@protoc_insertion_point(destructor:lms.ClientListResponse.Client)
+Response_ClientList_Client::~Response_ClientList_Client() {
+  // @@protoc_insertion_point(destructor:lms.Response.ClientList.Client)
   SharedDtor();
 }
 
-void ClientListResponse_Client::SharedDtor() {
+void Response_ClientList_Client::SharedDtor() {
   if (peer_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete peer_;
   }
@@ -3209,28 +3259,28 @@ void ClientListResponse_Client::SharedDtor() {
   }
 }
 
-void ClientListResponse_Client::SetCachedSize(int size) const {
+void Response_ClientList_Client::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ClientListResponse_Client::descriptor() {
+const ::google::protobuf::Descriptor* Response_ClientList_Client::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ClientListResponse_Client_descriptor_;
+  return Response_ClientList_Client_descriptor_;
 }
 
-const ClientListResponse_Client& ClientListResponse_Client::default_instance() {
+const Response_ClientList_Client& Response_ClientList_Client::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ClientListResponse_Client* ClientListResponse_Client::default_instance_ = NULL;
+Response_ClientList_Client* Response_ClientList_Client::default_instance_ = NULL;
 
-ClientListResponse_Client* ClientListResponse_Client::New() const {
-  return new ClientListResponse_Client;
+Response_ClientList_Client* Response_ClientList_Client::New() const {
+  return new Response_ClientList_Client;
 }
 
-void ClientListResponse_Client::Clear() {
+void Response_ClientList_Client::Clear() {
   if (_has_bits_[0 / 32] & 3) {
     fd_ = 0;
     if (has_peer()) {
@@ -3243,11 +3293,11 @@ void ClientListResponse_Client::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool ClientListResponse_Client::MergePartialFromCodedStream(
+bool Response_ClientList_Client::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(parse_start:lms.Response.ClientList.Client)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -3298,17 +3348,17 @@ bool ClientListResponse_Client::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(parse_success:lms.Response.ClientList.Client)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ClientList.Client)
   return false;
 #undef DO_
 }
 
-void ClientListResponse_Client::SerializeWithCachedSizes(
+void Response_ClientList_Client::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(serialize_start:lms.Response.ClientList.Client)
   // optional int32 fd = 1;
   if (has_fd()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->fd(), output);
@@ -3328,12 +3378,12 @@ void ClientListResponse_Client::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ClientList.Client)
 }
 
-::google::protobuf::uint8* ClientListResponse_Client::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ClientList_Client::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ClientList.Client)
   // optional int32 fd = 1;
   if (has_fd()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->fd(), target);
@@ -3354,11 +3404,11 @@ void ClientListResponse_Client::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ClientList.Client)
   return target;
 }
 
-int ClientListResponse_Client::ByteSize() const {
+int Response_ClientList_Client::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -3388,10 +3438,10 @@ int ClientListResponse_Client::ByteSize() const {
   return total_size;
 }
 
-void ClientListResponse_Client::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ClientList_Client::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ClientListResponse_Client* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ClientListResponse_Client*>(
+  const Response_ClientList_Client* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ClientList_Client*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -3400,7 +3450,7 @@ void ClientListResponse_Client::MergeFrom(const ::google::protobuf::Message& fro
   }
 }
 
-void ClientListResponse_Client::MergeFrom(const ClientListResponse_Client& from) {
+void Response_ClientList_Client::MergeFrom(const Response_ClientList_Client& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_fd()) {
@@ -3413,24 +3463,24 @@ void ClientListResponse_Client::MergeFrom(const ClientListResponse_Client& from)
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ClientListResponse_Client::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ClientList_Client::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ClientListResponse_Client::CopyFrom(const ClientListResponse_Client& from) {
+void Response_ClientList_Client::CopyFrom(const Response_ClientList_Client& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ClientListResponse_Client::IsInitialized() const {
+bool Response_ClientList_Client::IsInitialized() const {
 
   return true;
 }
 
-void ClientListResponse_Client::Swap(ClientListResponse_Client* other) {
+void Response_ClientList_Client::Swap(Response_ClientList_Client* other) {
   if (other != this) {
     std::swap(fd_, other->fd_);
     std::swap(peer_, other->peer_);
@@ -3440,11 +3490,11 @@ void ClientListResponse_Client::Swap(ClientListResponse_Client* other) {
   }
 }
 
-::google::protobuf::Metadata ClientListResponse_Client::GetMetadata() const {
+::google::protobuf::Metadata Response_ClientList_Client::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ClientListResponse_Client_descriptor_;
-  metadata.reflection = ClientListResponse_Client_reflection_;
+  metadata.descriptor = Response_ClientList_Client_descriptor_;
+  metadata.reflection = Response_ClientList_Client_reflection_;
   return metadata;
 }
 
@@ -3452,78 +3502,78 @@ void ClientListResponse_Client::Swap(ClientListResponse_Client* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
-const int ClientListResponse::kClientsFieldNumber;
+const int Response_ClientList::kClientsFieldNumber;
 #endif  // !_MSC_VER
 
-ClientListResponse::ClientListResponse()
+Response_ClientList::Response_ClientList()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ClientListResponse)
+  // @@protoc_insertion_point(constructor:lms.Response.ClientList)
 }
 
-void ClientListResponse::InitAsDefaultInstance() {
+void Response_ClientList::InitAsDefaultInstance() {
 }
 
-ClientListResponse::ClientListResponse(const ClientListResponse& from)
+Response_ClientList::Response_ClientList(const Response_ClientList& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ClientListResponse)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ClientList)
 }
 
-void ClientListResponse::SharedCtor() {
+void Response_ClientList::SharedCtor() {
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ClientListResponse::~ClientListResponse() {
-  // @@protoc_insertion_point(destructor:lms.ClientListResponse)
+Response_ClientList::~Response_ClientList() {
+  // @@protoc_insertion_point(destructor:lms.Response.ClientList)
   SharedDtor();
 }
 
-void ClientListResponse::SharedDtor() {
+void Response_ClientList::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void ClientListResponse::SetCachedSize(int size) const {
+void Response_ClientList::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ClientListResponse::descriptor() {
+const ::google::protobuf::Descriptor* Response_ClientList::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ClientListResponse_descriptor_;
+  return Response_ClientList_descriptor_;
 }
 
-const ClientListResponse& ClientListResponse::default_instance() {
+const Response_ClientList& Response_ClientList::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ClientListResponse* ClientListResponse::default_instance_ = NULL;
+Response_ClientList* Response_ClientList::default_instance_ = NULL;
 
-ClientListResponse* ClientListResponse::New() const {
-  return new ClientListResponse;
+Response_ClientList* Response_ClientList::New() const {
+  return new Response_ClientList;
 }
 
-void ClientListResponse::Clear() {
+void Response_ClientList::Clear() {
   clients_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool ClientListResponse::MergePartialFromCodedStream(
+bool Response_ClientList::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ClientListResponse)
+  // @@protoc_insertion_point(parse_start:lms.Response.ClientList)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .lms.ClientListResponse.Client clients = 1;
+      // repeated .lms.Response.ClientList.Client clients = 1;
       case 1: {
         if (tag == 10) {
          parse_clients:
@@ -3551,18 +3601,18 @@ bool ClientListResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ClientListResponse)
+  // @@protoc_insertion_point(parse_success:lms.Response.ClientList)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ClientListResponse)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ClientList)
   return false;
 #undef DO_
 }
 
-void ClientListResponse::SerializeWithCachedSizes(
+void Response_ClientList::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ClientListResponse)
-  // repeated .lms.ClientListResponse.Client clients = 1;
+  // @@protoc_insertion_point(serialize_start:lms.Response.ClientList)
+  // repeated .lms.Response.ClientList.Client clients = 1;
   for (int i = 0; i < this->clients_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->clients(i), output);
@@ -3572,13 +3622,13 @@ void ClientListResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ClientListResponse)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ClientList)
 }
 
-::google::protobuf::uint8* ClientListResponse::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ClientList::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ClientListResponse)
-  // repeated .lms.ClientListResponse.Client clients = 1;
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ClientList)
+  // repeated .lms.Response.ClientList.Client clients = 1;
   for (int i = 0; i < this->clients_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -3589,14 +3639,14 @@ void ClientListResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ClientListResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ClientList)
   return target;
 }
 
-int ClientListResponse::ByteSize() const {
+int Response_ClientList::ByteSize() const {
   int total_size = 0;
 
-  // repeated .lms.ClientListResponse.Client clients = 1;
+  // repeated .lms.Response.ClientList.Client clients = 1;
   total_size += 1 * this->clients_size();
   for (int i = 0; i < this->clients_size(); i++) {
     total_size +=
@@ -3615,10 +3665,10 @@ int ClientListResponse::ByteSize() const {
   return total_size;
 }
 
-void ClientListResponse::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ClientList::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ClientListResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ClientListResponse*>(
+  const Response_ClientList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ClientList*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -3627,30 +3677,30 @@ void ClientListResponse::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void ClientListResponse::MergeFrom(const ClientListResponse& from) {
+void Response_ClientList::MergeFrom(const Response_ClientList& from) {
   GOOGLE_CHECK_NE(&from, this);
   clients_.MergeFrom(from.clients_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ClientListResponse::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ClientList::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ClientListResponse::CopyFrom(const ClientListResponse& from) {
+void Response_ClientList::CopyFrom(const Response_ClientList& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ClientListResponse::IsInitialized() const {
+bool Response_ClientList::IsInitialized() const {
 
   return true;
 }
 
-void ClientListResponse::Swap(ClientListResponse* other) {
+void Response_ClientList::Swap(Response_ClientList* other) {
   if (other != this) {
     clients_.Swap(&other->clients_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -3659,39 +3709,39 @@ void ClientListResponse::Swap(ClientListResponse* other) {
   }
 }
 
-::google::protobuf::Metadata ClientListResponse::GetMetadata() const {
+::google::protobuf::Metadata Response_ClientList::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ClientListResponse_descriptor_;
-  metadata.reflection = ClientListResponse_reflection_;
+  metadata.descriptor = Response_ClientList_descriptor_;
+  metadata.reflection = Response_ClientList_reflection_;
   return metadata;
 }
 
 
-// ===================================================================
+// -------------------------------------------------------------------
 
 #ifndef _MSC_VER
-const int ProcessListResponse_Process::kPidFieldNumber;
-const int ProcessListResponse_Process::kConfigFileFieldNumber;
+const int Response_ProcessList_Process::kPidFieldNumber;
+const int Response_ProcessList_Process::kConfigFileFieldNumber;
 #endif  // !_MSC_VER
 
-ProcessListResponse_Process::ProcessListResponse_Process()
+Response_ProcessList_Process::Response_ProcessList_Process()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(constructor:lms.Response.ProcessList.Process)
 }
 
-void ProcessListResponse_Process::InitAsDefaultInstance() {
+void Response_ProcessList_Process::InitAsDefaultInstance() {
 }
 
-ProcessListResponse_Process::ProcessListResponse_Process(const ProcessListResponse_Process& from)
+Response_ProcessList_Process::Response_ProcessList_Process(const Response_ProcessList_Process& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ProcessList.Process)
 }
 
-void ProcessListResponse_Process::SharedCtor() {
+void Response_ProcessList_Process::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   pid_ = 0;
@@ -3699,12 +3749,12 @@ void ProcessListResponse_Process::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ProcessListResponse_Process::~ProcessListResponse_Process() {
-  // @@protoc_insertion_point(destructor:lms.ProcessListResponse.Process)
+Response_ProcessList_Process::~Response_ProcessList_Process() {
+  // @@protoc_insertion_point(destructor:lms.Response.ProcessList.Process)
   SharedDtor();
 }
 
-void ProcessListResponse_Process::SharedDtor() {
+void Response_ProcessList_Process::SharedDtor() {
   if (config_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete config_file_;
   }
@@ -3712,28 +3762,28 @@ void ProcessListResponse_Process::SharedDtor() {
   }
 }
 
-void ProcessListResponse_Process::SetCachedSize(int size) const {
+void Response_ProcessList_Process::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ProcessListResponse_Process::descriptor() {
+const ::google::protobuf::Descriptor* Response_ProcessList_Process::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ProcessListResponse_Process_descriptor_;
+  return Response_ProcessList_Process_descriptor_;
 }
 
-const ProcessListResponse_Process& ProcessListResponse_Process::default_instance() {
+const Response_ProcessList_Process& Response_ProcessList_Process::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ProcessListResponse_Process* ProcessListResponse_Process::default_instance_ = NULL;
+Response_ProcessList_Process* Response_ProcessList_Process::default_instance_ = NULL;
 
-ProcessListResponse_Process* ProcessListResponse_Process::New() const {
-  return new ProcessListResponse_Process;
+Response_ProcessList_Process* Response_ProcessList_Process::New() const {
+  return new Response_ProcessList_Process;
 }
 
-void ProcessListResponse_Process::Clear() {
+void Response_ProcessList_Process::Clear() {
   if (_has_bits_[0 / 32] & 3) {
     pid_ = 0;
     if (has_config_file()) {
@@ -3746,11 +3796,11 @@ void ProcessListResponse_Process::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool ProcessListResponse_Process::MergePartialFromCodedStream(
+bool Response_ProcessList_Process::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(parse_start:lms.Response.ProcessList.Process)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -3801,17 +3851,17 @@ bool ProcessListResponse_Process::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(parse_success:lms.Response.ProcessList.Process)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ProcessList.Process)
   return false;
 #undef DO_
 }
 
-void ProcessListResponse_Process::SerializeWithCachedSizes(
+void Response_ProcessList_Process::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(serialize_start:lms.Response.ProcessList.Process)
   // optional int32 pid = 1;
   if (has_pid()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->pid(), output);
@@ -3831,12 +3881,12 @@ void ProcessListResponse_Process::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ProcessList.Process)
 }
 
-::google::protobuf::uint8* ProcessListResponse_Process::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ProcessList_Process::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ProcessList.Process)
   // optional int32 pid = 1;
   if (has_pid()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->pid(), target);
@@ -3857,11 +3907,11 @@ void ProcessListResponse_Process::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ProcessList.Process)
   return target;
 }
 
-int ProcessListResponse_Process::ByteSize() const {
+int Response_ProcessList_Process::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -3891,10 +3941,10 @@ int ProcessListResponse_Process::ByteSize() const {
   return total_size;
 }
 
-void ProcessListResponse_Process::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ProcessList_Process::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ProcessListResponse_Process* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProcessListResponse_Process*>(
+  const Response_ProcessList_Process* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ProcessList_Process*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -3903,7 +3953,7 @@ void ProcessListResponse_Process::MergeFrom(const ::google::protobuf::Message& f
   }
 }
 
-void ProcessListResponse_Process::MergeFrom(const ProcessListResponse_Process& from) {
+void Response_ProcessList_Process::MergeFrom(const Response_ProcessList_Process& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_pid()) {
@@ -3916,24 +3966,24 @@ void ProcessListResponse_Process::MergeFrom(const ProcessListResponse_Process& f
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ProcessListResponse_Process::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ProcessList_Process::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ProcessListResponse_Process::CopyFrom(const ProcessListResponse_Process& from) {
+void Response_ProcessList_Process::CopyFrom(const Response_ProcessList_Process& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ProcessListResponse_Process::IsInitialized() const {
+bool Response_ProcessList_Process::IsInitialized() const {
 
   return true;
 }
 
-void ProcessListResponse_Process::Swap(ProcessListResponse_Process* other) {
+void Response_ProcessList_Process::Swap(Response_ProcessList_Process* other) {
   if (other != this) {
     std::swap(pid_, other->pid_);
     std::swap(config_file_, other->config_file_);
@@ -3943,11 +3993,11 @@ void ProcessListResponse_Process::Swap(ProcessListResponse_Process* other) {
   }
 }
 
-::google::protobuf::Metadata ProcessListResponse_Process::GetMetadata() const {
+::google::protobuf::Metadata Response_ProcessList_Process::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ProcessListResponse_Process_descriptor_;
-  metadata.reflection = ProcessListResponse_Process_reflection_;
+  metadata.descriptor = Response_ProcessList_Process_descriptor_;
+  metadata.reflection = Response_ProcessList_Process_reflection_;
   return metadata;
 }
 
@@ -3955,78 +4005,78 @@ void ProcessListResponse_Process::Swap(ProcessListResponse_Process* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
-const int ProcessListResponse::kProcessesFieldNumber;
+const int Response_ProcessList::kProcessesFieldNumber;
 #endif  // !_MSC_VER
 
-ProcessListResponse::ProcessListResponse()
+Response_ProcessList::Response_ProcessList()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ProcessListResponse)
+  // @@protoc_insertion_point(constructor:lms.Response.ProcessList)
 }
 
-void ProcessListResponse::InitAsDefaultInstance() {
+void Response_ProcessList::InitAsDefaultInstance() {
 }
 
-ProcessListResponse::ProcessListResponse(const ProcessListResponse& from)
+Response_ProcessList::Response_ProcessList(const Response_ProcessList& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ProcessListResponse)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ProcessList)
 }
 
-void ProcessListResponse::SharedCtor() {
+void Response_ProcessList::SharedCtor() {
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ProcessListResponse::~ProcessListResponse() {
-  // @@protoc_insertion_point(destructor:lms.ProcessListResponse)
+Response_ProcessList::~Response_ProcessList() {
+  // @@protoc_insertion_point(destructor:lms.Response.ProcessList)
   SharedDtor();
 }
 
-void ProcessListResponse::SharedDtor() {
+void Response_ProcessList::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void ProcessListResponse::SetCachedSize(int size) const {
+void Response_ProcessList::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ProcessListResponse::descriptor() {
+const ::google::protobuf::Descriptor* Response_ProcessList::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ProcessListResponse_descriptor_;
+  return Response_ProcessList_descriptor_;
 }
 
-const ProcessListResponse& ProcessListResponse::default_instance() {
+const Response_ProcessList& Response_ProcessList::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ProcessListResponse* ProcessListResponse::default_instance_ = NULL;
+Response_ProcessList* Response_ProcessList::default_instance_ = NULL;
 
-ProcessListResponse* ProcessListResponse::New() const {
-  return new ProcessListResponse;
+Response_ProcessList* Response_ProcessList::New() const {
+  return new Response_ProcessList;
 }
 
-void ProcessListResponse::Clear() {
+void Response_ProcessList::Clear() {
   processes_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool ProcessListResponse::MergePartialFromCodedStream(
+bool Response_ProcessList::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ProcessListResponse)
+  // @@protoc_insertion_point(parse_start:lms.Response.ProcessList)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .lms.ProcessListResponse.Process processes = 1;
+      // repeated .lms.Response.ProcessList.Process processes = 1;
       case 1: {
         if (tag == 10) {
          parse_processes:
@@ -4054,18 +4104,18 @@ bool ProcessListResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ProcessListResponse)
+  // @@protoc_insertion_point(parse_success:lms.Response.ProcessList)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ProcessListResponse)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ProcessList)
   return false;
 #undef DO_
 }
 
-void ProcessListResponse::SerializeWithCachedSizes(
+void Response_ProcessList::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ProcessListResponse)
-  // repeated .lms.ProcessListResponse.Process processes = 1;
+  // @@protoc_insertion_point(serialize_start:lms.Response.ProcessList)
+  // repeated .lms.Response.ProcessList.Process processes = 1;
   for (int i = 0; i < this->processes_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->processes(i), output);
@@ -4075,13 +4125,13 @@ void ProcessListResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ProcessListResponse)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ProcessList)
 }
 
-::google::protobuf::uint8* ProcessListResponse::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ProcessList::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ProcessListResponse)
-  // repeated .lms.ProcessListResponse.Process processes = 1;
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ProcessList)
+  // repeated .lms.Response.ProcessList.Process processes = 1;
   for (int i = 0; i < this->processes_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -4092,14 +4142,14 @@ void ProcessListResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ProcessListResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ProcessList)
   return target;
 }
 
-int ProcessListResponse::ByteSize() const {
+int Response_ProcessList::ByteSize() const {
   int total_size = 0;
 
-  // repeated .lms.ProcessListResponse.Process processes = 1;
+  // repeated .lms.Response.ProcessList.Process processes = 1;
   total_size += 1 * this->processes_size();
   for (int i = 0; i < this->processes_size(); i++) {
     total_size +=
@@ -4118,10 +4168,10 @@ int ProcessListResponse::ByteSize() const {
   return total_size;
 }
 
-void ProcessListResponse::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ProcessList::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ProcessListResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProcessListResponse*>(
+  const Response_ProcessList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ProcessList*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -4130,30 +4180,30 @@ void ProcessListResponse::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void ProcessListResponse::MergeFrom(const ProcessListResponse& from) {
+void Response_ProcessList::MergeFrom(const Response_ProcessList& from) {
   GOOGLE_CHECK_NE(&from, this);
   processes_.MergeFrom(from.processes_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ProcessListResponse::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ProcessList::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ProcessListResponse::CopyFrom(const ProcessListResponse& from) {
+void Response_ProcessList::CopyFrom(const Response_ProcessList& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ProcessListResponse::IsInitialized() const {
+bool Response_ProcessList::IsInitialized() const {
 
   return true;
 }
 
-void ProcessListResponse::Swap(ProcessListResponse* other) {
+void Response_ProcessList::Swap(Response_ProcessList* other) {
   if (other != this) {
     processes_.Swap(&other->processes_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -4162,22 +4212,22 @@ void ProcessListResponse::Swap(ProcessListResponse* other) {
   }
 }
 
-::google::protobuf::Metadata ProcessListResponse::GetMetadata() const {
+::google::protobuf::Metadata Response_ProcessList::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ProcessListResponse_descriptor_;
-  metadata.reflection = ProcessListResponse_reflection_;
+  metadata.descriptor = Response_ProcessList_descriptor_;
+  metadata.reflection = Response_ProcessList_reflection_;
   return metadata;
 }
 
 
-// ===================================================================
+// -------------------------------------------------------------------
 
-const ::google::protobuf::EnumDescriptor* ModuleListResponse_Permission_descriptor() {
+const ::google::protobuf::EnumDescriptor* Response_ModuleListResponse_Permission_descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ModuleListResponse_Permission_descriptor_;
+  return Response_ModuleListResponse_Permission_descriptor_;
 }
-bool ModuleListResponse_Permission_IsValid(int value) {
+bool Response_ModuleListResponse_Permission_IsValid(int value) {
   switch(value) {
     case 1:
     case 2:
@@ -4188,35 +4238,35 @@ bool ModuleListResponse_Permission_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const ModuleListResponse_Permission ModuleListResponse::READ;
-const ModuleListResponse_Permission ModuleListResponse::WRITE;
-const ModuleListResponse_Permission ModuleListResponse::Permission_MIN;
-const ModuleListResponse_Permission ModuleListResponse::Permission_MAX;
-const int ModuleListResponse::Permission_ARRAYSIZE;
+const Response_ModuleListResponse_Permission Response_ModuleListResponse::READ;
+const Response_ModuleListResponse_Permission Response_ModuleListResponse::WRITE;
+const Response_ModuleListResponse_Permission Response_ModuleListResponse::Permission_MIN;
+const Response_ModuleListResponse_Permission Response_ModuleListResponse::Permission_MAX;
+const int Response_ModuleListResponse::Permission_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
-const int ModuleListResponse_Access::kModuleFieldNumber;
-const int ModuleListResponse_Access::kPermissionFieldNumber;
-const int ModuleListResponse_Access::kPriorityFieldNumber;
+const int Response_ModuleListResponse_Access::kModuleFieldNumber;
+const int Response_ModuleListResponse_Access::kPermissionFieldNumber;
+const int Response_ModuleListResponse_Access::kPriorityFieldNumber;
 #endif  // !_MSC_VER
 
-ModuleListResponse_Access::ModuleListResponse_Access()
+Response_ModuleListResponse_Access::Response_ModuleListResponse_Access()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(constructor:lms.Response.ModuleListResponse.Access)
 }
 
-void ModuleListResponse_Access::InitAsDefaultInstance() {
+void Response_ModuleListResponse_Access::InitAsDefaultInstance() {
 }
 
-ModuleListResponse_Access::ModuleListResponse_Access(const ModuleListResponse_Access& from)
+Response_ModuleListResponse_Access::Response_ModuleListResponse_Access(const Response_ModuleListResponse_Access& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ModuleListResponse.Access)
 }
 
-void ModuleListResponse_Access::SharedCtor() {
+void Response_ModuleListResponse_Access::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   module_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -4225,12 +4275,12 @@ void ModuleListResponse_Access::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ModuleListResponse_Access::~ModuleListResponse_Access() {
-  // @@protoc_insertion_point(destructor:lms.ModuleListResponse.Access)
+Response_ModuleListResponse_Access::~Response_ModuleListResponse_Access() {
+  // @@protoc_insertion_point(destructor:lms.Response.ModuleListResponse.Access)
   SharedDtor();
 }
 
-void ModuleListResponse_Access::SharedDtor() {
+void Response_ModuleListResponse_Access::SharedDtor() {
   if (module_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete module_;
   }
@@ -4238,28 +4288,28 @@ void ModuleListResponse_Access::SharedDtor() {
   }
 }
 
-void ModuleListResponse_Access::SetCachedSize(int size) const {
+void Response_ModuleListResponse_Access::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ModuleListResponse_Access::descriptor() {
+const ::google::protobuf::Descriptor* Response_ModuleListResponse_Access::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ModuleListResponse_Access_descriptor_;
+  return Response_ModuleListResponse_Access_descriptor_;
 }
 
-const ModuleListResponse_Access& ModuleListResponse_Access::default_instance() {
+const Response_ModuleListResponse_Access& Response_ModuleListResponse_Access::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ModuleListResponse_Access* ModuleListResponse_Access::default_instance_ = NULL;
+Response_ModuleListResponse_Access* Response_ModuleListResponse_Access::default_instance_ = NULL;
 
-ModuleListResponse_Access* ModuleListResponse_Access::New() const {
-  return new ModuleListResponse_Access;
+Response_ModuleListResponse_Access* Response_ModuleListResponse_Access::New() const {
+  return new Response_ModuleListResponse_Access;
 }
 
-void ModuleListResponse_Access::Clear() {
+void Response_ModuleListResponse_Access::Clear() {
   if (_has_bits_[0 / 32] & 7) {
     if (has_module()) {
       if (module_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
@@ -4273,11 +4323,11 @@ void ModuleListResponse_Access::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool ModuleListResponse_Access::MergePartialFromCodedStream(
+bool Response_ModuleListResponse_Access::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(parse_start:lms.Response.ModuleListResponse.Access)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -4299,7 +4349,7 @@ bool ModuleListResponse_Access::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lms.ModuleListResponse.Permission permission = 2;
+      // optional .lms.Response.ModuleListResponse.Permission permission = 2;
       case 2: {
         if (tag == 16) {
          parse_permission:
@@ -4307,8 +4357,8 @@ bool ModuleListResponse_Access::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::lms::ModuleListResponse_Permission_IsValid(value)) {
-            set_permission(static_cast< ::lms::ModuleListResponse_Permission >(value));
+          if (::lms::Response_ModuleListResponse_Permission_IsValid(value)) {
+            set_permission(static_cast< ::lms::Response_ModuleListResponse_Permission >(value));
           } else {
             mutable_unknown_fields()->AddVarint(2, value);
           }
@@ -4348,17 +4398,17 @@ bool ModuleListResponse_Access::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(parse_success:lms.Response.ModuleListResponse.Access)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ModuleListResponse.Access)
   return false;
 #undef DO_
 }
 
-void ModuleListResponse_Access::SerializeWithCachedSizes(
+void Response_ModuleListResponse_Access::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(serialize_start:lms.Response.ModuleListResponse.Access)
   // optional string module = 1;
   if (has_module()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
@@ -4369,7 +4419,7 @@ void ModuleListResponse_Access::SerializeWithCachedSizes(
       1, this->module(), output);
   }
 
-  // optional .lms.ModuleListResponse.Permission permission = 2;
+  // optional .lms.Response.ModuleListResponse.Permission permission = 2;
   if (has_permission()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       2, this->permission(), output);
@@ -4384,12 +4434,12 @@ void ModuleListResponse_Access::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ModuleListResponse.Access)
 }
 
-::google::protobuf::uint8* ModuleListResponse_Access::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ModuleListResponse_Access::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ModuleListResponse.Access)
   // optional string module = 1;
   if (has_module()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
@@ -4401,7 +4451,7 @@ void ModuleListResponse_Access::SerializeWithCachedSizes(
         1, this->module(), target);
   }
 
-  // optional .lms.ModuleListResponse.Permission permission = 2;
+  // optional .lms.Response.ModuleListResponse.Permission permission = 2;
   if (has_permission()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->permission(), target);
@@ -4416,11 +4466,11 @@ void ModuleListResponse_Access::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ModuleListResponse.Access)
   return target;
 }
 
-int ModuleListResponse_Access::ByteSize() const {
+int Response_ModuleListResponse_Access::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -4431,7 +4481,7 @@ int ModuleListResponse_Access::ByteSize() const {
           this->module());
     }
 
-    // optional .lms.ModuleListResponse.Permission permission = 2;
+    // optional .lms.Response.ModuleListResponse.Permission permission = 2;
     if (has_permission()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->permission());
@@ -4456,10 +4506,10 @@ int ModuleListResponse_Access::ByteSize() const {
   return total_size;
 }
 
-void ModuleListResponse_Access::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ModuleListResponse_Access::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ModuleListResponse_Access* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ModuleListResponse_Access*>(
+  const Response_ModuleListResponse_Access* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ModuleListResponse_Access*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -4468,7 +4518,7 @@ void ModuleListResponse_Access::MergeFrom(const ::google::protobuf::Message& fro
   }
 }
 
-void ModuleListResponse_Access::MergeFrom(const ModuleListResponse_Access& from) {
+void Response_ModuleListResponse_Access::MergeFrom(const Response_ModuleListResponse_Access& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_module()) {
@@ -4484,24 +4534,24 @@ void ModuleListResponse_Access::MergeFrom(const ModuleListResponse_Access& from)
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ModuleListResponse_Access::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ModuleListResponse_Access::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ModuleListResponse_Access::CopyFrom(const ModuleListResponse_Access& from) {
+void Response_ModuleListResponse_Access::CopyFrom(const Response_ModuleListResponse_Access& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ModuleListResponse_Access::IsInitialized() const {
+bool Response_ModuleListResponse_Access::IsInitialized() const {
 
   return true;
 }
 
-void ModuleListResponse_Access::Swap(ModuleListResponse_Access* other) {
+void Response_ModuleListResponse_Access::Swap(Response_ModuleListResponse_Access* other) {
   if (other != this) {
     std::swap(module_, other->module_);
     std::swap(permission_, other->permission_);
@@ -4512,11 +4562,11 @@ void ModuleListResponse_Access::Swap(ModuleListResponse_Access* other) {
   }
 }
 
-::google::protobuf::Metadata ModuleListResponse_Access::GetMetadata() const {
+::google::protobuf::Metadata Response_ModuleListResponse_Access::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ModuleListResponse_Access_descriptor_;
-  metadata.reflection = ModuleListResponse_Access_reflection_;
+  metadata.descriptor = Response_ModuleListResponse_Access_descriptor_;
+  metadata.reflection = Response_ModuleListResponse_Access_reflection_;
   return metadata;
 }
 
@@ -4524,87 +4574,114 @@ void ModuleListResponse_Access::Swap(ModuleListResponse_Access* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
-const int ModuleListResponse_AccessList::kAccessListFieldNumber;
+const int Response_ModuleListResponse_Channel::kNameFieldNumber;
+const int Response_ModuleListResponse_Channel::kAccessListFieldNumber;
 #endif  // !_MSC_VER
 
-ModuleListResponse_AccessList::ModuleListResponse_AccessList()
+Response_ModuleListResponse_Channel::Response_ModuleListResponse_Channel()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(constructor:lms.Response.ModuleListResponse.Channel)
 }
 
-void ModuleListResponse_AccessList::InitAsDefaultInstance() {
+void Response_ModuleListResponse_Channel::InitAsDefaultInstance() {
 }
 
-ModuleListResponse_AccessList::ModuleListResponse_AccessList(const ModuleListResponse_AccessList& from)
+Response_ModuleListResponse_Channel::Response_ModuleListResponse_Channel(const Response_ModuleListResponse_Channel& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ModuleListResponse.Channel)
 }
 
-void ModuleListResponse_AccessList::SharedCtor() {
+void Response_ModuleListResponse_Channel::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ModuleListResponse_AccessList::~ModuleListResponse_AccessList() {
-  // @@protoc_insertion_point(destructor:lms.ModuleListResponse.AccessList)
+Response_ModuleListResponse_Channel::~Response_ModuleListResponse_Channel() {
+  // @@protoc_insertion_point(destructor:lms.Response.ModuleListResponse.Channel)
   SharedDtor();
 }
 
-void ModuleListResponse_AccessList::SharedDtor() {
+void Response_ModuleListResponse_Channel::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
   if (this != default_instance_) {
   }
 }
 
-void ModuleListResponse_AccessList::SetCachedSize(int size) const {
+void Response_ModuleListResponse_Channel::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ModuleListResponse_AccessList::descriptor() {
+const ::google::protobuf::Descriptor* Response_ModuleListResponse_Channel::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ModuleListResponse_AccessList_descriptor_;
+  return Response_ModuleListResponse_Channel_descriptor_;
 }
 
-const ModuleListResponse_AccessList& ModuleListResponse_AccessList::default_instance() {
+const Response_ModuleListResponse_Channel& Response_ModuleListResponse_Channel::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ModuleListResponse_AccessList* ModuleListResponse_AccessList::default_instance_ = NULL;
+Response_ModuleListResponse_Channel* Response_ModuleListResponse_Channel::default_instance_ = NULL;
 
-ModuleListResponse_AccessList* ModuleListResponse_AccessList::New() const {
-  return new ModuleListResponse_AccessList;
+Response_ModuleListResponse_Channel* Response_ModuleListResponse_Channel::New() const {
+  return new Response_ModuleListResponse_Channel;
 }
 
-void ModuleListResponse_AccessList::Clear() {
-  accesslist_.Clear();
+void Response_ModuleListResponse_Channel::Clear() {
+  if (has_name()) {
+    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      name_->clear();
+    }
+  }
+  access_list_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool ModuleListResponse_AccessList::MergePartialFromCodedStream(
+bool Response_ModuleListResponse_Channel::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(parse_start:lms.Response.ModuleListResponse.Channel)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .lms.ModuleListResponse.Access accessList = 1;
+      // optional string name = 1;
       case 1: {
         if (tag == 10) {
-         parse_accessList:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_accesslist()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_accessList;
+        if (input->ExpectTag(18)) goto parse_access_list;
+        break;
+      }
+
+      // repeated .lms.Response.ModuleListResponse.Access access_list = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_access_list:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_access_list()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_access_list;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -4623,57 +4700,87 @@ bool ModuleListResponse_AccessList::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(parse_success:lms.Response.ModuleListResponse.Channel)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ModuleListResponse.Channel)
   return false;
 #undef DO_
 }
 
-void ModuleListResponse_AccessList::SerializeWithCachedSizes(
+void Response_ModuleListResponse_Channel::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ModuleListResponse.AccessList)
-  // repeated .lms.ModuleListResponse.Access accessList = 1;
-  for (int i = 0; i < this->accesslist_size(); i++) {
+  // @@protoc_insertion_point(serialize_start:lms.Response.ModuleListResponse.Channel)
+  // optional string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
+  }
+
+  // repeated .lms.Response.ModuleListResponse.Access access_list = 2;
+  for (int i = 0; i < this->access_list_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->accesslist(i), output);
+      2, this->access_list(i), output);
   }
 
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ModuleListResponse.Channel)
 }
 
-::google::protobuf::uint8* ModuleListResponse_AccessList::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ModuleListResponse_Channel::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ModuleListResponse.AccessList)
-  // repeated .lms.ModuleListResponse.Access accessList = 1;
-  for (int i = 0; i < this->accesslist_size(); i++) {
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ModuleListResponse.Channel)
+  // optional string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // repeated .lms.Response.ModuleListResponse.Access access_list = 2;
+  for (int i = 0; i < this->access_list_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->accesslist(i), target);
+        2, this->access_list(i), target);
   }
 
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ModuleListResponse.AccessList)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ModuleListResponse.Channel)
   return target;
 }
 
-int ModuleListResponse_AccessList::ByteSize() const {
+int Response_ModuleListResponse_Channel::ByteSize() const {
   int total_size = 0;
 
-  // repeated .lms.ModuleListResponse.Access accessList = 1;
-  total_size += 1 * this->accesslist_size();
-  for (int i = 0; i < this->accesslist_size(); i++) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+  }
+  // repeated .lms.Response.ModuleListResponse.Access access_list = 2;
+  total_size += 1 * this->access_list_size();
+  for (int i = 0; i < this->access_list_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->accesslist(i));
+        this->access_list(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -4687,10 +4794,10 @@ int ModuleListResponse_AccessList::ByteSize() const {
   return total_size;
 }
 
-void ModuleListResponse_AccessList::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ModuleListResponse_Channel::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ModuleListResponse_AccessList* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ModuleListResponse_AccessList*>(
+  const Response_ModuleListResponse_Channel* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ModuleListResponse_Channel*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -4699,43 +4806,49 @@ void ModuleListResponse_AccessList::MergeFrom(const ::google::protobuf::Message&
   }
 }
 
-void ModuleListResponse_AccessList::MergeFrom(const ModuleListResponse_AccessList& from) {
+void Response_ModuleListResponse_Channel::MergeFrom(const Response_ModuleListResponse_Channel& from) {
   GOOGLE_CHECK_NE(&from, this);
-  accesslist_.MergeFrom(from.accesslist_);
+  access_list_.MergeFrom(from.access_list_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ModuleListResponse_AccessList::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ModuleListResponse_Channel::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ModuleListResponse_AccessList::CopyFrom(const ModuleListResponse_AccessList& from) {
+void Response_ModuleListResponse_Channel::CopyFrom(const Response_ModuleListResponse_Channel& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ModuleListResponse_AccessList::IsInitialized() const {
+bool Response_ModuleListResponse_Channel::IsInitialized() const {
 
   return true;
 }
 
-void ModuleListResponse_AccessList::Swap(ModuleListResponse_AccessList* other) {
+void Response_ModuleListResponse_Channel::Swap(Response_ModuleListResponse_Channel* other) {
   if (other != this) {
-    accesslist_.Swap(&other->accesslist_);
+    std::swap(name_, other->name_);
+    access_list_.Swap(&other->access_list_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata ModuleListResponse_AccessList::GetMetadata() const {
+::google::protobuf::Metadata Response_ModuleListResponse_Channel::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ModuleListResponse_AccessList_descriptor_;
-  metadata.reflection = ModuleListResponse_AccessList_reflection_;
+  metadata.descriptor = Response_ModuleListResponse_Channel_descriptor_;
+  metadata.reflection = Response_ModuleListResponse_Channel_reflection_;
   return metadata;
 }
 
@@ -4743,115 +4856,157 @@ void ModuleListResponse_AccessList::Swap(ModuleListResponse_AccessList* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
+const int Response_ModuleListResponse::kChannelsFieldNumber;
 #endif  // !_MSC_VER
 
-ModuleListResponse::ModuleListResponse()
+Response_ModuleListResponse::Response_ModuleListResponse()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.ModuleListResponse)
+  // @@protoc_insertion_point(constructor:lms.Response.ModuleListResponse)
 }
 
-void ModuleListResponse::InitAsDefaultInstance() {
+void Response_ModuleListResponse::InitAsDefaultInstance() {
 }
 
-ModuleListResponse::ModuleListResponse(const ModuleListResponse& from)
+Response_ModuleListResponse::Response_ModuleListResponse(const Response_ModuleListResponse& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.ModuleListResponse)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.ModuleListResponse)
 }
 
-void ModuleListResponse::SharedCtor() {
+void Response_ModuleListResponse::SharedCtor() {
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ModuleListResponse::~ModuleListResponse() {
-  // @@protoc_insertion_point(destructor:lms.ModuleListResponse)
+Response_ModuleListResponse::~Response_ModuleListResponse() {
+  // @@protoc_insertion_point(destructor:lms.Response.ModuleListResponse)
   SharedDtor();
 }
 
-void ModuleListResponse::SharedDtor() {
+void Response_ModuleListResponse::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void ModuleListResponse::SetCachedSize(int size) const {
+void Response_ModuleListResponse::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ModuleListResponse::descriptor() {
+const ::google::protobuf::Descriptor* Response_ModuleListResponse::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ModuleListResponse_descriptor_;
+  return Response_ModuleListResponse_descriptor_;
 }
 
-const ModuleListResponse& ModuleListResponse::default_instance() {
+const Response_ModuleListResponse& Response_ModuleListResponse::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-ModuleListResponse* ModuleListResponse::default_instance_ = NULL;
+Response_ModuleListResponse* Response_ModuleListResponse::default_instance_ = NULL;
 
-ModuleListResponse* ModuleListResponse::New() const {
-  return new ModuleListResponse;
+Response_ModuleListResponse* Response_ModuleListResponse::New() const {
+  return new Response_ModuleListResponse;
 }
 
-void ModuleListResponse::Clear() {
+void Response_ModuleListResponse::Clear() {
+  channels_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool ModuleListResponse::MergePartialFromCodedStream(
+bool Response_ModuleListResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.ModuleListResponse)
+  // @@protoc_insertion_point(parse_start:lms.Response.ModuleListResponse)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-  handle_unusual:
-    if (tag == 0 ||
-        ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-        ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-      goto success;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .lms.Response.ModuleListResponse.Channel channels = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_channels:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_channels()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_channels;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
     }
-    DO_(::google::protobuf::internal::WireFormat::SkipField(
-          input, tag, mutable_unknown_fields()));
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.ModuleListResponse)
+  // @@protoc_insertion_point(parse_success:lms.Response.ModuleListResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.ModuleListResponse)
+  // @@protoc_insertion_point(parse_failure:lms.Response.ModuleListResponse)
   return false;
 #undef DO_
 }
 
-void ModuleListResponse::SerializeWithCachedSizes(
+void Response_ModuleListResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.ModuleListResponse)
+  // @@protoc_insertion_point(serialize_start:lms.Response.ModuleListResponse)
+  // repeated .lms.Response.ModuleListResponse.Channel channels = 1;
+  for (int i = 0; i < this->channels_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->channels(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.ModuleListResponse)
+  // @@protoc_insertion_point(serialize_end:lms.Response.ModuleListResponse)
 }
 
-::google::protobuf::uint8* ModuleListResponse::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_ModuleListResponse::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.ModuleListResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.ModuleListResponse)
+  // repeated .lms.Response.ModuleListResponse.Channel channels = 1;
+  for (int i = 0; i < this->channels_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->channels(i), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.ModuleListResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.ModuleListResponse)
   return target;
 }
 
-int ModuleListResponse::ByteSize() const {
+int Response_ModuleListResponse::ByteSize() const {
   int total_size = 0;
+
+  // repeated .lms.Response.ModuleListResponse.Channel channels = 1;
+  total_size += 1 * this->channels_size();
+  for (int i = 0; i < this->channels_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->channels(i));
+  }
 
   if (!unknown_fields().empty()) {
     total_size +=
@@ -4864,10 +5019,10 @@ int ModuleListResponse::ByteSize() const {
   return total_size;
 }
 
-void ModuleListResponse::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_ModuleListResponse::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const ModuleListResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ModuleListResponse*>(
+  const Response_ModuleListResponse* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_ModuleListResponse*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -4876,51 +5031,54 @@ void ModuleListResponse::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void ModuleListResponse::MergeFrom(const ModuleListResponse& from) {
+void Response_ModuleListResponse::MergeFrom(const Response_ModuleListResponse& from) {
   GOOGLE_CHECK_NE(&from, this);
+  channels_.MergeFrom(from.channels_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ModuleListResponse::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_ModuleListResponse::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ModuleListResponse::CopyFrom(const ModuleListResponse& from) {
+void Response_ModuleListResponse::CopyFrom(const Response_ModuleListResponse& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ModuleListResponse::IsInitialized() const {
+bool Response_ModuleListResponse::IsInitialized() const {
 
   return true;
 }
 
-void ModuleListResponse::Swap(ModuleListResponse* other) {
+void Response_ModuleListResponse::Swap(Response_ModuleListResponse* other) {
   if (other != this) {
+    channels_.Swap(&other->channels_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata ModuleListResponse::GetMetadata() const {
+::google::protobuf::Metadata Response_ModuleListResponse::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ModuleListResponse_descriptor_;
-  metadata.reflection = ModuleListResponse_reflection_;
+  metadata.descriptor = Response_ModuleListResponse_descriptor_;
+  metadata.reflection = Response_ModuleListResponse_reflection_;
   return metadata;
 }
 
 
-// ===================================================================
+// -------------------------------------------------------------------
 
-const ::google::protobuf::EnumDescriptor* LogEvent_Level_descriptor() {
+const ::google::protobuf::EnumDescriptor* Response_LogEvent_Level_descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return LogEvent_Level_descriptor_;
+  return Response_LogEvent_Level_descriptor_;
 }
-bool LogEvent_Level_IsValid(int value) {
+bool Response_LogEvent_Level_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
@@ -4935,40 +5093,40 @@ bool LogEvent_Level_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const LogEvent_Level LogEvent::ALL;
-const LogEvent_Level LogEvent::DEBUG;
-const LogEvent_Level LogEvent::INFO;
-const LogEvent_Level LogEvent::WARN;
-const LogEvent_Level LogEvent::ERROR;
-const LogEvent_Level LogEvent::OFF;
-const LogEvent_Level LogEvent::Level_MIN;
-const LogEvent_Level LogEvent::Level_MAX;
-const int LogEvent::Level_ARRAYSIZE;
+const Response_LogEvent_Level Response_LogEvent::ALL;
+const Response_LogEvent_Level Response_LogEvent::DEBUG;
+const Response_LogEvent_Level Response_LogEvent::INFO;
+const Response_LogEvent_Level Response_LogEvent::WARN;
+const Response_LogEvent_Level Response_LogEvent::ERROR;
+const Response_LogEvent_Level Response_LogEvent::OFF;
+const Response_LogEvent_Level Response_LogEvent::Level_MIN;
+const Response_LogEvent_Level Response_LogEvent::Level_MAX;
+const int Response_LogEvent::Level_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
-const int LogEvent::kLevelFieldNumber;
-const int LogEvent::kTagFieldNumber;
-const int LogEvent::kTextFieldNumber;
-const int LogEvent::kCloseAfterFieldNumber;
+const int Response_LogEvent::kLevelFieldNumber;
+const int Response_LogEvent::kTagFieldNumber;
+const int Response_LogEvent::kTextFieldNumber;
+const int Response_LogEvent::kCloseAfterFieldNumber;
 #endif  // !_MSC_VER
 
-LogEvent::LogEvent()
+Response_LogEvent::Response_LogEvent()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.LogEvent)
+  // @@protoc_insertion_point(constructor:lms.Response.LogEvent)
 }
 
-void LogEvent::InitAsDefaultInstance() {
+void Response_LogEvent::InitAsDefaultInstance() {
 }
 
-LogEvent::LogEvent(const LogEvent& from)
+Response_LogEvent::Response_LogEvent(const Response_LogEvent& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.LogEvent)
+  // @@protoc_insertion_point(copy_constructor:lms.Response.LogEvent)
 }
 
-void LogEvent::SharedCtor() {
+void Response_LogEvent::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   level_ = 0;
@@ -4978,12 +5136,12 @@ void LogEvent::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-LogEvent::~LogEvent() {
-  // @@protoc_insertion_point(destructor:lms.LogEvent)
+Response_LogEvent::~Response_LogEvent() {
+  // @@protoc_insertion_point(destructor:lms.Response.LogEvent)
   SharedDtor();
 }
 
-void LogEvent::SharedDtor() {
+void Response_LogEvent::SharedDtor() {
   if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete tag_;
   }
@@ -4994,30 +5152,30 @@ void LogEvent::SharedDtor() {
   }
 }
 
-void LogEvent::SetCachedSize(int size) const {
+void Response_LogEvent::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* LogEvent::descriptor() {
+const ::google::protobuf::Descriptor* Response_LogEvent::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return LogEvent_descriptor_;
+  return Response_LogEvent_descriptor_;
 }
 
-const LogEvent& LogEvent::default_instance() {
+const Response_LogEvent& Response_LogEvent::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
   return *default_instance_;
 }
 
-LogEvent* LogEvent::default_instance_ = NULL;
+Response_LogEvent* Response_LogEvent::default_instance_ = NULL;
 
-LogEvent* LogEvent::New() const {
-  return new LogEvent;
+Response_LogEvent* Response_LogEvent::New() const {
+  return new Response_LogEvent;
 }
 
-void LogEvent::Clear() {
+void Response_LogEvent::Clear() {
 #define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<LogEvent*>(16)->f) - \
+  &reinterpret_cast<Response_LogEvent*>(16)->f) - \
    reinterpret_cast<char*>(16))
 
 #define ZR_(first, last) do {                              \
@@ -5047,25 +5205,25 @@ void LogEvent::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool LogEvent::MergePartialFromCodedStream(
+bool Response_LogEvent::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.LogEvent)
+  // @@protoc_insertion_point(parse_start:lms.Response.LogEvent)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .lms.LogEvent.Level level = 1;
+      // optional .lms.Response.LogEvent.Level level = 1;
       case 1: {
         if (tag == 8) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::lms::LogEvent_Level_IsValid(value)) {
-            set_level(static_cast< ::lms::LogEvent_Level >(value));
+          if (::lms::Response_LogEvent_Level_IsValid(value)) {
+            set_level(static_cast< ::lms::Response_LogEvent_Level >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -5139,18 +5297,18 @@ bool LogEvent::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lms.LogEvent)
+  // @@protoc_insertion_point(parse_success:lms.Response.LogEvent)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lms.LogEvent)
+  // @@protoc_insertion_point(parse_failure:lms.Response.LogEvent)
   return false;
 #undef DO_
 }
 
-void LogEvent::SerializeWithCachedSizes(
+void Response_LogEvent::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.LogEvent)
-  // optional .lms.LogEvent.Level level = 1;
+  // @@protoc_insertion_point(serialize_start:lms.Response.LogEvent)
+  // optional .lms.Response.LogEvent.Level level = 1;
   if (has_level()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->level(), output);
@@ -5185,13 +5343,13 @@ void LogEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lms.LogEvent)
+  // @@protoc_insertion_point(serialize_end:lms.Response.LogEvent)
 }
 
-::google::protobuf::uint8* LogEvent::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response_LogEvent::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.LogEvent)
-  // optional .lms.LogEvent.Level level = 1;
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response.LogEvent)
+  // optional .lms.Response.LogEvent.Level level = 1;
   if (has_level()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->level(), target);
@@ -5228,15 +5386,15 @@ void LogEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.LogEvent)
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response.LogEvent)
   return target;
 }
 
-int LogEvent::ByteSize() const {
+int Response_LogEvent::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .lms.LogEvent.Level level = 1;
+    // optional .lms.Response.LogEvent.Level level = 1;
     if (has_level()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->level());
@@ -5273,10 +5431,10 @@ int LogEvent::ByteSize() const {
   return total_size;
 }
 
-void LogEvent::MergeFrom(const ::google::protobuf::Message& from) {
+void Response_LogEvent::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const LogEvent* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const LogEvent*>(
+  const Response_LogEvent* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response_LogEvent*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -5285,7 +5443,7 @@ void LogEvent::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void LogEvent::MergeFrom(const LogEvent& from) {
+void Response_LogEvent::MergeFrom(const Response_LogEvent& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_level()) {
@@ -5304,24 +5462,24 @@ void LogEvent::MergeFrom(const LogEvent& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void LogEvent::CopyFrom(const ::google::protobuf::Message& from) {
+void Response_LogEvent::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void LogEvent::CopyFrom(const LogEvent& from) {
+void Response_LogEvent::CopyFrom(const Response_LogEvent& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool LogEvent::IsInitialized() const {
+bool Response_LogEvent::IsInitialized() const {
 
   return true;
 }
 
-void LogEvent::Swap(LogEvent* other) {
+void Response_LogEvent::Swap(Response_LogEvent* other) {
   if (other != this) {
     std::swap(level_, other->level_);
     std::swap(tag_, other->tag_);
@@ -5333,11 +5491,432 @@ void LogEvent::Swap(LogEvent* other) {
   }
 }
 
-::google::protobuf::Metadata LogEvent::GetMetadata() const {
+::google::protobuf::Metadata Response_LogEvent::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = LogEvent_descriptor_;
-  metadata.reflection = LogEvent_reflection_;
+  metadata.descriptor = Response_LogEvent_descriptor_;
+  metadata.reflection = Response_LogEvent_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
+const int Response::kInfoFieldNumber;
+const int Response::kClientListFieldNumber;
+const int Response::kProcessListFieldNumber;
+const int Response::kModuleListFieldNumber;
+const int Response::kLogEventFieldNumber;
+#endif  // !_MSC_VER
+
+Response::Response()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:lms.Response)
+}
+
+void Response::InitAsDefaultInstance() {
+  Response_default_oneof_instance_->info_ = const_cast< ::lms::Response_Info*>(&::lms::Response_Info::default_instance());
+  Response_default_oneof_instance_->client_list_ = const_cast< ::lms::Response_ClientList*>(&::lms::Response_ClientList::default_instance());
+  Response_default_oneof_instance_->process_list_ = const_cast< ::lms::Response_ProcessList*>(&::lms::Response_ProcessList::default_instance());
+  Response_default_oneof_instance_->module_list_ = const_cast< ::lms::Response_ModuleListResponse*>(&::lms::Response_ModuleListResponse::default_instance());
+  Response_default_oneof_instance_->log_event_ = const_cast< ::lms::Response_LogEvent*>(&::lms::Response_LogEvent::default_instance());
+}
+
+Response::Response(const Response& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:lms.Response)
+}
+
+void Response::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  clear_has_content();
+}
+
+Response::~Response() {
+  // @@protoc_insertion_point(destructor:lms.Response)
+  SharedDtor();
+}
+
+void Response::SharedDtor() {
+  if (has_content()) {
+    clear_content();
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Response::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Response::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Response_descriptor_;
+}
+
+const Response& Response::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
+  return *default_instance_;
+}
+
+Response* Response::default_instance_ = NULL;
+
+Response* Response::New() const {
+  return new Response;
+}
+
+void Response::clear_content() {
+  switch(content_case()) {
+    case kInfo: {
+      delete content_.info_;
+      break;
+    }
+    case kClientList: {
+      delete content_.client_list_;
+      break;
+    }
+    case kProcessList: {
+      delete content_.process_list_;
+      break;
+    }
+    case kModuleList: {
+      delete content_.module_list_;
+      break;
+    }
+    case kLogEvent: {
+      delete content_.log_event_;
+      break;
+    }
+    case CONTENT_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = CONTENT_NOT_SET;
+}
+
+
+void Response::Clear() {
+  clear_content();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Response::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:lms.Response)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .lms.Response.Info info = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_info()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_client_list;
+        break;
+      }
+
+      // optional .lms.Response.ClientList client_list = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_client_list:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_client_list()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_process_list;
+        break;
+      }
+
+      // optional .lms.Response.ProcessList process_list = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_process_list:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_process_list()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_module_list;
+        break;
+      }
+
+      // optional .lms.Response.ModuleListResponse module_list = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_module_list:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_module_list()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(42)) goto parse_log_event;
+        break;
+      }
+
+      // optional .lms.Response.LogEvent log_event = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_log_event:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_log_event()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:lms.Response)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:lms.Response)
+  return false;
+#undef DO_
+}
+
+void Response::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:lms.Response)
+  // optional .lms.Response.Info info = 1;
+  if (has_info()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->info(), output);
+  }
+
+  // optional .lms.Response.ClientList client_list = 2;
+  if (has_client_list()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->client_list(), output);
+  }
+
+  // optional .lms.Response.ProcessList process_list = 3;
+  if (has_process_list()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->process_list(), output);
+  }
+
+  // optional .lms.Response.ModuleListResponse module_list = 4;
+  if (has_module_list()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->module_list(), output);
+  }
+
+  // optional .lms.Response.LogEvent log_event = 5;
+  if (has_log_event()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->log_event(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:lms.Response)
+}
+
+::google::protobuf::uint8* Response::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Response)
+  // optional .lms.Response.Info info = 1;
+  if (has_info()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->info(), target);
+  }
+
+  // optional .lms.Response.ClientList client_list = 2;
+  if (has_client_list()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->client_list(), target);
+  }
+
+  // optional .lms.Response.ProcessList process_list = 3;
+  if (has_process_list()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->process_list(), target);
+  }
+
+  // optional .lms.Response.ModuleListResponse module_list = 4;
+  if (has_module_list()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->module_list(), target);
+  }
+
+  // optional .lms.Response.LogEvent log_event = 5;
+  if (has_log_event()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->log_event(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Response)
+  return target;
+}
+
+int Response::ByteSize() const {
+  int total_size = 0;
+
+  switch (content_case()) {
+    // optional .lms.Response.Info info = 1;
+    case kInfo: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->info());
+      break;
+    }
+    // optional .lms.Response.ClientList client_list = 2;
+    case kClientList: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->client_list());
+      break;
+    }
+    // optional .lms.Response.ProcessList process_list = 3;
+    case kProcessList: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->process_list());
+      break;
+    }
+    // optional .lms.Response.ModuleListResponse module_list = 4;
+    case kModuleList: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->module_list());
+      break;
+    }
+    // optional .lms.Response.LogEvent log_event = 5;
+    case kLogEvent: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->log_event());
+      break;
+    }
+    case CONTENT_NOT_SET: {
+      break;
+    }
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Response::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Response* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Response*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Response::MergeFrom(const Response& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  switch (from.content_case()) {
+    case kInfo: {
+      mutable_info()->::lms::Response_Info::MergeFrom(from.info());
+      break;
+    }
+    case kClientList: {
+      mutable_client_list()->::lms::Response_ClientList::MergeFrom(from.client_list());
+      break;
+    }
+    case kProcessList: {
+      mutable_process_list()->::lms::Response_ProcessList::MergeFrom(from.process_list());
+      break;
+    }
+    case kModuleList: {
+      mutable_module_list()->::lms::Response_ModuleListResponse::MergeFrom(from.module_list());
+      break;
+    }
+    case kLogEvent: {
+      mutable_log_event()->::lms::Response_LogEvent::MergeFrom(from.log_event());
+      break;
+    }
+    case CONTENT_NOT_SET: {
+      break;
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Response::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Response::CopyFrom(const Response& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Response::IsInitialized() const {
+
+  return true;
+}
+
+void Response::Swap(Response* other) {
+  if (other != this) {
+    std::swap(content_, other->content_);
+    std::swap(_oneof_case_[0], other->_oneof_case_[0]);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Response::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Response_descriptor_;
+  metadata.reflection = Response_reflection_;
   return metadata;
 }
 
