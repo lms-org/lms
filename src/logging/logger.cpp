@@ -55,34 +55,12 @@ std::unique_ptr<Event> Logger::perror(const std::string &tag) {
     return log(Level::ERROR, tag) << msgPtr << " - ";
 }
 
-void Logger::time(const std::string &timerName) {
-    // trigger a debug message to inform the programmer
-    debug(timerName) << "started";
-
-    // at LAST: save the current time in our cache
-    m_timestampCache[timerName] = Time::now();
+void Logger::time(const std::string &tag) {
+    log(Level::PROFILE, tag) << "_begin";
 }
 
-void Logger::timeEnd(const std::string &timerName) {
-    // at FIRST: save the current time
-    Time endTime = Time::now();
-
-    // check if time() was called with the same timer name.
-    auto it = m_timestampCache.find(timerName);
-
-    if (it == m_timestampCache.end()) {
-        // if not found: trigger bad debug message
-        debug(timerName) << "timeEnd() was called without time()";
-    } else {
-        // compute time difference
-        Time deltaTime = endTime - it->second;
-
-        // print delta time as debug message
-        debug(timerName) << deltaTime;
-
-        // remove timestamp from our cache
-        m_timestampCache.erase(it);
-    }
+void Logger::timeEnd(const std::string &tag) {
+    log(Level::PROFILE, tag) << "_end";
 }
 
 std::unique_ptr<Event> Logger::log(Level lvl, const std::string &tag) {
@@ -105,7 +83,7 @@ std::unique_ptr<Event> Logger::log(Level lvl, const std::string &tag) {
 
     if (lvl >= threshold &&
         (filter == nullptr || filter->decide(lvl, newTag))) {
-        return std::unique_ptr<Event>(new Event(*context, lvl, newTag));
+        return std::unique_ptr<Event>(new Event(*context, lvl, newTag, lms::Time::now()));
     } else {
         return nullptr;
     }

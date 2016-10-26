@@ -389,8 +389,8 @@ void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
         const auto &event = response.log_event();
         if(static_cast<logging::Level>(event.level()) >= logLevel) {
             // get time now
-            time_t rawtime;
-            std::time(&rawtime);
+            time_t rawtime = event.timestamp() / 1000 / 1000;
+            //std::time(&rawtime);
             struct tm *now = std::localtime(&rawtime);
 
             // format time to "HH:MM:SS"

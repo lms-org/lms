@@ -12,6 +12,7 @@ void ProtobufSink::sink(const lms::logging::Event &message) {
     event->set_tag(message.tag);
     event->set_level(static_cast<Response::LogEvent::Level>(message.level));
     event->set_text(message.messageText());
+    event->set_timestamp(message.timestamp.micros());
 
     {
         std::lock_guard<std::mutex> lck(mtx);

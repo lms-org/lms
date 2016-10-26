@@ -15,7 +15,6 @@
 #include "lms/datamanager.h"
 #include "executionmanager.h"
 #include "lms/logger.h"
-#include "profiler.h"
 #include "lms/messaging.h"
 #include "dag.h"
 #include "watch_dog.h"
@@ -27,7 +26,7 @@ namespace internal {
 
 class ExecutionManager {
 public:
-    ExecutionManager(Profiler &profiler, Framework &runtime);
+    ExecutionManager(Framework &runtime);
     ~ExecutionManager();
 
     /**cycle modules */
@@ -83,8 +82,6 @@ public:
 
     void printCycleList();
 
-    Profiler &profiler();
-
     Messaging &messaging();
 
     /**
@@ -125,7 +122,6 @@ private:
     void threadFunction(int threadNum);
     void stopRunning();
 
-    Profiler &m_profiler;
     Framework &m_runtime;
 
     ModuleChannelGraph<Module *> moduleChannelGraph;

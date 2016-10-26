@@ -11,7 +11,7 @@ namespace lms {
 namespace internal {
 
 Framework::Framework(const std::string &mainConfigFilePath)
-    : m_executionManager(m_profiler, *this), logger("lms.Framework"),
+    : m_executionManager(*this), logger("lms.Framework"),
       mainConfigFilePath(mainConfigFilePath), m_running(false), is_debug(false) {
 
     // start();
@@ -42,9 +42,11 @@ void Framework::start() {
             }
 
             try {
+                logger.time("updateSystem");
                 if(! updateSystem(runtime)) {
                     m_running = false;
                 }
+                logger.timeEnd("updateSystem");
             } catch(std::exception const &ex) {
                 logger.error() << lms::typeName(ex) << ": " <<  ex.what();
                 m_running = false;
@@ -175,8 +177,6 @@ bool Framework::cycle() {
     m_executionManager.loop();
     return true;
 }
-
-Profiler &Framework::profiler() { return m_profiler; }
 
 std::shared_ptr<Service> Framework::getService(std::string const &name) {
     return services[name];

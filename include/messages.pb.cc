@@ -400,11 +400,12 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(Response_ModuleListResponse_Channel));
   Response_ModuleListResponse_Permission_descriptor_ = Response_ModuleListResponse_descriptor_->enum_type(0);
   Response_LogEvent_descriptor_ = Response_descriptor_->nested_type(4);
-  static const int Response_LogEvent_offsets_[4] = {
+  static const int Response_LogEvent_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, level_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, tag_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, close_after_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_LogEvent, timestamp_),
   };
   Response_LogEvent_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -536,7 +537,7 @@ void protobuf_AddDesc_messages_2eproto() {
     "lude_paths\030\002 \003(\t\022\r\n\005flags\030\003 \003(\t\022\r\n\005debug"
     "\030\004 \001(\010\032\017\n\rListProcesses\032\024\n\006Attach\022\n\n\002id\030"
     "\001 \001(\t\032 \n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004kill\030\002 \001(\010\032"
-    "\014\n\nModuleListB\t\n\007content\"\360\007\n\010Response\022\"\n"
+    "\014\n\nModuleListB\t\n\007content\"\220\010\n\010Response\022\"\n"
     "\004info\030\001 \001(\0132\022.lms.Response.InfoH\000\022/\n\013cli"
     "ent_list\030\002 \001(\0132\030.lms.Response.ClientList"
     "H\000\0221\n\014process_list\030\003 \001(\0132\031.lms.Response."
@@ -557,11 +558,12 @@ void protobuf_AddDesc_messages_2eproto() {
     "U\n\007Channel\022\014\n\004name\030\001 \001(\t\022<\n\013access_list\030"
     "\002 \003(\0132\'.lms.Response.ModuleListResponse."
     "Access\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005WRITE\020"
-    "\002\032\264\001\n\010LogEvent\022+\n\005level\030\001 \001(\0162\034.lms.Resp"
+    "\002\032\324\001\n\010LogEvent\022+\n\005level\030\001 \001(\0162\034.lms.Resp"
     "onse.LogEvent.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text"
-    "\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005false\"D\n\005Le"
-    "vel\022\007\n\003ALL\020\000\022\t\n\005DEBUG\020\001\022\010\n\004INFO\020\002\022\010\n\004WAR"
-    "N\020\003\022\t\n\005ERROR\020\004\022\010\n\003OFF\020\377\001B\t\n\007content", 1595);
+    "\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005false\022\021\n\tti"
+    "mestamp\030\005 \001(\003\"Q\n\005Level\022\007\n\003ALL\020\000\022\013\n\007PROFI"
+    "LE\020\n\022\t\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004WARN\020(\022\t\n\005E"
+    "RROR\0202\022\010\n\003OFF\020\377\001B\t\n\007content", 1627);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -5081,10 +5083,11 @@ const ::google::protobuf::EnumDescriptor* Response_LogEvent_Level_descriptor() {
 bool Response_LogEvent_Level_IsValid(int value) {
   switch(value) {
     case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
+    case 10:
+    case 20:
+    case 30:
+    case 40:
+    case 50:
     case 255:
       return true;
     default:
@@ -5094,6 +5097,7 @@ bool Response_LogEvent_Level_IsValid(int value) {
 
 #ifndef _MSC_VER
 const Response_LogEvent_Level Response_LogEvent::ALL;
+const Response_LogEvent_Level Response_LogEvent::PROFILE;
 const Response_LogEvent_Level Response_LogEvent::DEBUG;
 const Response_LogEvent_Level Response_LogEvent::INFO;
 const Response_LogEvent_Level Response_LogEvent::WARN;
@@ -5108,6 +5112,7 @@ const int Response_LogEvent::kLevelFieldNumber;
 const int Response_LogEvent::kTagFieldNumber;
 const int Response_LogEvent::kTextFieldNumber;
 const int Response_LogEvent::kCloseAfterFieldNumber;
+const int Response_LogEvent::kTimestampFieldNumber;
 #endif  // !_MSC_VER
 
 Response_LogEvent::Response_LogEvent()
@@ -5133,6 +5138,7 @@ void Response_LogEvent::SharedCtor() {
   tag_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   text_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   close_after_ = false;
+  timestamp_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5184,7 +5190,7 @@ void Response_LogEvent::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 15) {
+  if (_has_bits_[0 / 32] & 31) {
     ZR_(level_, close_after_);
     if (has_tag()) {
       if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
@@ -5196,6 +5202,7 @@ void Response_LogEvent::Clear() {
         text_->clear();
       }
     }
+    timestamp_ = GOOGLE_LONGLONG(0);
   }
 
 #undef OFFSET_OF_FIELD_
@@ -5279,6 +5286,21 @@ bool Response_LogEvent::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(40)) goto parse_timestamp;
+        break;
+      }
+
+      // optional int64 timestamp = 5;
+      case 5: {
+        if (tag == 40) {
+         parse_timestamp:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &timestamp_)));
+          set_has_timestamp();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -5339,6 +5361,11 @@ void Response_LogEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->close_after(), output);
   }
 
+  // optional int64 timestamp = 5;
+  if (has_timestamp()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(5, this->timestamp(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -5382,6 +5409,11 @@ void Response_LogEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->close_after(), target);
   }
 
+  // optional int64 timestamp = 5;
+  if (has_timestamp()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(5, this->timestamp(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -5417,6 +5449,13 @@ int Response_LogEvent::ByteSize() const {
     // optional bool close_after = 4 [default = false];
     if (has_close_after()) {
       total_size += 1 + 1;
+    }
+
+    // optional int64 timestamp = 5;
+    if (has_timestamp()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->timestamp());
     }
 
   }
@@ -5458,6 +5497,9 @@ void Response_LogEvent::MergeFrom(const Response_LogEvent& from) {
     if (from.has_close_after()) {
       set_close_after(from.close_after());
     }
+    if (from.has_timestamp()) {
+      set_timestamp(from.timestamp());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5485,6 +5527,7 @@ void Response_LogEvent::Swap(Response_LogEvent* other) {
     std::swap(tag_, other->tag_);
     std::swap(text_, other->text_);
     std::swap(close_after_, other->close_after_);
+    std::swap(timestamp_, other->timestamp_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

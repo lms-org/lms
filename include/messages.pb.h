@@ -75,10 +75,11 @@ inline bool Response_ModuleListResponse_Permission_Parse(
 }
 enum Response_LogEvent_Level {
   Response_LogEvent_Level_ALL = 0,
-  Response_LogEvent_Level_DEBUG = 1,
-  Response_LogEvent_Level_INFO = 2,
-  Response_LogEvent_Level_WARN = 3,
-  Response_LogEvent_Level_ERROR = 4,
+  Response_LogEvent_Level_PROFILE = 10,
+  Response_LogEvent_Level_DEBUG = 20,
+  Response_LogEvent_Level_INFO = 30,
+  Response_LogEvent_Level_WARN = 40,
+  Response_LogEvent_Level_ERROR = 50,
   Response_LogEvent_Level_OFF = 255
 };
 bool Response_LogEvent_Level_IsValid(int value);
@@ -1744,6 +1745,7 @@ class Response_LogEvent : public ::google::protobuf::Message {
 
   typedef Response_LogEvent_Level Level;
   static const Level ALL = Response_LogEvent_Level_ALL;
+  static const Level PROFILE = Response_LogEvent_Level_PROFILE;
   static const Level DEBUG = Response_LogEvent_Level_DEBUG;
   static const Level INFO = Response_LogEvent_Level_INFO;
   static const Level WARN = Response_LogEvent_Level_WARN;
@@ -1810,6 +1812,13 @@ class Response_LogEvent : public ::google::protobuf::Message {
   inline bool close_after() const;
   inline void set_close_after(bool value);
 
+  // optional int64 timestamp = 5;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 5;
+  inline ::google::protobuf::int64 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int64 value);
+
   // @@protoc_insertion_point(class_scope:lms.Response.LogEvent)
  private:
   inline void set_has_level();
@@ -1820,6 +1829,8 @@ class Response_LogEvent : public ::google::protobuf::Message {
   inline void clear_has_text();
   inline void set_has_close_after();
   inline void clear_has_close_after();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1829,6 +1840,7 @@ class Response_LogEvent : public ::google::protobuf::Message {
   int level_;
   bool close_after_;
   ::std::string* text_;
+  ::google::protobuf::int64 timestamp_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -3564,6 +3576,30 @@ inline void Response_LogEvent::set_close_after(bool value) {
   set_has_close_after();
   close_after_ = value;
   // @@protoc_insertion_point(field_set:lms.Response.LogEvent.close_after)
+}
+
+// optional int64 timestamp = 5;
+inline bool Response_LogEvent::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Response_LogEvent::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Response_LogEvent::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Response_LogEvent::clear_timestamp() {
+  timestamp_ = GOOGLE_LONGLONG(0);
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int64 Response_LogEvent::timestamp() const {
+  // @@protoc_insertion_point(field_get:lms.Response.LogEvent.timestamp)
+  return timestamp_;
+}
+inline void Response_LogEvent::set_timestamp(::google::protobuf::int64 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.LogEvent.timestamp)
 }
 
 // -------------------------------------------------------------------

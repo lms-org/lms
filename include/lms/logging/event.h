@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "level.h"
+#include "../time.h"
 
 namespace lms {
 namespace logging {
@@ -30,8 +31,8 @@ public:
      * @param lvl logging level
      * @param tag logging tag (used for logging hierarchies and log filtering)
      */
-    Event(Context &ctx, Level level, const std::string &tag)
-        : tag(tag), level(level), ctx(ctx) {}
+    Event(Context &ctx, Level level, const std::string &tag, lms::Time timestamp)
+        : tag(tag), level(level), ctx(ctx), timestamp(timestamp) {}
 
     /**
      * @brief The destructor will flush the log message to the
@@ -71,6 +72,11 @@ public:
      * You can append to this stream via the << operator.
      */
     std::ostringstream messageStream;
+
+    /**
+     * @brief timestamp
+     */
+    const lms::Time timestamp;
 };
 
 /**

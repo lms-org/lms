@@ -81,14 +81,16 @@ message Response {
         optional string tag = 2;
         optional string text = 3;
         optional bool close_after = 4 [default = false];
+        optional int64 timestamp = 5;
         
         enum Level {
             // must be compatible to lms::logging:Level
             ALL = 0;
-            DEBUG = 1;
-            INFO = 2;
-            WARN = 3;
-            ERROR = 4;
+            PROFILE = 10;
+            DEBUG = 20;
+            INFO = 30;
+            WARN = 40;
+            ERROR = 50;
             OFF = 255;
         }
     }
@@ -101,4 +103,3 @@ message Response {
         LogEvent log_event = 5;
     }
 }
-
