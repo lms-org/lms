@@ -43,57 +43,59 @@ class Request_ListProcesses;
 class Request_Attach;
 class Request_Stop;
 class Request_ModuleList;
-class InfoResponse;
-class ClientListResponse;
-class ClientListResponse_Client;
-class ProcessListResponse;
-class ProcessListResponse_Process;
-class ModuleListResponse;
-class ModuleListResponse_Access;
-class ModuleListResponse_AccessList;
-class LogEvent;
+class Response;
+class Response_Info;
+class Response_ClientList;
+class Response_ClientList_Client;
+class Response_ProcessList;
+class Response_ProcessList_Process;
+class Response_ModuleListResponse;
+class Response_ModuleListResponse_Access;
+class Response_ModuleListResponse_Channel;
+class Response_LogEvent;
 
-enum ModuleListResponse_Permission {
-  ModuleListResponse_Permission_READ = 1,
-  ModuleListResponse_Permission_WRITE = 2
+enum Response_ModuleListResponse_Permission {
+  Response_ModuleListResponse_Permission_READ = 1,
+  Response_ModuleListResponse_Permission_WRITE = 2
 };
-bool ModuleListResponse_Permission_IsValid(int value);
-const ModuleListResponse_Permission ModuleListResponse_Permission_Permission_MIN = ModuleListResponse_Permission_READ;
-const ModuleListResponse_Permission ModuleListResponse_Permission_Permission_MAX = ModuleListResponse_Permission_WRITE;
-const int ModuleListResponse_Permission_Permission_ARRAYSIZE = ModuleListResponse_Permission_Permission_MAX + 1;
+bool Response_ModuleListResponse_Permission_IsValid(int value);
+const Response_ModuleListResponse_Permission Response_ModuleListResponse_Permission_Permission_MIN = Response_ModuleListResponse_Permission_READ;
+const Response_ModuleListResponse_Permission Response_ModuleListResponse_Permission_Permission_MAX = Response_ModuleListResponse_Permission_WRITE;
+const int Response_ModuleListResponse_Permission_Permission_ARRAYSIZE = Response_ModuleListResponse_Permission_Permission_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* ModuleListResponse_Permission_descriptor();
-inline const ::std::string& ModuleListResponse_Permission_Name(ModuleListResponse_Permission value) {
+const ::google::protobuf::EnumDescriptor* Response_ModuleListResponse_Permission_descriptor();
+inline const ::std::string& Response_ModuleListResponse_Permission_Name(Response_ModuleListResponse_Permission value) {
   return ::google::protobuf::internal::NameOfEnum(
-    ModuleListResponse_Permission_descriptor(), value);
+    Response_ModuleListResponse_Permission_descriptor(), value);
 }
-inline bool ModuleListResponse_Permission_Parse(
-    const ::std::string& name, ModuleListResponse_Permission* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<ModuleListResponse_Permission>(
-    ModuleListResponse_Permission_descriptor(), name, value);
+inline bool Response_ModuleListResponse_Permission_Parse(
+    const ::std::string& name, Response_ModuleListResponse_Permission* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Response_ModuleListResponse_Permission>(
+    Response_ModuleListResponse_Permission_descriptor(), name, value);
 }
-enum LogEvent_Level {
-  LogEvent_Level_ALL = 0,
-  LogEvent_Level_DEBUG = 1,
-  LogEvent_Level_INFO = 2,
-  LogEvent_Level_WARN = 3,
-  LogEvent_Level_ERROR = 4,
-  LogEvent_Level_OFF = 255
+enum Response_LogEvent_Level {
+  Response_LogEvent_Level_ALL = 0,
+  Response_LogEvent_Level_PROFILE = 10,
+  Response_LogEvent_Level_DEBUG = 20,
+  Response_LogEvent_Level_INFO = 30,
+  Response_LogEvent_Level_WARN = 40,
+  Response_LogEvent_Level_ERROR = 50,
+  Response_LogEvent_Level_OFF = 255
 };
-bool LogEvent_Level_IsValid(int value);
-const LogEvent_Level LogEvent_Level_Level_MIN = LogEvent_Level_ALL;
-const LogEvent_Level LogEvent_Level_Level_MAX = LogEvent_Level_OFF;
-const int LogEvent_Level_Level_ARRAYSIZE = LogEvent_Level_Level_MAX + 1;
+bool Response_LogEvent_Level_IsValid(int value);
+const Response_LogEvent_Level Response_LogEvent_Level_Level_MIN = Response_LogEvent_Level_ALL;
+const Response_LogEvent_Level Response_LogEvent_Level_Level_MAX = Response_LogEvent_Level_OFF;
+const int Response_LogEvent_Level_Level_ARRAYSIZE = Response_LogEvent_Level_Level_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* LogEvent_Level_descriptor();
-inline const ::std::string& LogEvent_Level_Name(LogEvent_Level value) {
+const ::google::protobuf::EnumDescriptor* Response_LogEvent_Level_descriptor();
+inline const ::std::string& Response_LogEvent_Level_Name(Response_LogEvent_Level value) {
   return ::google::protobuf::internal::NameOfEnum(
-    LogEvent_Level_descriptor(), value);
+    Response_LogEvent_Level_descriptor(), value);
 }
-inline bool LogEvent_Level_Parse(
-    const ::std::string& name, LogEvent_Level* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<LogEvent_Level>(
-    LogEvent_Level_descriptor(), name, value);
+inline bool Response_LogEvent_Level_Parse(
+    const ::std::string& name, Response_LogEvent_Level* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Response_LogEvent_Level>(
+    Response_LogEvent_Level_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -935,14 +937,14 @@ class Request : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class InfoResponse : public ::google::protobuf::Message {
+class Response_Info : public ::google::protobuf::Message {
  public:
-  InfoResponse();
-  virtual ~InfoResponse();
+  Response_Info();
+  virtual ~Response_Info();
 
-  InfoResponse(const InfoResponse& from);
+  Response_Info(const Response_Info& from);
 
-  inline InfoResponse& operator=(const InfoResponse& from) {
+  inline Response_Info& operator=(const Response_Info& from) {
     CopyFrom(from);
     return *this;
   }
@@ -956,17 +958,17 @@ class InfoResponse : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const InfoResponse& default_instance();
+  static const Response_Info& default_instance();
 
-  void Swap(InfoResponse* other);
+  void Swap(Response_Info* other);
 
   // implements Message ----------------------------------------------
 
-  InfoResponse* New() const;
+  Response_Info* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const InfoResponse& from);
-  void MergeFrom(const InfoResponse& from);
+  void CopyFrom(const Response_Info& from);
+  void MergeFrom(const Response_Info& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1002,7 +1004,7 @@ class InfoResponse : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 pid() const;
   inline void set_pid(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:lms.InfoResponse)
+  // @@protoc_insertion_point(class_scope:lms.Response.Info)
  private:
   inline void set_has_version();
   inline void clear_has_version();
@@ -1020,18 +1022,18 @@ class InfoResponse : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static InfoResponse* default_instance_;
+  static Response_Info* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ClientListResponse_Client : public ::google::protobuf::Message {
+class Response_ClientList_Client : public ::google::protobuf::Message {
  public:
-  ClientListResponse_Client();
-  virtual ~ClientListResponse_Client();
+  Response_ClientList_Client();
+  virtual ~Response_ClientList_Client();
 
-  ClientListResponse_Client(const ClientListResponse_Client& from);
+  Response_ClientList_Client(const Response_ClientList_Client& from);
 
-  inline ClientListResponse_Client& operator=(const ClientListResponse_Client& from) {
+  inline Response_ClientList_Client& operator=(const Response_ClientList_Client& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1045,17 +1047,17 @@ class ClientListResponse_Client : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ClientListResponse_Client& default_instance();
+  static const Response_ClientList_Client& default_instance();
 
-  void Swap(ClientListResponse_Client* other);
+  void Swap(Response_ClientList_Client* other);
 
   // implements Message ----------------------------------------------
 
-  ClientListResponse_Client* New() const;
+  Response_ClientList_Client* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClientListResponse_Client& from);
-  void MergeFrom(const ClientListResponse_Client& from);
+  void CopyFrom(const Response_ClientList_Client& from);
+  void MergeFrom(const Response_ClientList_Client& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1096,7 +1098,7 @@ class ClientListResponse_Client : public ::google::protobuf::Message {
   inline ::std::string* release_peer();
   inline void set_allocated_peer(::std::string* peer);
 
-  // @@protoc_insertion_point(class_scope:lms.ClientListResponse.Client)
+  // @@protoc_insertion_point(class_scope:lms.Response.ClientList.Client)
  private:
   inline void set_has_fd();
   inline void clear_has_fd();
@@ -1114,18 +1116,18 @@ class ClientListResponse_Client : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ClientListResponse_Client* default_instance_;
+  static Response_ClientList_Client* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ClientListResponse : public ::google::protobuf::Message {
+class Response_ClientList : public ::google::protobuf::Message {
  public:
-  ClientListResponse();
-  virtual ~ClientListResponse();
+  Response_ClientList();
+  virtual ~Response_ClientList();
 
-  ClientListResponse(const ClientListResponse& from);
+  Response_ClientList(const Response_ClientList& from);
 
-  inline ClientListResponse& operator=(const ClientListResponse& from) {
+  inline Response_ClientList& operator=(const Response_ClientList& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1139,17 +1141,17 @@ class ClientListResponse : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ClientListResponse& default_instance();
+  static const Response_ClientList& default_instance();
 
-  void Swap(ClientListResponse* other);
+  void Swap(Response_ClientList* other);
 
   // implements Message ----------------------------------------------
 
-  ClientListResponse* New() const;
+  Response_ClientList* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClientListResponse& from);
-  void MergeFrom(const ClientListResponse& from);
+  void CopyFrom(const Response_ClientList& from);
+  void MergeFrom(const Response_ClientList& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1169,47 +1171,47 @@ class ClientListResponse : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef ClientListResponse_Client Client;
+  typedef Response_ClientList_Client Client;
 
   // accessors -------------------------------------------------------
 
-  // repeated .lms.ClientListResponse.Client clients = 1;
+  // repeated .lms.Response.ClientList.Client clients = 1;
   inline int clients_size() const;
   inline void clear_clients();
   static const int kClientsFieldNumber = 1;
-  inline const ::lms::ClientListResponse_Client& clients(int index) const;
-  inline ::lms::ClientListResponse_Client* mutable_clients(int index);
-  inline ::lms::ClientListResponse_Client* add_clients();
-  inline const ::google::protobuf::RepeatedPtrField< ::lms::ClientListResponse_Client >&
+  inline const ::lms::Response_ClientList_Client& clients(int index) const;
+  inline ::lms::Response_ClientList_Client* mutable_clients(int index);
+  inline ::lms::Response_ClientList_Client* add_clients();
+  inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ClientList_Client >&
       clients() const;
-  inline ::google::protobuf::RepeatedPtrField< ::lms::ClientListResponse_Client >*
+  inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ClientList_Client >*
       mutable_clients();
 
-  // @@protoc_insertion_point(class_scope:lms.ClientListResponse)
+  // @@protoc_insertion_point(class_scope:lms.Response.ClientList)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lms::ClientListResponse_Client > clients_;
+  ::google::protobuf::RepeatedPtrField< ::lms::Response_ClientList_Client > clients_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ClientListResponse* default_instance_;
+  static Response_ClientList* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ProcessListResponse_Process : public ::google::protobuf::Message {
+class Response_ProcessList_Process : public ::google::protobuf::Message {
  public:
-  ProcessListResponse_Process();
-  virtual ~ProcessListResponse_Process();
+  Response_ProcessList_Process();
+  virtual ~Response_ProcessList_Process();
 
-  ProcessListResponse_Process(const ProcessListResponse_Process& from);
+  Response_ProcessList_Process(const Response_ProcessList_Process& from);
 
-  inline ProcessListResponse_Process& operator=(const ProcessListResponse_Process& from) {
+  inline Response_ProcessList_Process& operator=(const Response_ProcessList_Process& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1223,17 +1225,17 @@ class ProcessListResponse_Process : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ProcessListResponse_Process& default_instance();
+  static const Response_ProcessList_Process& default_instance();
 
-  void Swap(ProcessListResponse_Process* other);
+  void Swap(Response_ProcessList_Process* other);
 
   // implements Message ----------------------------------------------
 
-  ProcessListResponse_Process* New() const;
+  Response_ProcessList_Process* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ProcessListResponse_Process& from);
-  void MergeFrom(const ProcessListResponse_Process& from);
+  void CopyFrom(const Response_ProcessList_Process& from);
+  void MergeFrom(const Response_ProcessList_Process& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1274,7 +1276,7 @@ class ProcessListResponse_Process : public ::google::protobuf::Message {
   inline ::std::string* release_config_file();
   inline void set_allocated_config_file(::std::string* config_file);
 
-  // @@protoc_insertion_point(class_scope:lms.ProcessListResponse.Process)
+  // @@protoc_insertion_point(class_scope:lms.Response.ProcessList.Process)
  private:
   inline void set_has_pid();
   inline void clear_has_pid();
@@ -1292,18 +1294,18 @@ class ProcessListResponse_Process : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ProcessListResponse_Process* default_instance_;
+  static Response_ProcessList_Process* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ProcessListResponse : public ::google::protobuf::Message {
+class Response_ProcessList : public ::google::protobuf::Message {
  public:
-  ProcessListResponse();
-  virtual ~ProcessListResponse();
+  Response_ProcessList();
+  virtual ~Response_ProcessList();
 
-  ProcessListResponse(const ProcessListResponse& from);
+  Response_ProcessList(const Response_ProcessList& from);
 
-  inline ProcessListResponse& operator=(const ProcessListResponse& from) {
+  inline Response_ProcessList& operator=(const Response_ProcessList& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1317,17 +1319,17 @@ class ProcessListResponse : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ProcessListResponse& default_instance();
+  static const Response_ProcessList& default_instance();
 
-  void Swap(ProcessListResponse* other);
+  void Swap(Response_ProcessList* other);
 
   // implements Message ----------------------------------------------
 
-  ProcessListResponse* New() const;
+  Response_ProcessList* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ProcessListResponse& from);
-  void MergeFrom(const ProcessListResponse& from);
+  void CopyFrom(const Response_ProcessList& from);
+  void MergeFrom(const Response_ProcessList& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1347,47 +1349,47 @@ class ProcessListResponse : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef ProcessListResponse_Process Process;
+  typedef Response_ProcessList_Process Process;
 
   // accessors -------------------------------------------------------
 
-  // repeated .lms.ProcessListResponse.Process processes = 1;
+  // repeated .lms.Response.ProcessList.Process processes = 1;
   inline int processes_size() const;
   inline void clear_processes();
   static const int kProcessesFieldNumber = 1;
-  inline const ::lms::ProcessListResponse_Process& processes(int index) const;
-  inline ::lms::ProcessListResponse_Process* mutable_processes(int index);
-  inline ::lms::ProcessListResponse_Process* add_processes();
-  inline const ::google::protobuf::RepeatedPtrField< ::lms::ProcessListResponse_Process >&
+  inline const ::lms::Response_ProcessList_Process& processes(int index) const;
+  inline ::lms::Response_ProcessList_Process* mutable_processes(int index);
+  inline ::lms::Response_ProcessList_Process* add_processes();
+  inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ProcessList_Process >&
       processes() const;
-  inline ::google::protobuf::RepeatedPtrField< ::lms::ProcessListResponse_Process >*
+  inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ProcessList_Process >*
       mutable_processes();
 
-  // @@protoc_insertion_point(class_scope:lms.ProcessListResponse)
+  // @@protoc_insertion_point(class_scope:lms.Response.ProcessList)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lms::ProcessListResponse_Process > processes_;
+  ::google::protobuf::RepeatedPtrField< ::lms::Response_ProcessList_Process > processes_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ProcessListResponse* default_instance_;
+  static Response_ProcessList* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ModuleListResponse_Access : public ::google::protobuf::Message {
+class Response_ModuleListResponse_Access : public ::google::protobuf::Message {
  public:
-  ModuleListResponse_Access();
-  virtual ~ModuleListResponse_Access();
+  Response_ModuleListResponse_Access();
+  virtual ~Response_ModuleListResponse_Access();
 
-  ModuleListResponse_Access(const ModuleListResponse_Access& from);
+  Response_ModuleListResponse_Access(const Response_ModuleListResponse_Access& from);
 
-  inline ModuleListResponse_Access& operator=(const ModuleListResponse_Access& from) {
+  inline Response_ModuleListResponse_Access& operator=(const Response_ModuleListResponse_Access& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1401,17 +1403,17 @@ class ModuleListResponse_Access : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ModuleListResponse_Access& default_instance();
+  static const Response_ModuleListResponse_Access& default_instance();
 
-  void Swap(ModuleListResponse_Access* other);
+  void Swap(Response_ModuleListResponse_Access* other);
 
   // implements Message ----------------------------------------------
 
-  ModuleListResponse_Access* New() const;
+  Response_ModuleListResponse_Access* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ModuleListResponse_Access& from);
-  void MergeFrom(const ModuleListResponse_Access& from);
+  void CopyFrom(const Response_ModuleListResponse_Access& from);
+  void MergeFrom(const Response_ModuleListResponse_Access& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1445,12 +1447,12 @@ class ModuleListResponse_Access : public ::google::protobuf::Message {
   inline ::std::string* release_module();
   inline void set_allocated_module(::std::string* module);
 
-  // optional .lms.ModuleListResponse.Permission permission = 2;
+  // optional .lms.Response.ModuleListResponse.Permission permission = 2;
   inline bool has_permission() const;
   inline void clear_permission();
   static const int kPermissionFieldNumber = 2;
-  inline ::lms::ModuleListResponse_Permission permission() const;
-  inline void set_permission(::lms::ModuleListResponse_Permission value);
+  inline ::lms::Response_ModuleListResponse_Permission permission() const;
+  inline void set_permission(::lms::Response_ModuleListResponse_Permission value);
 
   // optional int32 priority = 3;
   inline bool has_priority() const;
@@ -1459,7 +1461,7 @@ class ModuleListResponse_Access : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 priority() const;
   inline void set_priority(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:lms.ModuleListResponse.Access)
+  // @@protoc_insertion_point(class_scope:lms.Response.ModuleListResponse.Access)
  private:
   inline void set_has_module();
   inline void clear_has_module();
@@ -1480,18 +1482,18 @@ class ModuleListResponse_Access : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ModuleListResponse_Access* default_instance_;
+  static Response_ModuleListResponse_Access* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ModuleListResponse_AccessList : public ::google::protobuf::Message {
+class Response_ModuleListResponse_Channel : public ::google::protobuf::Message {
  public:
-  ModuleListResponse_AccessList();
-  virtual ~ModuleListResponse_AccessList();
+  Response_ModuleListResponse_Channel();
+  virtual ~Response_ModuleListResponse_Channel();
 
-  ModuleListResponse_AccessList(const ModuleListResponse_AccessList& from);
+  Response_ModuleListResponse_Channel(const Response_ModuleListResponse_Channel& from);
 
-  inline ModuleListResponse_AccessList& operator=(const ModuleListResponse_AccessList& from) {
+  inline Response_ModuleListResponse_Channel& operator=(const Response_ModuleListResponse_Channel& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1505,17 +1507,17 @@ class ModuleListResponse_AccessList : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ModuleListResponse_AccessList& default_instance();
+  static const Response_ModuleListResponse_Channel& default_instance();
 
-  void Swap(ModuleListResponse_AccessList* other);
+  void Swap(Response_ModuleListResponse_Channel* other);
 
   // implements Message ----------------------------------------------
 
-  ModuleListResponse_AccessList* New() const;
+  Response_ModuleListResponse_Channel* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ModuleListResponse_AccessList& from);
-  void MergeFrom(const ModuleListResponse_AccessList& from);
+  void CopyFrom(const Response_ModuleListResponse_Channel& from);
+  void MergeFrom(const Response_ModuleListResponse_Channel& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1537,43 +1539,58 @@ class ModuleListResponse_AccessList : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .lms.ModuleListResponse.Access accessList = 1;
-  inline int accesslist_size() const;
-  inline void clear_accesslist();
-  static const int kAccessListFieldNumber = 1;
-  inline const ::lms::ModuleListResponse_Access& accesslist(int index) const;
-  inline ::lms::ModuleListResponse_Access* mutable_accesslist(int index);
-  inline ::lms::ModuleListResponse_Access* add_accesslist();
-  inline const ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >&
-      accesslist() const;
-  inline ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >*
-      mutable_accesslist();
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
-  // @@protoc_insertion_point(class_scope:lms.ModuleListResponse.AccessList)
+  // repeated .lms.Response.ModuleListResponse.Access access_list = 2;
+  inline int access_list_size() const;
+  inline void clear_access_list();
+  static const int kAccessListFieldNumber = 2;
+  inline const ::lms::Response_ModuleListResponse_Access& access_list(int index) const;
+  inline ::lms::Response_ModuleListResponse_Access* mutable_access_list(int index);
+  inline ::lms::Response_ModuleListResponse_Access* add_access_list();
+  inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Access >&
+      access_list() const;
+  inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Access >*
+      mutable_access_list();
+
+  // @@protoc_insertion_point(class_scope:lms.Response.ModuleListResponse.Channel)
  private:
+  inline void set_has_name();
+  inline void clear_has_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access > accesslist_;
+  ::std::string* name_;
+  ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Access > access_list_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ModuleListResponse_AccessList* default_instance_;
+  static Response_ModuleListResponse_Channel* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class ModuleListResponse : public ::google::protobuf::Message {
+class Response_ModuleListResponse : public ::google::protobuf::Message {
  public:
-  ModuleListResponse();
-  virtual ~ModuleListResponse();
+  Response_ModuleListResponse();
+  virtual ~Response_ModuleListResponse();
 
-  ModuleListResponse(const ModuleListResponse& from);
+  Response_ModuleListResponse(const Response_ModuleListResponse& from);
 
-  inline ModuleListResponse& operator=(const ModuleListResponse& from) {
+  inline Response_ModuleListResponse& operator=(const Response_ModuleListResponse& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1587,17 +1604,17 @@ class ModuleListResponse : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ModuleListResponse& default_instance();
+  static const Response_ModuleListResponse& default_instance();
 
-  void Swap(ModuleListResponse* other);
+  void Swap(Response_ModuleListResponse* other);
 
   // implements Message ----------------------------------------------
 
-  ModuleListResponse* New() const;
+  Response_ModuleListResponse* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ModuleListResponse& from);
-  void MergeFrom(const ModuleListResponse& from);
+  void CopyFrom(const Response_ModuleListResponse& from);
+  void MergeFrom(const Response_ModuleListResponse& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1617,59 +1634,72 @@ class ModuleListResponse : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef ModuleListResponse_Access Access;
-  typedef ModuleListResponse_AccessList AccessList;
+  typedef Response_ModuleListResponse_Access Access;
+  typedef Response_ModuleListResponse_Channel Channel;
 
-  typedef ModuleListResponse_Permission Permission;
-  static const Permission READ = ModuleListResponse_Permission_READ;
-  static const Permission WRITE = ModuleListResponse_Permission_WRITE;
+  typedef Response_ModuleListResponse_Permission Permission;
+  static const Permission READ = Response_ModuleListResponse_Permission_READ;
+  static const Permission WRITE = Response_ModuleListResponse_Permission_WRITE;
   static inline bool Permission_IsValid(int value) {
-    return ModuleListResponse_Permission_IsValid(value);
+    return Response_ModuleListResponse_Permission_IsValid(value);
   }
   static const Permission Permission_MIN =
-    ModuleListResponse_Permission_Permission_MIN;
+    Response_ModuleListResponse_Permission_Permission_MIN;
   static const Permission Permission_MAX =
-    ModuleListResponse_Permission_Permission_MAX;
+    Response_ModuleListResponse_Permission_Permission_MAX;
   static const int Permission_ARRAYSIZE =
-    ModuleListResponse_Permission_Permission_ARRAYSIZE;
+    Response_ModuleListResponse_Permission_Permission_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
   Permission_descriptor() {
-    return ModuleListResponse_Permission_descriptor();
+    return Response_ModuleListResponse_Permission_descriptor();
   }
   static inline const ::std::string& Permission_Name(Permission value) {
-    return ModuleListResponse_Permission_Name(value);
+    return Response_ModuleListResponse_Permission_Name(value);
   }
   static inline bool Permission_Parse(const ::std::string& name,
       Permission* value) {
-    return ModuleListResponse_Permission_Parse(name, value);
+    return Response_ModuleListResponse_Permission_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // @@protoc_insertion_point(class_scope:lms.ModuleListResponse)
+  // repeated .lms.Response.ModuleListResponse.Channel channels = 1;
+  inline int channels_size() const;
+  inline void clear_channels();
+  static const int kChannelsFieldNumber = 1;
+  inline const ::lms::Response_ModuleListResponse_Channel& channels(int index) const;
+  inline ::lms::Response_ModuleListResponse_Channel* mutable_channels(int index);
+  inline ::lms::Response_ModuleListResponse_Channel* add_channels();
+  inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Channel >&
+      channels() const;
+  inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Channel >*
+      mutable_channels();
+
+  // @@protoc_insertion_point(class_scope:lms.Response.ModuleListResponse)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Channel > channels_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static ModuleListResponse* default_instance_;
+  static Response_ModuleListResponse* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class LogEvent : public ::google::protobuf::Message {
+class Response_LogEvent : public ::google::protobuf::Message {
  public:
-  LogEvent();
-  virtual ~LogEvent();
+  Response_LogEvent();
+  virtual ~Response_LogEvent();
 
-  LogEvent(const LogEvent& from);
+  Response_LogEvent(const Response_LogEvent& from);
 
-  inline LogEvent& operator=(const LogEvent& from) {
+  inline Response_LogEvent& operator=(const Response_LogEvent& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1683,17 +1713,17 @@ class LogEvent : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const LogEvent& default_instance();
+  static const Response_LogEvent& default_instance();
 
-  void Swap(LogEvent* other);
+  void Swap(Response_LogEvent* other);
 
   // implements Message ----------------------------------------------
 
-  LogEvent* New() const;
+  Response_LogEvent* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const LogEvent& from);
-  void MergeFrom(const LogEvent& from);
+  void CopyFrom(const Response_LogEvent& from);
+  void MergeFrom(const Response_LogEvent& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1713,42 +1743,43 @@ class LogEvent : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef LogEvent_Level Level;
-  static const Level ALL = LogEvent_Level_ALL;
-  static const Level DEBUG = LogEvent_Level_DEBUG;
-  static const Level INFO = LogEvent_Level_INFO;
-  static const Level WARN = LogEvent_Level_WARN;
-  static const Level ERROR = LogEvent_Level_ERROR;
-  static const Level OFF = LogEvent_Level_OFF;
+  typedef Response_LogEvent_Level Level;
+  static const Level ALL = Response_LogEvent_Level_ALL;
+  static const Level PROFILE = Response_LogEvent_Level_PROFILE;
+  static const Level DEBUG = Response_LogEvent_Level_DEBUG;
+  static const Level INFO = Response_LogEvent_Level_INFO;
+  static const Level WARN = Response_LogEvent_Level_WARN;
+  static const Level ERROR = Response_LogEvent_Level_ERROR;
+  static const Level OFF = Response_LogEvent_Level_OFF;
   static inline bool Level_IsValid(int value) {
-    return LogEvent_Level_IsValid(value);
+    return Response_LogEvent_Level_IsValid(value);
   }
   static const Level Level_MIN =
-    LogEvent_Level_Level_MIN;
+    Response_LogEvent_Level_Level_MIN;
   static const Level Level_MAX =
-    LogEvent_Level_Level_MAX;
+    Response_LogEvent_Level_Level_MAX;
   static const int Level_ARRAYSIZE =
-    LogEvent_Level_Level_ARRAYSIZE;
+    Response_LogEvent_Level_Level_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
   Level_descriptor() {
-    return LogEvent_Level_descriptor();
+    return Response_LogEvent_Level_descriptor();
   }
   static inline const ::std::string& Level_Name(Level value) {
-    return LogEvent_Level_Name(value);
+    return Response_LogEvent_Level_Name(value);
   }
   static inline bool Level_Parse(const ::std::string& name,
       Level* value) {
-    return LogEvent_Level_Parse(name, value);
+    return Response_LogEvent_Level_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // optional .lms.LogEvent.Level level = 1;
+  // optional .lms.Response.LogEvent.Level level = 1;
   inline bool has_level() const;
   inline void clear_level();
   static const int kLevelFieldNumber = 1;
-  inline ::lms::LogEvent_Level level() const;
-  inline void set_level(::lms::LogEvent_Level value);
+  inline ::lms::Response_LogEvent_Level level() const;
+  inline void set_level(::lms::Response_LogEvent_Level value);
 
   // optional string tag = 2;
   inline bool has_tag() const;
@@ -1781,7 +1812,14 @@ class LogEvent : public ::google::protobuf::Message {
   inline bool close_after() const;
   inline void set_close_after(bool value);
 
-  // @@protoc_insertion_point(class_scope:lms.LogEvent)
+  // optional int64 timestamp = 5;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 5;
+  inline ::google::protobuf::int64 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int64 value);
+
+  // @@protoc_insertion_point(class_scope:lms.Response.LogEvent)
  private:
   inline void set_has_level();
   inline void clear_has_level();
@@ -1791,6 +1829,8 @@ class LogEvent : public ::google::protobuf::Message {
   inline void clear_has_text();
   inline void set_has_close_after();
   inline void clear_has_close_after();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1800,12 +1840,161 @@ class LogEvent : public ::google::protobuf::Message {
   int level_;
   bool close_after_;
   ::std::string* text_;
+  ::google::protobuf::int64 timestamp_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static LogEvent* default_instance_;
+  static Response_LogEvent* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Response : public ::google::protobuf::Message {
+ public:
+  Response();
+  virtual ~Response();
+
+  Response(const Response& from);
+
+  inline Response& operator=(const Response& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Response& default_instance();
+
+  enum ContentCase {
+    kInfo = 1,
+    kClientList = 2,
+    kProcessList = 3,
+    kModuleList = 4,
+    kLogEvent = 5,
+    CONTENT_NOT_SET = 0,
+  };
+
+  void Swap(Response* other);
+
+  // implements Message ----------------------------------------------
+
+  Response* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Response& from);
+  void MergeFrom(const Response& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Response_Info Info;
+  typedef Response_ClientList ClientList;
+  typedef Response_ProcessList ProcessList;
+  typedef Response_ModuleListResponse ModuleListResponse;
+  typedef Response_LogEvent LogEvent;
+
+  // accessors -------------------------------------------------------
+
+  // optional .lms.Response.Info info = 1;
+  inline bool has_info() const;
+  inline void clear_info();
+  static const int kInfoFieldNumber = 1;
+  inline const ::lms::Response_Info& info() const;
+  inline ::lms::Response_Info* mutable_info();
+  inline ::lms::Response_Info* release_info();
+  inline void set_allocated_info(::lms::Response_Info* info);
+
+  // optional .lms.Response.ClientList client_list = 2;
+  inline bool has_client_list() const;
+  inline void clear_client_list();
+  static const int kClientListFieldNumber = 2;
+  inline const ::lms::Response_ClientList& client_list() const;
+  inline ::lms::Response_ClientList* mutable_client_list();
+  inline ::lms::Response_ClientList* release_client_list();
+  inline void set_allocated_client_list(::lms::Response_ClientList* client_list);
+
+  // optional .lms.Response.ProcessList process_list = 3;
+  inline bool has_process_list() const;
+  inline void clear_process_list();
+  static const int kProcessListFieldNumber = 3;
+  inline const ::lms::Response_ProcessList& process_list() const;
+  inline ::lms::Response_ProcessList* mutable_process_list();
+  inline ::lms::Response_ProcessList* release_process_list();
+  inline void set_allocated_process_list(::lms::Response_ProcessList* process_list);
+
+  // optional .lms.Response.ModuleListResponse module_list = 4;
+  inline bool has_module_list() const;
+  inline void clear_module_list();
+  static const int kModuleListFieldNumber = 4;
+  inline const ::lms::Response_ModuleListResponse& module_list() const;
+  inline ::lms::Response_ModuleListResponse* mutable_module_list();
+  inline ::lms::Response_ModuleListResponse* release_module_list();
+  inline void set_allocated_module_list(::lms::Response_ModuleListResponse* module_list);
+
+  // optional .lms.Response.LogEvent log_event = 5;
+  inline bool has_log_event() const;
+  inline void clear_log_event();
+  static const int kLogEventFieldNumber = 5;
+  inline const ::lms::Response_LogEvent& log_event() const;
+  inline ::lms::Response_LogEvent* mutable_log_event();
+  inline ::lms::Response_LogEvent* release_log_event();
+  inline void set_allocated_log_event(::lms::Response_LogEvent* log_event);
+
+  inline ContentCase content_case() const;
+  // @@protoc_insertion_point(class_scope:lms.Response)
+ private:
+  inline void set_has_info();
+  inline void set_has_client_list();
+  inline void set_has_process_list();
+  inline void set_has_module_list();
+  inline void set_has_log_event();
+
+  inline bool has_content();
+  void clear_content();
+  inline void clear_has_content();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  union ContentUnion {
+    ::lms::Response_Info* info_;
+    ::lms::Response_ClientList* client_list_;
+    ::lms::Response_ProcessList* process_list_;
+    ::lms::Response_ModuleListResponse* module_list_;
+    ::lms::Response_LogEvent* log_event_;
+  } content_;
+  ::google::protobuf::uint32 _oneof_case_[1];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Response* default_instance_;
 };
 // ===================================================================
 
@@ -2585,137 +2774,137 @@ inline Request::ContentCase Request::content_case() const {
 }
 // -------------------------------------------------------------------
 
-// InfoResponse
+// Response_Info
 
 // optional int32 version = 1;
-inline bool InfoResponse::has_version() const {
+inline bool Response_Info::has_version() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void InfoResponse::set_has_version() {
+inline void Response_Info::set_has_version() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void InfoResponse::clear_has_version() {
+inline void Response_Info::clear_has_version() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void InfoResponse::clear_version() {
+inline void Response_Info::clear_version() {
   version_ = 0;
   clear_has_version();
 }
-inline ::google::protobuf::int32 InfoResponse::version() const {
-  // @@protoc_insertion_point(field_get:lms.InfoResponse.version)
+inline ::google::protobuf::int32 Response_Info::version() const {
+  // @@protoc_insertion_point(field_get:lms.Response.Info.version)
   return version_;
 }
-inline void InfoResponse::set_version(::google::protobuf::int32 value) {
+inline void Response_Info::set_version(::google::protobuf::int32 value) {
   set_has_version();
   version_ = value;
-  // @@protoc_insertion_point(field_set:lms.InfoResponse.version)
+  // @@protoc_insertion_point(field_set:lms.Response.Info.version)
 }
 
 // optional int32 pid = 2;
-inline bool InfoResponse::has_pid() const {
+inline bool Response_Info::has_pid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void InfoResponse::set_has_pid() {
+inline void Response_Info::set_has_pid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void InfoResponse::clear_has_pid() {
+inline void Response_Info::clear_has_pid() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void InfoResponse::clear_pid() {
+inline void Response_Info::clear_pid() {
   pid_ = 0;
   clear_has_pid();
 }
-inline ::google::protobuf::int32 InfoResponse::pid() const {
-  // @@protoc_insertion_point(field_get:lms.InfoResponse.pid)
+inline ::google::protobuf::int32 Response_Info::pid() const {
+  // @@protoc_insertion_point(field_get:lms.Response.Info.pid)
   return pid_;
 }
-inline void InfoResponse::set_pid(::google::protobuf::int32 value) {
+inline void Response_Info::set_pid(::google::protobuf::int32 value) {
   set_has_pid();
   pid_ = value;
-  // @@protoc_insertion_point(field_set:lms.InfoResponse.pid)
+  // @@protoc_insertion_point(field_set:lms.Response.Info.pid)
 }
 
 // -------------------------------------------------------------------
 
-// ClientListResponse_Client
+// Response_ClientList_Client
 
 // optional int32 fd = 1;
-inline bool ClientListResponse_Client::has_fd() const {
+inline bool Response_ClientList_Client::has_fd() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ClientListResponse_Client::set_has_fd() {
+inline void Response_ClientList_Client::set_has_fd() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ClientListResponse_Client::clear_has_fd() {
+inline void Response_ClientList_Client::clear_has_fd() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ClientListResponse_Client::clear_fd() {
+inline void Response_ClientList_Client::clear_fd() {
   fd_ = 0;
   clear_has_fd();
 }
-inline ::google::protobuf::int32 ClientListResponse_Client::fd() const {
-  // @@protoc_insertion_point(field_get:lms.ClientListResponse.Client.fd)
+inline ::google::protobuf::int32 Response_ClientList_Client::fd() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ClientList.Client.fd)
   return fd_;
 }
-inline void ClientListResponse_Client::set_fd(::google::protobuf::int32 value) {
+inline void Response_ClientList_Client::set_fd(::google::protobuf::int32 value) {
   set_has_fd();
   fd_ = value;
-  // @@protoc_insertion_point(field_set:lms.ClientListResponse.Client.fd)
+  // @@protoc_insertion_point(field_set:lms.Response.ClientList.Client.fd)
 }
 
 // optional string peer = 2;
-inline bool ClientListResponse_Client::has_peer() const {
+inline bool Response_ClientList_Client::has_peer() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ClientListResponse_Client::set_has_peer() {
+inline void Response_ClientList_Client::set_has_peer() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ClientListResponse_Client::clear_has_peer() {
+inline void Response_ClientList_Client::clear_has_peer() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ClientListResponse_Client::clear_peer() {
+inline void Response_ClientList_Client::clear_peer() {
   if (peer_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     peer_->clear();
   }
   clear_has_peer();
 }
-inline const ::std::string& ClientListResponse_Client::peer() const {
-  // @@protoc_insertion_point(field_get:lms.ClientListResponse.Client.peer)
+inline const ::std::string& Response_ClientList_Client::peer() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ClientList.Client.peer)
   return *peer_;
 }
-inline void ClientListResponse_Client::set_peer(const ::std::string& value) {
+inline void Response_ClientList_Client::set_peer(const ::std::string& value) {
   set_has_peer();
   if (peer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     peer_ = new ::std::string;
   }
   peer_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.ClientListResponse.Client.peer)
+  // @@protoc_insertion_point(field_set:lms.Response.ClientList.Client.peer)
 }
-inline void ClientListResponse_Client::set_peer(const char* value) {
+inline void Response_ClientList_Client::set_peer(const char* value) {
   set_has_peer();
   if (peer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     peer_ = new ::std::string;
   }
   peer_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.ClientListResponse.Client.peer)
+  // @@protoc_insertion_point(field_set_char:lms.Response.ClientList.Client.peer)
 }
-inline void ClientListResponse_Client::set_peer(const char* value, size_t size) {
+inline void Response_ClientList_Client::set_peer(const char* value, size_t size) {
   set_has_peer();
   if (peer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     peer_ = new ::std::string;
   }
   peer_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.ClientListResponse.Client.peer)
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.ClientList.Client.peer)
 }
-inline ::std::string* ClientListResponse_Client::mutable_peer() {
+inline ::std::string* Response_ClientList_Client::mutable_peer() {
   set_has_peer();
   if (peer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     peer_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.ClientListResponse.Client.peer)
+  // @@protoc_insertion_point(field_mutable:lms.Response.ClientList.Client.peer)
   return peer_;
 }
-inline ::std::string* ClientListResponse_Client::release_peer() {
+inline ::std::string* Response_ClientList_Client::release_peer() {
   clear_has_peer();
   if (peer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
@@ -2725,7 +2914,7 @@ inline ::std::string* ClientListResponse_Client::release_peer() {
     return temp;
   }
 }
-inline void ClientListResponse_Client::set_allocated_peer(::std::string* peer) {
+inline void Response_ClientList_Client::set_allocated_peer(::std::string* peer) {
   if (peer_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete peer_;
   }
@@ -2736,124 +2925,124 @@ inline void ClientListResponse_Client::set_allocated_peer(::std::string* peer) {
     clear_has_peer();
     peer_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.ClientListResponse.Client.peer)
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.ClientList.Client.peer)
 }
 
 // -------------------------------------------------------------------
 
-// ClientListResponse
+// Response_ClientList
 
-// repeated .lms.ClientListResponse.Client clients = 1;
-inline int ClientListResponse::clients_size() const {
+// repeated .lms.Response.ClientList.Client clients = 1;
+inline int Response_ClientList::clients_size() const {
   return clients_.size();
 }
-inline void ClientListResponse::clear_clients() {
+inline void Response_ClientList::clear_clients() {
   clients_.Clear();
 }
-inline const ::lms::ClientListResponse_Client& ClientListResponse::clients(int index) const {
-  // @@protoc_insertion_point(field_get:lms.ClientListResponse.clients)
+inline const ::lms::Response_ClientList_Client& Response_ClientList::clients(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Response.ClientList.clients)
   return clients_.Get(index);
 }
-inline ::lms::ClientListResponse_Client* ClientListResponse::mutable_clients(int index) {
-  // @@protoc_insertion_point(field_mutable:lms.ClientListResponse.clients)
+inline ::lms::Response_ClientList_Client* Response_ClientList::mutable_clients(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Response.ClientList.clients)
   return clients_.Mutable(index);
 }
-inline ::lms::ClientListResponse_Client* ClientListResponse::add_clients() {
-  // @@protoc_insertion_point(field_add:lms.ClientListResponse.clients)
+inline ::lms::Response_ClientList_Client* Response_ClientList::add_clients() {
+  // @@protoc_insertion_point(field_add:lms.Response.ClientList.clients)
   return clients_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::lms::ClientListResponse_Client >&
-ClientListResponse::clients() const {
-  // @@protoc_insertion_point(field_list:lms.ClientListResponse.clients)
+inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ClientList_Client >&
+Response_ClientList::clients() const {
+  // @@protoc_insertion_point(field_list:lms.Response.ClientList.clients)
   return clients_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::lms::ClientListResponse_Client >*
-ClientListResponse::mutable_clients() {
-  // @@protoc_insertion_point(field_mutable_list:lms.ClientListResponse.clients)
+inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ClientList_Client >*
+Response_ClientList::mutable_clients() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Response.ClientList.clients)
   return &clients_;
 }
 
 // -------------------------------------------------------------------
 
-// ProcessListResponse_Process
+// Response_ProcessList_Process
 
 // optional int32 pid = 1;
-inline bool ProcessListResponse_Process::has_pid() const {
+inline bool Response_ProcessList_Process::has_pid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ProcessListResponse_Process::set_has_pid() {
+inline void Response_ProcessList_Process::set_has_pid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ProcessListResponse_Process::clear_has_pid() {
+inline void Response_ProcessList_Process::clear_has_pid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ProcessListResponse_Process::clear_pid() {
+inline void Response_ProcessList_Process::clear_pid() {
   pid_ = 0;
   clear_has_pid();
 }
-inline ::google::protobuf::int32 ProcessListResponse_Process::pid() const {
-  // @@protoc_insertion_point(field_get:lms.ProcessListResponse.Process.pid)
+inline ::google::protobuf::int32 Response_ProcessList_Process::pid() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProcessList.Process.pid)
   return pid_;
 }
-inline void ProcessListResponse_Process::set_pid(::google::protobuf::int32 value) {
+inline void Response_ProcessList_Process::set_pid(::google::protobuf::int32 value) {
   set_has_pid();
   pid_ = value;
-  // @@protoc_insertion_point(field_set:lms.ProcessListResponse.Process.pid)
+  // @@protoc_insertion_point(field_set:lms.Response.ProcessList.Process.pid)
 }
 
 // optional string config_file = 2;
-inline bool ProcessListResponse_Process::has_config_file() const {
+inline bool Response_ProcessList_Process::has_config_file() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ProcessListResponse_Process::set_has_config_file() {
+inline void Response_ProcessList_Process::set_has_config_file() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ProcessListResponse_Process::clear_has_config_file() {
+inline void Response_ProcessList_Process::clear_has_config_file() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ProcessListResponse_Process::clear_config_file() {
+inline void Response_ProcessList_Process::clear_config_file() {
   if (config_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     config_file_->clear();
   }
   clear_has_config_file();
 }
-inline const ::std::string& ProcessListResponse_Process::config_file() const {
-  // @@protoc_insertion_point(field_get:lms.ProcessListResponse.Process.config_file)
+inline const ::std::string& Response_ProcessList_Process::config_file() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProcessList.Process.config_file)
   return *config_file_;
 }
-inline void ProcessListResponse_Process::set_config_file(const ::std::string& value) {
+inline void Response_ProcessList_Process::set_config_file(const ::std::string& value) {
   set_has_config_file();
   if (config_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     config_file_ = new ::std::string;
   }
   config_file_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.ProcessListResponse.Process.config_file)
+  // @@protoc_insertion_point(field_set:lms.Response.ProcessList.Process.config_file)
 }
-inline void ProcessListResponse_Process::set_config_file(const char* value) {
+inline void Response_ProcessList_Process::set_config_file(const char* value) {
   set_has_config_file();
   if (config_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     config_file_ = new ::std::string;
   }
   config_file_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.ProcessListResponse.Process.config_file)
+  // @@protoc_insertion_point(field_set_char:lms.Response.ProcessList.Process.config_file)
 }
-inline void ProcessListResponse_Process::set_config_file(const char* value, size_t size) {
+inline void Response_ProcessList_Process::set_config_file(const char* value, size_t size) {
   set_has_config_file();
   if (config_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     config_file_ = new ::std::string;
   }
   config_file_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.ProcessListResponse.Process.config_file)
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.ProcessList.Process.config_file)
 }
-inline ::std::string* ProcessListResponse_Process::mutable_config_file() {
+inline ::std::string* Response_ProcessList_Process::mutable_config_file() {
   set_has_config_file();
   if (config_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     config_file_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.ProcessListResponse.Process.config_file)
+  // @@protoc_insertion_point(field_mutable:lms.Response.ProcessList.Process.config_file)
   return config_file_;
 }
-inline ::std::string* ProcessListResponse_Process::release_config_file() {
+inline ::std::string* Response_ProcessList_Process::release_config_file() {
   clear_has_config_file();
   if (config_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
@@ -2863,7 +3052,7 @@ inline ::std::string* ProcessListResponse_Process::release_config_file() {
     return temp;
   }
 }
-inline void ProcessListResponse_Process::set_allocated_config_file(::std::string* config_file) {
+inline void Response_ProcessList_Process::set_allocated_config_file(::std::string* config_file) {
   if (config_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete config_file_;
   }
@@ -2874,100 +3063,100 @@ inline void ProcessListResponse_Process::set_allocated_config_file(::std::string
     clear_has_config_file();
     config_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.ProcessListResponse.Process.config_file)
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.ProcessList.Process.config_file)
 }
 
 // -------------------------------------------------------------------
 
-// ProcessListResponse
+// Response_ProcessList
 
-// repeated .lms.ProcessListResponse.Process processes = 1;
-inline int ProcessListResponse::processes_size() const {
+// repeated .lms.Response.ProcessList.Process processes = 1;
+inline int Response_ProcessList::processes_size() const {
   return processes_.size();
 }
-inline void ProcessListResponse::clear_processes() {
+inline void Response_ProcessList::clear_processes() {
   processes_.Clear();
 }
-inline const ::lms::ProcessListResponse_Process& ProcessListResponse::processes(int index) const {
-  // @@protoc_insertion_point(field_get:lms.ProcessListResponse.processes)
+inline const ::lms::Response_ProcessList_Process& Response_ProcessList::processes(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProcessList.processes)
   return processes_.Get(index);
 }
-inline ::lms::ProcessListResponse_Process* ProcessListResponse::mutable_processes(int index) {
-  // @@protoc_insertion_point(field_mutable:lms.ProcessListResponse.processes)
+inline ::lms::Response_ProcessList_Process* Response_ProcessList::mutable_processes(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Response.ProcessList.processes)
   return processes_.Mutable(index);
 }
-inline ::lms::ProcessListResponse_Process* ProcessListResponse::add_processes() {
-  // @@protoc_insertion_point(field_add:lms.ProcessListResponse.processes)
+inline ::lms::Response_ProcessList_Process* Response_ProcessList::add_processes() {
+  // @@protoc_insertion_point(field_add:lms.Response.ProcessList.processes)
   return processes_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::lms::ProcessListResponse_Process >&
-ProcessListResponse::processes() const {
-  // @@protoc_insertion_point(field_list:lms.ProcessListResponse.processes)
+inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ProcessList_Process >&
+Response_ProcessList::processes() const {
+  // @@protoc_insertion_point(field_list:lms.Response.ProcessList.processes)
   return processes_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::lms::ProcessListResponse_Process >*
-ProcessListResponse::mutable_processes() {
-  // @@protoc_insertion_point(field_mutable_list:lms.ProcessListResponse.processes)
+inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ProcessList_Process >*
+Response_ProcessList::mutable_processes() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Response.ProcessList.processes)
   return &processes_;
 }
 
 // -------------------------------------------------------------------
 
-// ModuleListResponse_Access
+// Response_ModuleListResponse_Access
 
 // optional string module = 1;
-inline bool ModuleListResponse_Access::has_module() const {
+inline bool Response_ModuleListResponse_Access::has_module() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ModuleListResponse_Access::set_has_module() {
+inline void Response_ModuleListResponse_Access::set_has_module() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ModuleListResponse_Access::clear_has_module() {
+inline void Response_ModuleListResponse_Access::clear_has_module() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ModuleListResponse_Access::clear_module() {
+inline void Response_ModuleListResponse_Access::clear_module() {
   if (module_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     module_->clear();
   }
   clear_has_module();
 }
-inline const ::std::string& ModuleListResponse_Access::module() const {
-  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.Access.module)
+inline const ::std::string& Response_ModuleListResponse_Access::module() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ModuleListResponse.Access.module)
   return *module_;
 }
-inline void ModuleListResponse_Access::set_module(const ::std::string& value) {
+inline void Response_ModuleListResponse_Access::set_module(const ::std::string& value) {
   set_has_module();
   if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     module_ = new ::std::string;
   }
   module_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.ModuleListResponse.Access.module)
+  // @@protoc_insertion_point(field_set:lms.Response.ModuleListResponse.Access.module)
 }
-inline void ModuleListResponse_Access::set_module(const char* value) {
+inline void Response_ModuleListResponse_Access::set_module(const char* value) {
   set_has_module();
   if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     module_ = new ::std::string;
   }
   module_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.ModuleListResponse.Access.module)
+  // @@protoc_insertion_point(field_set_char:lms.Response.ModuleListResponse.Access.module)
 }
-inline void ModuleListResponse_Access::set_module(const char* value, size_t size) {
+inline void Response_ModuleListResponse_Access::set_module(const char* value, size_t size) {
   set_has_module();
   if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     module_ = new ::std::string;
   }
   module_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.ModuleListResponse.Access.module)
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.ModuleListResponse.Access.module)
 }
-inline ::std::string* ModuleListResponse_Access::mutable_module() {
+inline ::std::string* Response_ModuleListResponse_Access::mutable_module() {
   set_has_module();
   if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     module_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.ModuleListResponse.Access.module)
+  // @@protoc_insertion_point(field_mutable:lms.Response.ModuleListResponse.Access.module)
   return module_;
 }
-inline ::std::string* ModuleListResponse_Access::release_module() {
+inline ::std::string* Response_ModuleListResponse_Access::release_module() {
   clear_has_module();
   if (module_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
@@ -2977,7 +3166,7 @@ inline ::std::string* ModuleListResponse_Access::release_module() {
     return temp;
   }
 }
-inline void ModuleListResponse_Access::set_allocated_module(::std::string* module) {
+inline void Response_ModuleListResponse_Access::set_allocated_module(::std::string* module) {
   if (module_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete module_;
   }
@@ -2988,178 +3177,284 @@ inline void ModuleListResponse_Access::set_allocated_module(::std::string* modul
     clear_has_module();
     module_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.ModuleListResponse.Access.module)
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.ModuleListResponse.Access.module)
 }
 
-// optional .lms.ModuleListResponse.Permission permission = 2;
-inline bool ModuleListResponse_Access::has_permission() const {
+// optional .lms.Response.ModuleListResponse.Permission permission = 2;
+inline bool Response_ModuleListResponse_Access::has_permission() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ModuleListResponse_Access::set_has_permission() {
+inline void Response_ModuleListResponse_Access::set_has_permission() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ModuleListResponse_Access::clear_has_permission() {
+inline void Response_ModuleListResponse_Access::clear_has_permission() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ModuleListResponse_Access::clear_permission() {
+inline void Response_ModuleListResponse_Access::clear_permission() {
   permission_ = 1;
   clear_has_permission();
 }
-inline ::lms::ModuleListResponse_Permission ModuleListResponse_Access::permission() const {
-  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.Access.permission)
-  return static_cast< ::lms::ModuleListResponse_Permission >(permission_);
+inline ::lms::Response_ModuleListResponse_Permission Response_ModuleListResponse_Access::permission() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ModuleListResponse.Access.permission)
+  return static_cast< ::lms::Response_ModuleListResponse_Permission >(permission_);
 }
-inline void ModuleListResponse_Access::set_permission(::lms::ModuleListResponse_Permission value) {
-  assert(::lms::ModuleListResponse_Permission_IsValid(value));
+inline void Response_ModuleListResponse_Access::set_permission(::lms::Response_ModuleListResponse_Permission value) {
+  assert(::lms::Response_ModuleListResponse_Permission_IsValid(value));
   set_has_permission();
   permission_ = value;
-  // @@protoc_insertion_point(field_set:lms.ModuleListResponse.Access.permission)
+  // @@protoc_insertion_point(field_set:lms.Response.ModuleListResponse.Access.permission)
 }
 
 // optional int32 priority = 3;
-inline bool ModuleListResponse_Access::has_priority() const {
+inline bool Response_ModuleListResponse_Access::has_priority() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ModuleListResponse_Access::set_has_priority() {
+inline void Response_ModuleListResponse_Access::set_has_priority() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ModuleListResponse_Access::clear_has_priority() {
+inline void Response_ModuleListResponse_Access::clear_has_priority() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void ModuleListResponse_Access::clear_priority() {
+inline void Response_ModuleListResponse_Access::clear_priority() {
   priority_ = 0;
   clear_has_priority();
 }
-inline ::google::protobuf::int32 ModuleListResponse_Access::priority() const {
-  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.Access.priority)
+inline ::google::protobuf::int32 Response_ModuleListResponse_Access::priority() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ModuleListResponse.Access.priority)
   return priority_;
 }
-inline void ModuleListResponse_Access::set_priority(::google::protobuf::int32 value) {
+inline void Response_ModuleListResponse_Access::set_priority(::google::protobuf::int32 value) {
   set_has_priority();
   priority_ = value;
-  // @@protoc_insertion_point(field_set:lms.ModuleListResponse.Access.priority)
+  // @@protoc_insertion_point(field_set:lms.Response.ModuleListResponse.Access.priority)
 }
 
 // -------------------------------------------------------------------
 
-// ModuleListResponse_AccessList
+// Response_ModuleListResponse_Channel
 
-// repeated .lms.ModuleListResponse.Access accessList = 1;
-inline int ModuleListResponse_AccessList::accesslist_size() const {
-  return accesslist_.size();
-}
-inline void ModuleListResponse_AccessList::clear_accesslist() {
-  accesslist_.Clear();
-}
-inline const ::lms::ModuleListResponse_Access& ModuleListResponse_AccessList::accesslist(int index) const {
-  // @@protoc_insertion_point(field_get:lms.ModuleListResponse.AccessList.accessList)
-  return accesslist_.Get(index);
-}
-inline ::lms::ModuleListResponse_Access* ModuleListResponse_AccessList::mutable_accesslist(int index) {
-  // @@protoc_insertion_point(field_mutable:lms.ModuleListResponse.AccessList.accessList)
-  return accesslist_.Mutable(index);
-}
-inline ::lms::ModuleListResponse_Access* ModuleListResponse_AccessList::add_accesslist() {
-  // @@protoc_insertion_point(field_add:lms.ModuleListResponse.AccessList.accessList)
-  return accesslist_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >&
-ModuleListResponse_AccessList::accesslist() const {
-  // @@protoc_insertion_point(field_list:lms.ModuleListResponse.AccessList.accessList)
-  return accesslist_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::lms::ModuleListResponse_Access >*
-ModuleListResponse_AccessList::mutable_accesslist() {
-  // @@protoc_insertion_point(field_mutable_list:lms.ModuleListResponse.AccessList.accessList)
-  return &accesslist_;
-}
-
-// -------------------------------------------------------------------
-
-// ModuleListResponse
-
-// -------------------------------------------------------------------
-
-// LogEvent
-
-// optional .lms.LogEvent.Level level = 1;
-inline bool LogEvent::has_level() const {
+// optional string name = 1;
+inline bool Response_ModuleListResponse_Channel::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void LogEvent::set_has_level() {
+inline void Response_ModuleListResponse_Channel::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void LogEvent::clear_has_level() {
+inline void Response_ModuleListResponse_Channel::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void LogEvent::clear_level() {
+inline void Response_ModuleListResponse_Channel::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Response_ModuleListResponse_Channel::name() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ModuleListResponse.Channel.name)
+  return *name_;
+}
+inline void Response_ModuleListResponse_Channel::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Response.ModuleListResponse.Channel.name)
+}
+inline void Response_ModuleListResponse_Channel::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Response.ModuleListResponse.Channel.name)
+}
+inline void Response_ModuleListResponse_Channel::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.ModuleListResponse.Channel.name)
+}
+inline ::std::string* Response_ModuleListResponse_Channel::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Response.ModuleListResponse.Channel.name)
+  return name_;
+}
+inline ::std::string* Response_ModuleListResponse_Channel::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Response_ModuleListResponse_Channel::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.ModuleListResponse.Channel.name)
+}
+
+// repeated .lms.Response.ModuleListResponse.Access access_list = 2;
+inline int Response_ModuleListResponse_Channel::access_list_size() const {
+  return access_list_.size();
+}
+inline void Response_ModuleListResponse_Channel::clear_access_list() {
+  access_list_.Clear();
+}
+inline const ::lms::Response_ModuleListResponse_Access& Response_ModuleListResponse_Channel::access_list(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Response.ModuleListResponse.Channel.access_list)
+  return access_list_.Get(index);
+}
+inline ::lms::Response_ModuleListResponse_Access* Response_ModuleListResponse_Channel::mutable_access_list(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Response.ModuleListResponse.Channel.access_list)
+  return access_list_.Mutable(index);
+}
+inline ::lms::Response_ModuleListResponse_Access* Response_ModuleListResponse_Channel::add_access_list() {
+  // @@protoc_insertion_point(field_add:lms.Response.ModuleListResponse.Channel.access_list)
+  return access_list_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Access >&
+Response_ModuleListResponse_Channel::access_list() const {
+  // @@protoc_insertion_point(field_list:lms.Response.ModuleListResponse.Channel.access_list)
+  return access_list_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Access >*
+Response_ModuleListResponse_Channel::mutable_access_list() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Response.ModuleListResponse.Channel.access_list)
+  return &access_list_;
+}
+
+// -------------------------------------------------------------------
+
+// Response_ModuleListResponse
+
+// repeated .lms.Response.ModuleListResponse.Channel channels = 1;
+inline int Response_ModuleListResponse::channels_size() const {
+  return channels_.size();
+}
+inline void Response_ModuleListResponse::clear_channels() {
+  channels_.Clear();
+}
+inline const ::lms::Response_ModuleListResponse_Channel& Response_ModuleListResponse::channels(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Response.ModuleListResponse.channels)
+  return channels_.Get(index);
+}
+inline ::lms::Response_ModuleListResponse_Channel* Response_ModuleListResponse::mutable_channels(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Response.ModuleListResponse.channels)
+  return channels_.Mutable(index);
+}
+inline ::lms::Response_ModuleListResponse_Channel* Response_ModuleListResponse::add_channels() {
+  // @@protoc_insertion_point(field_add:lms.Response.ModuleListResponse.channels)
+  return channels_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Channel >&
+Response_ModuleListResponse::channels() const {
+  // @@protoc_insertion_point(field_list:lms.Response.ModuleListResponse.channels)
+  return channels_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ModuleListResponse_Channel >*
+Response_ModuleListResponse::mutable_channels() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Response.ModuleListResponse.channels)
+  return &channels_;
+}
+
+// -------------------------------------------------------------------
+
+// Response_LogEvent
+
+// optional .lms.Response.LogEvent.Level level = 1;
+inline bool Response_LogEvent::has_level() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Response_LogEvent::set_has_level() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Response_LogEvent::clear_has_level() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Response_LogEvent::clear_level() {
   level_ = 0;
   clear_has_level();
 }
-inline ::lms::LogEvent_Level LogEvent::level() const {
-  // @@protoc_insertion_point(field_get:lms.LogEvent.level)
-  return static_cast< ::lms::LogEvent_Level >(level_);
+inline ::lms::Response_LogEvent_Level Response_LogEvent::level() const {
+  // @@protoc_insertion_point(field_get:lms.Response.LogEvent.level)
+  return static_cast< ::lms::Response_LogEvent_Level >(level_);
 }
-inline void LogEvent::set_level(::lms::LogEvent_Level value) {
-  assert(::lms::LogEvent_Level_IsValid(value));
+inline void Response_LogEvent::set_level(::lms::Response_LogEvent_Level value) {
+  assert(::lms::Response_LogEvent_Level_IsValid(value));
   set_has_level();
   level_ = value;
-  // @@protoc_insertion_point(field_set:lms.LogEvent.level)
+  // @@protoc_insertion_point(field_set:lms.Response.LogEvent.level)
 }
 
 // optional string tag = 2;
-inline bool LogEvent::has_tag() const {
+inline bool Response_LogEvent::has_tag() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void LogEvent::set_has_tag() {
+inline void Response_LogEvent::set_has_tag() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void LogEvent::clear_has_tag() {
+inline void Response_LogEvent::clear_has_tag() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void LogEvent::clear_tag() {
+inline void Response_LogEvent::clear_tag() {
   if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     tag_->clear();
   }
   clear_has_tag();
 }
-inline const ::std::string& LogEvent::tag() const {
-  // @@protoc_insertion_point(field_get:lms.LogEvent.tag)
+inline const ::std::string& Response_LogEvent::tag() const {
+  // @@protoc_insertion_point(field_get:lms.Response.LogEvent.tag)
   return *tag_;
 }
-inline void LogEvent::set_tag(const ::std::string& value) {
+inline void Response_LogEvent::set_tag(const ::std::string& value) {
   set_has_tag();
   if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     tag_ = new ::std::string;
   }
   tag_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.LogEvent.tag)
+  // @@protoc_insertion_point(field_set:lms.Response.LogEvent.tag)
 }
-inline void LogEvent::set_tag(const char* value) {
+inline void Response_LogEvent::set_tag(const char* value) {
   set_has_tag();
   if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     tag_ = new ::std::string;
   }
   tag_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.LogEvent.tag)
+  // @@protoc_insertion_point(field_set_char:lms.Response.LogEvent.tag)
 }
-inline void LogEvent::set_tag(const char* value, size_t size) {
+inline void Response_LogEvent::set_tag(const char* value, size_t size) {
   set_has_tag();
   if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     tag_ = new ::std::string;
   }
   tag_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.LogEvent.tag)
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.LogEvent.tag)
 }
-inline ::std::string* LogEvent::mutable_tag() {
+inline ::std::string* Response_LogEvent::mutable_tag() {
   set_has_tag();
   if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     tag_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.LogEvent.tag)
+  // @@protoc_insertion_point(field_mutable:lms.Response.LogEvent.tag)
   return tag_;
 }
-inline ::std::string* LogEvent::release_tag() {
+inline ::std::string* Response_LogEvent::release_tag() {
   clear_has_tag();
   if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
@@ -3169,7 +3464,7 @@ inline ::std::string* LogEvent::release_tag() {
     return temp;
   }
 }
-inline void LogEvent::set_allocated_tag(::std::string* tag) {
+inline void Response_LogEvent::set_allocated_tag(::std::string* tag) {
   if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete tag_;
   }
@@ -3180,62 +3475,62 @@ inline void LogEvent::set_allocated_tag(::std::string* tag) {
     clear_has_tag();
     tag_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.LogEvent.tag)
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.LogEvent.tag)
 }
 
 // optional string text = 3;
-inline bool LogEvent::has_text() const {
+inline bool Response_LogEvent::has_text() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void LogEvent::set_has_text() {
+inline void Response_LogEvent::set_has_text() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void LogEvent::clear_has_text() {
+inline void Response_LogEvent::clear_has_text() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void LogEvent::clear_text() {
+inline void Response_LogEvent::clear_text() {
   if (text_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     text_->clear();
   }
   clear_has_text();
 }
-inline const ::std::string& LogEvent::text() const {
-  // @@protoc_insertion_point(field_get:lms.LogEvent.text)
+inline const ::std::string& Response_LogEvent::text() const {
+  // @@protoc_insertion_point(field_get:lms.Response.LogEvent.text)
   return *text_;
 }
-inline void LogEvent::set_text(const ::std::string& value) {
+inline void Response_LogEvent::set_text(const ::std::string& value) {
   set_has_text();
   if (text_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     text_ = new ::std::string;
   }
   text_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.LogEvent.text)
+  // @@protoc_insertion_point(field_set:lms.Response.LogEvent.text)
 }
-inline void LogEvent::set_text(const char* value) {
+inline void Response_LogEvent::set_text(const char* value) {
   set_has_text();
   if (text_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     text_ = new ::std::string;
   }
   text_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.LogEvent.text)
+  // @@protoc_insertion_point(field_set_char:lms.Response.LogEvent.text)
 }
-inline void LogEvent::set_text(const char* value, size_t size) {
+inline void Response_LogEvent::set_text(const char* value, size_t size) {
   set_has_text();
   if (text_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     text_ = new ::std::string;
   }
   text_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.LogEvent.text)
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.LogEvent.text)
 }
-inline ::std::string* LogEvent::mutable_text() {
+inline ::std::string* Response_LogEvent::mutable_text() {
   set_has_text();
   if (text_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     text_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.LogEvent.text)
+  // @@protoc_insertion_point(field_mutable:lms.Response.LogEvent.text)
   return text_;
 }
-inline ::std::string* LogEvent::release_text() {
+inline ::std::string* Response_LogEvent::release_text() {
   clear_has_text();
   if (text_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
@@ -3245,7 +3540,7 @@ inline ::std::string* LogEvent::release_text() {
     return temp;
   }
 }
-inline void LogEvent::set_allocated_text(::std::string* text) {
+inline void Response_LogEvent::set_allocated_text(::std::string* text) {
   if (text_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete text_;
   }
@@ -3256,33 +3551,285 @@ inline void LogEvent::set_allocated_text(::std::string* text) {
     clear_has_text();
     text_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.LogEvent.text)
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.LogEvent.text)
 }
 
 // optional bool close_after = 4 [default = false];
-inline bool LogEvent::has_close_after() const {
+inline bool Response_LogEvent::has_close_after() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void LogEvent::set_has_close_after() {
+inline void Response_LogEvent::set_has_close_after() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void LogEvent::clear_has_close_after() {
+inline void Response_LogEvent::clear_has_close_after() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void LogEvent::clear_close_after() {
+inline void Response_LogEvent::clear_close_after() {
   close_after_ = false;
   clear_has_close_after();
 }
-inline bool LogEvent::close_after() const {
-  // @@protoc_insertion_point(field_get:lms.LogEvent.close_after)
+inline bool Response_LogEvent::close_after() const {
+  // @@protoc_insertion_point(field_get:lms.Response.LogEvent.close_after)
   return close_after_;
 }
-inline void LogEvent::set_close_after(bool value) {
+inline void Response_LogEvent::set_close_after(bool value) {
   set_has_close_after();
   close_after_ = value;
-  // @@protoc_insertion_point(field_set:lms.LogEvent.close_after)
+  // @@protoc_insertion_point(field_set:lms.Response.LogEvent.close_after)
 }
 
+// optional int64 timestamp = 5;
+inline bool Response_LogEvent::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Response_LogEvent::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Response_LogEvent::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Response_LogEvent::clear_timestamp() {
+  timestamp_ = GOOGLE_LONGLONG(0);
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int64 Response_LogEvent::timestamp() const {
+  // @@protoc_insertion_point(field_get:lms.Response.LogEvent.timestamp)
+  return timestamp_;
+}
+inline void Response_LogEvent::set_timestamp(::google::protobuf::int64 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.LogEvent.timestamp)
+}
+
+// -------------------------------------------------------------------
+
+// Response
+
+// optional .lms.Response.Info info = 1;
+inline bool Response::has_info() const {
+  return content_case() == kInfo;
+}
+inline void Response::set_has_info() {
+  _oneof_case_[0] = kInfo;
+}
+inline void Response::clear_info() {
+  if (has_info()) {
+    delete content_.info_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Response_Info& Response::info() const {
+  return has_info() ? *content_.info_
+                      : ::lms::Response_Info::default_instance();
+}
+inline ::lms::Response_Info* Response::mutable_info() {
+  if (!has_info()) {
+    clear_content();
+    set_has_info();
+    content_.info_ = new ::lms::Response_Info;
+  }
+  return content_.info_;
+}
+inline ::lms::Response_Info* Response::release_info() {
+  if (has_info()) {
+    clear_has_content();
+    ::lms::Response_Info* temp = content_.info_;
+    content_.info_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Response::set_allocated_info(::lms::Response_Info* info) {
+  clear_content();
+  if (info) {
+    set_has_info();
+    content_.info_ = info;
+  }
+}
+
+// optional .lms.Response.ClientList client_list = 2;
+inline bool Response::has_client_list() const {
+  return content_case() == kClientList;
+}
+inline void Response::set_has_client_list() {
+  _oneof_case_[0] = kClientList;
+}
+inline void Response::clear_client_list() {
+  if (has_client_list()) {
+    delete content_.client_list_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Response_ClientList& Response::client_list() const {
+  return has_client_list() ? *content_.client_list_
+                      : ::lms::Response_ClientList::default_instance();
+}
+inline ::lms::Response_ClientList* Response::mutable_client_list() {
+  if (!has_client_list()) {
+    clear_content();
+    set_has_client_list();
+    content_.client_list_ = new ::lms::Response_ClientList;
+  }
+  return content_.client_list_;
+}
+inline ::lms::Response_ClientList* Response::release_client_list() {
+  if (has_client_list()) {
+    clear_has_content();
+    ::lms::Response_ClientList* temp = content_.client_list_;
+    content_.client_list_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Response::set_allocated_client_list(::lms::Response_ClientList* client_list) {
+  clear_content();
+  if (client_list) {
+    set_has_client_list();
+    content_.client_list_ = client_list;
+  }
+}
+
+// optional .lms.Response.ProcessList process_list = 3;
+inline bool Response::has_process_list() const {
+  return content_case() == kProcessList;
+}
+inline void Response::set_has_process_list() {
+  _oneof_case_[0] = kProcessList;
+}
+inline void Response::clear_process_list() {
+  if (has_process_list()) {
+    delete content_.process_list_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Response_ProcessList& Response::process_list() const {
+  return has_process_list() ? *content_.process_list_
+                      : ::lms::Response_ProcessList::default_instance();
+}
+inline ::lms::Response_ProcessList* Response::mutable_process_list() {
+  if (!has_process_list()) {
+    clear_content();
+    set_has_process_list();
+    content_.process_list_ = new ::lms::Response_ProcessList;
+  }
+  return content_.process_list_;
+}
+inline ::lms::Response_ProcessList* Response::release_process_list() {
+  if (has_process_list()) {
+    clear_has_content();
+    ::lms::Response_ProcessList* temp = content_.process_list_;
+    content_.process_list_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Response::set_allocated_process_list(::lms::Response_ProcessList* process_list) {
+  clear_content();
+  if (process_list) {
+    set_has_process_list();
+    content_.process_list_ = process_list;
+  }
+}
+
+// optional .lms.Response.ModuleListResponse module_list = 4;
+inline bool Response::has_module_list() const {
+  return content_case() == kModuleList;
+}
+inline void Response::set_has_module_list() {
+  _oneof_case_[0] = kModuleList;
+}
+inline void Response::clear_module_list() {
+  if (has_module_list()) {
+    delete content_.module_list_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Response_ModuleListResponse& Response::module_list() const {
+  return has_module_list() ? *content_.module_list_
+                      : ::lms::Response_ModuleListResponse::default_instance();
+}
+inline ::lms::Response_ModuleListResponse* Response::mutable_module_list() {
+  if (!has_module_list()) {
+    clear_content();
+    set_has_module_list();
+    content_.module_list_ = new ::lms::Response_ModuleListResponse;
+  }
+  return content_.module_list_;
+}
+inline ::lms::Response_ModuleListResponse* Response::release_module_list() {
+  if (has_module_list()) {
+    clear_has_content();
+    ::lms::Response_ModuleListResponse* temp = content_.module_list_;
+    content_.module_list_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Response::set_allocated_module_list(::lms::Response_ModuleListResponse* module_list) {
+  clear_content();
+  if (module_list) {
+    set_has_module_list();
+    content_.module_list_ = module_list;
+  }
+}
+
+// optional .lms.Response.LogEvent log_event = 5;
+inline bool Response::has_log_event() const {
+  return content_case() == kLogEvent;
+}
+inline void Response::set_has_log_event() {
+  _oneof_case_[0] = kLogEvent;
+}
+inline void Response::clear_log_event() {
+  if (has_log_event()) {
+    delete content_.log_event_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Response_LogEvent& Response::log_event() const {
+  return has_log_event() ? *content_.log_event_
+                      : ::lms::Response_LogEvent::default_instance();
+}
+inline ::lms::Response_LogEvent* Response::mutable_log_event() {
+  if (!has_log_event()) {
+    clear_content();
+    set_has_log_event();
+    content_.log_event_ = new ::lms::Response_LogEvent;
+  }
+  return content_.log_event_;
+}
+inline ::lms::Response_LogEvent* Response::release_log_event() {
+  if (has_log_event()) {
+    clear_has_content();
+    ::lms::Response_LogEvent* temp = content_.log_event_;
+    content_.log_event_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Response::set_allocated_log_event(::lms::Response_LogEvent* log_event) {
+  clear_content();
+  if (log_event) {
+    set_has_log_event();
+    content_.log_event_ = log_event;
+  }
+}
+
+inline bool Response::has_content() {
+  return content_case() != CONTENT_NOT_SET;
+}
+inline void Response::clear_has_content() {
+  _oneof_case_[0] = CONTENT_NOT_SET;
+}
+inline Response::ContentCase Response::content_case() const {
+  return Response::ContentCase(_oneof_case_[0]);
+}
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -3292,15 +3839,15 @@ inline void LogEvent::set_close_after(bool value) {
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::lms::ModuleListResponse_Permission> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::lms::Response_ModuleListResponse_Permission> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::lms::ModuleListResponse_Permission>() {
-  return ::lms::ModuleListResponse_Permission_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::lms::Response_ModuleListResponse_Permission>() {
+  return ::lms::Response_ModuleListResponse_Permission_descriptor();
 }
-template <> struct is_proto_enum< ::lms::LogEvent_Level> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::lms::Response_LogEvent_Level> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::lms::LogEvent_Level>() {
-  return ::lms::LogEvent_Level_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::lms::Response_LogEvent_Level>() {
+  return ::lms::Response_LogEvent_Level_descriptor();
 }
 
 }  // namespace google

@@ -7,14 +7,16 @@ namespace internal {
 ProtobufSink::ProtobufSink(int socket) : socket(socket) {}
 
 void ProtobufSink::sink(const lms::logging::Event &message) {
-    lms::LogEvent log;
-    log.set_tag(message.tag);
-    log.set_level(static_cast<lms::LogEvent_Level>(message.level));
-    log.set_text(message.messageText());
+    Response response;
+    Response::LogEvent *event = response.mutable_log_event();
+    event->set_tag(message.tag);
+    event->set_level(static_cast<Response::LogEvent::Level>(message.level));
+    event->set_text(message.messageText());
+    event->set_timestamp(message.timestamp.micros());
 
     {
         std::lock_guard<std::mutex> lck(mtx);
-        socket.writeMessage(log);
+        socket.writeMessage(response);
     }
 }
 

@@ -20,14 +20,16 @@ namespace logging {
 enum class Level : std::uint8_t {
     //! The lowest possible rank, will turn on all logging.
     ALL = 0,
+    //! Timing information. Log message has special meaning.
+    PROFILE = 10,
     //! Detailed information for debugging.
-    DEBUG = 1,
+    DEBUG = 20,
     //! Should be used for startup/shutdown events.
-    INFO = 2,
+    INFO = 30,
     //! Almost errors that do not interrupt the program's flow.
-    WARN = 3,
+    WARN = 40,
     //! Runtime errors, hardware problems.
-    ERROR = 4,
+    ERROR = 50,
     //! The highest possible rank, will turn off all logging.
     OFF = 255
 };

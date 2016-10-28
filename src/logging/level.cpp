@@ -8,6 +8,8 @@ std::string levelName(Level lvl) {
     switch (lvl) {
     case Level::ALL:
         return "ALL";
+    case Level::PROFILE:
+        return "PROFILE";
     case Level::DEBUG:
         return "DEBUG";
     case Level::INFO:

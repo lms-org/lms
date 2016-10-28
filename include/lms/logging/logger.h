@@ -82,7 +82,7 @@ public:
      *
      * @param timerName name for the timer
      */
-    void time(const std::string &timerName);
+    void time(const std::string &tag);
 
     /**
      * @brief End a timer and log the past time as
@@ -95,7 +95,7 @@ public:
      *
      * @param timerName name for the timer
      */
-    void timeEnd(const std::string &timerName);
+    void timeEnd(const std::string &tag);
 
     /**
      * @brief Log an error message prepended by strerror(errno).
@@ -129,9 +129,6 @@ public:
      * Minimum logging level.
      */
     Level threshold;
-
-private:
-    std::map<std::string, lms::Time> m_timestampCache;
 };
 
 } // namespace logging

@@ -11,10 +11,10 @@
 namespace lms {
 namespace internal {
 
-ExecutionManager::ExecutionManager(Profiler &profiler, Framework &runtime)
+ExecutionManager::ExecutionManager(Framework &runtime)
     : logger("ExecutionManager"), m_numThreads(1),
       m_multithreading(false), valid(false), m_messaging(),
-      m_cycleCounter(-1), running(true), m_profiler(profiler),
+      m_cycleCounter(-1), running(true),
       m_runtime(runtime) {}
 
 ExecutionManager::~ExecutionManager() {
@@ -35,7 +35,7 @@ void ExecutionManager::loop() {
         for (Module *mod : sortedCycleList) {
             m_dog.beginModule(mod->getName());
 
-            profiler().markBegin(mod->getName());
+            logger.time(mod->getName());
 
             if (m_runtime.isDebug()) {
                 logger.debug("executeBegin") << mod->getName();
@@ -53,7 +53,7 @@ void ExecutionManager::loop() {
                 logger.debug("executeEnd") << mod->getName();
             }
 
-            profiler().markEnd(mod->getName());
+            logger.timeEnd(mod->getName());
 
             m_dog.endModule();
         }
@@ -138,7 +138,7 @@ void ExecutionManager::threadFunction(int threadNum) {
 
             // now we can execute it
             lck.unlock();
-            profiler().markBegin(executableModule->getName());
+            logger.time(executableModule->getName());
 
             try {
                 executableModule->cycle();
@@ -147,7 +147,7 @@ void ExecutionManager::threadFunction(int threadNum) {
                                       << " throws " << lms::typeName(ex)
                                       << " : " << ex.what();
             }
-            profiler().markEnd(executableModule->getName());
+            logger.timeEnd(executableModule->getName());
 
             lck.lock();
 
@@ -252,8 +252,6 @@ void ExecutionManager::printCycleList(DAG<Module *> &clist) {
 }
 
 void ExecutionManager::printCycleList() { printCycleList(cycleList); }
-
-Profiler &ExecutionManager::profiler() { return m_profiler; }
 
 Messaging &ExecutionManager::messaging() { return m_messaging; }
 

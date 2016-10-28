@@ -34,8 +34,6 @@ public:
      */
     ~Framework();
 
-    Profiler &profiler();
-
     std::shared_ptr<Service> getService(std::string const &name);
 
     bool isDebug() const;
@@ -73,7 +71,6 @@ private:
 
     logging::Logger logger;
 
-    Profiler m_profiler;
     Loader m_loader;
 
     extra::FileMonitor configMonitor;

@@ -199,21 +199,21 @@ void MasterServer::start() {
         for(auto it = m_runtimes.begin(); it != m_runtimes.end(); ++it) {
             auto &runtime = *it;
             if(FD_ISSET(runtime.sock.getFD(), &fds)) {
-                std::cout << "Runtime packet" << std::endl;
                 // forward log events to attached clients
-                LogEvent event;
-                if(runtime.sock.readMessage(event)) {
+                Response response;
+                if(runtime.sock.readMessage(response)) {
                     for(auto &client : m_clients) {
                         if(client.isAttached && client.attachedRuntime == runtime.pid) {
-                            client.sock.writeMessage(event);
+                            client.sock.writeMessage(response);
                         }
                     }
                 } else {
-                    LogEvent closeEvent;
-                    closeEvent.set_level(LogEvent::INFO);
-                    closeEvent.set_tag("master");
-                    closeEvent.set_text("Runtime stopped");
-                    closeEvent.set_close_after(true);
+                    Response closeEvent;
+                    Response::LogEvent *event = closeEvent.mutable_log_event();
+                    event->set_level(Response::LogEvent::INFO);
+                    event->set_tag("master");
+                    event->set_text("Runtime stopped");
+                    event->set_close_after(true);
                     for(auto &client : m_clients) {
                         if(client.isAttached && client.attachedRuntime == runtime.pid) {
                              client.sock.writeMessage(closeEvent);
@@ -234,35 +234,34 @@ void MasterServer::start() {
 
 MasterServer::ClientResult
 MasterServer::processClient(Client &client, const lms::Request &message) {
+    Response response;
+
     switch(message.content_case()) {
     case lms::Request::kInfo:
         {
-        lms::InfoResponse res;
-        res.set_version(LMS_VERSION_CODE);
-        res.set_pid(getpid());
-        client.sock.writeMessage(res);
+        auto info = response.mutable_info();
+        info->set_version(LMS_VERSION_CODE);
+        info->set_pid(getpid());
         }
         break;
     case lms::Request::kListClients:
         {
-        lms::ClientListResponse res;
+        auto list = response.mutable_client_list();
         for (const auto &cl : m_clients) {
-            lms::ClientListResponse_Client *client = res.add_clients();
+            auto client = list->add_clients();
             client->set_fd(cl.sock.getFD());
             client->set_peer(cl.peer);
         }
-        client.sock.writeMessage(res);
         }
         break;
     case lms::Request::kListProcesses:
         {
-        lms::ProcessListResponse res;
+        auto list = response.mutable_process_list();
         for(const auto &rt : m_runtimes) {
-            lms::ProcessListResponse_Process *process = res.add_processes();
+            auto *process = list->add_processes();
             process->set_pid(rt.pid);
             process->set_config_file(rt.config_file);
         }
-        client.sock.writeMessage(res);
         }
         break;
     case lms::Request::kShutdown:
@@ -281,6 +280,8 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         kill(atoi(message.stop().id().c_str()), signal);
         break;
     }
+
+    client.sock.writeMessage(response);
 
     /*} else if (message == "tcpip") {
         int port = args.size() >= 1 ? atoi(args[0].c_str()) : 3344;
@@ -381,12 +382,15 @@ MasterClient MasterClient::fromUnix(const std::string &path) {
 int MasterClient::fd() const { return m_sockfd; }
 
 void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
-    LogEvent event;
-    while(socket.readMessage(event)) {
+    Response response;
+    while(socket.readMessage(response)) {
+        if(!response.has_log_event()) continue;
+
+        const auto &event = response.log_event();
         if(static_cast<logging::Level>(event.level()) >= logLevel) {
             // get time now
-            time_t rawtime;
-            std::time(&rawtime);
+            time_t rawtime = event.timestamp() / 1000 / 1000;
+            //std::time(&rawtime);
             struct tm *now = std::localtime(&rawtime);
 
             // format time to "HH:MM:SS"
@@ -407,6 +411,12 @@ void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
     }
 }
 
+void expectResponseType(const Response &response, Response::ContentCase type) {
+    if(response.content_case() != type) {
+        std::cout << "Unexpected response type: " << response.content_case() << std::endl;
+    }
+}
+
 void connectToMaster(int argc, char *argv[]) {
     lms::internal::MasterClient client =
         lms::internal::MasterClient::fromUnix("/tmp/lms.sock");
@@ -419,36 +429,42 @@ void connectToMaster(int argc, char *argv[]) {
             req.mutable_info();
             socket.writeMessage(req);
 
-            lms::InfoResponse res;
+            Response res;
             socket.readMessage(res);
+            expectResponseType(res, Response::kInfo);
             std::cout << "Client: " << LMS_VERSION_STRING << "\n";
-            std::cout << "Server: " << versionCodeToString(res.version()) << "\n";
+            std::cout << "Server: " << versionCodeToString(res.info().version()) << "\n";
         } else if(strcmp(argv[1], "pid") == 0) {
             req.mutable_info();
             socket.writeMessage(req);
 
-            lms::InfoResponse res;
+            Response res;
             socket.readMessage(res);
-            std::cout << res.pid() << std::endl;
+            expectResponseType(res, Response::kInfo);
+            std::cout << res.info().pid() << std::endl;
         } else if(strcmp(argv[1], "clients") == 0) {
             req.mutable_list_clients();
             socket.writeMessage(req);
 
-            lms::ClientListResponse res;
+            Response res;
             socket.readMessage(res);
+            expectResponseType(res, Response::kClientList);
+            const auto &list = res.client_list();
             std::cout << "FD \tPEER\n";
-            for(int i = 0; i < res.clients_size(); i++) {
-                std::cout << res.clients(i).fd() << " \t" << res.clients(i).peer() << "\n";
+            for(int i = 0; i < list.clients_size(); i++) {
+                std::cout << list.clients(i).fd() << " \t" << list.clients(i).peer() << "\n";
             }
         } else if(strcmp(argv[1], "ps") == 0) {
             req.mutable_list_processes();
             socket.writeMessage(req);
 
-            lms::ProcessListResponse res;
+            Response res;
             socket.readMessage(res);
+            expectResponseType(res, Response::kProcessList);
+            const auto &list = res.process_list();
             std::cout << "ID \tCONFIG\n";
-            for(int i = 0; i < res.processes_size(); i++) {
-                std::cout << res.processes(i).pid() << " \t" << res.processes(i).config_file() << "\n";
+            for(int i = 0; i < list.processes_size(); i++) {
+                std::cout << list.processes(i).pid() << " \t" << list.processes(i).config_file() << "\n";
             }
         } else if(strcmp(argv[1], "shutdown") == 0) {
             req.mutable_shutdown();

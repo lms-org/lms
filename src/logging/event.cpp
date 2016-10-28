@@ -24,7 +24,7 @@ std::unique_ptr<Event> operator<<(std::unique_ptr<Event> message,
             // - put it into the unique pointer
             // - return the new wrapped log message
             message.reset(
-                new Event(message->ctx, message->level, message->tag));
+                new Event(message->ctx, message->level, message->tag, message->timestamp));
         } else {
             // in case of any other stream modifier (e.g. std::hex)
             // -> just write it into the stringstream
