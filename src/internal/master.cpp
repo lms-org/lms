@@ -58,21 +58,27 @@ void Profiler::getOverview(Response::ProfilingSummary *summary) const {
         float sum_x = 0;
         float sum_x_squared = 0;
         std::int64_t max = 0;
+        std::int64_t min = std::numeric_limits<decltype(min)>::max();
         for(auto time : pair.second) {
             sum_x += time.micros();
             sum_x_squared += time.micros() * time.micros();
             if(time.micros() > max) {
                 max = time.micros();
             }
+            if(time.micros() < min) {
+                min = time.micros();
+            }
         }
         float avg = sum_x / float(pair.second.size());
         float var = sum_x_squared / pair.second.size() - avg * avg;
+        // stanard deviation is square root of variance
         float std = std::sqrt(var);
 
         Response::ProfilingSummary::Trace *trace = summary->add_traces();
         trace->set_name(pair.first);
         trace->set_count(pair.second.size());
-        trace->set_median(avg);
+        trace->set_avg(avg);
+        trace->set_min(min);
         trace->set_max(max);
         trace->set_std(std);
     }
@@ -620,10 +626,10 @@ void connectToMaster(int argc, char *argv[]) {
                 const auto &profiling = res.profiling_summary();
                 for(int i = 0; i < profiling.traces_size(); i++) {
                     const auto &trace = profiling.traces(i);
-                    std::cout << trace.name() << " #" << trace.count()
-                              << " avg: " << trace.median()
-                              << " std: " << trace.std()
-                              << " max: " << trace.max()
+                    std::cout << trace.name() << "\t#" << trace.count()
+                              << "\t\u00F8 " << trace.avg()
+                              << "\t\u00B1 " << trace.std()
+                              << "\t [" << trace.min() << "; " << trace.max() << "]"
                               << std::endl;
                 }
             } else {

@@ -102,10 +102,11 @@ message Response {
     message ProfilingSummary {
         message Trace {
             optional string name = 1;
-            optional int32 median = 2;
+            optional int32 avg = 2;
             optional int32 std = 3;
             optional int32 max = 4;
             optional int32 count = 5;
+            optional int32 min = 6;
         }
         
         repeated Trace traces = 1;

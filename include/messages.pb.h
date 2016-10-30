@@ -2015,12 +2015,12 @@ class Response_ProfilingSummary_Trace : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // optional int32 median = 2;
-  inline bool has_median() const;
-  inline void clear_median();
-  static const int kMedianFieldNumber = 2;
-  inline ::google::protobuf::int32 median() const;
-  inline void set_median(::google::protobuf::int32 value);
+  // optional int32 avg = 2;
+  inline bool has_avg() const;
+  inline void clear_avg();
+  static const int kAvgFieldNumber = 2;
+  inline ::google::protobuf::int32 avg() const;
+  inline void set_avg(::google::protobuf::int32 value);
 
   // optional int32 std = 3;
   inline bool has_std() const;
@@ -2043,28 +2043,38 @@ class Response_ProfilingSummary_Trace : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 count() const;
   inline void set_count(::google::protobuf::int32 value);
 
+  // optional int32 min = 6;
+  inline bool has_min() const;
+  inline void clear_min();
+  static const int kMinFieldNumber = 6;
+  inline ::google::protobuf::int32 min() const;
+  inline void set_min(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:lms.Response.ProfilingSummary.Trace)
  private:
   inline void set_has_name();
   inline void clear_has_name();
-  inline void set_has_median();
-  inline void clear_has_median();
+  inline void set_has_avg();
+  inline void clear_has_avg();
   inline void set_has_std();
   inline void clear_has_std();
   inline void set_has_max();
   inline void clear_has_max();
   inline void set_has_count();
   inline void clear_has_count();
+  inline void set_has_min();
+  inline void clear_has_min();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* name_;
-  ::google::protobuf::int32 median_;
+  ::google::protobuf::int32 avg_;
   ::google::protobuf::int32 std_;
   ::google::protobuf::int32 max_;
   ::google::protobuf::int32 count_;
+  ::google::protobuf::int32 min_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -4126,28 +4136,28 @@ inline void Response_ProfilingSummary_Trace::set_allocated_name(::std::string* n
   // @@protoc_insertion_point(field_set_allocated:lms.Response.ProfilingSummary.Trace.name)
 }
 
-// optional int32 median = 2;
-inline bool Response_ProfilingSummary_Trace::has_median() const {
+// optional int32 avg = 2;
+inline bool Response_ProfilingSummary_Trace::has_avg() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Response_ProfilingSummary_Trace::set_has_median() {
+inline void Response_ProfilingSummary_Trace::set_has_avg() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Response_ProfilingSummary_Trace::clear_has_median() {
+inline void Response_ProfilingSummary_Trace::clear_has_avg() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Response_ProfilingSummary_Trace::clear_median() {
-  median_ = 0;
-  clear_has_median();
+inline void Response_ProfilingSummary_Trace::clear_avg() {
+  avg_ = 0;
+  clear_has_avg();
 }
-inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::median() const {
-  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.median)
-  return median_;
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::avg() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.avg)
+  return avg_;
 }
-inline void Response_ProfilingSummary_Trace::set_median(::google::protobuf::int32 value) {
-  set_has_median();
-  median_ = value;
-  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.median)
+inline void Response_ProfilingSummary_Trace::set_avg(::google::protobuf::int32 value) {
+  set_has_avg();
+  avg_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.avg)
 }
 
 // optional int32 std = 3;
@@ -4220,6 +4230,30 @@ inline void Response_ProfilingSummary_Trace::set_count(::google::protobuf::int32
   set_has_count();
   count_ = value;
   // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.count)
+}
+
+// optional int32 min = 6;
+inline bool Response_ProfilingSummary_Trace::has_min() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_min() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_min() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Response_ProfilingSummary_Trace::clear_min() {
+  min_ = 0;
+  clear_has_min();
+}
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::min() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.min)
+  return min_;
+}
+inline void Response_ProfilingSummary_Trace::set_min(::google::protobuf::int32 value) {
+  set_has_min();
+  min_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.min)
 }
 
 // -------------------------------------------------------------------

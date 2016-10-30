@@ -463,12 +463,13 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Response_ProfilingSummary));
   Response_ProfilingSummary_Trace_descriptor_ = Response_ProfilingSummary_descriptor_->nested_type(0);
-  static const int Response_ProfilingSummary_Trace_offsets_[5] = {
+  static const int Response_ProfilingSummary_Trace_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, median_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, avg_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, std_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, max_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, count_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response_ProfilingSummary_Trace, min_),
   };
   Response_ProfilingSummary_Trace_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -613,7 +614,7 @@ void protobuf_AddDesc_messages_2eproto() {
     "debug\030\004 \001(\010\032\017\n\rListProcesses\032\024\n\006Attach\022\n"
     "\n\002id\030\001 \001(\t\032 \n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004kill\030\002"
     " \001(\010\032\014\n\nModuleList\032\027\n\tProfiling\022\n\n\002id\030\001 "
-    "\001(\tB\t\n\007content\"\350\t\n\010Response\022\"\n\004info\030\001 \001("
+    "\001(\tB\t\n\007content\"\362\t\n\010Response\022\"\n\004info\030\001 \001("
     "\0132\022.lms.Response.InfoH\000\022/\n\013client_list\030\002"
     " \001(\0132\030.lms.Response.ClientListH\000\0221\n\014proc"
     "ess_list\030\003 \001(\0132\031.lms.Response.ProcessLis"
@@ -640,11 +641,12 @@ void protobuf_AddDesc_messages_2eproto() {
     "\001(\t\022\014\n\004text\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005"
     "false\022\021\n\ttimestamp\030\005 \001(\003\"Q\n\005Level\022\007\n\003ALL"
     "\020\000\022\013\n\007PROFILE\020\n\022\t\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004"
-    "WARN\020(\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001\032\230\001\n\020Profilin"
+    "WARN\020(\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001\032\242\001\n\020Profilin"
     "gSummary\0224\n\006traces\030\001 \003(\0132$.lms.Response."
-    "ProfilingSummary.Trace\032N\n\005Trace\022\014\n\004name\030"
-    "\001 \001(\t\022\016\n\006median\030\002 \001(\005\022\013\n\003std\030\003 \001(\005\022\013\n\003ma"
-    "x\030\004 \001(\005\022\r\n\005count\030\005 \001(\005B\t\n\007content", 1913);
+    "ProfilingSummary.Trace\032X\n\005Trace\022\014\n\004name\030"
+    "\001 \001(\t\022\013\n\003avg\030\002 \001(\005\022\013\n\003std\030\003 \001(\005\022\013\n\003max\030\004"
+    " \001(\005\022\r\n\005count\030\005 \001(\005\022\013\n\003min\030\006 \001(\005B\t\n\007cont"
+    "ent", 1923);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -5920,10 +5922,11 @@ void Response_LogEvent::Swap(Response_LogEvent* other) {
 
 #ifndef _MSC_VER
 const int Response_ProfilingSummary_Trace::kNameFieldNumber;
-const int Response_ProfilingSummary_Trace::kMedianFieldNumber;
+const int Response_ProfilingSummary_Trace::kAvgFieldNumber;
 const int Response_ProfilingSummary_Trace::kStdFieldNumber;
 const int Response_ProfilingSummary_Trace::kMaxFieldNumber;
 const int Response_ProfilingSummary_Trace::kCountFieldNumber;
+const int Response_ProfilingSummary_Trace::kMinFieldNumber;
 #endif  // !_MSC_VER
 
 Response_ProfilingSummary_Trace::Response_ProfilingSummary_Trace()
@@ -5946,10 +5949,11 @@ void Response_ProfilingSummary_Trace::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  median_ = 0;
+  avg_ = 0;
   std_ = 0;
   max_ = 0;
   count_ = 0;
+  min_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5998,8 +6002,8 @@ void Response_ProfilingSummary_Trace::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 31) {
-    ZR_(median_, count_);
+  if (_has_bits_[0 / 32] & 63) {
+    ZR_(avg_, min_);
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
@@ -6036,18 +6040,18 @@ bool Response_ProfilingSummary_Trace::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_median;
+        if (input->ExpectTag(16)) goto parse_avg;
         break;
       }
 
-      // optional int32 median = 2;
+      // optional int32 avg = 2;
       case 2: {
         if (tag == 16) {
-         parse_median:
+         parse_avg:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &median_)));
-          set_has_median();
+                 input, &avg_)));
+          set_has_avg();
         } else {
           goto handle_unusual;
         }
@@ -6096,6 +6100,21 @@ bool Response_ProfilingSummary_Trace::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(48)) goto parse_min;
+        break;
+      }
+
+      // optional int32 min = 6;
+      case 6: {
+        if (tag == 48) {
+         parse_min:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &min_)));
+          set_has_min();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -6135,9 +6154,9 @@ void Response_ProfilingSummary_Trace::SerializeWithCachedSizes(
       1, this->name(), output);
   }
 
-  // optional int32 median = 2;
-  if (has_median()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->median(), output);
+  // optional int32 avg = 2;
+  if (has_avg()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->avg(), output);
   }
 
   // optional int32 std = 3;
@@ -6153,6 +6172,11 @@ void Response_ProfilingSummary_Trace::SerializeWithCachedSizes(
   // optional int32 count = 5;
   if (has_count()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->count(), output);
+  }
+
+  // optional int32 min = 6;
+  if (has_min()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->min(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -6176,9 +6200,9 @@ void Response_ProfilingSummary_Trace::SerializeWithCachedSizes(
         1, this->name(), target);
   }
 
-  // optional int32 median = 2;
-  if (has_median()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->median(), target);
+  // optional int32 avg = 2;
+  if (has_avg()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->avg(), target);
   }
 
   // optional int32 std = 3;
@@ -6194,6 +6218,11 @@ void Response_ProfilingSummary_Trace::SerializeWithCachedSizes(
   // optional int32 count = 5;
   if (has_count()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->count(), target);
+  }
+
+  // optional int32 min = 6;
+  if (has_min()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->min(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -6215,11 +6244,11 @@ int Response_ProfilingSummary_Trace::ByteSize() const {
           this->name());
     }
 
-    // optional int32 median = 2;
-    if (has_median()) {
+    // optional int32 avg = 2;
+    if (has_avg()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->median());
+          this->avg());
     }
 
     // optional int32 std = 3;
@@ -6241,6 +6270,13 @@ int Response_ProfilingSummary_Trace::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->count());
+    }
+
+    // optional int32 min = 6;
+    if (has_min()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->min());
     }
 
   }
@@ -6273,8 +6309,8 @@ void Response_ProfilingSummary_Trace::MergeFrom(const Response_ProfilingSummary_
     if (from.has_name()) {
       set_name(from.name());
     }
-    if (from.has_median()) {
-      set_median(from.median());
+    if (from.has_avg()) {
+      set_avg(from.avg());
     }
     if (from.has_std()) {
       set_std(from.std());
@@ -6284,6 +6320,9 @@ void Response_ProfilingSummary_Trace::MergeFrom(const Response_ProfilingSummary_
     }
     if (from.has_count()) {
       set_count(from.count());
+    }
+    if (from.has_min()) {
+      set_min(from.min());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -6309,10 +6348,11 @@ bool Response_ProfilingSummary_Trace::IsInitialized() const {
 void Response_ProfilingSummary_Trace::Swap(Response_ProfilingSummary_Trace* other) {
   if (other != this) {
     std::swap(name_, other->name_);
-    std::swap(median_, other->median_);
+    std::swap(avg_, other->avg_);
     std::swap(std_, other->std_);
     std::swap(max_, other->max_);
     std::swap(count_, other->count_);
+    std::swap(min_, other->min_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
