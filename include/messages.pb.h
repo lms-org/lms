@@ -43,6 +43,7 @@ class Request_ListProcesses;
 class Request_Attach;
 class Request_Stop;
 class Request_ModuleList;
+class Request_Profiling;
 class Response;
 class Response_Info;
 class Response_ClientList;
@@ -53,6 +54,8 @@ class Response_ModuleListResponse;
 class Response_ModuleListResponse_Access;
 class Response_ModuleListResponse_Channel;
 class Response_LogEvent;
+class Response_ProfilingSummary;
+class Response_ProfilingSummary_Trace;
 
 enum Response_ModuleListResponse_Permission {
   Response_ModuleListResponse_Permission_READ = 1,
@@ -750,6 +753,90 @@ class Request_ModuleList : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_Profiling : public ::google::protobuf::Message {
+ public:
+  Request_Profiling();
+  virtual ~Request_Profiling();
+
+  Request_Profiling(const Request_Profiling& from);
+
+  inline Request_Profiling& operator=(const Request_Profiling& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Profiling& default_instance();
+
+  void Swap(Request_Profiling* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Profiling* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Profiling& from);
+  void MergeFrom(const Request_Profiling& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline const ::std::string& id() const;
+  inline void set_id(const ::std::string& value);
+  inline void set_id(const char* value);
+  inline void set_id(const char* value, size_t size);
+  inline ::std::string* mutable_id();
+  inline ::std::string* release_id();
+  inline void set_allocated_id(::std::string* id);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Profiling)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* id_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Profiling* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request : public ::google::protobuf::Message {
  public:
   Request();
@@ -782,6 +869,7 @@ class Request : public ::google::protobuf::Message {
     kAttach = 6,
     kStop = 7,
     kModuleList = 8,
+    kProfiling = 9,
     CONTENT_NOT_SET = 0,
   };
 
@@ -821,6 +909,7 @@ class Request : public ::google::protobuf::Message {
   typedef Request_Attach Attach;
   typedef Request_Stop Stop;
   typedef Request_ModuleList ModuleList;
+  typedef Request_Profiling Profiling;
 
   // accessors -------------------------------------------------------
 
@@ -896,6 +985,15 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_ModuleList* release_module_list();
   inline void set_allocated_module_list(::lms::Request_ModuleList* module_list);
 
+  // optional .lms.Request.Profiling profiling = 9;
+  inline bool has_profiling() const;
+  inline void clear_profiling();
+  static const int kProfilingFieldNumber = 9;
+  inline const ::lms::Request_Profiling& profiling() const;
+  inline ::lms::Request_Profiling* mutable_profiling();
+  inline ::lms::Request_Profiling* release_profiling();
+  inline void set_allocated_profiling(::lms::Request_Profiling* profiling);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
  private:
@@ -907,6 +1005,7 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_attach();
   inline void set_has_stop();
   inline void set_has_module_list();
+  inline void set_has_profiling();
 
   inline bool has_content();
   void clear_content();
@@ -925,6 +1024,7 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_Attach* attach_;
     ::lms::Request_Stop* stop_;
     ::lms::Request_ModuleList* module_list_;
+    ::lms::Request_Profiling* profiling_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -1850,6 +1950,214 @@ class Response_LogEvent : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Response_ProfilingSummary_Trace : public ::google::protobuf::Message {
+ public:
+  Response_ProfilingSummary_Trace();
+  virtual ~Response_ProfilingSummary_Trace();
+
+  Response_ProfilingSummary_Trace(const Response_ProfilingSummary_Trace& from);
+
+  inline Response_ProfilingSummary_Trace& operator=(const Response_ProfilingSummary_Trace& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Response_ProfilingSummary_Trace& default_instance();
+
+  void Swap(Response_ProfilingSummary_Trace* other);
+
+  // implements Message ----------------------------------------------
+
+  Response_ProfilingSummary_Trace* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Response_ProfilingSummary_Trace& from);
+  void MergeFrom(const Response_ProfilingSummary_Trace& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional int32 median = 2;
+  inline bool has_median() const;
+  inline void clear_median();
+  static const int kMedianFieldNumber = 2;
+  inline ::google::protobuf::int32 median() const;
+  inline void set_median(::google::protobuf::int32 value);
+
+  // optional int32 std = 3;
+  inline bool has_std() const;
+  inline void clear_std();
+  static const int kStdFieldNumber = 3;
+  inline ::google::protobuf::int32 std() const;
+  inline void set_std(::google::protobuf::int32 value);
+
+  // optional int32 max = 4;
+  inline bool has_max() const;
+  inline void clear_max();
+  static const int kMaxFieldNumber = 4;
+  inline ::google::protobuf::int32 max() const;
+  inline void set_max(::google::protobuf::int32 value);
+
+  // optional int32 count = 5;
+  inline bool has_count() const;
+  inline void clear_count();
+  static const int kCountFieldNumber = 5;
+  inline ::google::protobuf::int32 count() const;
+  inline void set_count(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:lms.Response.ProfilingSummary.Trace)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_median();
+  inline void clear_has_median();
+  inline void set_has_std();
+  inline void clear_has_std();
+  inline void set_has_max();
+  inline void clear_has_max();
+  inline void set_has_count();
+  inline void clear_has_count();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::google::protobuf::int32 median_;
+  ::google::protobuf::int32 std_;
+  ::google::protobuf::int32 max_;
+  ::google::protobuf::int32 count_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Response_ProfilingSummary_Trace* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Response_ProfilingSummary : public ::google::protobuf::Message {
+ public:
+  Response_ProfilingSummary();
+  virtual ~Response_ProfilingSummary();
+
+  Response_ProfilingSummary(const Response_ProfilingSummary& from);
+
+  inline Response_ProfilingSummary& operator=(const Response_ProfilingSummary& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Response_ProfilingSummary& default_instance();
+
+  void Swap(Response_ProfilingSummary* other);
+
+  // implements Message ----------------------------------------------
+
+  Response_ProfilingSummary* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Response_ProfilingSummary& from);
+  void MergeFrom(const Response_ProfilingSummary& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Response_ProfilingSummary_Trace Trace;
+
+  // accessors -------------------------------------------------------
+
+  // repeated .lms.Response.ProfilingSummary.Trace traces = 1;
+  inline int traces_size() const;
+  inline void clear_traces();
+  static const int kTracesFieldNumber = 1;
+  inline const ::lms::Response_ProfilingSummary_Trace& traces(int index) const;
+  inline ::lms::Response_ProfilingSummary_Trace* mutable_traces(int index);
+  inline ::lms::Response_ProfilingSummary_Trace* add_traces();
+  inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ProfilingSummary_Trace >&
+      traces() const;
+  inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ProfilingSummary_Trace >*
+      mutable_traces();
+
+  // @@protoc_insertion_point(class_scope:lms.Response.ProfilingSummary)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::lms::Response_ProfilingSummary_Trace > traces_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Response_ProfilingSummary* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Response : public ::google::protobuf::Message {
  public:
   Response();
@@ -1879,6 +2187,7 @@ class Response : public ::google::protobuf::Message {
     kProcessList = 3,
     kModuleList = 4,
     kLogEvent = 5,
+    kProfilingSummary = 6,
     CONTENT_NOT_SET = 0,
   };
 
@@ -1915,6 +2224,7 @@ class Response : public ::google::protobuf::Message {
   typedef Response_ProcessList ProcessList;
   typedef Response_ModuleListResponse ModuleListResponse;
   typedef Response_LogEvent LogEvent;
+  typedef Response_ProfilingSummary ProfilingSummary;
 
   // accessors -------------------------------------------------------
 
@@ -1963,6 +2273,15 @@ class Response : public ::google::protobuf::Message {
   inline ::lms::Response_LogEvent* release_log_event();
   inline void set_allocated_log_event(::lms::Response_LogEvent* log_event);
 
+  // optional .lms.Response.ProfilingSummary profiling_summary = 6;
+  inline bool has_profiling_summary() const;
+  inline void clear_profiling_summary();
+  static const int kProfilingSummaryFieldNumber = 6;
+  inline const ::lms::Response_ProfilingSummary& profiling_summary() const;
+  inline ::lms::Response_ProfilingSummary* mutable_profiling_summary();
+  inline ::lms::Response_ProfilingSummary* release_profiling_summary();
+  inline void set_allocated_profiling_summary(::lms::Response_ProfilingSummary* profiling_summary);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Response)
  private:
@@ -1971,6 +2290,7 @@ class Response : public ::google::protobuf::Message {
   inline void set_has_process_list();
   inline void set_has_module_list();
   inline void set_has_log_event();
+  inline void set_has_profiling_summary();
 
   inline bool has_content();
   void clear_content();
@@ -1986,6 +2306,7 @@ class Response : public ::google::protobuf::Message {
     ::lms::Response_ProcessList* process_list_;
     ::lms::Response_ModuleListResponse* module_list_;
     ::lms::Response_LogEvent* log_event_;
+    ::lms::Response_ProfilingSummary* profiling_summary_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -2417,6 +2738,86 @@ inline void Request_Stop::set_kill(bool value) {
 
 // -------------------------------------------------------------------
 
+// Request_Profiling
+
+// optional string id = 1;
+inline bool Request_Profiling::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_Profiling::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_Profiling::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_Profiling::clear_id() {
+  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    id_->clear();
+  }
+  clear_has_id();
+}
+inline const ::std::string& Request_Profiling::id() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Profiling.id)
+  return *id_;
+}
+inline void Request_Profiling::set_id(const ::std::string& value) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    id_ = new ::std::string;
+  }
+  id_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Profiling.id)
+}
+inline void Request_Profiling::set_id(const char* value) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    id_ = new ::std::string;
+  }
+  id_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Profiling.id)
+}
+inline void Request_Profiling::set_id(const char* value, size_t size) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    id_ = new ::std::string;
+  }
+  id_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Profiling.id)
+}
+inline ::std::string* Request_Profiling::mutable_id() {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    id_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Profiling.id)
+  return id_;
+}
+inline ::std::string* Request_Profiling::release_id() {
+  clear_has_id();
+  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = id_;
+    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Profiling::set_allocated_id(::std::string* id) {
+  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete id_;
+  }
+  if (id) {
+    set_has_id();
+    id_ = id;
+  } else {
+    clear_has_id();
+    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Profiling.id)
+}
+
+// -------------------------------------------------------------------
+
 // Request
 
 // optional .lms.Request.Info info = 1;
@@ -2760,6 +3161,49 @@ inline void Request::set_allocated_module_list(::lms::Request_ModuleList* module
   if (module_list) {
     set_has_module_list();
     content_.module_list_ = module_list;
+  }
+}
+
+// optional .lms.Request.Profiling profiling = 9;
+inline bool Request::has_profiling() const {
+  return content_case() == kProfiling;
+}
+inline void Request::set_has_profiling() {
+  _oneof_case_[0] = kProfiling;
+}
+inline void Request::clear_profiling() {
+  if (has_profiling()) {
+    delete content_.profiling_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Profiling& Request::profiling() const {
+  return has_profiling() ? *content_.profiling_
+                      : ::lms::Request_Profiling::default_instance();
+}
+inline ::lms::Request_Profiling* Request::mutable_profiling() {
+  if (!has_profiling()) {
+    clear_content();
+    set_has_profiling();
+    content_.profiling_ = new ::lms::Request_Profiling;
+  }
+  return content_.profiling_;
+}
+inline ::lms::Request_Profiling* Request::release_profiling() {
+  if (has_profiling()) {
+    clear_has_content();
+    ::lms::Request_Profiling* temp = content_.profiling_;
+    content_.profiling_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request::set_allocated_profiling(::lms::Request_Profiling* profiling) {
+  clear_content();
+  if (profiling) {
+    set_has_profiling();
+    content_.profiling_ = profiling;
   }
 }
 
@@ -3604,6 +4048,216 @@ inline void Response_LogEvent::set_timestamp(::google::protobuf::int64 value) {
 
 // -------------------------------------------------------------------
 
+// Response_ProfilingSummary_Trace
+
+// optional string name = 1;
+inline bool Response_ProfilingSummary_Trace::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Response_ProfilingSummary_Trace::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Response_ProfilingSummary_Trace::name() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.name)
+  return *name_;
+}
+inline void Response_ProfilingSummary_Trace::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.name)
+}
+inline void Response_ProfilingSummary_Trace::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Response.ProfilingSummary.Trace.name)
+}
+inline void Response_ProfilingSummary_Trace::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.ProfilingSummary.Trace.name)
+}
+inline ::std::string* Response_ProfilingSummary_Trace::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Response.ProfilingSummary.Trace.name)
+  return name_;
+}
+inline ::std::string* Response_ProfilingSummary_Trace::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Response_ProfilingSummary_Trace::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.ProfilingSummary.Trace.name)
+}
+
+// optional int32 median = 2;
+inline bool Response_ProfilingSummary_Trace::has_median() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_median() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_median() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Response_ProfilingSummary_Trace::clear_median() {
+  median_ = 0;
+  clear_has_median();
+}
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::median() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.median)
+  return median_;
+}
+inline void Response_ProfilingSummary_Trace::set_median(::google::protobuf::int32 value) {
+  set_has_median();
+  median_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.median)
+}
+
+// optional int32 std = 3;
+inline bool Response_ProfilingSummary_Trace::has_std() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_std() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_std() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Response_ProfilingSummary_Trace::clear_std() {
+  std_ = 0;
+  clear_has_std();
+}
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::std() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.std)
+  return std_;
+}
+inline void Response_ProfilingSummary_Trace::set_std(::google::protobuf::int32 value) {
+  set_has_std();
+  std_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.std)
+}
+
+// optional int32 max = 4;
+inline bool Response_ProfilingSummary_Trace::has_max() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_max() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_max() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Response_ProfilingSummary_Trace::clear_max() {
+  max_ = 0;
+  clear_has_max();
+}
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::max() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.max)
+  return max_;
+}
+inline void Response_ProfilingSummary_Trace::set_max(::google::protobuf::int32 value) {
+  set_has_max();
+  max_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.max)
+}
+
+// optional int32 count = 5;
+inline bool Response_ProfilingSummary_Trace::has_count() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_count() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_count() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Response_ProfilingSummary_Trace::clear_count() {
+  count_ = 0;
+  clear_has_count();
+}
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::count() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.count)
+  return count_;
+}
+inline void Response_ProfilingSummary_Trace::set_count(::google::protobuf::int32 value) {
+  set_has_count();
+  count_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.count)
+}
+
+// -------------------------------------------------------------------
+
+// Response_ProfilingSummary
+
+// repeated .lms.Response.ProfilingSummary.Trace traces = 1;
+inline int Response_ProfilingSummary::traces_size() const {
+  return traces_.size();
+}
+inline void Response_ProfilingSummary::clear_traces() {
+  traces_.Clear();
+}
+inline const ::lms::Response_ProfilingSummary_Trace& Response_ProfilingSummary::traces(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.traces)
+  return traces_.Get(index);
+}
+inline ::lms::Response_ProfilingSummary_Trace* Response_ProfilingSummary::mutable_traces(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Response.ProfilingSummary.traces)
+  return traces_.Mutable(index);
+}
+inline ::lms::Response_ProfilingSummary_Trace* Response_ProfilingSummary::add_traces() {
+  // @@protoc_insertion_point(field_add:lms.Response.ProfilingSummary.traces)
+  return traces_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::lms::Response_ProfilingSummary_Trace >&
+Response_ProfilingSummary::traces() const {
+  // @@protoc_insertion_point(field_list:lms.Response.ProfilingSummary.traces)
+  return traces_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::lms::Response_ProfilingSummary_Trace >*
+Response_ProfilingSummary::mutable_traces() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Response.ProfilingSummary.traces)
+  return &traces_;
+}
+
+// -------------------------------------------------------------------
+
 // Response
 
 // optional .lms.Response.Info info = 1;
@@ -3818,6 +4472,49 @@ inline void Response::set_allocated_log_event(::lms::Response_LogEvent* log_even
   if (log_event) {
     set_has_log_event();
     content_.log_event_ = log_event;
+  }
+}
+
+// optional .lms.Response.ProfilingSummary profiling_summary = 6;
+inline bool Response::has_profiling_summary() const {
+  return content_case() == kProfilingSummary;
+}
+inline void Response::set_has_profiling_summary() {
+  _oneof_case_[0] = kProfilingSummary;
+}
+inline void Response::clear_profiling_summary() {
+  if (has_profiling_summary()) {
+    delete content_.profiling_summary_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Response_ProfilingSummary& Response::profiling_summary() const {
+  return has_profiling_summary() ? *content_.profiling_summary_
+                      : ::lms::Response_ProfilingSummary::default_instance();
+}
+inline ::lms::Response_ProfilingSummary* Response::mutable_profiling_summary() {
+  if (!has_profiling_summary()) {
+    clear_content();
+    set_has_profiling_summary();
+    content_.profiling_summary_ = new ::lms::Response_ProfilingSummary;
+  }
+  return content_.profiling_summary_;
+}
+inline ::lms::Response_ProfilingSummary* Response::release_profiling_summary() {
+  if (has_profiling_summary()) {
+    clear_has_content();
+    ::lms::Response_ProfilingSummary* temp = content_.profiling_summary_;
+    content_.profiling_summary_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Response::set_allocated_profiling_summary(::lms::Response_ProfilingSummary* profiling_summary) {
+  clear_content();
+  if (profiling_summary) {
+    set_has_profiling_summary();
+    content_.profiling_summary_ = profiling_summary;
   }
 }
 

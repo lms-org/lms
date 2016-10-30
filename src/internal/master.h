@@ -3,12 +3,24 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <map>
+#include <list>
 
 #include "protobuf_socket.h"
 #include "messages.pb.h"
+#include "../time.h"
 
 namespace lms {
 namespace internal {
+
+class Profiler {
+public:
+    void addMeasurement(const Response::LogEvent &event);
+    void getOverview(Response::ProfilingSummary *summary) const;
+private:
+    std::map<std::string, lms::Time> beginTimes;
+    std::map<std::string, std::list<lms::Time>> measurements;
+};
 
 class MasterServer {
 public:
@@ -35,6 +47,7 @@ private:
         pid_t pid;
         ProtobufSocket sock;
         std::string config_file;
+        Profiler profiler;
     };
 
     std::vector<Server> m_servers;

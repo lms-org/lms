@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <cmath>
 
 #include "messages.pb.h"
 #include "protobuf_socket.h"
@@ -25,6 +26,57 @@
 
 namespace lms {
 namespace internal {
+
+void Profiler::addMeasurement(const Response::LogEvent &event) {
+    if(event.level() == Response::LogEvent::PROFILE) {
+        if(event.text() == "_begin") {
+            // memorize new begin timestamp
+            beginTimes[event.tag()] = lms::Time::fromMicros(event.timestamp());
+        } else if(event.text() == "_end") {
+            auto it = beginTimes.find(event.tag());
+            if(it == beginTimes.end()) {
+                // could not find begin time
+            } else {
+                lms::Time begin = it->second;
+                lms::Time end = lms::Time::fromMicros(event.timestamp());
+                auto &times = measurements[event.tag()];
+                times.push_back(end - begin);
+                if(times.size() > 100) {
+                    // hold only a limited number of measurements
+                    times.pop_front();
+                }
+            }
+        }
+    }
+}
+
+void Profiler::getOverview(Response::ProfilingSummary *summary) const {
+    for(const auto &pair : measurements) {
+        std::int64_t sum = 0;
+        std::int64_t max = 0;
+        for(auto time : pair.second) {
+            sum += time.micros();
+            if(time.micros() > max) {
+                max = time.micros();
+            }
+        }
+        std::int64_t avg = sum / pair.second.size();
+        std::int64_t var;
+        for(auto time : pair.second) {
+            std::int64_t diff = time.micros() - avg;
+            var += diff * diff;
+        }
+        var /= pair.second.size();
+        float std = std::sqrt(var);
+
+        Response::ProfilingSummary::Trace *trace = summary->add_traces();
+        trace->set_name(pair.first);
+        trace->set_count(pair.second.size());
+        trace->set_median(avg);
+        trace->set_max(max);
+        trace->set_std(std);
+    }
+}
 
 std::string getPeer(sockaddr_storage &addr) {
     char ipstr[255];
@@ -202,6 +254,11 @@ void MasterServer::start() {
                 // forward log events to attached clients
                 Response response;
                 if(runtime.sock.readMessage(response)) {
+                    if(response.has_log_event() &&
+                            response.log_event().level() == Response::LogEvent::PROFILE) {
+                        runtime.profiler.addMeasurement(response.log_event());
+                    }
+
                     for(auto &client : m_clients) {
                         if(client.isAttached && client.attachedRuntime == runtime.pid) {
                             client.sock.writeMessage(response);
@@ -275,9 +332,24 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         client.isAttached = true;
         client.attachedRuntime = atoi(message.attach().id().c_str());
         return ClientResult::attached;
+        break;
     case lms::Request::kStop:
+        {
         int signal = message.stop().kill() ? SIGKILL : SIGINT;
         kill(atoi(message.stop().id().c_str()), signal);
+        }
+        break;
+    case lms::Request::kProfiling:
+        {
+        int requestedId = atoi(message.profiling().id().c_str());
+        for(const auto &rt : m_runtimes) {
+            if(rt.pid == requestedId) {
+                rt.profiler.getOverview(response.mutable_profiling_summary());
+                break;
+            }
+        }
+        // TODO runtime not found
+        }
         break;
     }
 
@@ -534,6 +606,25 @@ void connectToMaster(int argc, char *argv[]) {
         } else if(strcmp(argv[1], "modules") == 0) {
             lms::Request_ModuleList *modules = req.mutable_module_list();
             socket.writeMessage(req);
+        } else if(strcmp(argv[1], "profiling") == 0) {
+            Request::Profiling *profiling = req.mutable_profiling();
+
+            if(argc >= 3) {
+                profiling->set_id(argv[2]);
+                socket.writeMessage(req);
+                socket.writeMessage(req);
+
+                Response res;
+                socket.readMessage(res);
+                expectResponseType(res, Response::ContentCase::kProfilingSummary);
+                const auto &profiling = res.profiling_summary();
+                for(int i = 0; i < profiling.traces_size(); i++) {
+                    const auto &trace = profiling.traces(i);
+                    std::cout << trace.name() << " " << trace.median() << " " << trace.std() << std::endl;
+                }
+            } else {
+                std::cout << "Requires argument: lms profiling <id> \n";
+            }
         } else {
             std::cout << "Unknown command\n";
         }

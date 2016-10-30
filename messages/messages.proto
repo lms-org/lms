@@ -19,6 +19,9 @@ message Request {
 	    optional bool kill = 2;
 	}
 	message ModuleList {}
+    message Profiling {
+        optional string id = 1;
+    }
 
 	oneof content {
 		Info info = 1;
@@ -29,6 +32,7 @@ message Request {
 		Attach attach = 6;
 		Stop stop = 7;
 		ModuleList module_list = 8;
+		Profiling profiling = 9;
 	}
 }
 
@@ -95,11 +99,24 @@ message Response {
         }
     }
     
+    message ProfilingSummary {
+        message Trace {
+            optional string name = 1;
+            optional int32 median = 2;
+            optional int32 std = 3;
+            optional int32 max = 4;
+            optional int32 count = 5;
+        }
+        
+        repeated Trace traces = 1;
+    }
+    
     oneof content {
         Info info = 1;
         ClientList client_list = 2;
         ProcessList process_list = 3;
         ModuleListResponse module_list = 4;
         LogEvent log_event = 5;
+        ProfilingSummary profiling_summary = 6;
     }
 }
