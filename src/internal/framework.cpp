@@ -75,6 +75,12 @@ bool Framework::updateSystem(const RuntimeInfo &info) {
         logger.debug() << "updateSystem()";
     }
 
+    // Update clock
+    m_clock.cycleTime(info.clock.cycle);
+    m_clock.enabledSleep(info.clock.sleep);
+    m_clock.enabledSlowWarning(info.clock.slowWarnings);
+    m_clock.enabledCompensate(info.clock.sleepCompensate);
+
     // Update or load services
     for (const ServiceInfo &serviceInfo : info.services) {
         if(isDebug()) {
