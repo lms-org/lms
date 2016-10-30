@@ -52,21 +52,21 @@ void Profiler::addMeasurement(const Response::LogEvent &event) {
 
 void Profiler::getOverview(Response::ProfilingSummary *summary) const {
     for(const auto &pair : measurements) {
-        std::int64_t sum = 0;
+        if(pair.second.size() == 0) {
+            continue;
+        }
+        float sum_x = 0;
+        float sum_x_squared = 0;
         std::int64_t max = 0;
         for(auto time : pair.second) {
-            sum += time.micros();
+            sum_x += time.micros();
+            sum_x_squared += time.micros() * time.micros();
             if(time.micros() > max) {
                 max = time.micros();
             }
         }
-        std::int64_t avg = sum / pair.second.size();
-        std::int64_t var;
-        for(auto time : pair.second) {
-            std::int64_t diff = time.micros() - avg;
-            var += diff * diff;
-        }
-        var /= pair.second.size();
+        float avg = sum_x / float(pair.second.size());
+        float var = sum_x_squared / pair.second.size() - avg * avg;
         float std = std::sqrt(var);
 
         Response::ProfilingSummary::Trace *trace = summary->add_traces();
@@ -620,7 +620,11 @@ void connectToMaster(int argc, char *argv[]) {
                 const auto &profiling = res.profiling_summary();
                 for(int i = 0; i < profiling.traces_size(); i++) {
                     const auto &trace = profiling.traces(i);
-                    std::cout << trace.name() << " " << trace.median() << " " << trace.std() << std::endl;
+                    std::cout << trace.name() << " #" << trace.count()
+                              << " avg: " << trace.median()
+                              << " std: " << trace.std()
+                              << " max: " << trace.max()
+                              << std::endl;
                 }
             } else {
                 std::cout << "Requires argument: lms profiling <id> \n";
