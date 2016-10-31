@@ -4,7 +4,7 @@
 
 #include "lms/logging/sink.h"
 #include "lms/logging/event.h"
-#include "protobuf_socket.h"
+#include "lms/protobuf_socket.h"
 
 namespace lms {
 namespace internal {
@@ -17,7 +17,7 @@ public:
 
     void sink(const lms::logging::Event &message) override;
 private:
-    lms::internal::ProtobufSocket socket;
+    lms::ProtobufSocket socket;
     std::mutex mtx;
 };
 

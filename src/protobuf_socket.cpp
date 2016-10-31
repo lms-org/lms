@@ -1,4 +1,4 @@
-#include "protobuf_socket.h"
+#include "lms/protobuf_socket.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -10,7 +10,6 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
 namespace lms {
-namespace internal {
 
 ProtobufSocket::ProtobufSocket(int fd) : fd(fd) {}
 
@@ -74,5 +73,4 @@ void ProtobufSocket::close() {
     ::close(fd);
 }
 
-}  // namespace internal
 }  // namespace lms

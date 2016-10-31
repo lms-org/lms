@@ -60,6 +60,8 @@ set (HEADERS
     "include/lms/time.h"
     "include/lms/datamanager.h"
     "include/lms/exception.h"
+    "include/lms/client.h"
+    "include/lms/protobuf_socket.h"
 
     "src/internal/framework.h"
     "src/internal/signalhandler.h"
@@ -83,7 +85,6 @@ set (HEADERS
     "src/internal/os.h"
     "src/internal/debug_server_sink.h"
     "src/internal/protobuf_sink.h"
-    "src/internal/protobuf_socket.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -106,6 +107,8 @@ set (SOURCE
     "src/type.cpp"
     "src/time.cpp"
     "src/datamanager.cpp"
+    "src/client.cpp"
+    "src/protobuf_socket.cpp"
 
     "src/internal/executionmanager.cpp"
     "src/internal/framework.cpp"
@@ -128,7 +131,6 @@ set (SOURCE
     "src/internal/master.cpp"
     "src/internal/debug_server_sink.cpp"
     "src/internal/protobuf_sink.cpp"
-    "src/internal/protobuf_socket.cpp"
 
     "src/logging/level.cpp"
     "src/logging/logger.cpp"

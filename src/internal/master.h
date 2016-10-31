@@ -6,7 +6,7 @@
 #include <map>
 #include <list>
 
-#include "protobuf_socket.h"
+#include "lms/protobuf_socket.h"
 #include "messages.pb.h"
 #include "../time.h"
 
@@ -60,17 +60,6 @@ private:
     void enableNonBlock(int sock);
     ClientResult processClient(Client &client, const lms::Request &message);
     void runFramework(Client &client, const Request_Run &options);
-};
-
-class MasterClient {
-public:
-    static MasterClient fromUnix(const std::string &path);
-    ~MasterClient();
-    int fd() const;
-
-private:
-    int m_sockfd;
-    MasterClient(int fd);
 };
 
 void connectToMaster(int argc, char *argv[]);

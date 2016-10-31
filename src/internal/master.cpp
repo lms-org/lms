@@ -12,7 +12,7 @@
 #include <cmath>
 
 #include "messages.pb.h"
-#include "protobuf_socket.h"
+#include "lms/protobuf_socket.h"
 #include "protobuf_sink.h"
 
 #include "master.h"
@@ -22,6 +22,7 @@
 #include "tclap/CmdLine.h"
 #include "framework.h"
 #include "colors.h"
+#include "lms/client.h"
 
 
 namespace lms {
@@ -436,29 +437,6 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
     }
 }
 
-MasterClient::MasterClient(int fd) : m_sockfd(fd) {}
-MasterClient::~MasterClient() { close(m_sockfd); }
-
-MasterClient MasterClient::fromUnix(const std::string &path) {
-    int fd;
-    if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-        LMS_EXCEPTION("Creating unix client socket failed");
-    }
-
-    sockaddr_un addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sun_family = AF_UNIX;
-    strncpy(addr.sun_path, path.c_str(), sizeof(addr.sun_path) - 1);
-
-    if (connect(fd, (sockaddr *)&addr, sizeof addr) == -1) {
-        LMS_EXCEPTION("Connecting unix client socket failed");
-    }
-
-    return MasterClient(fd);
-}
-
-int MasterClient::fd() const { return m_sockfd; }
-
 void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
     Response response;
     while(socket.readMessage(response)) {
@@ -496,9 +474,8 @@ void expectResponseType(const Response &response, Response::ContentCase type) {
 }
 
 void connectToMaster(int argc, char *argv[]) {
-    lms::internal::MasterClient client =
-        lms::internal::MasterClient::fromUnix("/tmp/lms.sock");
-    lms::internal::ProtobufSocket socket(client.fd());
+    auto client = Client::fromUnix("/tmp/lms.sock");
+    auto &socket = client.sock();
 
     lms::Request req;
 
