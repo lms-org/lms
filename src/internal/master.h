@@ -56,10 +56,8 @@ private:
     std::vector<Runtime> m_runtimes;
     bool m_running;
 
-    enum class ClientResult { exit, attached };
-
     void enableNonBlock(int sock);
-    ClientResult processClient(Client &client, const lms::Request &message);
+    void processClient(Client &client, const lms::Request &message);
     void runFramework(Client &client, const Request_Run &options);
 };
 

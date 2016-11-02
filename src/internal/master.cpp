@@ -241,15 +241,8 @@ void MasterServer::start() {
                 auto readRes = client.sock.readMessage(req);
 
                 if(readRes == ProtobufSocket::OK) {
-                    ClientResult res = processClient(client, req);
-                    if (res == ClientResult::exit) {
-                        exit = true;
-                    }
+                    processClient(client, req);
                 } else {
-                    exit = true;
-                }
-
-                if(exit) {
                     if(client.isAttached && client.shutdownRuntimeOnDetach) {
                         kill(client.attachedRuntime, SIGINT);
                     }
@@ -300,8 +293,7 @@ void MasterServer::start() {
     }
 }
 
-MasterServer::ClientResult
-MasterServer::processClient(Client &client, const lms::Request &message) {
+void MasterServer::processClient(Client &client, const lms::Request &message) {
     Response response;
 
     switch(message.content_case()) {
@@ -337,13 +329,11 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         break;
     case lms::Request::kRun:
         runFramework(client, message.run());
-        return ClientResult::attached;
         break;
     case lms::Request::kAttach:
         client.isAttached = true;
         client.attachedRuntime = atoi(message.attach().id().c_str());
         client.shutdownRuntimeOnDetach = false;
-        return ClientResult::attached;
         break;
     case lms::Request::kStop:
         {
@@ -385,8 +375,6 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
         client.writer.writeLine("Unknown command");
         client.writer.writeLine();
     }*/
-
-    return ClientResult::exit;
 }
 
 void MasterServer::runFramework(Client &client, const Request_Run &options) {
