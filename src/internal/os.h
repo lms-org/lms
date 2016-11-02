@@ -48,6 +48,8 @@ std::string homepath();
  */
 void copyTree(std::string const &from, std::string const &to);
 
+std::string realpath(const std::string &path);
+
 } // namespace internal
 } // namespace lms
 

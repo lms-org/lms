@@ -23,6 +23,7 @@
 #include "framework.h"
 #include "colors.h"
 #include "lms/client.h"
+#include "os.h"
 
 
 namespace lms {
@@ -545,9 +546,9 @@ void connectToMaster(int argc, char *argv[]) {
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
-            run->set_config_file(configArg.getValue());
+            run->set_config_file(internal::realpath(configArg.getValue()));
             for(const auto& path : loadPathsArg) {
-                *run->add_include_paths() = path;
+                *run->add_include_paths() = internal::realpath(path);
             }
             for(const auto& flag : flagsArg) {
                 *run->add_flags() = flag;

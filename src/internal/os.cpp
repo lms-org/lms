@@ -85,5 +85,11 @@ void copyTree(std::string const &from, std::string const &to) {
     }
 }
 
+std::string realpath(const std::string &path) {
+    char resolved[PATH_MAX];
+    ::realpath(path.c_str(), resolved);
+    return resolved;
+}
+
 } // namespace internal
 } // namespace lms
