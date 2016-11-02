@@ -36,6 +36,7 @@ private:
         std::string peer;
         bool isAttached;
         pid_t attachedRuntime;
+        bool shutdownRuntimeOnDetach;
     };
 
     struct Server {

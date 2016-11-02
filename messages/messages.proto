@@ -9,6 +9,8 @@ message Request {
         repeated string include_paths = 2;
         repeated string flags = 3;
         optional bool debug = 4;
+        optional bool detached = 5 [default = false];
+        optional bool shutdown_runtime_on_detach = 6 [default = false];
 	}
 	message ListProcesses {}
 	message Attach {

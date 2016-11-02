@@ -250,6 +250,9 @@ void MasterServer::start() {
                 }
 
                 if(exit) {
+                    if(client.isAttached && client.shutdownRuntimeOnDetach) {
+                        kill(client.attachedRuntime, SIGINT);
+                    }
                     client.sock.close();
                     m_clients.erase(it);
                     --it;
@@ -339,6 +342,7 @@ MasterServer::processClient(Client &client, const lms::Request &message) {
     case lms::Request::kAttach:
         client.isAttached = true;
         client.attachedRuntime = atoi(message.attach().id().c_str());
+        client.shutdownRuntimeOnDetach = false;
         return ClientResult::attached;
         break;
     case lms::Request::kStop:
@@ -432,8 +436,13 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         close(fd[1]);
 
         Runtime rt{childpid, fd[0], options.config_file()};
-        client.isAttached = true;
-        client.attachedRuntime = childpid;
+        if(! options.detached()) {
+            client.isAttached = true;
+            client.attachedRuntime = childpid;
+            if(options.shutdown_runtime_on_detach()) {
+                client.shutdownRuntimeOnDetach = true;
+            }
+        }
         m_runtimes.push_back(rt);
     }
 }
@@ -543,6 +552,10 @@ void connectToMaster(int argc, char *argv[]) {
             TCLAP::ValueArg<std::string> logArg(
                 "", "log", "Minimum logging level",
                 false, "ALL", &logConstraint, cmd);
+            TCLAP::SwitchArg detachSwitch(
+                "d", "detach", "Start runtime but do not show logging messages", cmd, false);
+            TCLAP::SwitchArg shutdownOnDetachSwitch(
+                "s", "shutdown-on-detach", "Shutdown runtime when clients disconnects", cmd, false);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -554,6 +567,8 @@ void connectToMaster(int argc, char *argv[]) {
                 *run->add_flags() = flag;
             }
             run->set_debug(debugSwitch.getValue());
+            run->set_detached(detachSwitch.getValue());
+            run->set_shutdown_runtime_on_detach(shutdownOnDetachSwitch.getValue());
 
             char *lms_path = std::getenv("LMS_PATH");
             if (lms_path != nullptr && lms_path[0] != '\0') {
@@ -566,7 +581,10 @@ void connectToMaster(int argc, char *argv[]) {
 
             logging::Level logLevel = logging::Level::ALL;
             logging::levelFromName(logArg.getValue(), logLevel);
-            streamLogs(socket, logLevel);
+
+            if(! detachSwitch.getValue()) {
+                streamLogs(socket, logLevel);
+            }
         } else if(strcmp(argv[1], "attach") == 0) {
             lms::Request_Attach *attach = req.mutable_attach();
 

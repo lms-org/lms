@@ -413,12 +413,30 @@ class Request_Run : public ::google::protobuf::Message {
   inline bool debug() const;
   inline void set_debug(bool value);
 
+  // optional bool detached = 5 [default = false];
+  inline bool has_detached() const;
+  inline void clear_detached();
+  static const int kDetachedFieldNumber = 5;
+  inline bool detached() const;
+  inline void set_detached(bool value);
+
+  // optional bool shutdown_runtime_on_detach = 6 [default = false];
+  inline bool has_shutdown_runtime_on_detach() const;
+  inline void clear_shutdown_runtime_on_detach();
+  static const int kShutdownRuntimeOnDetachFieldNumber = 6;
+  inline bool shutdown_runtime_on_detach() const;
+  inline void set_shutdown_runtime_on_detach(bool value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
   inline void clear_has_config_file();
   inline void set_has_debug();
   inline void clear_has_debug();
+  inline void set_has_detached();
+  inline void clear_has_detached();
+  inline void set_has_shutdown_runtime_on_detach();
+  inline void clear_has_shutdown_runtime_on_detach();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -428,6 +446,8 @@ class Request_Run : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::std::string> include_paths_;
   ::google::protobuf::RepeatedPtrField< ::std::string> flags_;
   bool debug_;
+  bool detached_;
+  bool shutdown_runtime_on_detach_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -2552,6 +2572,54 @@ inline void Request_Run::set_debug(bool value) {
   set_has_debug();
   debug_ = value;
   // @@protoc_insertion_point(field_set:lms.Request.Run.debug)
+}
+
+// optional bool detached = 5 [default = false];
+inline bool Request_Run::has_detached() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Request_Run::set_has_detached() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Request_Run::clear_has_detached() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Request_Run::clear_detached() {
+  detached_ = false;
+  clear_has_detached();
+}
+inline bool Request_Run::detached() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.detached)
+  return detached_;
+}
+inline void Request_Run::set_detached(bool value) {
+  set_has_detached();
+  detached_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Run.detached)
+}
+
+// optional bool shutdown_runtime_on_detach = 6 [default = false];
+inline bool Request_Run::has_shutdown_runtime_on_detach() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Request_Run::set_has_shutdown_runtime_on_detach() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Request_Run::clear_has_shutdown_runtime_on_detach() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Request_Run::clear_shutdown_runtime_on_detach() {
+  shutdown_runtime_on_detach_ = false;
+  clear_has_shutdown_runtime_on_detach();
+}
+inline bool Request_Run::shutdown_runtime_on_detach() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.shutdown_runtime_on_detach)
+  return shutdown_runtime_on_detach_;
+}
+inline void Request_Run::set_shutdown_runtime_on_detach(bool value) {
+  set_has_shutdown_runtime_on_detach();
+  shutdown_runtime_on_detach_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Run.shutdown_runtime_on_detach)
 }
 
 // -------------------------------------------------------------------
