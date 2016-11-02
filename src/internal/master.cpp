@@ -237,9 +237,9 @@ void MasterServer::start() {
                 bool exit = false;
 
                 lms::Request req;
-                bool readRes = client.sock.readMessage(req);
+                auto readRes = client.sock.readMessage(req);
 
-                if(readRes) {
+                if(readRes == ProtobufSocket::OK) {
                     ClientResult res = processClient(client, req);
                     if (res == ClientResult::exit) {
                         exit = true;
@@ -260,7 +260,7 @@ void MasterServer::start() {
             if(FD_ISSET(runtime.sock.getFD(), &fds)) {
                 // forward log events to attached clients
                 Response response;
-                if(runtime.sock.readMessage(response)) {
+                if(runtime.sock.readMessage(response) == ProtobufSocket::OK) {
                     if(response.has_log_event() &&
                             response.log_event().level() == Response::LogEvent::PROFILE) {
                         runtime.profiler.addMeasurement(response.log_event());
@@ -439,7 +439,7 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
 
 void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
     Response response;
-    while(socket.readMessage(response)) {
+    while(socket.readMessage(response) == ProtobufSocket::OK) {
         if(!response.has_log_event()) continue;
 
         const auto &event = response.log_event();
@@ -474,7 +474,8 @@ void expectResponseType(const Response &response, Response::ContentCase type) {
 }
 
 void connectToMaster(int argc, char *argv[]) {
-    auto client = Client::fromUnix("/tmp/lms.sock");
+    Client client;
+    client.connectUnix("/tmp/lms.sock");
     auto &socket = client.sock();
 
     lms::Request req;

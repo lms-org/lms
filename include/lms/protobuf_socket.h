@@ -6,10 +6,15 @@ namespace lms {
 
 class ProtobufSocket {
 public:
-    ProtobufSocket(int fd);
+    enum Error {
+        OK, CLOSED, ERROR
+    };
 
-    bool writeMessage(const google::protobuf::Message &message);
-    bool readMessage(google::protobuf::Message &message);
+    ProtobufSocket(int fd);
+    ~ProtobufSocket();
+
+    Error writeMessage(const google::protobuf::Message &message);
+    Error readMessage(google::protobuf::Message &message);
     int getFD() const;
     void close();
 private:

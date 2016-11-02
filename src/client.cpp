@@ -9,11 +9,15 @@
 
 namespace lms {
 
-Client::Client(int fd) : m_socket(fd) {}
+Client::Client() {}
 
-Client::~Client() { m_socket.close(); }
+Client::~Client() {
+    if(m_socket) {
+        m_socket->close();
+    }
+}
 
-Client Client::fromUnix(const std::string &path) {
+void Client::connectUnix(const std::string &path) {
     int fd;
     if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
         LMS_EXCEPTION("Creating unix client socket failed");
@@ -28,11 +32,15 @@ Client Client::fromUnix(const std::string &path) {
         LMS_EXCEPTION("Connecting unix client socket failed");
     }
 
-    return Client(fd);
+    this->m_socket.reset(new ProtobufSocket(fd));
 }
 
 ProtobufSocket& Client::sock() {
-    return m_socket;
+    if(m_socket) {
+        return *m_socket.get();
+    } else {
+        LMS_EXCEPTION("Client is not connected");
+    }
 }
 
 }  // namespace lms

@@ -13,7 +13,9 @@ namespace lms {
 
 ProtobufSocket::ProtobufSocket(int fd) : fd(fd) {}
 
-bool ProtobufSocket::writeMessage(const google::protobuf::Message &message) {
+ProtobufSocket::~ProtobufSocket() { }
+
+ProtobufSocket::Error ProtobufSocket::writeMessage(const google::protobuf::Message &message) {
     int siz = message.ByteSize() + 4;
     std::unique_ptr<char[]> pkt(new char [siz]);
     google::protobuf::io::ArrayOutputStream aos(pkt.get(),siz);
@@ -21,18 +23,18 @@ bool ProtobufSocket::writeMessage(const google::protobuf::Message &message) {
     coded_output.WriteLittleEndian32(message.ByteSize());
     message.SerializeToCodedStream(&coded_output);
 
-    return ::send(fd, pkt.get(),siz,0) != -1;
+    return ::send(fd, pkt.get(),siz,0) != -1 ? OK : ERROR;
 }
 
-bool ProtobufSocket::readMessage(google::protobuf::Message &message) {
+ProtobufSocket::Error ProtobufSocket::readMessage(google::protobuf::Message &message) {
     char buffer[4];
     int bytesRead = recv(fd, buffer, 4, MSG_PEEK);
     if(bytesRead == -1) {
         // error
-        return false;
+        return ERROR;
     } else if(bytesRead == 0) {
         // closed
-        return false;
+        return CLOSED;
     }
 
     // parse message length
@@ -49,9 +51,9 @@ bool ProtobufSocket::readMessage(google::protobuf::Message &message) {
     bytesRead = recv(fd, messageBuffer.get(), 4+messageSize, MSG_WAITALL);
     if(bytesRead == -1) {
         // error
-        return false;
+        return ERROR;
     } else if(bytesRead == 0) {
-        return false;
+        return CLOSED;
     }
     google::protobuf::io::ArrayInputStream ais(messageBuffer.get(),messageSize+4);
     google::protobuf::io::CodedInputStream coded_input(&ais);
@@ -62,7 +64,7 @@ bool ProtobufSocket::readMessage(google::protobuf::Message &message) {
     coded_input.PopLimit(msgLimit);
     }
 
-    return true;
+    return OK;
 }
 
 int ProtobufSocket::getFD() const {

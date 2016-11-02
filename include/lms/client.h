@@ -1,19 +1,20 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include "protobuf_socket.h"
 
 namespace lms {
 
 class Client {
 public:
-    static Client fromUnix(const std::string &path);
-    ProtobufSocket &sock();
+    Client();
     ~Client();
+    void connectUnix(const std::string &path);
+    ProtobufSocket &sock();
 
 private:
-    lms::ProtobufSocket m_socket;
-    Client(int fd);
+    std::unique_ptr<lms::ProtobufSocket> m_socket;
 };
 
 }  // namespace lms
