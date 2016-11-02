@@ -37,6 +37,7 @@ private:
         bool isAttached;
         pid_t attachedRuntime;
         bool shutdownRuntimeOnDetach;
+        bool listenBroadcats = false;
     };
 
     struct Server {
@@ -59,6 +60,9 @@ private:
     void enableNonBlock(int sock);
     void processClient(Client &client, const lms::Request &message);
     void runFramework(Client &client, const Request_Run &options);
+    void broadcastResponse(const lms::Response &response);
+    void buildListRuntimesResponse(lms::Response &response);
+    void buildListClientsResponse(lms::Response &response);
 };
 
 void connectToMaster(int argc, char *argv[]);

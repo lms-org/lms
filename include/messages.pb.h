@@ -44,6 +44,7 @@ class Request_Attach;
 class Request_Stop;
 class Request_ModuleList;
 class Request_Profiling;
+class Request_ListenBroadcastEvents;
 class Response;
 class Response_Info;
 class Response_ClientList;
@@ -857,6 +858,85 @@ class Request_Profiling : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_ListenBroadcastEvents : public ::google::protobuf::Message {
+ public:
+  Request_ListenBroadcastEvents();
+  virtual ~Request_ListenBroadcastEvents();
+
+  Request_ListenBroadcastEvents(const Request_ListenBroadcastEvents& from);
+
+  inline Request_ListenBroadcastEvents& operator=(const Request_ListenBroadcastEvents& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_ListenBroadcastEvents& default_instance();
+
+  void Swap(Request_ListenBroadcastEvents* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_ListenBroadcastEvents* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_ListenBroadcastEvents& from);
+  void MergeFrom(const Request_ListenBroadcastEvents& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool enable = 1;
+  inline bool has_enable() const;
+  inline void clear_enable();
+  static const int kEnableFieldNumber = 1;
+  inline bool enable() const;
+  inline void set_enable(bool value);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.ListenBroadcastEvents)
+ private:
+  inline void set_has_enable();
+  inline void clear_has_enable();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  bool enable_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_ListenBroadcastEvents* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request : public ::google::protobuf::Message {
  public:
   Request();
@@ -890,6 +970,7 @@ class Request : public ::google::protobuf::Message {
     kStop = 7,
     kModuleList = 8,
     kProfiling = 9,
+    kListenBroadcasts = 10,
     CONTENT_NOT_SET = 0,
   };
 
@@ -930,6 +1011,7 @@ class Request : public ::google::protobuf::Message {
   typedef Request_Stop Stop;
   typedef Request_ModuleList ModuleList;
   typedef Request_Profiling Profiling;
+  typedef Request_ListenBroadcastEvents ListenBroadcastEvents;
 
   // accessors -------------------------------------------------------
 
@@ -1014,6 +1096,15 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_Profiling* release_profiling();
   inline void set_allocated_profiling(::lms::Request_Profiling* profiling);
 
+  // optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
+  inline bool has_listen_broadcasts() const;
+  inline void clear_listen_broadcasts();
+  static const int kListenBroadcastsFieldNumber = 10;
+  inline const ::lms::Request_ListenBroadcastEvents& listen_broadcasts() const;
+  inline ::lms::Request_ListenBroadcastEvents* mutable_listen_broadcasts();
+  inline ::lms::Request_ListenBroadcastEvents* release_listen_broadcasts();
+  inline void set_allocated_listen_broadcasts(::lms::Request_ListenBroadcastEvents* listen_broadcasts);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
  private:
@@ -1026,6 +1117,7 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_stop();
   inline void set_has_module_list();
   inline void set_has_profiling();
+  inline void set_has_listen_broadcasts();
 
   inline bool has_content();
   void clear_content();
@@ -1045,6 +1137,7 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_Stop* stop_;
     ::lms::Request_ModuleList* module_list_;
     ::lms::Request_Profiling* profiling_;
+    ::lms::Request_ListenBroadcastEvents* listen_broadcasts_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -2896,6 +2989,34 @@ inline void Request_Profiling::set_allocated_id(::std::string* id) {
 
 // -------------------------------------------------------------------
 
+// Request_ListenBroadcastEvents
+
+// optional bool enable = 1;
+inline bool Request_ListenBroadcastEvents::has_enable() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_ListenBroadcastEvents::set_has_enable() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_ListenBroadcastEvents::clear_has_enable() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_ListenBroadcastEvents::clear_enable() {
+  enable_ = false;
+  clear_has_enable();
+}
+inline bool Request_ListenBroadcastEvents::enable() const {
+  // @@protoc_insertion_point(field_get:lms.Request.ListenBroadcastEvents.enable)
+  return enable_;
+}
+inline void Request_ListenBroadcastEvents::set_enable(bool value) {
+  set_has_enable();
+  enable_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.ListenBroadcastEvents.enable)
+}
+
+// -------------------------------------------------------------------
+
 // Request
 
 // optional .lms.Request.Info info = 1;
@@ -3282,6 +3403,49 @@ inline void Request::set_allocated_profiling(::lms::Request_Profiling* profiling
   if (profiling) {
     set_has_profiling();
     content_.profiling_ = profiling;
+  }
+}
+
+// optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
+inline bool Request::has_listen_broadcasts() const {
+  return content_case() == kListenBroadcasts;
+}
+inline void Request::set_has_listen_broadcasts() {
+  _oneof_case_[0] = kListenBroadcasts;
+}
+inline void Request::clear_listen_broadcasts() {
+  if (has_listen_broadcasts()) {
+    delete content_.listen_broadcasts_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_ListenBroadcastEvents& Request::listen_broadcasts() const {
+  return has_listen_broadcasts() ? *content_.listen_broadcasts_
+                      : ::lms::Request_ListenBroadcastEvents::default_instance();
+}
+inline ::lms::Request_ListenBroadcastEvents* Request::mutable_listen_broadcasts() {
+  if (!has_listen_broadcasts()) {
+    clear_content();
+    set_has_listen_broadcasts();
+    content_.listen_broadcasts_ = new ::lms::Request_ListenBroadcastEvents;
+  }
+  return content_.listen_broadcasts_;
+}
+inline ::lms::Request_ListenBroadcastEvents* Request::release_listen_broadcasts() {
+  if (has_listen_broadcasts()) {
+    clear_has_content();
+    ::lms::Request_ListenBroadcastEvents* temp = content_.listen_broadcasts_;
+    content_.listen_broadcasts_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request::set_allocated_listen_broadcasts(::lms::Request_ListenBroadcastEvents* listen_broadcasts) {
+  clear_content();
+  if (listen_broadcasts) {
+    set_has_listen_broadcasts();
+    content_.listen_broadcasts_ = listen_broadcasts;
   }
 }
 

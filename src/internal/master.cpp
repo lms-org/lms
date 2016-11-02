@@ -232,6 +232,11 @@ void MasterServer::start() {
                 int clientfd = accept(server.fd, (sockaddr *)&peer, &peerLen);
                 //enableNonBlock(clientfd);
                 m_clients.push_back(Client(clientfd, getPeer(peer)));
+
+                // push broadcast
+                lms::Response response;
+                buildListClientsResponse(response);
+                broadcastResponse(response);
             }
         }
         for (auto it = m_clients.begin(); it != m_clients.end(); ++it) {
@@ -249,6 +254,12 @@ void MasterServer::start() {
                     if(client.isAttached && client.shutdownRuntimeOnDetach) {
                         kill(client.attachedRuntime, SIGINT);
                     }
+
+                    // push broadcast
+                    lms::Response response;
+                    buildListClientsResponse(response);
+                    broadcastResponse(response);
+
                     client.sock.close();
                     m_clients.erase(it);
                     --it;
@@ -284,6 +295,11 @@ void MasterServer::start() {
                         }
                     }
 
+                    // push broadcast
+                    lms::Response response;
+                    buildListRuntimesResponse(response);
+                    broadcastResponse(response);
+
                     // close runtime connection
                     runtime.sock.close();
                     m_runtimes.erase(it);
@@ -293,6 +309,32 @@ void MasterServer::start() {
                 }
             }
         }
+    }
+}
+
+void MasterServer::broadcastResponse(const Response &response) {
+    for(auto &client : m_clients) {
+        if(client.listenBroadcats) {
+            client.sock.writeMessage(response);
+        }
+    }
+}
+
+void MasterServer::buildListRuntimesResponse(lms::Response &response) {
+    auto list = response.mutable_process_list();
+    for(const auto &rt : m_runtimes) {
+        auto *process = list->add_processes();
+        process->set_pid(rt.pid);
+        process->set_config_file(rt.config_file);
+    }
+}
+
+void MasterServer::buildListClientsResponse(lms::Response &response) {
+    auto list = response.mutable_client_list();
+    for (const auto &cl : m_clients) {
+        auto client = list->add_clients();
+        client->set_fd(cl.sock.getFD());
+        client->set_peer(cl.peer);
     }
 }
 
@@ -308,30 +350,22 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         }
         break;
     case lms::Request::kListClients:
-        {
-        auto list = response.mutable_client_list();
-        for (const auto &cl : m_clients) {
-            auto client = list->add_clients();
-            client->set_fd(cl.sock.getFD());
-            client->set_peer(cl.peer);
-        }
-        }
+        buildListClientsResponse(response);
         break;
     case lms::Request::kListProcesses:
-        {
-        auto list = response.mutable_process_list();
-        for(const auto &rt : m_runtimes) {
-            auto *process = list->add_processes();
-            process->set_pid(rt.pid);
-            process->set_config_file(rt.config_file);
-        }
-        }
+        buildListRuntimesResponse(response);
         break;
     case lms::Request::kShutdown:
         m_running = false;
         break;
     case lms::Request::kRun:
+        {
         runFramework(client, message.run());
+        // push broadcast
+        lms::Response response;
+        buildListRuntimesResponse(response);
+        broadcastResponse(response);
+        }
         break;
     case lms::Request::kAttach:
         client.isAttached = true;
@@ -355,6 +389,9 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         }
         // TODO runtime not found
         }
+        break;
+    case lms::Request::kListenBroadcasts:
+        client.listenBroadcats = message.listen_broadcasts().enable();
         break;
     }
 

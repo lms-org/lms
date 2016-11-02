@@ -24,6 +24,9 @@ message Request {
     message Profiling {
         optional string id = 1;
     }
+    message ListenBroadcastEvents {
+        optional bool enable = 1;
+    }
 
 	oneof content {
 		Info info = 1;
@@ -35,6 +38,7 @@ message Request {
 		Stop stop = 7;
 		ModuleList module_list = 8;
 		Profiling profiling = 9;
+		ListenBroadcastEvents listen_broadcasts = 10;
 	}
 }
 
