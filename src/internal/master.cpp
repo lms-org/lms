@@ -186,6 +186,9 @@ void MasterServer::enableNonBlock(int sock) {
 }
 
 void MasterServer::start() {
+    // Fix broken pipe behavior
+    ::signal(SIGPIPE, SIG_IGN);
+
     fd_set fds;
 
     //save cout from master
