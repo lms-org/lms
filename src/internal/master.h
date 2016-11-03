@@ -9,6 +9,7 @@
 #include "lms/protobuf_socket.h"
 #include "messages.pb.h"
 #include "../time.h"
+#include "lms/logger.h"
 
 namespace lms {
 namespace internal {
@@ -38,6 +39,7 @@ private:
         pid_t attachedRuntime;
         bool shutdownRuntimeOnDetach;
         bool listenBroadcats = false;
+        logging::Level logLevel = logging::Level::ALL;
     };
 
     struct Server {

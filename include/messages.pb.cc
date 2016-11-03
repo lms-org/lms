@@ -191,13 +191,14 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ListClients));
   Request_Run_descriptor_ = Request_descriptor_->nested_type(3);
-  static const int Request_Run_offsets_[6] = {
+  static const int Request_Run_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, config_file_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, include_paths_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, flags_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, debug_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, detached_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, shutdown_runtime_on_detach_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, log_level_),
   };
   Request_Run_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -225,8 +226,9 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ListProcesses));
   Request_Attach_descriptor_ = Request_descriptor_->nested_type(5);
-  static const int Request_Attach_offsets_[1] = {
+  static const int Request_Attach_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Attach, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Attach, log_level_),
   };
   Request_Attach_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -624,7 +626,7 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\003lms\"\245\006\n\007Request\022!\n\004inf"
+    "\n\016messages.proto\022\003lms\"\221\007\n\007Request\022!\n\004inf"
     "o\030\001 \001(\0132\021.lms.Request.InfoH\000\022)\n\010shutdown"
     "\030\002 \001(\0132\025.lms.Request.ShutdownH\000\0220\n\014list_"
     "clients\030\003 \001(\0132\030.lms.Request.ListClientsH"
@@ -636,47 +638,50 @@ void protobuf_AddDesc_messages_2eproto() {
     "duleListH\000\022+\n\tprofiling\030\t \001(\0132\026.lms.Requ"
     "est.ProfilingH\000\022\?\n\021listen_broadcasts\030\n \001"
     "(\0132\".lms.Request.ListenBroadcastEventsH\000"
-    "\032\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListClients\032\223\001\n\003"
+    "\032\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListClients\032\311\001\n\003"
     "Run\022\023\n\013config_file\030\001 \001(\t\022\025\n\rinclude_path"
     "s\030\002 \003(\t\022\r\n\005flags\030\003 \003(\t\022\r\n\005debug\030\004 \001(\010\022\027\n"
     "\010detached\030\005 \001(\010:\005false\022)\n\032shutdown_runti"
-    "me_on_detach\030\006 \001(\010:\005false\032\017\n\rListProcess"
-    "es\032\024\n\006Attach\022\n\n\002id\030\001 \001(\t\032 \n\004Stop\022\n\n\002id\030\001"
-    " \001(\t\022\014\n\004kill\030\002 \001(\010\032\014\n\nModuleList\032\027\n\tProf"
-    "iling\022\n\n\002id\030\001 \001(\t\032\'\n\025ListenBroadcastEven"
-    "ts\022\016\n\006enable\030\001 \001(\010B\t\n\007content\"\362\t\n\010Respon"
-    "se\022\"\n\004info\030\001 \001(\0132\022.lms.Response.InfoH\000\022/"
-    "\n\013client_list\030\002 \001(\0132\030.lms.Response.Clien"
-    "tListH\000\0221\n\014process_list\030\003 \001(\0132\031.lms.Resp"
-    "onse.ProcessListH\000\0227\n\013module_list\030\004 \001(\0132"
-    " .lms.Response.ModuleListResponseH\000\022+\n\tl"
-    "og_event\030\005 \001(\0132\026.lms.Response.LogEventH\000"
-    "\022;\n\021profiling_summary\030\006 \001(\0132\036.lms.Respon"
-    "se.ProfilingSummaryH\000\032$\n\004Info\022\017\n\007version"
-    "\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005\032b\n\nClientList\0220\n\007cli"
-    "ents\030\001 \003(\0132\037.lms.Response.ClientList.Cli"
-    "ent\032\"\n\006Client\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030\002 \001(\t\032"
-    "p\n\013ProcessList\0224\n\tprocesses\030\001 \003(\0132!.lms."
-    "Response.ProcessList.Process\032+\n\007Process\022"
-    "\013\n\003pid\030\001 \001(\005\022\023\n\013config_file\030\002 \001(\t\032\267\002\n\022Mo"
-    "duleListResponse\022:\n\010channels\030\001 \003(\0132(.lms"
-    ".Response.ModuleListResponse.Channel\032k\n\006"
-    "Access\022\016\n\006module\030\001 \001(\t\022\?\n\npermission\030\002 \001"
-    "(\0162+.lms.Response.ModuleListResponse.Per"
-    "mission\022\020\n\010priority\030\003 \001(\005\032U\n\007Channel\022\014\n\004"
-    "name\030\001 \001(\t\022<\n\013access_list\030\002 \003(\0132\'.lms.Re"
-    "sponse.ModuleListResponse.Access\"!\n\nPerm"
-    "ission\022\010\n\004READ\020\001\022\t\n\005WRITE\020\002\032\324\001\n\010LogEvent"
-    "\022+\n\005level\030\001 \001(\0162\034.lms.Response.LogEvent."
-    "Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\022\032\n\013clos"
-    "e_after\030\004 \001(\010:\005false\022\021\n\ttimestamp\030\005 \001(\003\""
-    "Q\n\005Level\022\007\n\003ALL\020\000\022\013\n\007PROFILE\020\n\022\t\n\005DEBUG\020"
-    "\024\022\010\n\004INFO\020\036\022\010\n\004WARN\020(\022\t\n\005ERROR\0202\022\010\n\003OFF\020"
-    "\377\001\032\242\001\n\020ProfilingSummary\0224\n\006traces\030\001 \003(\0132"
-    "$.lms.Response.ProfilingSummary.Trace\032X\n"
-    "\005Trace\022\014\n\004name\030\001 \001(\t\022\013\n\003avg\030\002 \001(\005\022\013\n\003std"
-    "\030\003 \001(\005\022\013\n\003max\030\004 \001(\005\022\r\n\005count\030\005 \001(\005\022\013\n\003mi"
-    "n\030\006 \001(\005B\t\n\007content", 2098);
+    "me_on_detach\030\006 \001(\010:\005false\0224\n\tlog_level\030\007"
+    " \001(\0162\034.lms.Response.LogEvent.Level:\003ALL\032"
+    "\017\n\rListProcesses\032J\n\006Attach\022\n\n\002id\030\001 \001(\t\0224"
+    "\n\tlog_level\030\002 \001(\0162\034.lms.Response.LogEven"
+    "t.Level:\003ALL\032 \n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004kill"
+    "\030\002 \001(\010\032\014\n\nModuleList\032\027\n\tProfiling\022\n\n\002id\030"
+    "\001 \001(\t\032\'\n\025ListenBroadcastEvents\022\016\n\006enable"
+    "\030\001 \001(\010B\t\n\007content\"\362\t\n\010Response\022\"\n\004info\030\001"
+    " \001(\0132\022.lms.Response.InfoH\000\022/\n\013client_lis"
+    "t\030\002 \001(\0132\030.lms.Response.ClientListH\000\0221\n\014p"
+    "rocess_list\030\003 \001(\0132\031.lms.Response.Process"
+    "ListH\000\0227\n\013module_list\030\004 \001(\0132 .lms.Respon"
+    "se.ModuleListResponseH\000\022+\n\tlog_event\030\005 \001"
+    "(\0132\026.lms.Response.LogEventH\000\022;\n\021profilin"
+    "g_summary\030\006 \001(\0132\036.lms.Response.Profiling"
+    "SummaryH\000\032$\n\004Info\022\017\n\007version\030\001 \001(\005\022\013\n\003pi"
+    "d\030\002 \001(\005\032b\n\nClientList\0220\n\007clients\030\001 \003(\0132\037"
+    ".lms.Response.ClientList.Client\032\"\n\006Clien"
+    "t\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030\002 \001(\t\032p\n\013ProcessLi"
+    "st\0224\n\tprocesses\030\001 \003(\0132!.lms.Response.Pro"
+    "cessList.Process\032+\n\007Process\022\013\n\003pid\030\001 \001(\005"
+    "\022\023\n\013config_file\030\002 \001(\t\032\267\002\n\022ModuleListResp"
+    "onse\022:\n\010channels\030\001 \003(\0132(.lms.Response.Mo"
+    "duleListResponse.Channel\032k\n\006Access\022\016\n\006mo"
+    "dule\030\001 \001(\t\022\?\n\npermission\030\002 \001(\0162+.lms.Res"
+    "ponse.ModuleListResponse.Permission\022\020\n\010p"
+    "riority\030\003 \001(\005\032U\n\007Channel\022\014\n\004name\030\001 \001(\t\022<"
+    "\n\013access_list\030\002 \003(\0132\'.lms.Response.Modul"
+    "eListResponse.Access\"!\n\nPermission\022\010\n\004RE"
+    "AD\020\001\022\t\n\005WRITE\020\002\032\324\001\n\010LogEvent\022+\n\005level\030\001 "
+    "\001(\0162\034.lms.Response.LogEvent.Level\022\013\n\003tag"
+    "\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\022\032\n\013close_after\030\004 \001("
+    "\010:\005false\022\021\n\ttimestamp\030\005 \001(\003\"Q\n\005Level\022\007\n\003"
+    "ALL\020\000\022\013\n\007PROFILE\020\n\022\t\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022"
+    "\010\n\004WARN\020(\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001\032\242\001\n\020Profi"
+    "lingSummary\0224\n\006traces\030\001 \003(\0132$.lms.Respon"
+    "se.ProfilingSummary.Trace\032X\n\005Trace\022\014\n\004na"
+    "me\030\001 \001(\t\022\013\n\003avg\030\002 \001(\005\022\013\n\003std\030\003 \001(\005\022\013\n\003ma"
+    "x\030\004 \001(\005\022\r\n\005count\030\005 \001(\005\022\013\n\003min\030\006 \001(\005B\t\n\007c"
+    "ontent", 2206);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -1268,6 +1273,7 @@ const int Request_Run::kFlagsFieldNumber;
 const int Request_Run::kDebugFieldNumber;
 const int Request_Run::kDetachedFieldNumber;
 const int Request_Run::kShutdownRuntimeOnDetachFieldNumber;
+const int Request_Run::kLogLevelFieldNumber;
 #endif  // !_MSC_VER
 
 Request_Run::Request_Run()
@@ -1293,6 +1299,7 @@ void Request_Run::SharedCtor() {
   debug_ = false;
   detached_ = false;
   shutdown_runtime_on_detach_ = false;
+  log_level_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1341,8 +1348,8 @@ void Request_Run::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 57) {
-    ZR_(debug_, shutdown_runtime_on_detach_);
+  if (_has_bits_[0 / 32] & 121) {
+    ZR_(debug_, log_level_);
     if (has_config_file()) {
       if (config_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         config_file_->clear();
@@ -1464,6 +1471,26 @@ bool Request_Run::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(56)) goto parse_log_level;
+        break;
+      }
+
+      // optional .lms.Response.LogEvent.Level log_level = 7 [default = ALL];
+      case 7: {
+        if (tag == 56) {
+         parse_log_level:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::lms::Response_LogEvent_Level_IsValid(value)) {
+            set_log_level(static_cast< ::lms::Response_LogEvent_Level >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(7, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1538,6 +1565,12 @@ void Request_Run::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->shutdown_runtime_on_detach(), output);
   }
 
+  // optional .lms.Response.LogEvent.Level log_level = 7 [default = ALL];
+  if (has_log_level()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      7, this->log_level(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1594,6 +1627,12 @@ void Request_Run::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->shutdown_runtime_on_detach(), target);
   }
 
+  // optional .lms.Response.LogEvent.Level log_level = 7 [default = ALL];
+  if (has_log_level()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      7, this->log_level(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1626,6 +1665,12 @@ int Request_Run::ByteSize() const {
     // optional bool shutdown_runtime_on_detach = 6 [default = false];
     if (has_shutdown_runtime_on_detach()) {
       total_size += 1 + 1;
+    }
+
+    // optional .lms.Response.LogEvent.Level log_level = 7 [default = ALL];
+    if (has_log_level()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->log_level());
     }
 
   }
@@ -1683,6 +1728,9 @@ void Request_Run::MergeFrom(const Request_Run& from) {
     if (from.has_shutdown_runtime_on_detach()) {
       set_shutdown_runtime_on_detach(from.shutdown_runtime_on_detach());
     }
+    if (from.has_log_level()) {
+      set_log_level(from.log_level());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1712,6 +1760,7 @@ void Request_Run::Swap(Request_Run* other) {
     std::swap(debug_, other->debug_);
     std::swap(detached_, other->detached_);
     std::swap(shutdown_runtime_on_detach_, other->shutdown_runtime_on_detach_);
+    std::swap(log_level_, other->log_level_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1905,6 +1954,7 @@ void Request_ListProcesses::Swap(Request_ListProcesses* other) {
 
 #ifndef _MSC_VER
 const int Request_Attach::kIdFieldNumber;
+const int Request_Attach::kLogLevelFieldNumber;
 #endif  // !_MSC_VER
 
 Request_Attach::Request_Attach()
@@ -1927,6 +1977,7 @@ void Request_Attach::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  log_level_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1965,10 +2016,13 @@ Request_Attach* Request_Attach::New() const {
 }
 
 void Request_Attach::Clear() {
-  if (has_id()) {
-    if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      id_->clear();
+  if (_has_bits_[0 / 32] & 3) {
+    if (has_id()) {
+      if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        id_->clear();
+      }
     }
+    log_level_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1993,6 +2047,26 @@ bool Request_Attach::MergePartialFromCodedStream(
             this->id().data(), this->id().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
             "id");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_log_level;
+        break;
+      }
+
+      // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
+      case 2: {
+        if (tag == 16) {
+         parse_log_level:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::lms::Response_LogEvent_Level_IsValid(value)) {
+            set_log_level(static_cast< ::lms::Response_LogEvent_Level >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(2, value);
+          }
         } else {
           goto handle_unusual;
         }
@@ -2035,6 +2109,12 @@ void Request_Attach::SerializeWithCachedSizes(
       1, this->id(), output);
   }
 
+  // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
+  if (has_log_level()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->log_level(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2056,6 +2136,12 @@ void Request_Attach::SerializeWithCachedSizes(
         1, this->id(), target);
   }
 
+  // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
+  if (has_log_level()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->log_level(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2073,6 +2159,12 @@ int Request_Attach::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->id());
+    }
+
+    // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
+    if (has_log_level()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->log_level());
     }
 
   }
@@ -2105,6 +2197,9 @@ void Request_Attach::MergeFrom(const Request_Attach& from) {
     if (from.has_id()) {
       set_id(from.id());
     }
+    if (from.has_log_level()) {
+      set_log_level(from.log_level());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2129,6 +2224,7 @@ bool Request_Attach::IsInitialized() const {
 void Request_Attach::Swap(Request_Attach* other) {
   if (other != this) {
     std::swap(id_, other->id_);
+    std::swap(log_level_, other->log_level_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

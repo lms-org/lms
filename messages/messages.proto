@@ -11,10 +11,12 @@ message Request {
         optional bool debug = 4;
         optional bool detached = 5 [default = false];
         optional bool shutdown_runtime_on_detach = 6 [default = false];
+        optional Response.LogEvent.Level log_level = 7 [default = ALL];
 	}
 	message ListProcesses {}
 	message Attach {
 	    optional string id = 1;
+	    optional Response.LogEvent.Level log_level = 2 [default = ALL];
 	}
 	message Stop {
 	    optional string id = 1;

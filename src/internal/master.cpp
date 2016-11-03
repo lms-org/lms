@@ -279,7 +279,10 @@ void MasterServer::start() {
 
                     for(auto &client : m_clients) {
                         if(client.isAttached && client.attachedRuntime == runtime.pid) {
-                            client.sock.writeMessage(response);
+                            if(!response.has_log_event()
+                                || static_cast<logging::Level>(response.log_event().level()) >= client.logLevel) {
+                                client.sock.writeMessage(response);
+                            }
                         }
                     }
                 } else {
@@ -371,6 +374,7 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         client.isAttached = true;
         client.attachedRuntime = atoi(message.attach().id().c_str());
         client.shutdownRuntimeOnDetach = false;
+        client.logLevel = static_cast<logging::Level>(message.attach().log_level());
         break;
     case lms::Request::kStop:
         {
@@ -467,6 +471,7 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         if(! options.detached()) {
             client.isAttached = true;
             client.attachedRuntime = childpid;
+            client.logLevel = static_cast<logging::Level>(options.log_level());
             if(options.shutdown_runtime_on_detach()) {
                 client.shutdownRuntimeOnDetach = true;
             }
@@ -475,29 +480,27 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
     }
 }
 
-void streamLogs(ProtobufSocket &socket, logging::Level logLevel) {
+void streamLogs(ProtobufSocket &socket) {
     Response response;
     while(socket.readMessage(response) == ProtobufSocket::OK) {
         if(!response.has_log_event()) continue;
 
         const auto &event = response.log_event();
-        if(static_cast<logging::Level>(event.level()) >= logLevel) {
-            // get time now
-            time_t rawtime = event.timestamp() / 1000 / 1000;
-            //std::time(&rawtime);
-            struct tm *now = std::localtime(&rawtime);
+        // get time now
+        time_t rawtime = event.timestamp() / 1000 / 1000;
+        //std::time(&rawtime);
+        struct tm *now = std::localtime(&rawtime);
 
-            // format time to "HH:MM:SS"
-            char buffer[10];
-            std::strftime(buffer, 10, "%T", now);
+        // format time to "HH:MM:SS"
+        char buffer[10];
+        std::strftime(buffer, 10, "%T", now);
 
-            std::cout << buffer << " ";
+        std::cout << buffer << " ";
 
-            std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
-            std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
-            std::cout << lms::internal::COLOR_WHITE;
-            std::cout << " " << event.text() << std::endl;
-        }
+        std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
+        std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
+        std::cout << lms::internal::COLOR_WHITE;
+        std::cout << " " << event.text() << std::endl;
 
         if(event.has_close_after() && event.close_after()) {
             break;
@@ -509,6 +512,10 @@ void expectResponseType(const Response &response, Response::ContentCase type) {
     if(response.content_case() != type) {
         std::cout << "Unexpected response type: " << response.content_case() << std::endl;
     }
+}
+
+std::vector<std::string> logLevels() {
+    return std::vector<std::string>{"all", "debug", "info", "warn", "error"};
 }
 
 void connectToMaster(int argc, char *argv[]) {
@@ -564,9 +571,8 @@ void connectToMaster(int argc, char *argv[]) {
             req.mutable_shutdown();
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "run") == 0) {
-            std::vector<std::string> logLevels = {"all",  "debug", "info",
-                                                    "warn", "error"};
-            TCLAP::ValuesConstraint<std::string> logConstraint(logLevels);
+            auto levels = logLevels();
+            TCLAP::ValuesConstraint<std::string> logConstraint(levels);
 
             TCLAP::CmdLine cmd("lms run", ' ', LMS_VERSION_STRING);
             TCLAP::UnlabeledValueArg<std::string> configArg(
@@ -597,6 +603,10 @@ void connectToMaster(int argc, char *argv[]) {
             run->set_debug(debugSwitch.getValue());
             run->set_detached(detachSwitch.getValue());
             run->set_shutdown_runtime_on_detach(shutdownOnDetachSwitch.getValue());
+            logging::Level logLevel = logging::Level::ALL;
+            if(logging::levelFromName(logArg.getValue(), logLevel)) {
+                run->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
+            }
 
             char *lms_path = std::getenv("LMS_PATH");
             if (lms_path != nullptr && lms_path[0] != '\0') {
@@ -607,23 +617,33 @@ void connectToMaster(int argc, char *argv[]) {
 
             socket.writeMessage(req);
 
-            logging::Level logLevel = logging::Level::ALL;
-            logging::levelFromName(logArg.getValue(), logLevel);
-
             if(! detachSwitch.getValue()) {
-                streamLogs(socket, logLevel);
+                streamLogs(socket);
             }
         } else if(strcmp(argv[1], "attach") == 0) {
+            auto levels = logLevels();
+            TCLAP::ValuesConstraint<std::string> logConstraint(levels);
+            TCLAP::CmdLine cmd("lms attach", ' ', LMS_VERSION_STRING);
+            TCLAP::UnlabeledValueArg<std::string> configArg(
+                "id", "Runtime ID", true, "1234", "ID", cmd);
+            TCLAP::ValueArg<std::string> logArg(
+                "", "log", "Minimum logging level",
+                false, "ALL", &logConstraint, cmd);
+
             lms::Request_Attach *attach = req.mutable_attach();
 
             if(argc >= 3) {
                 attach->set_id(argv[2]);
+                logging::Level logLevel = logging::Level::ALL;
+                if(logging::levelFromName(logArg.getValue(), logLevel)) {
+                    attach->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
+                }
                 socket.writeMessage(req);
             } else {
                 std::cout << "Requires argument: lms attach <id> \n";
             }
 
-            streamLogs(socket, logging::Level::ALL);
+            streamLogs(socket);
         } else if(strcmp(argv[1], "kill") == 0 || strcmp(argv[1], "stop") == 0) {
             lms::Request_Stop *stop = req.mutable_stop();
 

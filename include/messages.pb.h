@@ -428,6 +428,13 @@ class Request_Run : public ::google::protobuf::Message {
   inline bool shutdown_runtime_on_detach() const;
   inline void set_shutdown_runtime_on_detach(bool value);
 
+  // optional .lms.Response.LogEvent.Level log_level = 7 [default = ALL];
+  inline bool has_log_level() const;
+  inline void clear_log_level();
+  static const int kLogLevelFieldNumber = 7;
+  inline ::lms::Response_LogEvent_Level log_level() const;
+  inline void set_log_level(::lms::Response_LogEvent_Level value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
@@ -438,6 +445,8 @@ class Request_Run : public ::google::protobuf::Message {
   inline void clear_has_detached();
   inline void set_has_shutdown_runtime_on_detach();
   inline void clear_has_shutdown_runtime_on_detach();
+  inline void set_has_log_level();
+  inline void clear_has_log_level();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -449,6 +458,7 @@ class Request_Run : public ::google::protobuf::Message {
   bool debug_;
   bool detached_;
   bool shutdown_runtime_on_detach_;
+  int log_level_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -592,16 +602,26 @@ class Request_Attach : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
+  // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
+  inline bool has_log_level() const;
+  inline void clear_log_level();
+  static const int kLogLevelFieldNumber = 2;
+  inline ::lms::Response_LogEvent_Level log_level() const;
+  inline void set_log_level(::lms::Response_LogEvent_Level value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Attach)
  private:
   inline void set_has_id();
   inline void clear_has_id();
+  inline void set_has_log_level();
+  inline void clear_has_log_level();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* id_;
+  int log_level_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -2715,6 +2735,31 @@ inline void Request_Run::set_shutdown_runtime_on_detach(bool value) {
   // @@protoc_insertion_point(field_set:lms.Request.Run.shutdown_runtime_on_detach)
 }
 
+// optional .lms.Response.LogEvent.Level log_level = 7 [default = ALL];
+inline bool Request_Run::has_log_level() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Request_Run::set_has_log_level() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Request_Run::clear_has_log_level() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Request_Run::clear_log_level() {
+  log_level_ = 0;
+  clear_has_log_level();
+}
+inline ::lms::Response_LogEvent_Level Request_Run::log_level() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.log_level)
+  return static_cast< ::lms::Response_LogEvent_Level >(log_level_);
+}
+inline void Request_Run::set_log_level(::lms::Response_LogEvent_Level value) {
+  assert(::lms::Response_LogEvent_Level_IsValid(value));
+  set_has_log_level();
+  log_level_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Run.log_level)
+}
+
 // -------------------------------------------------------------------
 
 // Request_ListProcesses
@@ -2797,6 +2842,31 @@ inline void Request_Attach::set_allocated_id(::std::string* id) {
     id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:lms.Request.Attach.id)
+}
+
+// optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
+inline bool Request_Attach::has_log_level() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Request_Attach::set_has_log_level() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Request_Attach::clear_has_log_level() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Request_Attach::clear_log_level() {
+  log_level_ = 0;
+  clear_has_log_level();
+}
+inline ::lms::Response_LogEvent_Level Request_Attach::log_level() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Attach.log_level)
+  return static_cast< ::lms::Response_LogEvent_Level >(log_level_);
+}
+inline void Request_Attach::set_log_level(::lms::Response_LogEvent_Level value) {
+  assert(::lms::Response_LogEvent_Level_IsValid(value));
+  set_has_log_level();
+  log_level_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Attach.log_level)
 }
 
 // -------------------------------------------------------------------
