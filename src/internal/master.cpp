@@ -243,7 +243,6 @@ void MasterServer::start() {
             auto &client = *it;
             if (FD_ISSET(client.sock.getFD(), &fds)) {
                 std::cout << "Client packet" << std::endl;
-                bool exit = false;
 
                 lms::Request req;
                 auto readRes = client.sock.readMessage(req);
@@ -252,6 +251,7 @@ void MasterServer::start() {
                     processClient(client, req);
                 } else {
                     if(client.isAttached && client.shutdownRuntimeOnDetach) {
+                        std::cout << "Kill runtime" << client.attachedRuntime << " because client detached" << std::endl;
                         kill(client.attachedRuntime, SIGINT);
                     }
 
