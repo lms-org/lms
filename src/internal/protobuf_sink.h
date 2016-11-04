@@ -11,7 +11,7 @@ namespace internal {
 
 class ProtobufSink : public lms::logging::Sink {
 public:
-    ProtobufSink(int socket);
+    ProtobufSink(int socket, logging::Level level);
 
     ~ProtobufSink() {}
 
@@ -19,6 +19,7 @@ public:
 private:
     lms::ProtobufSocket socket;
     std::mutex mtx;
+    logging::Level level;
 };
 
 }  // namespace internal

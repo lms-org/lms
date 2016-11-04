@@ -4,9 +4,11 @@
 namespace lms {
 namespace internal {
 
-ProtobufSink::ProtobufSink(int socket) : socket(socket) {}
+ProtobufSink::ProtobufSink(int socket, logging::Level level) : socket(socket), level(level) {}
 
 void ProtobufSink::sink(const lms::logging::Event &message) {
+    if(message.level < level) return;
+
     Response response;
     Response::LogEvent *event = response.mutable_log_event();
     event->set_tag(message.tag);

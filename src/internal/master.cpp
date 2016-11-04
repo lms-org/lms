@@ -417,7 +417,8 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         close(fd[0]);
 
         logging::Context &ctx = logging::Context::getDefault();
-        ctx.appendSink(new ProtobufSink(fd[1]));
+        logging::Level logLevel = options.production() ? logging::Level::WARN : logging::Level::ALL;
+        ctx.appendSink(new ProtobufSink(fd[1], logLevel));
         //Write to file
         //std::ofstream fs("/tmp/gangster.txt");
         //ctx.appendSink(new logging::ConsoleSink(fs));
@@ -555,7 +556,7 @@ void connectToMaster(int argc, char *argv[]) {
             TCLAP::UnlabeledValueArg<std::string> configArg(
                 "config", "XML config path", true, "lms.xml", "XML Config", cmd);
             TCLAP::MultiArg<std::string> loadPathsArg(
-                "p", "path", "Add additional load path", false, "Path", cmd);
+                "l", "load-path", "Add additional load path", false, "Path", cmd);
             TCLAP::MultiArg<std::string> flagsArg(
                 "f", "flag", "Add flag for XML config", false, "Flag", cmd);
             TCLAP::SwitchArg debugSwitch(
@@ -567,6 +568,8 @@ void connectToMaster(int argc, char *argv[]) {
                 "d", "detach", "Start runtime but do not show logging messages", cmd, false);
             TCLAP::SwitchArg shutdownOnDetachSwitch(
                 "s", "shutdown-on-detach", "Shutdown runtime when clients disconnects", cmd, false);
+            TCLAP::SwitchArg productionSwitch(
+                "p", "production", "Enable production mode. This sets the logging level at the runtime to WARN", cmd, false);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -580,6 +583,7 @@ void connectToMaster(int argc, char *argv[]) {
             run->set_debug(debugSwitch.getValue());
             run->set_detached(detachSwitch.getValue());
             run->set_shutdown_runtime_on_detach(shutdownOnDetachSwitch.getValue());
+            run->set_production(productionSwitch.getValue());
             logging::Level logLevel = logging::Level::ALL;
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 run->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));

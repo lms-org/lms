@@ -436,6 +436,13 @@ class Request_Run : public ::google::protobuf::Message {
   inline ::lms::Response_LogEvent_Level log_level() const;
   inline void set_log_level(::lms::Response_LogEvent_Level value);
 
+  // optional bool production = 8;
+  inline bool has_production() const;
+  inline void clear_production();
+  static const int kProductionFieldNumber = 8;
+  inline bool production() const;
+  inline void set_production(bool value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
@@ -448,6 +455,8 @@ class Request_Run : public ::google::protobuf::Message {
   inline void clear_has_shutdown_runtime_on_detach();
   inline void set_has_log_level();
   inline void clear_has_log_level();
+  inline void set_has_production();
+  inline void clear_has_production();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -459,6 +468,7 @@ class Request_Run : public ::google::protobuf::Message {
   bool debug_;
   bool detached_;
   bool shutdown_runtime_on_detach_;
+  bool production_;
   int log_level_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2841,6 +2851,30 @@ inline void Request_Run::set_log_level(::lms::Response_LogEvent_Level value) {
   set_has_log_level();
   log_level_ = value;
   // @@protoc_insertion_point(field_set:lms.Request.Run.log_level)
+}
+
+// optional bool production = 8;
+inline bool Request_Run::has_production() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Request_Run::set_has_production() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Request_Run::clear_has_production() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Request_Run::clear_production() {
+  production_ = false;
+  clear_has_production();
+}
+inline bool Request_Run::production() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.production)
+  return production_;
+}
+inline void Request_Run::set_production(bool value) {
+  set_has_production();
+  production_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Run.production)
 }
 
 // -------------------------------------------------------------------
