@@ -397,6 +397,10 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
     case lms::Request::kListenBroadcasts:
         client.listenBroadcats = message.listen_broadcasts().enable();
         break;
+    case lms::Request::kDetach:
+        client.isAttached = false;
+        client.shutdownRuntimeOnDetach = false;
+        break;
     }
 
     client.sock.writeMessage(response);

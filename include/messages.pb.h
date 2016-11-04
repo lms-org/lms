@@ -45,6 +45,7 @@ class Request_Stop;
 class Request_ModuleList;
 class Request_Profiling;
 class Request_ListenBroadcastEvents;
+class Request_Detach;
 class Response;
 class Response_Info;
 class Response_ClientList;
@@ -957,6 +958,75 @@ class Request_ListenBroadcastEvents : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_Detach : public ::google::protobuf::Message {
+ public:
+  Request_Detach();
+  virtual ~Request_Detach();
+
+  Request_Detach(const Request_Detach& from);
+
+  inline Request_Detach& operator=(const Request_Detach& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Detach& default_instance();
+
+  void Swap(Request_Detach* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Detach* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Detach& from);
+  void MergeFrom(const Request_Detach& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Detach)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Detach* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request : public ::google::protobuf::Message {
  public:
   Request();
@@ -991,6 +1061,7 @@ class Request : public ::google::protobuf::Message {
     kModuleList = 8,
     kProfiling = 9,
     kListenBroadcasts = 10,
+    kDetach = 11,
     CONTENT_NOT_SET = 0,
   };
 
@@ -1032,6 +1103,7 @@ class Request : public ::google::protobuf::Message {
   typedef Request_ModuleList ModuleList;
   typedef Request_Profiling Profiling;
   typedef Request_ListenBroadcastEvents ListenBroadcastEvents;
+  typedef Request_Detach Detach;
 
   // accessors -------------------------------------------------------
 
@@ -1125,6 +1197,15 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_ListenBroadcastEvents* release_listen_broadcasts();
   inline void set_allocated_listen_broadcasts(::lms::Request_ListenBroadcastEvents* listen_broadcasts);
 
+  // optional .lms.Request.Detach detach = 11;
+  inline bool has_detach() const;
+  inline void clear_detach();
+  static const int kDetachFieldNumber = 11;
+  inline const ::lms::Request_Detach& detach() const;
+  inline ::lms::Request_Detach* mutable_detach();
+  inline ::lms::Request_Detach* release_detach();
+  inline void set_allocated_detach(::lms::Request_Detach* detach);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
  private:
@@ -1138,6 +1219,7 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_module_list();
   inline void set_has_profiling();
   inline void set_has_listen_broadcasts();
+  inline void set_has_detach();
 
   inline bool has_content();
   void clear_content();
@@ -1158,6 +1240,7 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_ModuleList* module_list_;
     ::lms::Request_Profiling* profiling_;
     ::lms::Request_ListenBroadcastEvents* listen_broadcasts_;
+    ::lms::Request_Detach* detach_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -3087,6 +3170,10 @@ inline void Request_ListenBroadcastEvents::set_enable(bool value) {
 
 // -------------------------------------------------------------------
 
+// Request_Detach
+
+// -------------------------------------------------------------------
+
 // Request
 
 // optional .lms.Request.Info info = 1;
@@ -3516,6 +3603,49 @@ inline void Request::set_allocated_listen_broadcasts(::lms::Request_ListenBroadc
   if (listen_broadcasts) {
     set_has_listen_broadcasts();
     content_.listen_broadcasts_ = listen_broadcasts;
+  }
+}
+
+// optional .lms.Request.Detach detach = 11;
+inline bool Request::has_detach() const {
+  return content_case() == kDetach;
+}
+inline void Request::set_has_detach() {
+  _oneof_case_[0] = kDetach;
+}
+inline void Request::clear_detach() {
+  if (has_detach()) {
+    delete content_.detach_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Detach& Request::detach() const {
+  return has_detach() ? *content_.detach_
+                      : ::lms::Request_Detach::default_instance();
+}
+inline ::lms::Request_Detach* Request::mutable_detach() {
+  if (!has_detach()) {
+    clear_content();
+    set_has_detach();
+    content_.detach_ = new ::lms::Request_Detach;
+  }
+  return content_.detach_;
+}
+inline ::lms::Request_Detach* Request::release_detach() {
+  if (has_detach()) {
+    clear_has_content();
+    ::lms::Request_Detach* temp = content_.detach_;
+    content_.detach_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request::set_allocated_detach(::lms::Request_Detach* detach) {
+  clear_content();
+  if (detach) {
+    set_has_detach();
+    content_.detach_ = detach;
   }
 }
 

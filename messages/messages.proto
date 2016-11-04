@@ -29,6 +29,7 @@ message Request {
     message ListenBroadcastEvents {
         optional bool enable = 1;
     }
+    message Detach {}
 
 	oneof content {
 		Info info = 1;
@@ -41,6 +42,7 @@ message Request {
 		ModuleList module_list = 8;
 		Profiling profiling = 9;
 		ListenBroadcastEvents listen_broadcasts = 10;
+		Detach detach = 11;
 	}
 }
 
