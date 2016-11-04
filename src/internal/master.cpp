@@ -41,12 +41,8 @@ void Profiler::addMeasurement(const Response::LogEvent &event) {
             } else {
                 lms::Time begin = it->second;
                 lms::Time end = lms::Time::fromMicros(event.timestamp());
-                auto &times = measurements[event.tag()];
-                times.push_back(end - begin);
-                if(times.size() > 100) {
-                    // hold only a limited number of measurements
-                    times.pop_front();
-                }
+                auto &trace = measurements[event.tag()];
+                trace.update((end - begin).micros());
             }
         }
     }
@@ -54,35 +50,13 @@ void Profiler::addMeasurement(const Response::LogEvent &event) {
 
 void Profiler::getOverview(Response::ProfilingSummary *summary) const {
     for(const auto &pair : measurements) {
-        if(pair.second.size() == 0) {
-            continue;
-        }
-        float sum_x = 0;
-        float sum_x_squared = 0;
-        std::int64_t max = 0;
-        std::int64_t min = std::numeric_limits<decltype(min)>::max();
-        for(auto time : pair.second) {
-            sum_x += time.micros();
-            sum_x_squared += time.micros() * time.micros();
-            if(time.micros() > max) {
-                max = time.micros();
-            }
-            if(time.micros() < min) {
-                min = time.micros();
-            }
-        }
-        float avg = sum_x / float(pair.second.size());
-        float var = sum_x_squared / pair.second.size() - avg * avg;
-        // stanard deviation is square root of variance
-        float std = std::sqrt(var);
-
         Response::ProfilingSummary::Trace *trace = summary->add_traces();
         trace->set_name(pair.first);
-        trace->set_count(pair.second.size());
-        trace->set_avg(avg);
-        trace->set_min(min);
-        trace->set_max(max);
-        trace->set_std(std);
+        trace->set_count(pair.second.count());
+        trace->set_avg(pair.second.avg());
+        trace->set_min(pair.second.min());
+        trace->set_max(pair.second.max());
+        trace->set_std(pair.second.std());
     }
 }
 
