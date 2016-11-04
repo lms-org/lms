@@ -251,7 +251,7 @@ void MasterServer::start() {
                     processClient(client, req);
                 } else {
                     if(client.isAttached && client.shutdownRuntimeOnDetach) {
-                        std::cout << "Kill runtime" << client.attachedRuntime << " because client detached" << std::endl;
+                        std::cout << "Kill runtime " << client.attachedRuntime << " because client detached" << std::endl;
                         kill(client.attachedRuntime, SIGINT);
                     }
 
@@ -476,9 +476,8 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
             client.isAttached = true;
             client.attachedRuntime = childpid;
             client.logLevel = static_cast<logging::Level>(options.log_level());
-            if(options.shutdown_runtime_on_detach()) {
-                client.shutdownRuntimeOnDetach = true;
-            }
+            client.shutdownRuntimeOnDetach = options.has_shutdown_runtime_on_detach()
+                    && options.shutdown_runtime_on_detach();
         }
         m_runtimes.push_back(rt);
     }
