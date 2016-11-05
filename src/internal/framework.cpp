@@ -180,7 +180,9 @@ bool Framework::cycle() {
 
     m_clock.beforeLoopIteration();
     executionManager().validate(modules);
+    logger.time("cycle");
     m_executionManager.loop();
+    logger.timeEnd("cylce");
     return true;
 }
 
