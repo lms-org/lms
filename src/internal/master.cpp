@@ -650,9 +650,18 @@ void connectToMaster(int argc, char *argv[]) {
                 socket.readMessage(res);
                 expectResponseType(res, Response::ContentCase::kProfilingSummary);
                 const auto &profiling = res.profiling_summary();
+                size_t maxNameLen = 0;
+                for(int i = 0; i < profiling.traces().size(); i++) {
+                    maxNameLen = std::max(maxNameLen, profiling.traces(i).name().length());
+                }
                 for(int i = 0; i < profiling.traces_size(); i++) {
                     const auto &trace = profiling.traces(i);
-                    std::cout << trace.name() << "\t#" << trace.count()
+                    std::cout << trace.name();
+                    size_t numPadSpaces = maxNameLen - trace.name().length();
+                    while(numPadSpaces -- > 0) {
+                        std::cout << " ";
+                    }
+                    std::cout << " #" << trace.count()
                               << "\t\u00F8 " << trace.avg()
                               << "\t\u00B1 " << trace.std()
                               << "\t [" << trace.min() << "; " << trace.max() << "]"
