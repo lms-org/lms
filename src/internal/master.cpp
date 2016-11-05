@@ -672,6 +672,9 @@ void connectToMaster(int argc, char *argv[]) {
                 }
                 for(int i = 0; i < profiling.traces_size(); i++) {
                     const auto &trace = profiling.traces(i);
+                    if(trace.has_running_since()) {
+                        std::cout << lms::internal::COLOR_GREEN;
+                    }
                     std::cout << trace.name();
                     size_t numPadSpaces = maxNameLen - trace.name().length();
                     while(numPadSpaces -- > 0) {
@@ -680,8 +683,13 @@ void connectToMaster(int argc, char *argv[]) {
                     std::cout << " #" << trace.count()
                               << "\t\u00F8 " << trace.avg()
                               << "\t\u00B1 " << trace.std()
-                              << "\t [" << trace.min() << "; " << trace.max() << "]"
-                              << std::endl;
+                              << "\t [" << trace.min() << "; " << trace.max() << "]";
+                    if(trace.has_running_since()) {
+                        std::cout << "\t\u2192 " << trace.running_since();
+                        std::cout << lms::internal::COLOR_WHITE;
+                    }
+                    std::cout << std::endl;
+
                 }
             } else {
                 std::cout << "Requires argument: lms profiling <id> \n";
