@@ -323,6 +323,12 @@ void MasterServer::start() {
             }
         }
     }
+
+    // graceful shutdown
+    for(const auto &rt : m_runtimes) {
+        std::cout << "Shutdown " << rt.pid << std::endl;
+        kill(rt.pid, SIGINT);
+    }
 }
 
 void MasterServer::broadcastResponse(const Response &response) {
