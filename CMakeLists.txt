@@ -83,7 +83,6 @@ set (HEADERS
     "src/internal/master.h"
     "src/internal/clock.h"
     "src/internal/os.h"
-    "src/internal/debug_server_sink.h"
     "src/internal/protobuf_sink.h"
 
     "include/lms/logging/level.h"
@@ -129,7 +128,6 @@ set (SOURCE
     "src/internal/viz.cpp"
     "src/internal/daemon.cpp"
     "src/internal/master.cpp"
-    "src/internal/debug_server_sink.cpp"
     "src/internal/protobuf_sink.cpp"
 
     "src/logging/level.cpp"
