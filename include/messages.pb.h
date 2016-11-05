@@ -443,6 +443,18 @@ class Request_Run : public ::google::protobuf::Message {
   inline bool production() const;
   inline void set_production(bool value);
 
+  // optional string name = 9;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 9;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
@@ -457,6 +469,8 @@ class Request_Run : public ::google::protobuf::Message {
   inline void clear_has_log_level();
   inline void set_has_production();
   inline void clear_has_production();
+  inline void set_has_name();
+  inline void clear_has_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -470,6 +484,7 @@ class Request_Run : public ::google::protobuf::Message {
   bool shutdown_runtime_on_detach_;
   bool production_;
   int log_level_;
+  ::std::string* name_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -601,17 +616,17 @@ class Request_Attach : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string id = 1;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 1;
-  inline const ::std::string& id() const;
-  inline void set_id(const ::std::string& value);
-  inline void set_id(const char* value);
-  inline void set_id(const char* value, size_t size);
-  inline ::std::string* mutable_id();
-  inline ::std::string* release_id();
-  inline void set_allocated_id(::std::string* id);
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
   inline bool has_log_level() const;
@@ -622,8 +637,8 @@ class Request_Attach : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:lms.Request.Attach)
  private:
-  inline void set_has_id();
-  inline void clear_has_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_log_level();
   inline void clear_has_log_level();
 
@@ -631,7 +646,7 @@ class Request_Attach : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::std::string* id_;
+  ::std::string* name_;
   int log_level_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -695,17 +710,17 @@ class Request_Stop : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string id = 1;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 1;
-  inline const ::std::string& id() const;
-  inline void set_id(const ::std::string& value);
-  inline void set_id(const char* value);
-  inline void set_id(const char* value, size_t size);
-  inline ::std::string* mutable_id();
-  inline ::std::string* release_id();
-  inline void set_allocated_id(::std::string* id);
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional bool kill = 2;
   inline bool has_kill() const;
@@ -716,8 +731,8 @@ class Request_Stop : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:lms.Request.Stop)
  private:
-  inline void set_has_id();
-  inline void clear_has_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_kill();
   inline void clear_has_kill();
 
@@ -725,7 +740,7 @@ class Request_Stop : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::std::string* id_;
+  ::std::string* name_;
   bool kill_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -858,17 +873,17 @@ class Request_Profiling : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string id = 1;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 1;
-  inline const ::std::string& id() const;
-  inline void set_id(const ::std::string& value);
-  inline void set_id(const char* value);
-  inline void set_id(const char* value, size_t size);
-  inline ::std::string* mutable_id();
-  inline ::std::string* release_id();
-  inline void set_allocated_id(::std::string* id);
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional bool reset = 2 [default = false];
   inline bool has_reset() const;
@@ -879,8 +894,8 @@ class Request_Profiling : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:lms.Request.Profiling)
  private:
-  inline void set_has_id();
-  inline void clear_has_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_reset();
   inline void clear_has_reset();
 
@@ -888,7 +903,7 @@ class Request_Profiling : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::std::string* id_;
+  ::std::string* name_;
   bool reset_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1612,18 +1627,33 @@ class Response_ProcessList_Process : public ::google::protobuf::Message {
   inline ::std::string* release_config_file();
   inline void set_allocated_config_file(::std::string* config_file);
 
+  // optional string name = 3;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 3;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
   // @@protoc_insertion_point(class_scope:lms.Response.ProcessList.Process)
  private:
   inline void set_has_pid();
   inline void clear_has_pid();
   inline void set_has_config_file();
   inline void clear_has_config_file();
+  inline void set_has_name();
+  inline void clear_has_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* config_file_;
+  ::std::string* name_;
   ::google::protobuf::int32 pid_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2897,6 +2927,82 @@ inline void Request_Run::set_production(bool value) {
   // @@protoc_insertion_point(field_set:lms.Request.Run.production)
 }
 
+// optional string name = 9;
+inline bool Request_Run::has_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Request_Run::set_has_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Request_Run::clear_has_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Request_Run::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Request_Run::name() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.name)
+  return *name_;
+}
+inline void Request_Run::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Run.name)
+}
+inline void Request_Run::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Run.name)
+}
+inline void Request_Run::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Run.name)
+}
+inline ::std::string* Request_Run::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Run.name)
+  return name_;
+}
+inline ::std::string* Request_Run::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Run::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Run.name)
+}
+
 // -------------------------------------------------------------------
 
 // Request_ListProcesses
@@ -2905,80 +3011,80 @@ inline void Request_Run::set_production(bool value) {
 
 // Request_Attach
 
-// optional string id = 1;
-inline bool Request_Attach::has_id() const {
+// optional string name = 1;
+inline bool Request_Attach::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Request_Attach::set_has_id() {
+inline void Request_Attach::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Request_Attach::clear_has_id() {
+inline void Request_Attach::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Request_Attach::clear_id() {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_->clear();
+inline void Request_Attach::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
   }
-  clear_has_id();
+  clear_has_name();
 }
-inline const ::std::string& Request_Attach::id() const {
-  // @@protoc_insertion_point(field_get:lms.Request.Attach.id)
-  return *id_;
+inline const ::std::string& Request_Attach::name() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Attach.name)
+  return *name_;
 }
-inline void Request_Attach::set_id(const ::std::string& value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Attach::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.Request.Attach.id)
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Attach.name)
 }
-inline void Request_Attach::set_id(const char* value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Attach::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.Request.Attach.id)
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Attach.name)
 }
-inline void Request_Attach::set_id(const char* value, size_t size) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Attach::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.Request.Attach.id)
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Attach.name)
 }
-inline ::std::string* Request_Attach::mutable_id() {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline ::std::string* Request_Attach::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.Request.Attach.id)
-  return id_;
+  // @@protoc_insertion_point(field_mutable:lms.Request.Attach.name)
+  return name_;
 }
-inline ::std::string* Request_Attach::release_id() {
-  clear_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+inline ::std::string* Request_Attach::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
   } else {
-    ::std::string* temp = id_;
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     return temp;
   }
 }
-inline void Request_Attach::set_allocated_id(::std::string* id) {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete id_;
+inline void Request_Attach::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
   }
-  if (id) {
-    set_has_id();
-    id_ = id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_id();
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.Request.Attach.id)
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Attach.name)
 }
 
 // optional .lms.Response.LogEvent.Level log_level = 2 [default = ALL];
@@ -3010,80 +3116,80 @@ inline void Request_Attach::set_log_level(::lms::Response_LogEvent_Level value) 
 
 // Request_Stop
 
-// optional string id = 1;
-inline bool Request_Stop::has_id() const {
+// optional string name = 1;
+inline bool Request_Stop::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Request_Stop::set_has_id() {
+inline void Request_Stop::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Request_Stop::clear_has_id() {
+inline void Request_Stop::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Request_Stop::clear_id() {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_->clear();
+inline void Request_Stop::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
   }
-  clear_has_id();
+  clear_has_name();
 }
-inline const ::std::string& Request_Stop::id() const {
-  // @@protoc_insertion_point(field_get:lms.Request.Stop.id)
-  return *id_;
+inline const ::std::string& Request_Stop::name() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Stop.name)
+  return *name_;
 }
-inline void Request_Stop::set_id(const ::std::string& value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Stop::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.Request.Stop.id)
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Stop.name)
 }
-inline void Request_Stop::set_id(const char* value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Stop::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.Request.Stop.id)
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Stop.name)
 }
-inline void Request_Stop::set_id(const char* value, size_t size) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Stop::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.Request.Stop.id)
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Stop.name)
 }
-inline ::std::string* Request_Stop::mutable_id() {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline ::std::string* Request_Stop::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.Request.Stop.id)
-  return id_;
+  // @@protoc_insertion_point(field_mutable:lms.Request.Stop.name)
+  return name_;
 }
-inline ::std::string* Request_Stop::release_id() {
-  clear_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+inline ::std::string* Request_Stop::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
   } else {
-    ::std::string* temp = id_;
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     return temp;
   }
 }
-inline void Request_Stop::set_allocated_id(::std::string* id) {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete id_;
+inline void Request_Stop::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
   }
-  if (id) {
-    set_has_id();
-    id_ = id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_id();
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.Request.Stop.id)
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Stop.name)
 }
 
 // optional bool kill = 2;
@@ -3118,80 +3224,80 @@ inline void Request_Stop::set_kill(bool value) {
 
 // Request_Profiling
 
-// optional string id = 1;
-inline bool Request_Profiling::has_id() const {
+// optional string name = 1;
+inline bool Request_Profiling::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Request_Profiling::set_has_id() {
+inline void Request_Profiling::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Request_Profiling::clear_has_id() {
+inline void Request_Profiling::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Request_Profiling::clear_id() {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_->clear();
+inline void Request_Profiling::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
   }
-  clear_has_id();
+  clear_has_name();
 }
-inline const ::std::string& Request_Profiling::id() const {
-  // @@protoc_insertion_point(field_get:lms.Request.Profiling.id)
-  return *id_;
+inline const ::std::string& Request_Profiling::name() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Profiling.name)
+  return *name_;
 }
-inline void Request_Profiling::set_id(const ::std::string& value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Profiling::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.Request.Profiling.id)
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Profiling.name)
 }
-inline void Request_Profiling::set_id(const char* value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Profiling::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.Request.Profiling.id)
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Profiling.name)
 }
-inline void Request_Profiling::set_id(const char* value, size_t size) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline void Request_Profiling::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  id_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.Request.Profiling.id)
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Profiling.name)
 }
-inline ::std::string* Request_Profiling::mutable_id() {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    id_ = new ::std::string;
+inline ::std::string* Request_Profiling::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:lms.Request.Profiling.id)
-  return id_;
+  // @@protoc_insertion_point(field_mutable:lms.Request.Profiling.name)
+  return name_;
 }
-inline ::std::string* Request_Profiling::release_id() {
-  clear_has_id();
-  if (id_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+inline ::std::string* Request_Profiling::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     return NULL;
   } else {
-    ::std::string* temp = id_;
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     return temp;
   }
 }
-inline void Request_Profiling::set_allocated_id(::std::string* id) {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete id_;
+inline void Request_Profiling::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
   }
-  if (id) {
-    set_has_id();
-    id_ = id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_id();
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:lms.Request.Profiling.id)
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Profiling.name)
 }
 
 // optional bool reset = 2 [default = false];
@@ -4028,6 +4134,82 @@ inline void Response_ProcessList_Process::set_allocated_config_file(::std::strin
     config_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:lms.Response.ProcessList.Process.config_file)
+}
+
+// optional string name = 3;
+inline bool Response_ProcessList_Process::has_name() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Response_ProcessList_Process::set_has_name() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Response_ProcessList_Process::clear_has_name() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Response_ProcessList_Process::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Response_ProcessList_Process::name() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProcessList.Process.name)
+  return *name_;
+}
+inline void Response_ProcessList_Process::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Response.ProcessList.Process.name)
+}
+inline void Response_ProcessList_Process::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Response.ProcessList.Process.name)
+}
+inline void Response_ProcessList_Process::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Response.ProcessList.Process.name)
+}
+inline ::std::string* Response_ProcessList_Process::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Response.ProcessList.Process.name)
+  return name_;
+}
+inline ::std::string* Response_ProcessList_Process::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Response_ProcessList_Process::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Response.ProcessList.Process.name)
 }
 
 // -------------------------------------------------------------------

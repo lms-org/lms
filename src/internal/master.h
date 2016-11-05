@@ -88,6 +88,7 @@ private:
     };
 
     struct Runtime {
+        std::string name;
         pid_t pid;
         ProtobufSocket sock;
         std::string config_file;
@@ -98,6 +99,7 @@ private:
     std::vector<Client> m_clients;
     std::vector<Runtime> m_runtimes;
     bool m_running;
+    int runtimeNameCounter = 1;
 
     void enableNonBlock(int sock);
     void processClient(Client &client, const lms::Request &message);
@@ -105,6 +107,7 @@ private:
     void broadcastResponse(const lms::Response &response);
     void buildListRuntimesResponse(lms::Response &response);
     void buildListClientsResponse(lms::Response &response);
+    Runtime* getRuntimeByName(const std::string &name);
 };
 
 void connectToMaster(int argc, char *argv[]);

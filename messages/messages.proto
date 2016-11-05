@@ -13,19 +13,20 @@ message Request {
         optional bool shutdown_runtime_on_detach = 6 [default = false];
         optional Response.LogEvent.Level log_level = 7 [default = ALL];
         optional bool production = 8 [default = false];
+        optional string name = 9;
 	}
 	message ListProcesses {}
 	message Attach {
-	    optional string id = 1;
+	    optional string name = 1;
 	    optional Response.LogEvent.Level log_level = 2 [default = ALL];
 	}
 	message Stop {
-	    optional string id = 1;
+	    optional string name = 1;
 	    optional bool kill = 2;
 	}
 	message ModuleList {}
     message Profiling {
-        optional string id = 1;
+        optional string name = 1;
         optional bool reset = 2 [default = false];
     }
     message ListenBroadcastEvents {
@@ -67,6 +68,7 @@ message Response {
         message Process {
             optional int32 pid = 1;
             optional string config_file = 2;
+            optional string name = 3;
         }
         
         repeated Process processes = 1;

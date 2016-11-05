@@ -345,6 +345,7 @@ void MasterServer::buildListRuntimesResponse(lms::Response &response) {
         auto *process = list->add_processes();
         process->set_pid(rt.pid);
         process->set_config_file(rt.config_file);
+        process->set_name(rt.name);
     }
 }
 
@@ -387,30 +388,34 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         }
         break;
     case lms::Request::kAttach:
-        client.isAttached = true;
-        client.attachedRuntime = atoi(message.attach().id().c_str());
-        client.shutdownRuntimeOnDetach = false;
-        client.logLevel = static_cast<logging::Level>(message.attach().log_level());
+        {
+        Runtime *rt = getRuntimeByName(message.attach().name());
+        if(rt != nullptr) {
+            client.isAttached = true;
+            client.attachedRuntime = rt->pid;
+            client.shutdownRuntimeOnDetach = false;
+            client.logLevel = static_cast<logging::Level>(message.attach().log_level());
+        }
+        }
         break;
     case lms::Request::kStop:
         {
-        int signal = message.stop().kill() ? SIGKILL : SIGINT;
-        kill(atoi(message.stop().id().c_str()), signal);
+        Runtime *rt = getRuntimeByName(message.stop().name());
+        if(rt != nullptr) {
+            int signal = message.stop().kill() ? SIGKILL : SIGINT;
+            kill(rt->pid, signal);
+        }
         }
         break;
     case lms::Request::kProfiling:
         {
-        int requestedId = atoi(message.profiling().id().c_str());
-        for(auto &rt : m_runtimes) {
-            if(rt.pid == requestedId) {
-                rt.profiler.getOverview(response.mutable_profiling_summary());
-                if(message.profiling().reset()) {
-                    rt.profiler.reset();
-                }
-                break;
+        Runtime *rt = getRuntimeByName(message.profiling().name());
+        if(rt != nullptr) {
+            rt->profiler.getOverview(response.mutable_profiling_summary());
+            if(message.profiling().reset()) {
+                rt->profiler.reset();
             }
         }
-        // TODO runtime not found
         }
         break;
     case lms::Request::kListenBroadcasts:
@@ -491,7 +496,13 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         // close writing ends of pipes
         close(fd[1]);
 
-        Runtime rt{childpid, fd[0], options.config_file()};
+        std::string name;
+        if(options.has_name()) {
+            name = options.name();
+        } else {
+            name = std::to_string(runtimeNameCounter++);
+        }
+        Runtime rt{name, childpid, fd[0], options.config_file(), Profiler()};
         if(! options.detached()) {
             client.isAttached = true;
             client.attachedRuntime = childpid;
@@ -501,6 +512,15 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         }
         m_runtimes.push_back(rt);
     }
+}
+
+MasterServer::Runtime* MasterServer::getRuntimeByName(const std::string &name) {
+    for(auto &rt : m_runtimes) {
+        if(rt.name == name) {
+            return &rt;
+        }
+    }
+    return nullptr;
 }
 
 void streamLogs(ProtobufSocket &socket) {
@@ -586,9 +606,11 @@ void connectToMaster(int argc, char *argv[]) {
             socket.readMessage(res);
             expectResponseType(res, Response::kProcessList);
             const auto &list = res.process_list();
-            std::cout << "ID \tCONFIG\n";
+            std::cout << "NAME \tID \tCONFIG\n";
             for(int i = 0; i < list.processes_size(); i++) {
-                std::cout << list.processes(i).pid() << " \t" << list.processes(i).config_file() << "\n";
+                std::cout << list.processes(i).name() << " \t"
+                          << list.processes(i).pid() << " \t"
+                          << list.processes(i).config_file() << "\n";
             }
         } else if(strcmp(argv[1], "shutdown") == 0) {
             req.mutable_shutdown();
@@ -615,6 +637,9 @@ void connectToMaster(int argc, char *argv[]) {
                 "s", "shutdown-on-detach", "Shutdown runtime when clients disconnects", cmd, false);
             TCLAP::SwitchArg productionSwitch(
                 "p", "production", "Enable production mode. This sets the logging level at the runtime to WARN", cmd, false);
+            TCLAP::ValueArg<std::string> nameArg(
+                "", "name", "Custom runtime name",
+                false, "", "NAME", cmd);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -629,6 +654,9 @@ void connectToMaster(int argc, char *argv[]) {
             run->set_detached(detachSwitch.getValue());
             run->set_shutdown_runtime_on_detach(shutdownOnDetachSwitch.getValue());
             run->set_production(productionSwitch.getValue());
+            if(nameArg.isSet()) {
+                run->set_name(nameArg.getValue());
+            }
             logging::Level logLevel = logging::Level::ALL;
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 run->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
@@ -650,8 +678,8 @@ void connectToMaster(int argc, char *argv[]) {
             auto levels = logLevels();
             TCLAP::ValuesConstraint<std::string> logConstraint(levels);
             TCLAP::CmdLine cmd("lms attach", ' ', LMS_VERSION_STRING);
-            TCLAP::UnlabeledValueArg<std::string> idArg(
-                "id", "Runtime ID", true, "1234", "ID", cmd);
+            TCLAP::UnlabeledValueArg<std::string> nameArg(
+                "name", "Runtime name", true, "my_runtime", "NAME", cmd);
             TCLAP::ValueArg<std::string> logArg(
                 "", "log", "Minimum logging level",
                 false, "ALL", &logConstraint, cmd);
@@ -659,7 +687,7 @@ void connectToMaster(int argc, char *argv[]) {
 
             lms::Request_Attach *attach = req.mutable_attach();
 
-            attach->set_id(idArg.getValue());
+            attach->set_name(nameArg.getValue());
             logging::Level logLevel = logging::Level::ALL;
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 attach->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
@@ -671,7 +699,7 @@ void connectToMaster(int argc, char *argv[]) {
             lms::Request_Stop *stop = req.mutable_stop();
 
             if(argc >= 3) {
-                stop->set_id(argv[2]);
+                stop->set_name(argv[2]);
                 stop->set_kill(strcmp(argv[1], "kill") == 0);
                 socket.writeMessage(req);
             } else {
@@ -682,15 +710,15 @@ void connectToMaster(int argc, char *argv[]) {
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "profiling") == 0) {
             TCLAP::CmdLine cmd("lms profiling", ' ', LMS_VERSION_STRING);
-            TCLAP::UnlabeledValueArg<std::string> idArg(
-                "id", "Runtime ID", true, "1234", "ID", cmd);
+            TCLAP::UnlabeledValueArg<std::string> nameArg(
+                "name", "Runtime name", true, "my_runtime", "NAME", cmd);
             TCLAP::SwitchArg resetSwitch(
                 "r", "reset", "Reset profiling data after showing them", cmd, false);
             cmd.parse(argc-1, argv+1);
 
             Request::Profiling *profiling = req.mutable_profiling();
 
-            profiling->set_id(idArg.getValue());
+            profiling->set_name(nameArg.getValue());
             profiling->set_reset(resetSwitch.getValue());
             socket.writeMessage(req);
 
