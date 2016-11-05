@@ -2,6 +2,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <csignal>
@@ -180,9 +181,23 @@ void MasterServer::enableNonBlock(int sock) {
     fcntl(sock, F_SETFL, flags);
 }
 
+/**
+ * @brief Collect all zombies (not blocking)
+ */
+void rickGrimes(int signal) {
+    (void)signal; // ignore parameter
+    int status;
+    while(waitpid(-1, &status, WNOHANG) >= 0) {
+        std::cout << "Collected zombie" << std::endl;
+    }
+}
+
 void MasterServer::start() {
     // Fix broken pipe behavior
     ::signal(SIGPIPE, SIG_IGN);
+
+    // Kill zombie child processes
+    ::signal(SIGCHLD, rickGrimes);
 
     fd_set fds;
 
