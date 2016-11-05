@@ -26,6 +26,7 @@ message Request {
 	message ModuleList {}
     message Profiling {
         optional string id = 1;
+        optional bool reset = 2 [default = false];
     }
     message ListenBroadcastEvents {
         optional bool enable = 1;

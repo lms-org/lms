@@ -870,16 +870,26 @@ class Request_Profiling : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
+  // optional bool reset = 2 [default = false];
+  inline bool has_reset() const;
+  inline void clear_reset();
+  static const int kResetFieldNumber = 2;
+  inline bool reset() const;
+  inline void set_reset(bool value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Profiling)
  private:
   inline void set_has_id();
   inline void clear_has_id();
+  inline void set_has_reset();
+  inline void clear_has_reset();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* id_;
+  bool reset_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -3182,6 +3192,30 @@ inline void Request_Profiling::set_allocated_id(::std::string* id) {
     id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:lms.Request.Profiling.id)
+}
+
+// optional bool reset = 2 [default = false];
+inline bool Request_Profiling::has_reset() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Request_Profiling::set_has_reset() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Request_Profiling::clear_has_reset() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Request_Profiling::clear_reset() {
+  reset_ = false;
+  clear_has_reset();
+}
+inline bool Request_Profiling::reset() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Profiling.reset)
+  return reset_;
+}
+inline void Request_Profiling::set_reset(bool value) {
+  set_has_reset();
+  reset_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Profiling.reset)
 }
 
 // -------------------------------------------------------------------

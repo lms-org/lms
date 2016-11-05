@@ -76,6 +76,11 @@ void Profiler::getOverview(Response::ProfilingSummary *summary) const {
     }
 }
 
+void Profiler::reset() {
+    beginTimes.clear();
+    measurements.clear();
+}
+
 std::string getPeer(sockaddr_storage &addr) {
     char ipstr[255];
     int port;
@@ -375,9 +380,12 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
     case lms::Request::kProfiling:
         {
         int requestedId = atoi(message.profiling().id().c_str());
-        for(const auto &rt : m_runtimes) {
+        for(auto &rt : m_runtimes) {
             if(rt.pid == requestedId) {
                 rt.profiler.getOverview(response.mutable_profiling_summary());
+                if(message.profiling().reset()) {
+                    rt.profiler.reset();
+                }
                 break;
             }
         }
@@ -621,24 +629,21 @@ void connectToMaster(int argc, char *argv[]) {
             auto levels = logLevels();
             TCLAP::ValuesConstraint<std::string> logConstraint(levels);
             TCLAP::CmdLine cmd("lms attach", ' ', LMS_VERSION_STRING);
-            TCLAP::UnlabeledValueArg<std::string> configArg(
+            TCLAP::UnlabeledValueArg<std::string> idArg(
                 "id", "Runtime ID", true, "1234", "ID", cmd);
             TCLAP::ValueArg<std::string> logArg(
                 "", "log", "Minimum logging level",
                 false, "ALL", &logConstraint, cmd);
+            cmd.parse(argc-1, argv+1);
 
             lms::Request_Attach *attach = req.mutable_attach();
 
-            if(argc >= 3) {
-                attach->set_id(argv[2]);
-                logging::Level logLevel = logging::Level::ALL;
-                if(logging::levelFromName(logArg.getValue(), logLevel)) {
-                    attach->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
-                }
-                socket.writeMessage(req);
-            } else {
-                std::cout << "Requires argument: lms attach <id> \n";
+            attach->set_id(idArg.getValue());
+            logging::Level logLevel = logging::Level::ALL;
+            if(logging::levelFromName(logArg.getValue(), logLevel)) {
+                attach->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
             }
+            socket.writeMessage(req);
 
             streamLogs(socket);
         } else if(strcmp(argv[1], "kill") == 0 || strcmp(argv[1], "stop") == 0) {
@@ -655,44 +660,47 @@ void connectToMaster(int argc, char *argv[]) {
             lms::Request_ModuleList *modules = req.mutable_module_list();
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "profiling") == 0) {
+            TCLAP::CmdLine cmd("lms profiling", ' ', LMS_VERSION_STRING);
+            TCLAP::UnlabeledValueArg<std::string> idArg(
+                "id", "Runtime ID", true, "1234", "ID", cmd);
+            TCLAP::SwitchArg resetSwitch(
+                "r", "reset", "Reset profiling data after showing them", cmd, false);
+            cmd.parse(argc-1, argv+1);
+
             Request::Profiling *profiling = req.mutable_profiling();
 
-            if(argc >= 3) {
-                profiling->set_id(argv[2]);
-                socket.writeMessage(req);
-                socket.writeMessage(req);
+            profiling->set_id(idArg.getValue());
+            profiling->set_reset(resetSwitch.getValue());
+            socket.writeMessage(req);
 
-                Response res;
-                socket.readMessage(res);
-                expectResponseType(res, Response::ContentCase::kProfilingSummary);
-                const auto &profiling = res.profiling_summary();
-                size_t maxNameLen = 0;
-                for(int i = 0; i < profiling.traces().size(); i++) {
-                    maxNameLen = std::max(maxNameLen, profiling.traces(i).name().length());
+            Response res;
+            socket.readMessage(res);
+            expectResponseType(res, Response::ContentCase::kProfilingSummary);
+            const auto &profSumm = res.profiling_summary();
+            size_t maxNameLen = 0;
+            for(int i = 0; i < profSumm.traces().size(); i++) {
+                maxNameLen = std::max(maxNameLen, profSumm.traces(i).name().length());
+            }
+            for(int i = 0; i < profSumm.traces_size(); i++) {
+                const auto &trace = profSumm.traces(i);
+                if(trace.has_running_since()) {
+                    std::cout << lms::internal::COLOR_GREEN;
                 }
-                for(int i = 0; i < profiling.traces_size(); i++) {
-                    const auto &trace = profiling.traces(i);
-                    if(trace.has_running_since()) {
-                        std::cout << lms::internal::COLOR_GREEN;
-                    }
-                    std::cout << trace.name();
-                    size_t numPadSpaces = maxNameLen - trace.name().length();
-                    while(numPadSpaces -- > 0) {
-                        std::cout << " ";
-                    }
-                    std::cout << " #" << trace.count()
-                              << "\t\u00F8 " << trace.avg()
-                              << "\t\u00B1 " << trace.std()
-                              << "\t [" << trace.min() << "; " << trace.max() << "]";
-                    if(trace.has_running_since()) {
-                        std::cout << "\t\u2192 " << trace.running_since();
-                        std::cout << lms::internal::COLOR_WHITE;
-                    }
-                    std::cout << std::endl;
+                std::cout << trace.name();
+                size_t numPadSpaces = maxNameLen - trace.name().length();
+                while(numPadSpaces -- > 0) {
+                    std::cout << " ";
+                }
+                std::cout << " #" << trace.count()
+                          << "\t\u00F8 " << trace.avg()
+                          << "\t\u00B1 " << trace.std()
+                          << "\t [" << trace.min() << "; " << trace.max() << "]";
+                if(trace.has_running_since()) {
+                    std::cout << "\t\u2192 " << trace.running_since();
+                    std::cout << lms::internal::COLOR_WHITE;
+                }
+                std::cout << std::endl;
 
-                }
-            } else {
-                std::cout << "Requires argument: lms profiling <id> \n";
             }
         } else {
             std::cout << "Unknown command\n";

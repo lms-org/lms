@@ -57,6 +57,7 @@ class Profiler {
 public:
     void addMeasurement(const Response::LogEvent &event);
     void getOverview(Response::ProfilingSummary *summary) const;
+    void reset();
 private:
     std::map<std::string, lms::Time> beginTimes;
     std::map<std::string, Trace<float>> measurements;

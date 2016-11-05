@@ -278,8 +278,9 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ModuleList));
   Request_Profiling_descriptor_ = Request_descriptor_->nested_type(8);
-  static const int Request_Profiling_offsets_[1] = {
+  static const int Request_Profiling_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Profiling, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Profiling, reset_),
   };
   Request_Profiling_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -651,7 +652,7 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\003lms\"\335\007\n\007Request\022!\n\004inf"
+    "\n\016messages.proto\022\003lms\"\363\007\n\007Request\022!\n\004inf"
     "o\030\001 \001(\0132\021.lms.Request.InfoH\000\022)\n\010shutdown"
     "\030\002 \001(\0132\025.lms.Request.ShutdownH\000\0220\n\014list_"
     "clients\030\003 \001(\0132\030.lms.Request.ListClientsH"
@@ -674,41 +675,42 @@ void protobuf_AddDesc_messages_2eproto() {
     "es\032J\n\006Attach\022\n\n\002id\030\001 \001(\t\0224\n\tlog_level\030\002 "
     "\001(\0162\034.lms.Response.LogEvent.Level:\003ALL\032 "
     "\n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004kill\030\002 \001(\010\032\014\n\nModu"
-    "leList\032\027\n\tProfiling\022\n\n\002id\030\001 \001(\t\032\'\n\025Liste"
-    "nBroadcastEvents\022\016\n\006enable\030\001 \001(\010\032\010\n\006Deta"
-    "chB\t\n\007content\"\211\n\n\010Response\022\"\n\004info\030\001 \001(\013"
-    "2\022.lms.Response.InfoH\000\022/\n\013client_list\030\002 "
-    "\001(\0132\030.lms.Response.ClientListH\000\0221\n\014proce"
-    "ss_list\030\003 \001(\0132\031.lms.Response.ProcessList"
-    "H\000\0227\n\013module_list\030\004 \001(\0132 .lms.Response.M"
-    "oduleListResponseH\000\022+\n\tlog_event\030\005 \001(\0132\026"
-    ".lms.Response.LogEventH\000\022;\n\021profiling_su"
-    "mmary\030\006 \001(\0132\036.lms.Response.ProfilingSumm"
-    "aryH\000\032$\n\004Info\022\017\n\007version\030\001 \001(\005\022\013\n\003pid\030\002 "
-    "\001(\005\032b\n\nClientList\0220\n\007clients\030\001 \003(\0132\037.lms"
-    ".Response.ClientList.Client\032\"\n\006Client\022\n\n"
-    "\002fd\030\001 \001(\005\022\014\n\004peer\030\002 \001(\t\032p\n\013ProcessList\0224"
-    "\n\tprocesses\030\001 \003(\0132!.lms.Response.Process"
-    "List.Process\032+\n\007Process\022\013\n\003pid\030\001 \001(\005\022\023\n\013"
-    "config_file\030\002 \001(\t\032\267\002\n\022ModuleListResponse"
-    "\022:\n\010channels\030\001 \003(\0132(.lms.Response.Module"
-    "ListResponse.Channel\032k\n\006Access\022\016\n\006module"
-    "\030\001 \001(\t\022\?\n\npermission\030\002 \001(\0162+.lms.Respons"
-    "e.ModuleListResponse.Permission\022\020\n\010prior"
-    "ity\030\003 \001(\005\032U\n\007Channel\022\014\n\004name\030\001 \001(\t\022<\n\013ac"
-    "cess_list\030\002 \003(\0132\'.lms.Response.ModuleLis"
-    "tResponse.Access\"!\n\nPermission\022\010\n\004READ\020\001"
-    "\022\t\n\005WRITE\020\002\032\324\001\n\010LogEvent\022+\n\005level\030\001 \001(\0162"
-    "\034.lms.Response.LogEvent.Level\022\013\n\003tag\030\002 \001"
-    "(\t\022\014\n\004text\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005f"
-    "alse\022\021\n\ttimestamp\030\005 \001(\003\"Q\n\005Level\022\007\n\003ALL\020"
-    "\000\022\013\n\007PROFILE\020\n\022\t\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004W"
-    "ARN\020(\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001\032\271\001\n\020Profiling"
-    "Summary\0224\n\006traces\030\001 \003(\0132$.lms.Response.P"
-    "rofilingSummary.Trace\032o\n\005Trace\022\014\n\004name\030\001"
-    " \001(\t\022\013\n\003avg\030\002 \001(\005\022\013\n\003std\030\003 \001(\005\022\013\n\003max\030\004 "
-    "\001(\005\022\r\n\005count\030\005 \001(\005\022\013\n\003min\030\006 \001(\005\022\025\n\rrunni"
-    "ng_since\030\007 \001(\005B\t\n\007content", 2305);
+    "leList\032-\n\tProfiling\022\n\n\002id\030\001 \001(\t\022\024\n\005reset"
+    "\030\002 \001(\010:\005false\032\'\n\025ListenBroadcastEvents\022\016"
+    "\n\006enable\030\001 \001(\010\032\010\n\006DetachB\t\n\007content\"\211\n\n\010"
+    "Response\022\"\n\004info\030\001 \001(\0132\022.lms.Response.In"
+    "foH\000\022/\n\013client_list\030\002 \001(\0132\030.lms.Response"
+    ".ClientListH\000\0221\n\014process_list\030\003 \001(\0132\031.lm"
+    "s.Response.ProcessListH\000\0227\n\013module_list\030"
+    "\004 \001(\0132 .lms.Response.ModuleListResponseH"
+    "\000\022+\n\tlog_event\030\005 \001(\0132\026.lms.Response.LogE"
+    "ventH\000\022;\n\021profiling_summary\030\006 \001(\0132\036.lms."
+    "Response.ProfilingSummaryH\000\032$\n\004Info\022\017\n\007v"
+    "ersion\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005\032b\n\nClientList\022"
+    "0\n\007clients\030\001 \003(\0132\037.lms.Response.ClientLi"
+    "st.Client\032\"\n\006Client\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030"
+    "\002 \001(\t\032p\n\013ProcessList\0224\n\tprocesses\030\001 \003(\0132"
+    "!.lms.Response.ProcessList.Process\032+\n\007Pr"
+    "ocess\022\013\n\003pid\030\001 \001(\005\022\023\n\013config_file\030\002 \001(\t\032"
+    "\267\002\n\022ModuleListResponse\022:\n\010channels\030\001 \003(\013"
+    "2(.lms.Response.ModuleListResponse.Chann"
+    "el\032k\n\006Access\022\016\n\006module\030\001 \001(\t\022\?\n\npermissi"
+    "on\030\002 \001(\0162+.lms.Response.ModuleListRespon"
+    "se.Permission\022\020\n\010priority\030\003 \001(\005\032U\n\007Chann"
+    "el\022\014\n\004name\030\001 \001(\t\022<\n\013access_list\030\002 \003(\0132\'."
+    "lms.Response.ModuleListResponse.Access\"!"
+    "\n\nPermission\022\010\n\004READ\020\001\022\t\n\005WRITE\020\002\032\324\001\n\010Lo"
+    "gEvent\022+\n\005level\030\001 \001(\0162\034.lms.Response.Log"
+    "Event.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\022\032"
+    "\n\013close_after\030\004 \001(\010:\005false\022\021\n\ttimestamp\030"
+    "\005 \001(\003\"Q\n\005Level\022\007\n\003ALL\020\000\022\013\n\007PROFILE\020\n\022\t\n\005"
+    "DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004WARN\020(\022\t\n\005ERROR\0202\022\010"
+    "\n\003OFF\020\377\001\032\271\001\n\020ProfilingSummary\0224\n\006traces\030"
+    "\001 \003(\0132$.lms.Response.ProfilingSummary.Tr"
+    "ace\032o\n\005Trace\022\014\n\004name\030\001 \001(\t\022\013\n\003avg\030\002 \001(\005\022"
+    "\013\n\003std\030\003 \001(\005\022\013\n\003max\030\004 \001(\005\022\r\n\005count\030\005 \001(\005"
+    "\022\013\n\003min\030\006 \001(\005\022\025\n\rrunning_since\030\007 \001(\005B\t\n\007"
+    "content", 2327);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -2765,6 +2767,7 @@ void Request_ModuleList::Swap(Request_ModuleList* other) {
 
 #ifndef _MSC_VER
 const int Request_Profiling::kIdFieldNumber;
+const int Request_Profiling::kResetFieldNumber;
 #endif  // !_MSC_VER
 
 Request_Profiling::Request_Profiling()
@@ -2787,6 +2790,7 @@ void Request_Profiling::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  reset_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2825,10 +2829,13 @@ Request_Profiling* Request_Profiling::New() const {
 }
 
 void Request_Profiling::Clear() {
-  if (has_id()) {
-    if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      id_->clear();
+  if (_has_bits_[0 / 32] & 3) {
+    if (has_id()) {
+      if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        id_->clear();
+      }
     }
+    reset_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2853,6 +2860,21 @@ bool Request_Profiling::MergePartialFromCodedStream(
             this->id().data(), this->id().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
             "id");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_reset;
+        break;
+      }
+
+      // optional bool reset = 2 [default = false];
+      case 2: {
+        if (tag == 16) {
+         parse_reset:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &reset_)));
+          set_has_reset();
         } else {
           goto handle_unusual;
         }
@@ -2895,6 +2917,11 @@ void Request_Profiling::SerializeWithCachedSizes(
       1, this->id(), output);
   }
 
+  // optional bool reset = 2 [default = false];
+  if (has_reset()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->reset(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2916,6 +2943,11 @@ void Request_Profiling::SerializeWithCachedSizes(
         1, this->id(), target);
   }
 
+  // optional bool reset = 2 [default = false];
+  if (has_reset()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->reset(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2933,6 +2965,11 @@ int Request_Profiling::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->id());
+    }
+
+    // optional bool reset = 2 [default = false];
+    if (has_reset()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -2965,6 +3002,9 @@ void Request_Profiling::MergeFrom(const Request_Profiling& from) {
     if (from.has_id()) {
       set_id(from.id());
     }
+    if (from.has_reset()) {
+      set_reset(from.reset());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2989,6 +3029,7 @@ bool Request_Profiling::IsInitialized() const {
 void Request_Profiling::Swap(Request_Profiling* other) {
   if (other != this) {
     std::swap(id_, other->id_);
+    std::swap(reset_, other->reset_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
