@@ -43,6 +43,7 @@ void Profiler::addMeasurement(const Response::LogEvent &event) {
                 lms::Time end = lms::Time::fromMicros(event.timestamp());
                 auto &trace = measurements[event.tag()];
                 trace.update((end - begin).micros());
+                beginTimes.erase(it);
             }
         }
     }
@@ -57,6 +58,21 @@ void Profiler::getOverview(Response::ProfilingSummary *summary) const {
         trace->set_min(pair.second.min());
         trace->set_max(pair.second.max());
         trace->set_std(pair.second.std());
+        // add beginTimes
+        auto it = beginTimes.find(pair.first);
+        if(it != beginTimes.end()) {
+            trace->set_running_since((lms::Time::now() - it->second).micros());
+        }
+    }
+    // add all beginTimes that are not already in measurements
+    for(const auto &pair : beginTimes) {
+        auto it = measurements.find(pair.first);
+        if(it == measurements.end()) {
+            Response::ProfilingSummary::Trace *trace = summary->add_traces();
+            trace->set_name(pair.first);
+            trace->set_count(0);
+            trace->set_running_since((lms::Time::now() - pair.second).micros());
+        }
     }
 }
 

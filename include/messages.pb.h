@@ -436,7 +436,7 @@ class Request_Run : public ::google::protobuf::Message {
   inline ::lms::Response_LogEvent_Level log_level() const;
   inline void set_log_level(::lms::Response_LogEvent_Level value);
 
-  // optional bool production = 8;
+  // optional bool production = 8 [default = false];
   inline bool has_production() const;
   inline void clear_production();
   static const int kProductionFieldNumber = 8;
@@ -2276,6 +2276,13 @@ class Response_ProfilingSummary_Trace : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 min() const;
   inline void set_min(::google::protobuf::int32 value);
 
+  // optional int32 running_since = 7;
+  inline bool has_running_since() const;
+  inline void clear_running_since();
+  static const int kRunningSinceFieldNumber = 7;
+  inline ::google::protobuf::int32 running_since() const;
+  inline void set_running_since(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:lms.Response.ProfilingSummary.Trace)
  private:
   inline void set_has_name();
@@ -2290,6 +2297,8 @@ class Response_ProfilingSummary_Trace : public ::google::protobuf::Message {
   inline void clear_has_count();
   inline void set_has_min();
   inline void clear_has_min();
+  inline void set_has_running_since();
+  inline void clear_has_running_since();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -2301,6 +2310,7 @@ class Response_ProfilingSummary_Trace : public ::google::protobuf::Message {
   ::google::protobuf::int32 max_;
   ::google::protobuf::int32 count_;
   ::google::protobuf::int32 min_;
+  ::google::protobuf::int32 running_since_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -2853,7 +2863,7 @@ inline void Request_Run::set_log_level(::lms::Response_LogEvent_Level value) {
   // @@protoc_insertion_point(field_set:lms.Request.Run.log_level)
 }
 
-// optional bool production = 8;
+// optional bool production = 8 [default = false];
 inline bool Request_Run::has_production() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -4720,6 +4730,30 @@ inline void Response_ProfilingSummary_Trace::set_min(::google::protobuf::int32 v
   set_has_min();
   min_ = value;
   // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.min)
+}
+
+// optional int32 running_since = 7;
+inline bool Response_ProfilingSummary_Trace::has_running_since() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Response_ProfilingSummary_Trace::set_has_running_since() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Response_ProfilingSummary_Trace::clear_has_running_since() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Response_ProfilingSummary_Trace::clear_running_since() {
+  running_since_ = 0;
+  clear_has_running_since();
+}
+inline ::google::protobuf::int32 Response_ProfilingSummary_Trace::running_since() const {
+  // @@protoc_insertion_point(field_get:lms.Response.ProfilingSummary.Trace.running_since)
+  return running_since_;
+}
+inline void Response_ProfilingSummary_Trace::set_running_since(::google::protobuf::int32 value) {
+  set_has_running_since();
+  running_since_ = value;
+  // @@protoc_insertion_point(field_set:lms.Response.ProfilingSummary.Trace.running_since)
 }
 
 // -------------------------------------------------------------------

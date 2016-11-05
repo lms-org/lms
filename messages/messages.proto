@@ -118,6 +118,7 @@ message Response {
             optional int32 max = 4;
             optional int32 count = 5;
             optional int32 min = 6;
+            optional int32 running_since = 7; // not running if not set
         }
         
         repeated Trace traces = 1;
