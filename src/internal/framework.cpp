@@ -182,7 +182,7 @@ bool Framework::cycle() {
     executionManager().validate(modules);
     logger.time("cycle");
     m_executionManager.loop();
-    logger.timeEnd("cylce");
+    logger.timeEnd("cycle");
     return true;
 }
 
