@@ -455,6 +455,30 @@ class Request_Run : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
+  // optional string load_path = 10;
+  inline bool has_load_path() const;
+  inline void clear_load_path();
+  static const int kLoadPathFieldNumber = 10;
+  inline const ::std::string& load_path() const;
+  inline void set_load_path(const ::std::string& value);
+  inline void set_load_path(const char* value);
+  inline void set_load_path(const char* value, size_t size);
+  inline ::std::string* mutable_load_path();
+  inline ::std::string* release_load_path();
+  inline void set_allocated_load_path(::std::string* load_path);
+
+  // optional string save_path = 11;
+  inline bool has_save_path() const;
+  inline void clear_save_path();
+  static const int kSavePathFieldNumber = 11;
+  inline const ::std::string& save_path() const;
+  inline void set_save_path(const ::std::string& value);
+  inline void set_save_path(const char* value);
+  inline void set_save_path(const char* value, size_t size);
+  inline ::std::string* mutable_save_path();
+  inline ::std::string* release_save_path();
+  inline void set_allocated_save_path(::std::string* save_path);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
@@ -471,6 +495,10 @@ class Request_Run : public ::google::protobuf::Message {
   inline void clear_has_production();
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_load_path();
+  inline void clear_has_load_path();
+  inline void set_has_save_path();
+  inline void clear_has_save_path();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -485,6 +513,8 @@ class Request_Run : public ::google::protobuf::Message {
   bool production_;
   int log_level_;
   ::std::string* name_;
+  ::std::string* load_path_;
+  ::std::string* save_path_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -3001,6 +3031,158 @@ inline void Request_Run::set_allocated_name(::std::string* name) {
     name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:lms.Request.Run.name)
+}
+
+// optional string load_path = 10;
+inline bool Request_Run::has_load_path() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Request_Run::set_has_load_path() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Request_Run::clear_has_load_path() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Request_Run::clear_load_path() {
+  if (load_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    load_path_->clear();
+  }
+  clear_has_load_path();
+}
+inline const ::std::string& Request_Run::load_path() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.load_path)
+  return *load_path_;
+}
+inline void Request_Run::set_load_path(const ::std::string& value) {
+  set_has_load_path();
+  if (load_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    load_path_ = new ::std::string;
+  }
+  load_path_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Run.load_path)
+}
+inline void Request_Run::set_load_path(const char* value) {
+  set_has_load_path();
+  if (load_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    load_path_ = new ::std::string;
+  }
+  load_path_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Run.load_path)
+}
+inline void Request_Run::set_load_path(const char* value, size_t size) {
+  set_has_load_path();
+  if (load_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    load_path_ = new ::std::string;
+  }
+  load_path_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Run.load_path)
+}
+inline ::std::string* Request_Run::mutable_load_path() {
+  set_has_load_path();
+  if (load_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    load_path_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Run.load_path)
+  return load_path_;
+}
+inline ::std::string* Request_Run::release_load_path() {
+  clear_has_load_path();
+  if (load_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = load_path_;
+    load_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Run::set_allocated_load_path(::std::string* load_path) {
+  if (load_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete load_path_;
+  }
+  if (load_path) {
+    set_has_load_path();
+    load_path_ = load_path;
+  } else {
+    clear_has_load_path();
+    load_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Run.load_path)
+}
+
+// optional string save_path = 11;
+inline bool Request_Run::has_save_path() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void Request_Run::set_has_save_path() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void Request_Run::clear_has_save_path() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void Request_Run::clear_save_path() {
+  if (save_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    save_path_->clear();
+  }
+  clear_has_save_path();
+}
+inline const ::std::string& Request_Run::save_path() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.save_path)
+  return *save_path_;
+}
+inline void Request_Run::set_save_path(const ::std::string& value) {
+  set_has_save_path();
+  if (save_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    save_path_ = new ::std::string;
+  }
+  save_path_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Run.save_path)
+}
+inline void Request_Run::set_save_path(const char* value) {
+  set_has_save_path();
+  if (save_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    save_path_ = new ::std::string;
+  }
+  save_path_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Run.save_path)
+}
+inline void Request_Run::set_save_path(const char* value, size_t size) {
+  set_has_save_path();
+  if (save_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    save_path_ = new ::std::string;
+  }
+  save_path_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Run.save_path)
+}
+inline ::std::string* Request_Run::mutable_save_path() {
+  set_has_save_path();
+  if (save_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    save_path_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Run.save_path)
+  return save_path_;
+}
+inline ::std::string* Request_Run::release_save_path() {
+  clear_has_save_path();
+  if (save_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = save_path_;
+    save_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Run::set_allocated_save_path(::std::string* save_path) {
+  if (save_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete save_path_;
+  }
+  if (save_path) {
+    set_has_save_path();
+    save_path_ = save_path;
+  } else {
+    clear_has_save_path();
+    save_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Run.save_path)
 }
 
 // -------------------------------------------------------------------

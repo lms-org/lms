@@ -42,6 +42,9 @@ public:
     void addSearchPath(const std::string &path);
     void addFlag(const std::string &flag);
 
+    void enableLoad(const std::string &path);
+    void enableSave(const std::string &path);
+
     std::string loadLogObject(std::string const &name, bool isDir);
     std::string saveLogObject(std::string const &name, bool isDir);
     bool isEnableLoad() const;
@@ -89,6 +92,8 @@ private:
     static constexpr std::uint32_t MODE = 0775;
     std::string m_loadLogPath;
     std::string m_saveLogPath;
+    bool m_isEnableLoad = false;
+    bool m_isEnableSave = false;
 };
 
 } // namespace internal

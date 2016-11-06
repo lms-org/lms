@@ -14,6 +14,8 @@ message Request {
         optional Response.LogEvent.Level log_level = 7 [default = ALL];
         optional bool production = 8 [default = false];
         optional string name = 9;
+        optional string load_path = 10;
+        optional string save_path = 11;
 	}
 	message ListProcesses {}
 	message Attach {

@@ -230,9 +230,19 @@ std::string Framework::saveLogObject(std::string const &name, bool isDir) {
     return isDir ? logobj + "/" : logobj;
 }
 
-bool Framework::isEnableLoad() const { return false; /* TODO */ }
+void Framework::enableLoad(const std::string &path) {
+    m_isEnableLoad = true;
+    m_loadLogPath = path;
+}
 
-bool Framework::isEnableSave() const { return false; /* TODO */ }
+void Framework::enableSave(const std::string &path) {
+    m_isEnableSave = true;
+    m_saveLogPath = path;
+}
+
+bool Framework::isEnableLoad() const { return m_isEnableLoad; }
+
+bool Framework::isEnableSave() const { return m_isEnableSave; }
 
 void Framework::addFlag(const std::string &flag) {
     flags.push_back(flag);

@@ -499,6 +499,12 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         for(int i = 0; i < options.flags_size(); i++) {
             fw.addFlag(options.flags(i));
         }
+        if(options.has_load_path()) {
+            fw.enableLoad(options.load_path());
+        }
+        if(options.has_save_path()) {
+            fw.enableSave(options.save_path());
+        }
 
         SignalHandler::getInstance().addListener(SIGSEGV, &fw);
         SignalHandler::getInstance().addListener(SIGINT, &fw);
@@ -655,6 +661,14 @@ void connectToMaster(int argc, char *argv[]) {
             TCLAP::ValueArg<std::string> nameArg(
                 "", "name", "Custom runtime name",
                 false, "", "NAME", cmd);
+            TCLAP::ValueArg<std::string> enableSaveArg(
+                "", "enable-save",
+                "Enable all saving modules and mark the save folder", false, "", "tag",
+                cmd);
+            TCLAP::ValueArg<std::string> enableLoadArg(
+                "", "enable-load",
+                "Enable all loading modules and set a default load path", false, "",
+                "path", cmd);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -675,6 +689,18 @@ void connectToMaster(int argc, char *argv[]) {
             logging::Level logLevel = logging::Level::ALL;
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 run->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
+            }
+            if(enableSaveArg.isSet()) {
+                std::string path = std::string("/tmp/lmslogs-") + enableSaveArg.getValue();
+                ::mkdir(path.c_str(), 0775);
+                run->set_save_path(path);
+            }
+            if(enableLoadArg.isSet()) {
+                std::string path = enableLoadArg.getValue();
+                if(! isAbsolute(path)) {
+                    path = std::string("/tmp/lmslogs-") + path;
+                }
+                run->set_load_path(path);
             }
 
             char *lms_path = std::getenv("LMS_PATH");
