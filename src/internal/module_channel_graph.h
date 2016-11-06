@@ -51,6 +51,18 @@ public:
         return false;
     }
 
+    bool hasReaders(const std::string &channel) const {
+        auto it = m_data.find(channel);
+        if(it != m_data.end()) {
+            for(const auto &access : it->second) {
+                if(access.permission == Permission::READ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     void clear() { m_data.clear(); }
 
     DAG<T> generateDAG() const {

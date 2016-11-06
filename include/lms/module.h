@@ -309,6 +309,13 @@ protected:
     }
 
     /**
+     * @brief Check if the channel exists and there is atleast module reading from it
+     * @param channelName channel's name
+     * @return true if there is one reader of this channel
+     */
+    bool isChannelInUse(const std::string &channelName) const;
+
+    /**
      * @brief Pause a running runtime or do nothing if already pausing.
      *
      * @return true if pausing was successful, false if runtime was not found

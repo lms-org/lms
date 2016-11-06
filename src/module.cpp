@@ -99,6 +99,11 @@ void Module::gainWriteAccess(const std::string &channelName) {
     dfunc()->m_fw->executionManager().invalidate();
 }
 
+bool Module::isChannelInUse(const std::string &channelName) const {
+    auto mapped = dfunc()->m_info.mapChannel(channelName);
+    return dfunc()->m_fw->executionManager().getModuleChannelGraph().hasReaders(mapped.first);
+}
+
 Messaging* Module::messaging() const {
     LMS_EXCEPTION("Messaging is currently not implemented"); // TODO
 }
