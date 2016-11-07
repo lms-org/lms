@@ -196,7 +196,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ListClients));
   Request_Run_descriptor_ = Request_descriptor_->nested_type(3);
-  static const int Request_Run_offsets_[11] = {
+  static const int Request_Run_offsets_[12] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, config_file_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, include_paths_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, flags_),
@@ -208,6 +208,7 @@ void protobuf_AssignDesc_messages_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, load_path_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, save_path_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Run, num_threads_),
   };
   Request_Run_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -656,7 +657,7 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\003lms\"\255\010\n\007Request\022!\n\004inf"
+    "\n\016messages.proto\022\003lms\"\302\010\n\007Request\022!\n\004inf"
     "o\030\001 \001(\0132\021.lms.Request.InfoH\000\022)\n\010shutdown"
     "\030\002 \001(\0132\025.lms.Request.ShutdownH\000\0220\n\014list_"
     "clients\030\003 \001(\0132\030.lms.Request.ListClientsH"
@@ -669,53 +670,54 @@ void protobuf_AddDesc_messages_2eproto() {
     "est.ProfilingH\000\022\?\n\021listen_broadcasts\030\n \001"
     "(\0132\".lms.Request.ListenBroadcastEventsH\000"
     "\022%\n\006detach\030\013 \001(\0132\023.lms.Request.DetachH\000\032"
-    "\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListClients\032\230\002\n\003R"
+    "\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListClients\032\255\002\n\003R"
     "un\022\023\n\013config_file\030\001 \001(\t\022\025\n\rinclude_paths"
     "\030\002 \003(\t\022\r\n\005flags\030\003 \003(\t\022\r\n\005debug\030\004 \001(\010\022\027\n\010"
     "detached\030\005 \001(\010:\005false\022)\n\032shutdown_runtim"
     "e_on_detach\030\006 \001(\010:\005false\0224\n\tlog_level\030\007 "
     "\001(\0162\034.lms.Response.LogEvent.Level:\003ALL\022\031"
     "\n\nproduction\030\010 \001(\010:\005false\022\014\n\004name\030\t \001(\t\022"
-    "\021\n\tload_path\030\n \001(\t\022\021\n\tsave_path\030\013 \001(\t\032\017\n"
-    "\rListProcesses\032L\n\006Attach\022\014\n\004name\030\001 \001(\t\0224"
-    "\n\tlog_level\030\002 \001(\0162\034.lms.Response.LogEven"
-    "t.Level:\003ALL\032\"\n\004Stop\022\014\n\004name\030\001 \001(\t\022\014\n\004ki"
-    "ll\030\002 \001(\010\032\014\n\nModuleList\032/\n\tProfiling\022\014\n\004n"
-    "ame\030\001 \001(\t\022\024\n\005reset\030\002 \001(\010:\005false\032\'\n\025Liste"
-    "nBroadcastEvents\022\016\n\006enable\030\001 \001(\010\032\010\n\006Deta"
-    "chB\t\n\007content\"\227\n\n\010Response\022\"\n\004info\030\001 \001(\013"
-    "2\022.lms.Response.InfoH\000\022/\n\013client_list\030\002 "
-    "\001(\0132\030.lms.Response.ClientListH\000\0221\n\014proce"
-    "ss_list\030\003 \001(\0132\031.lms.Response.ProcessList"
-    "H\000\0227\n\013module_list\030\004 \001(\0132 .lms.Response.M"
-    "oduleListResponseH\000\022+\n\tlog_event\030\005 \001(\0132\026"
-    ".lms.Response.LogEventH\000\022;\n\021profiling_su"
-    "mmary\030\006 \001(\0132\036.lms.Response.ProfilingSumm"
-    "aryH\000\032$\n\004Info\022\017\n\007version\030\001 \001(\005\022\013\n\003pid\030\002 "
-    "\001(\005\032b\n\nClientList\0220\n\007clients\030\001 \003(\0132\037.lms"
-    ".Response.ClientList.Client\032\"\n\006Client\022\n\n"
-    "\002fd\030\001 \001(\005\022\014\n\004peer\030\002 \001(\t\032~\n\013ProcessList\0224"
-    "\n\tprocesses\030\001 \003(\0132!.lms.Response.Process"
-    "List.Process\0329\n\007Process\022\013\n\003pid\030\001 \001(\005\022\023\n\013"
-    "config_file\030\002 \001(\t\022\014\n\004name\030\003 \001(\t\032\267\002\n\022Modu"
-    "leListResponse\022:\n\010channels\030\001 \003(\0132(.lms.R"
-    "esponse.ModuleListResponse.Channel\032k\n\006Ac"
-    "cess\022\016\n\006module\030\001 \001(\t\022\?\n\npermission\030\002 \001(\016"
-    "2+.lms.Response.ModuleListResponse.Permi"
-    "ssion\022\020\n\010priority\030\003 \001(\005\032U\n\007Channel\022\014\n\004na"
-    "me\030\001 \001(\t\022<\n\013access_list\030\002 \003(\0132\'.lms.Resp"
-    "onse.ModuleListResponse.Access\"!\n\nPermis"
-    "sion\022\010\n\004READ\020\001\022\t\n\005WRITE\020\002\032\324\001\n\010LogEvent\022+"
-    "\n\005level\030\001 \001(\0162\034.lms.Response.LogEvent.Le"
-    "vel\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t\022\032\n\013close_"
-    "after\030\004 \001(\010:\005false\022\021\n\ttimestamp\030\005 \001(\003\"Q\n"
-    "\005Level\022\007\n\003ALL\020\000\022\013\n\007PROFILE\020\n\022\t\n\005DEBUG\020\024\022"
-    "\010\n\004INFO\020\036\022\010\n\004WARN\020(\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001"
-    "\032\271\001\n\020ProfilingSummary\0224\n\006traces\030\001 \003(\0132$."
-    "lms.Response.ProfilingSummary.Trace\032o\n\005T"
-    "race\022\014\n\004name\030\001 \001(\t\022\013\n\003avg\030\002 \001(\005\022\013\n\003std\030\003"
-    " \001(\005\022\013\n\003max\030\004 \001(\005\022\r\n\005count\030\005 \001(\005\022\013\n\003min\030"
-    "\006 \001(\005\022\025\n\rrunning_since\030\007 \001(\005B\t\n\007content", 2399);
+    "\021\n\tload_path\030\n \001(\t\022\021\n\tsave_path\030\013 \001(\t\022\023\n"
+    "\013num_threads\030\014 \001(\005\032\017\n\rListProcesses\032L\n\006A"
+    "ttach\022\014\n\004name\030\001 \001(\t\0224\n\tlog_level\030\002 \001(\0162\034"
+    ".lms.Response.LogEvent.Level:\003ALL\032\"\n\004Sto"
+    "p\022\014\n\004name\030\001 \001(\t\022\014\n\004kill\030\002 \001(\010\032\014\n\nModuleL"
+    "ist\032/\n\tProfiling\022\014\n\004name\030\001 \001(\t\022\024\n\005reset\030"
+    "\002 \001(\010:\005false\032\'\n\025ListenBroadcastEvents\022\016\n"
+    "\006enable\030\001 \001(\010\032\010\n\006DetachB\t\n\007content\"\227\n\n\010R"
+    "esponse\022\"\n\004info\030\001 \001(\0132\022.lms.Response.Inf"
+    "oH\000\022/\n\013client_list\030\002 \001(\0132\030.lms.Response."
+    "ClientListH\000\0221\n\014process_list\030\003 \001(\0132\031.lms"
+    ".Response.ProcessListH\000\0227\n\013module_list\030\004"
+    " \001(\0132 .lms.Response.ModuleListResponseH\000"
+    "\022+\n\tlog_event\030\005 \001(\0132\026.lms.Response.LogEv"
+    "entH\000\022;\n\021profiling_summary\030\006 \001(\0132\036.lms.R"
+    "esponse.ProfilingSummaryH\000\032$\n\004Info\022\017\n\007ve"
+    "rsion\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005\032b\n\nClientList\0220"
+    "\n\007clients\030\001 \003(\0132\037.lms.Response.ClientLis"
+    "t.Client\032\"\n\006Client\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030\002"
+    " \001(\t\032~\n\013ProcessList\0224\n\tprocesses\030\001 \003(\0132!"
+    ".lms.Response.ProcessList.Process\0329\n\007Pro"
+    "cess\022\013\n\003pid\030\001 \001(\005\022\023\n\013config_file\030\002 \001(\t\022\014"
+    "\n\004name\030\003 \001(\t\032\267\002\n\022ModuleListResponse\022:\n\010c"
+    "hannels\030\001 \003(\0132(.lms.Response.ModuleListR"
+    "esponse.Channel\032k\n\006Access\022\016\n\006module\030\001 \001("
+    "\t\022\?\n\npermission\030\002 \001(\0162+.lms.Response.Mod"
+    "uleListResponse.Permission\022\020\n\010priority\030\003"
+    " \001(\005\032U\n\007Channel\022\014\n\004name\030\001 \001(\t\022<\n\013access_"
+    "list\030\002 \003(\0132\'.lms.Response.ModuleListResp"
+    "onse.Access\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005W"
+    "RITE\020\002\032\324\001\n\010LogEvent\022+\n\005level\030\001 \001(\0162\034.lms"
+    ".Response.LogEvent.Level\022\013\n\003tag\030\002 \001(\t\022\014\n"
+    "\004text\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005false\022"
+    "\021\n\ttimestamp\030\005 \001(\003\"Q\n\005Level\022\007\n\003ALL\020\000\022\013\n\007"
+    "PROFILE\020\n\022\t\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004WARN\020("
+    "\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001\032\271\001\n\020ProfilingSumma"
+    "ry\0224\n\006traces\030\001 \003(\0132$.lms.Response.Profil"
+    "ingSummary.Trace\032o\n\005Trace\022\014\n\004name\030\001 \001(\t\022"
+    "\013\n\003avg\030\002 \001(\005\022\013\n\003std\030\003 \001(\005\022\013\n\003max\030\004 \001(\005\022\r"
+    "\n\005count\030\005 \001(\005\022\013\n\003min\030\006 \001(\005\022\025\n\rrunning_si"
+    "nce\030\007 \001(\005B\t\n\007content", 2420);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -1314,6 +1316,7 @@ const int Request_Run::kProductionFieldNumber;
 const int Request_Run::kNameFieldNumber;
 const int Request_Run::kLoadPathFieldNumber;
 const int Request_Run::kSavePathFieldNumber;
+const int Request_Run::kNumThreadsFieldNumber;
 #endif  // !_MSC_VER
 
 Request_Run::Request_Run()
@@ -1344,6 +1347,7 @@ void Request_Run::SharedCtor() {
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   load_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   save_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  num_threads_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1409,7 +1413,7 @@ void Request_Run::Clear() {
       }
     }
   }
-  if (_has_bits_[8 / 32] & 1792) {
+  if (_has_bits_[8 / 32] & 3840) {
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
@@ -1425,6 +1429,7 @@ void Request_Run::Clear() {
         save_path_->clear();
       }
     }
+    num_threads_ = 0;
   }
 
 #undef OFFSET_OF_FIELD_
@@ -1627,6 +1632,21 @@ bool Request_Run::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(96)) goto parse_num_threads;
+        break;
+      }
+
+      // optional int32 num_threads = 12;
+      case 12: {
+        if (tag == 96) {
+         parse_num_threads:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &num_threads_)));
+          set_has_num_threads();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1742,6 +1762,11 @@ void Request_Run::SerializeWithCachedSizes(
       11, this->save_path(), output);
   }
 
+  // optional int32 num_threads = 12;
+  if (has_num_threads()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(12, this->num_threads(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1842,6 +1867,11 @@ void Request_Run::SerializeWithCachedSizes(
         11, this->save_path(), target);
   }
 
+  // optional int32 num_threads = 12;
+  if (has_num_threads()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(12, this->num_threads(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1908,6 +1938,13 @@ int Request_Run::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->save_path());
+    }
+
+    // optional int32 num_threads = 12;
+    if (has_num_threads()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->num_threads());
     }
 
   }
@@ -1982,6 +2019,9 @@ void Request_Run::MergeFrom(const Request_Run& from) {
     if (from.has_save_path()) {
       set_save_path(from.save_path());
     }
+    if (from.has_num_threads()) {
+      set_num_threads(from.num_threads());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2016,6 +2056,7 @@ void Request_Run::Swap(Request_Run* other) {
     std::swap(name_, other->name_);
     std::swap(load_path_, other->load_path_);
     std::swap(save_path_, other->save_path_);
+    std::swap(num_threads_, other->num_threads_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

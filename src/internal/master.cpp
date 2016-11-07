@@ -505,6 +505,10 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         if(options.has_save_path()) {
             fw.enableSave(options.save_path());
         }
+        if(options.has_num_threads()) {
+            fw.executionManager().enabledMultithreading(true);
+            fw.executionManager().numThreads(options.num_threads());
+        }
 
         SignalHandler::getInstance().addListener(SIGSEGV, &fw);
         SignalHandler::getInstance().addListener(SIGINT, &fw);
@@ -669,6 +673,9 @@ void connectToMaster(int argc, char *argv[]) {
                 "", "enable-load",
                 "Enable all loading modules and set a default load path", false, "",
                 "path", cmd);
+            TCLAP::ValueArg<int> multithreadingArg(
+                "j", "", "Enable multithreading and set number of threads",
+                false, 4, "NUM", cmd);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -701,6 +708,9 @@ void connectToMaster(int argc, char *argv[]) {
                     path = std::string("/tmp/lmslogs-") + path;
                 }
                 run->set_load_path(path);
+            }
+            if(multithreadingArg.isSet()) {
+                run->set_num_threads(multithreadingArg.getValue());
             }
 
             char *lms_path = std::getenv("LMS_PATH");

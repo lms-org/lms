@@ -16,6 +16,7 @@ message Request {
         optional string name = 9;
         optional string load_path = 10;
         optional string save_path = 11;
+        optional int32 num_threads = 12;
 	}
 	message ListProcesses {}
 	message Attach {

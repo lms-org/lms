@@ -479,6 +479,13 @@ class Request_Run : public ::google::protobuf::Message {
   inline ::std::string* release_save_path();
   inline void set_allocated_save_path(::std::string* save_path);
 
+  // optional int32 num_threads = 12;
+  inline bool has_num_threads() const;
+  inline void clear_num_threads();
+  static const int kNumThreadsFieldNumber = 12;
+  inline ::google::protobuf::int32 num_threads() const;
+  inline void set_num_threads(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
@@ -499,6 +506,8 @@ class Request_Run : public ::google::protobuf::Message {
   inline void clear_has_load_path();
   inline void set_has_save_path();
   inline void clear_has_save_path();
+  inline void set_has_num_threads();
+  inline void clear_has_num_threads();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -515,6 +524,7 @@ class Request_Run : public ::google::protobuf::Message {
   ::std::string* name_;
   ::std::string* load_path_;
   ::std::string* save_path_;
+  ::google::protobuf::int32 num_threads_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -3183,6 +3193,30 @@ inline void Request_Run::set_allocated_save_path(::std::string* save_path) {
     save_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:lms.Request.Run.save_path)
+}
+
+// optional int32 num_threads = 12;
+inline bool Request_Run::has_num_threads() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void Request_Run::set_has_num_threads() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void Request_Run::clear_has_num_threads() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void Request_Run::clear_num_threads() {
+  num_threads_ = 0;
+  clear_has_num_threads();
+}
+inline ::google::protobuf::int32 Request_Run::num_threads() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.num_threads)
+  return num_threads_;
+}
+inline void Request_Run::set_num_threads(::google::protobuf::int32 value) {
+  set_has_num_threads();
+  num_threads_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Run.num_threads)
 }
 
 // -------------------------------------------------------------------
