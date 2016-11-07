@@ -99,6 +99,8 @@ public:
 
     ModuleChannelGraph<Module *> &getModuleChannelGraph();
 
+    const DAG<Module *> &getDAG();
+
 private:
     logging::Logger logger;
 

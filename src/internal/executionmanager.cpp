@@ -216,6 +216,10 @@ void ExecutionManager::validate(const std::map<std::string, std::shared_ptr<Modu
         if (!success) {
             logger.error("validate") << "Module graph has circle";
         }
+
+        if(m_runtime.isDebug()) {
+            m_runtime.printDAG();
+        }
     }
 }
 
@@ -266,6 +270,10 @@ WatchDog &ExecutionManager::dog() { return m_dog; }
 
 ModuleChannelGraph<Module *> &ExecutionManager::getModuleChannelGraph() {
     return moduleChannelGraph;
+}
+
+const DAG<Module *> &ExecutionManager::getDAG() {
+    return cycleList;
 }
 
 } // namespace internal

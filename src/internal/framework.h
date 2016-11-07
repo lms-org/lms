@@ -64,9 +64,11 @@ public:
 
     virtual void signal(int signal);
 
+    void printDAG();
 private:
     bool updateSystem(const RuntimeInfo &info);
     void printOverview();
+    void printModuleChannelGraph();
 
     ExecutionManager m_executionManager;
     DataManager m_dataManager;

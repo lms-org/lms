@@ -54,6 +54,7 @@ void Framework::start() {
 
             if(isDebug()) {
                 printOverview();
+                printModuleChannelGraph();
             }
 
             for (auto file : parser.files()) {
@@ -273,6 +274,30 @@ void Framework::printOverview() {
     logger.info("overview") << "Services (" << services.size() << ")";
     for(const auto &service : services) {
         logger.info("overview") << "  " << service.first;
+    }
+}
+
+void Framework::printModuleChannelGraph() {
+    const auto &graph = m_executionManager.getModuleChannelGraph();
+    for(const auto &node : graph) {
+        logger.info("graph") << node.first;
+        for(const auto &access : node.second) {
+            logger.info("graph") << "  "
+                << access.module->getName()
+                << " " << static_cast<int>(access.permission)
+                << " " << access.priority;
+        }
+    }
+}
+
+void Framework::printDAG() {
+    const auto &dag = m_executionManager.getDAG();
+    for(const auto &node : dag) {
+        std::string dependencies;
+        for(const auto &dependency : node.second) {
+            dependencies += dependency->getName() + " ";
+        }
+        logger.info("dag") << node.first->getName() << " ( " << dependencies << ")";
     }
 }
 
