@@ -1,0 +1,26 @@
+<lms>
+    <module lib="lmscore" class="NumberGenerator" name="gen1">
+        <channelHint name="OUT" mapTo="FACTOR_1" />
+        <config>
+            <sleep>0</sleep>
+        </config>
+    </module>
+    <module lib="lmscore" class="NumberGenerator" name="gen2">
+        <channelHint name="OUT" mapTo="FACTOR_2" />
+        <config>
+            <sleep>0</sleep>
+        </config>
+    </module>
+    <module lib="lmscore" class="Multiply" name="mult">
+        <config>
+            <sleep>0</sleep>
+        </config>
+    </module>
+    <module lib="lmscore" class="Display" name="display">
+        <channelHint name="IN" mapTo="PRODUCT" />
+        <config>
+            <sleep>1000000</sleep>
+        </config>
+    </module>
+</lms>
+
