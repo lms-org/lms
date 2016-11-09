@@ -11,6 +11,7 @@ namespace internal {
  */
 class NumberGenerator : public lms::Module {
 public:
+    ~NumberGenerator();
     bool init() override;
     bool cycle() override;
     void destroy() override;
@@ -21,6 +22,7 @@ private:
 
 class Multiply : public lms::Module {
 public:
+    ~Multiply();
     bool init() override;
     bool cycle() override;
     void destroy() override;
@@ -32,6 +34,7 @@ private:
 
 class Display : public lms::Module {
 public:
+    ~Display();
     bool init() override;
     bool cycle() override;
     void destroy() override;

@@ -68,6 +68,8 @@ void Framework::start() {
         firstRun = false;
     }
 
+    shutdown();
+
     logger.info() << "Stopped";
 }
 
@@ -151,7 +153,7 @@ bool Framework::updateSystem(const RuntimeInfo &info) {
     return true;
 }
 
-Framework::~Framework() {
+void Framework::shutdown() {
     // Shutdown services
     for (auto &service : services) {
         try {
@@ -171,6 +173,13 @@ Framework::~Framework() {
                            << " : " << ex.what();
         }
     }
+
+    services.clear();
+    modules.clear();
+}
+
+Framework::~Framework() {
+    shutdown();
 }
 
 bool Framework::cycle() {

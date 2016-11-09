@@ -22,6 +22,10 @@ void NumberGenerator::destroy() {
     logger.info() << "destroy()";
 }
 
+NumberGenerator::~NumberGenerator() {
+    logger.info() << "destructor";
+}
+
 bool Multiply::init() {
     factor1 = readChannel<int>("FACTOR_1");
     factor2 = readChannel<int>("FACTOR_2");
@@ -40,6 +44,10 @@ void Multiply::destroy() {
     logger.info() << "destroy()";
 }
 
+Multiply::~Multiply() {
+    logger.info() << "destructor";
+}
+
 bool Display::init() {
     in = readChannel<int>("IN");
     return true;
@@ -53,6 +61,10 @@ bool Display::cycle() {
 
 void Display::destroy() {
     logger.info() << "destroy()";
+}
+
+Display::~Display() {
+    logger.info() << "destructor";
 }
 
 }  // namespace internal

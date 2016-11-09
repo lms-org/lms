@@ -69,6 +69,7 @@ private:
     bool updateSystem(const RuntimeInfo &info);
     void printOverview();
     void printModuleChannelGraph();
+    void shutdown();
 
     ExecutionManager m_executionManager;
     DataManager m_dataManager;
