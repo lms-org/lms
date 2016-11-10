@@ -42,5 +42,11 @@ private:
     lms::ReadDataChannel<int> in;
 };
 
+class ExitAfter : public lms::Module {
+    bool init() override;
+    bool cycle() override;
+    void destroy() override;
+};
+
 }  // namespace internal
 }  // namespace lms

@@ -126,4 +126,8 @@ bool Module::resumeRuntime(std::string const &name, bool reset) {
     return false;
 }
 
+void Module::exitRuntime(int status) {
+    dfunc()->m_fw->stop();
+}
+
 }

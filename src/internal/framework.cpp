@@ -275,6 +275,10 @@ void Framework::signal(int signal) {
     }
 }
 
+void Framework::stop() {
+    m_running = false;
+}
+
 void Framework::printOverview() {
     logger.info("overview") << "Modules (" << modules.size() << ")";
     for(const auto &module : modules) {

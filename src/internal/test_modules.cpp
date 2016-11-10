@@ -67,6 +67,19 @@ Display::~Display() {
     logger.info() << "destructor";
 }
 
+bool ExitAfter::init() {
+    return true;
+}
+
+bool ExitAfter::cycle() {
+    if(cycleCounter() == config().get<int>("cycles", -1)) {
+        exitRuntime();
+    }
+    return true;
+}
+
+void ExitAfter::destroy() {}
+
 }  // namespace internal
 }  // namespace lms
 
@@ -75,4 +88,5 @@ LMS_EXPORT_BEGIN
 LMS_EXPORT_MODULE_NS(lms::internal, Multiply)
 LMS_EXPORT_MODULE_NS(lms::internal, NumberGenerator)
 LMS_EXPORT_MODULE_NS(lms::internal, Display)
+LMS_EXPORT_MODULE_NS(lms::internal, ExitAfter)
 LMS_EXPORT_END

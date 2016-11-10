@@ -334,6 +334,12 @@ protected:
      */
     bool resumeRuntime(std::string const &name, bool reset = false);
 
+    /**
+     * @brief Stop and shutdown runtime after the current cycle.
+     * @param status Return status to master server and to all attached clients.
+     */
+    void exitRuntime(int status = 0);
+
 private:
     std::shared_ptr<Service>
     _getService(std::string const &name);

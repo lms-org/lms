@@ -58,6 +58,7 @@ public:
     bool cycle();
 
     void start();
+    void stop();
 
     DataManager& dataManager();
     ExecutionManager &executionManager();
