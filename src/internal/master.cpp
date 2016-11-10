@@ -697,15 +697,18 @@ void connectToMaster(int argc, char *argv[]) {
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 run->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
             }
+            std::string basepath = lms::internal::homepath() + "/lmslogs";
             if(enableSaveArg.isSet()) {
-                std::string path = std::string("/tmp/lmslogs-") + enableSaveArg.getValue();
+                ::mkdir(basepath.c_str(), 0775);
+                std::string path = basepath + "/" + enableSaveArg.getValue();
                 ::mkdir(path.c_str(), 0775);
                 run->set_save_path(path);
             }
             if(enableLoadArg.isSet()) {
+                ::mkdir(basepath.c_str(), 0775);
                 std::string path = enableLoadArg.getValue();
                 if(! isAbsolute(path)) {
-                    path = std::string("/tmp/lmslogs-") + path;
+                    path = basepath + "/" + path;
                 }
                 run->set_load_path(path);
             }
