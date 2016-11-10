@@ -655,7 +655,7 @@ void connectToMaster(int argc, char *argv[]) {
                 "", "debug", "Make a ridiculous number of debug outputs", cmd, false);
             TCLAP::ValueArg<std::string> logArg(
                 "", "log", "Minimum logging level",
-                false, "ALL", &logConstraint, cmd);
+                false, "DEBUG", &logConstraint, cmd);
             TCLAP::SwitchArg detachSwitch(
                 "d", "detach", "Start runtime but do not show logging messages", cmd, false);
             TCLAP::SwitchArg shutdownOnDetachSwitch(
@@ -693,7 +693,7 @@ void connectToMaster(int argc, char *argv[]) {
             if(nameArg.isSet()) {
                 run->set_name(nameArg.getValue());
             }
-            logging::Level logLevel = logging::Level::ALL;
+            logging::Level logLevel = logging::Level::DEBUG;
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 run->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
             }
@@ -733,7 +733,7 @@ void connectToMaster(int argc, char *argv[]) {
                 "name", "Runtime name", false, "my_runtime", "NAME", cmd);
             TCLAP::ValueArg<std::string> logArg(
                 "", "log", "Minimum logging level",
-                false, "ALL", &logConstraint, cmd);
+                false, "DEBUG", &logConstraint, cmd);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Attach *attach = req.mutable_attach();
@@ -741,7 +741,7 @@ void connectToMaster(int argc, char *argv[]) {
             if(nameArg.isSet()) {
                 attach->set_name(nameArg.getValue());
             }
-            logging::Level logLevel = logging::Level::ALL;
+            logging::Level logLevel = logging::Level::DEBUG;
             if(logging::levelFromName(logArg.getValue(), logLevel)) {
                 attach->set_log_level(static_cast<lms::Response::LogEvent::Level>(logLevel));
             }
