@@ -32,9 +32,9 @@ struct RequestOneofInstance {
   const ::lms::Request_Attach* attach_;
   const ::lms::Request_Stop* stop_;
   const ::lms::Request_ModuleList* module_list_;
-  const ::lms::Request_Profiling* profiling_;
   const ::lms::Request_ListenBroadcastEvents* listen_broadcasts_;
   const ::lms::Request_Detach* detach_;
+  const ::lms::Request_Runtime* runtime_;
 }* Request_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* Request_Info_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -60,15 +60,25 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Request_ModuleList_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Request_ModuleList_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Request_Profiling_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  Request_Profiling_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Request_ListenBroadcastEvents_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Request_ListenBroadcastEvents_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Request_Detach_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Request_Detach_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Request_Runtime_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Request_Runtime_reflection_ = NULL;
+struct Request_RuntimeOneofInstance {
+  const ::lms::Request_Runtime_LogFilter* filter_;
+  const ::lms::Request_Runtime_Profiling* profiling_;
+}* Request_Runtime_default_oneof_instance_ = NULL;
+const ::google::protobuf::Descriptor* Request_Runtime_LogFilter_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Request_Runtime_LogFilter_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Request_Runtime_Profiling_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Request_Runtime_Profiling_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Response_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Response_reflection_ = NULL;
@@ -135,9 +145,9 @@ void protobuf_AssignDesc_messages_2eproto() {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, attach_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, stop_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, module_list_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, profiling_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, listen_broadcasts_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, detach_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_default_oneof_instance_, runtime_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, content_),
   };
   Request_reflection_ =
@@ -281,23 +291,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ModuleList));
-  Request_Profiling_descriptor_ = Request_descriptor_->nested_type(8);
-  static const int Request_Profiling_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Profiling, name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Profiling, reset_),
-  };
-  Request_Profiling_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      Request_Profiling_descriptor_,
-      Request_Profiling::default_instance_,
-      Request_Profiling_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Profiling, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Profiling, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Request_Profiling));
-  Request_ListenBroadcastEvents_descriptor_ = Request_descriptor_->nested_type(9);
+  Request_ListenBroadcastEvents_descriptor_ = Request_descriptor_->nested_type(8);
   static const int Request_ListenBroadcastEvents_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_ListenBroadcastEvents, enable_),
   };
@@ -312,7 +306,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_ListenBroadcastEvents));
-  Request_Detach_descriptor_ = Request_descriptor_->nested_type(10);
+  Request_Detach_descriptor_ = Request_descriptor_->nested_type(9);
   static const int Request_Detach_offsets_[1] = {
   };
   Request_Detach_reflection_ =
@@ -326,6 +320,56 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Request_Detach));
+  Request_Runtime_descriptor_ = Request_descriptor_->nested_type(10);
+  static const int Request_Runtime_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime, name_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_Runtime_default_oneof_instance_, filter_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Request_Runtime_default_oneof_instance_, profiling_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime, content_),
+  };
+  Request_Runtime_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Request_Runtime_descriptor_,
+      Request_Runtime::default_instance_,
+      Request_Runtime_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime, _unknown_fields_),
+      -1,
+      Request_Runtime_default_oneof_instance_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime, _oneof_case_[0]),
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Request_Runtime));
+  Request_Runtime_LogFilter_descriptor_ = Request_Runtime_descriptor_->nested_type(0);
+  static const int Request_Runtime_LogFilter_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime_LogFilter, log_level_),
+  };
+  Request_Runtime_LogFilter_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Request_Runtime_LogFilter_descriptor_,
+      Request_Runtime_LogFilter::default_instance_,
+      Request_Runtime_LogFilter_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime_LogFilter, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime_LogFilter, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Request_Runtime_LogFilter));
+  Request_Runtime_Profiling_descriptor_ = Request_Runtime_descriptor_->nested_type(1);
+  static const int Request_Runtime_Profiling_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime_Profiling, reset_),
+  };
+  Request_Runtime_Profiling_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Request_Runtime_Profiling_descriptor_,
+      Request_Runtime_Profiling::default_instance_,
+      Request_Runtime_Profiling_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime_Profiling, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request_Runtime_Profiling, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Request_Runtime_Profiling));
   Response_descriptor_ = file->message_type(1);
   static const int Response_offsets_[7] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Response_default_oneof_instance_, info_),
@@ -564,11 +608,15 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Request_ModuleList_descriptor_, &Request_ModuleList::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Request_Profiling_descriptor_, &Request_Profiling::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Request_ListenBroadcastEvents_descriptor_, &Request_ListenBroadcastEvents::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Request_Detach_descriptor_, &Request_Detach::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Request_Runtime_descriptor_, &Request_Runtime::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Request_Runtime_LogFilter_descriptor_, &Request_Runtime_LogFilter::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Request_Runtime_Profiling_descriptor_, &Request_Runtime_Profiling::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Response_descriptor_, &Response::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -617,12 +665,17 @@ void protobuf_ShutdownFile_messages_2eproto() {
   delete Request_Stop_reflection_;
   delete Request_ModuleList::default_instance_;
   delete Request_ModuleList_reflection_;
-  delete Request_Profiling::default_instance_;
-  delete Request_Profiling_reflection_;
   delete Request_ListenBroadcastEvents::default_instance_;
   delete Request_ListenBroadcastEvents_reflection_;
   delete Request_Detach::default_instance_;
   delete Request_Detach_reflection_;
+  delete Request_Runtime::default_instance_;
+  delete Request_Runtime_default_oneof_instance_;
+  delete Request_Runtime_reflection_;
+  delete Request_Runtime_LogFilter::default_instance_;
+  delete Request_Runtime_LogFilter_reflection_;
+  delete Request_Runtime_Profiling::default_instance_;
+  delete Request_Runtime_Profiling_reflection_;
   delete Response::default_instance_;
   delete Response_default_oneof_instance_;
   delete Response_reflection_;
@@ -657,7 +710,7 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\003lms\"\302\010\n\007Request\022!\n\004inf"
+    "\n\016messages.proto\022\003lms\"\377\t\n\007Request\022!\n\004inf"
     "o\030\001 \001(\0132\021.lms.Request.InfoH\000\022)\n\010shutdown"
     "\030\002 \001(\0132\025.lms.Request.ShutdownH\000\0220\n\014list_"
     "clients\030\003 \001(\0132\030.lms.Request.ListClientsH"
@@ -666,58 +719,63 @@ void protobuf_AddDesc_messages_2eproto() {
     "cessesH\000\022%\n\006attach\030\006 \001(\0132\023.lms.Request.A"
     "ttachH\000\022!\n\004stop\030\007 \001(\0132\021.lms.Request.Stop"
     "H\000\022.\n\013module_list\030\010 \001(\0132\027.lms.Request.Mo"
-    "duleListH\000\022+\n\tprofiling\030\t \001(\0132\026.lms.Requ"
-    "est.ProfilingH\000\022\?\n\021listen_broadcasts\030\n \001"
-    "(\0132\".lms.Request.ListenBroadcastEventsH\000"
-    "\022%\n\006detach\030\013 \001(\0132\023.lms.Request.DetachH\000\032"
-    "\006\n\004Info\032\n\n\010Shutdown\032\r\n\013ListClients\032\255\002\n\003R"
-    "un\022\023\n\013config_file\030\001 \001(\t\022\025\n\rinclude_paths"
-    "\030\002 \003(\t\022\r\n\005flags\030\003 \003(\t\022\r\n\005debug\030\004 \001(\010\022\027\n\010"
-    "detached\030\005 \001(\010:\005false\022)\n\032shutdown_runtim"
-    "e_on_detach\030\006 \001(\010:\005false\0224\n\tlog_level\030\007 "
-    "\001(\0162\034.lms.Response.LogEvent.Level:\003ALL\022\031"
-    "\n\nproduction\030\010 \001(\010:\005false\022\014\n\004name\030\t \001(\t\022"
-    "\021\n\tload_path\030\n \001(\t\022\021\n\tsave_path\030\013 \001(\t\022\023\n"
-    "\013num_threads\030\014 \001(\005\032\017\n\rListProcesses\032L\n\006A"
-    "ttach\022\014\n\004name\030\001 \001(\t\0224\n\tlog_level\030\002 \001(\0162\034"
-    ".lms.Response.LogEvent.Level:\003ALL\032\"\n\004Sto"
-    "p\022\014\n\004name\030\001 \001(\t\022\014\n\004kill\030\002 \001(\010\032\014\n\nModuleL"
-    "ist\032/\n\tProfiling\022\014\n\004name\030\001 \001(\t\022\024\n\005reset\030"
-    "\002 \001(\010:\005false\032\'\n\025ListenBroadcastEvents\022\016\n"
-    "\006enable\030\001 \001(\010\032\010\n\006DetachB\t\n\007content\"\227\n\n\010R"
-    "esponse\022\"\n\004info\030\001 \001(\0132\022.lms.Response.Inf"
-    "oH\000\022/\n\013client_list\030\002 \001(\0132\030.lms.Response."
-    "ClientListH\000\0221\n\014process_list\030\003 \001(\0132\031.lms"
-    ".Response.ProcessListH\000\0227\n\013module_list\030\004"
-    " \001(\0132 .lms.Response.ModuleListResponseH\000"
-    "\022+\n\tlog_event\030\005 \001(\0132\026.lms.Response.LogEv"
-    "entH\000\022;\n\021profiling_summary\030\006 \001(\0132\036.lms.R"
-    "esponse.ProfilingSummaryH\000\032$\n\004Info\022\017\n\007ve"
-    "rsion\030\001 \001(\005\022\013\n\003pid\030\002 \001(\005\032b\n\nClientList\0220"
-    "\n\007clients\030\001 \003(\0132\037.lms.Response.ClientLis"
-    "t.Client\032\"\n\006Client\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030\002"
-    " \001(\t\032~\n\013ProcessList\0224\n\tprocesses\030\001 \003(\0132!"
-    ".lms.Response.ProcessList.Process\0329\n\007Pro"
-    "cess\022\013\n\003pid\030\001 \001(\005\022\023\n\013config_file\030\002 \001(\t\022\014"
-    "\n\004name\030\003 \001(\t\032\267\002\n\022ModuleListResponse\022:\n\010c"
-    "hannels\030\001 \003(\0132(.lms.Response.ModuleListR"
-    "esponse.Channel\032k\n\006Access\022\016\n\006module\030\001 \001("
-    "\t\022\?\n\npermission\030\002 \001(\0162+.lms.Response.Mod"
-    "uleListResponse.Permission\022\020\n\010priority\030\003"
-    " \001(\005\032U\n\007Channel\022\014\n\004name\030\001 \001(\t\022<\n\013access_"
-    "list\030\002 \003(\0132\'.lms.Response.ModuleListResp"
-    "onse.Access\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005W"
-    "RITE\020\002\032\324\001\n\010LogEvent\022+\n\005level\030\001 \001(\0162\034.lms"
-    ".Response.LogEvent.Level\022\013\n\003tag\030\002 \001(\t\022\014\n"
-    "\004text\030\003 \001(\t\022\032\n\013close_after\030\004 \001(\010:\005false\022"
-    "\021\n\ttimestamp\030\005 \001(\003\"Q\n\005Level\022\007\n\003ALL\020\000\022\013\n\007"
-    "PROFILE\020\n\022\t\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004WARN\020("
-    "\022\t\n\005ERROR\0202\022\010\n\003OFF\020\377\001\032\271\001\n\020ProfilingSumma"
-    "ry\0224\n\006traces\030\001 \003(\0132$.lms.Response.Profil"
-    "ingSummary.Trace\032o\n\005Trace\022\014\n\004name\030\001 \001(\t\022"
-    "\013\n\003avg\030\002 \001(\005\022\013\n\003std\030\003 \001(\005\022\013\n\003max\030\004 \001(\005\022\r"
-    "\n\005count\030\005 \001(\005\022\013\n\003min\030\006 \001(\005\022\025\n\rrunning_si"
-    "nce\030\007 \001(\005B\t\n\007content", 2420);
+    "duleListH\000\022\?\n\021listen_broadcasts\030\n \001(\0132\"."
+    "lms.Request.ListenBroadcastEventsH\000\022%\n\006d"
+    "etach\030\013 \001(\0132\023.lms.Request.DetachH\000\022\'\n\007ru"
+    "ntime\030\014 \001(\0132\024.lms.Request.RuntimeH\000\032\006\n\004I"
+    "nfo\032\n\n\010Shutdown\032\r\n\013ListClients\032\255\002\n\003Run\022\023"
+    "\n\013config_file\030\001 \001(\t\022\025\n\rinclude_paths\030\002 \003"
+    "(\t\022\r\n\005flags\030\003 \003(\t\022\r\n\005debug\030\004 \001(\010\022\027\n\010deta"
+    "ched\030\005 \001(\010:\005false\022)\n\032shutdown_runtime_on"
+    "_detach\030\006 \001(\010:\005false\0224\n\tlog_level\030\007 \001(\0162"
+    "\034.lms.Response.LogEvent.Level:\003ALL\022\031\n\npr"
+    "oduction\030\010 \001(\010:\005false\022\014\n\004name\030\t \001(\t\022\021\n\tl"
+    "oad_path\030\n \001(\t\022\021\n\tsave_path\030\013 \001(\t\022\023\n\013num"
+    "_threads\030\014 \001(\005\032\017\n\rListProcesses\032L\n\006Attac"
+    "h\022\014\n\004name\030\001 \001(\t\0224\n\tlog_level\030\002 \001(\0162\034.lms"
+    ".Response.LogEvent.Level:\003ALL\032\"\n\004Stop\022\014\n"
+    "\004name\030\001 \001(\t\022\014\n\004kill\030\002 \001(\010\032\014\n\nModuleList\032"
+    "\'\n\025ListenBroadcastEvents\022\016\n\006enable\030\001 \001(\010"
+    "\032\010\n\006Detach\032\357\001\n\007Runtime\022\014\n\004name\030\001 \001(\t\0220\n\006"
+    "filter\030\002 \001(\0132\036.lms.Request.Runtime.LogFi"
+    "lterH\000\0223\n\tprofiling\030\003 \001(\0132\036.lms.Request."
+    "Runtime.ProfilingH\000\032A\n\tLogFilter\0224\n\tlog_"
+    "level\030\001 \001(\0162\034.lms.Response.LogEvent.Leve"
+    "l:\003ALL\032!\n\tProfiling\022\024\n\005reset\030\001 \001(\010:\005fals"
+    "eB\t\n\007contentB\t\n\007content\"\227\n\n\010Response\022\"\n\004"
+    "info\030\001 \001(\0132\022.lms.Response.InfoH\000\022/\n\013clie"
+    "nt_list\030\002 \001(\0132\030.lms.Response.ClientListH"
+    "\000\0221\n\014process_list\030\003 \001(\0132\031.lms.Response.P"
+    "rocessListH\000\0227\n\013module_list\030\004 \001(\0132 .lms."
+    "Response.ModuleListResponseH\000\022+\n\tlog_eve"
+    "nt\030\005 \001(\0132\026.lms.Response.LogEventH\000\022;\n\021pr"
+    "ofiling_summary\030\006 \001(\0132\036.lms.Response.Pro"
+    "filingSummaryH\000\032$\n\004Info\022\017\n\007version\030\001 \001(\005"
+    "\022\013\n\003pid\030\002 \001(\005\032b\n\nClientList\0220\n\007clients\030\001"
+    " \003(\0132\037.lms.Response.ClientList.Client\032\"\n"
+    "\006Client\022\n\n\002fd\030\001 \001(\005\022\014\n\004peer\030\002 \001(\t\032~\n\013Pro"
+    "cessList\0224\n\tprocesses\030\001 \003(\0132!.lms.Respon"
+    "se.ProcessList.Process\0329\n\007Process\022\013\n\003pid"
+    "\030\001 \001(\005\022\023\n\013config_file\030\002 \001(\t\022\014\n\004name\030\003 \001("
+    "\t\032\267\002\n\022ModuleListResponse\022:\n\010channels\030\001 \003"
+    "(\0132(.lms.Response.ModuleListResponse.Cha"
+    "nnel\032k\n\006Access\022\016\n\006module\030\001 \001(\t\022\?\n\npermis"
+    "sion\030\002 \001(\0162+.lms.Response.ModuleListResp"
+    "onse.Permission\022\020\n\010priority\030\003 \001(\005\032U\n\007Cha"
+    "nnel\022\014\n\004name\030\001 \001(\t\022<\n\013access_list\030\002 \003(\0132"
+    "\'.lms.Response.ModuleListResponse.Access"
+    "\"!\n\nPermission\022\010\n\004READ\020\001\022\t\n\005WRITE\020\002\032\324\001\n\010"
+    "LogEvent\022+\n\005level\030\001 \001(\0162\034.lms.Response.L"
+    "ogEvent.Level\022\013\n\003tag\030\002 \001(\t\022\014\n\004text\030\003 \001(\t"
+    "\022\032\n\013close_after\030\004 \001(\010:\005false\022\021\n\ttimestam"
+    "p\030\005 \001(\003\"Q\n\005Level\022\007\n\003ALL\020\000\022\013\n\007PROFILE\020\n\022\t"
+    "\n\005DEBUG\020\024\022\010\n\004INFO\020\036\022\010\n\004WARN\020(\022\t\n\005ERROR\0202"
+    "\022\010\n\003OFF\020\377\001\032\271\001\n\020ProfilingSummary\0224\n\006trace"
+    "s\030\001 \003(\0132$.lms.Response.ProfilingSummary."
+    "Trace\032o\n\005Trace\022\014\n\004name\030\001 \001(\t\022\013\n\003avg\030\002 \001("
+    "\005\022\013\n\003std\030\003 \001(\005\022\013\n\003max\030\004 \001(\005\022\r\n\005count\030\005 \001"
+    "(\005\022\013\n\003min\030\006 \001(\005\022\025\n\rrunning_since\030\007 \001(\005B\t"
+    "\n\007content", 2609);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -730,9 +788,12 @@ void protobuf_AddDesc_messages_2eproto() {
   Request_Attach::default_instance_ = new Request_Attach();
   Request_Stop::default_instance_ = new Request_Stop();
   Request_ModuleList::default_instance_ = new Request_ModuleList();
-  Request_Profiling::default_instance_ = new Request_Profiling();
   Request_ListenBroadcastEvents::default_instance_ = new Request_ListenBroadcastEvents();
   Request_Detach::default_instance_ = new Request_Detach();
+  Request_Runtime::default_instance_ = new Request_Runtime();
+  Request_Runtime_default_oneof_instance_ = new Request_RuntimeOneofInstance;
+  Request_Runtime_LogFilter::default_instance_ = new Request_Runtime_LogFilter();
+  Request_Runtime_Profiling::default_instance_ = new Request_Runtime_Profiling();
   Response::default_instance_ = new Response();
   Response_default_oneof_instance_ = new ResponseOneofInstance;
   Response_Info::default_instance_ = new Response_Info();
@@ -755,9 +816,11 @@ void protobuf_AddDesc_messages_2eproto() {
   Request_Attach::default_instance_->InitAsDefaultInstance();
   Request_Stop::default_instance_->InitAsDefaultInstance();
   Request_ModuleList::default_instance_->InitAsDefaultInstance();
-  Request_Profiling::default_instance_->InitAsDefaultInstance();
   Request_ListenBroadcastEvents::default_instance_->InitAsDefaultInstance();
   Request_Detach::default_instance_->InitAsDefaultInstance();
+  Request_Runtime::default_instance_->InitAsDefaultInstance();
+  Request_Runtime_LogFilter::default_instance_->InitAsDefaultInstance();
+  Request_Runtime_Profiling::default_instance_->InitAsDefaultInstance();
   Response::default_instance_->InitAsDefaultInstance();
   Response_Info::default_instance_->InitAsDefaultInstance();
   Response_ClientList::default_instance_->InitAsDefaultInstance();
@@ -2995,288 +3058,6 @@ void Request_ModuleList::Swap(Request_ModuleList* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
-const int Request_Profiling::kNameFieldNumber;
-const int Request_Profiling::kResetFieldNumber;
-#endif  // !_MSC_VER
-
-Request_Profiling::Request_Profiling()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:lms.Request.Profiling)
-}
-
-void Request_Profiling::InitAsDefaultInstance() {
-}
-
-Request_Profiling::Request_Profiling(const Request_Profiling& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:lms.Request.Profiling)
-}
-
-void Request_Profiling::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
-  _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  reset_ = false;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-Request_Profiling::~Request_Profiling() {
-  // @@protoc_insertion_point(destructor:lms.Request.Profiling)
-  SharedDtor();
-}
-
-void Request_Profiling::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete name_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void Request_Profiling::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* Request_Profiling::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return Request_Profiling_descriptor_;
-}
-
-const Request_Profiling& Request_Profiling::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
-  return *default_instance_;
-}
-
-Request_Profiling* Request_Profiling::default_instance_ = NULL;
-
-Request_Profiling* Request_Profiling::New() const {
-  return new Request_Profiling;
-}
-
-void Request_Profiling::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_name()) {
-      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        name_->clear();
-      }
-    }
-    reset_ = false;
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool Request_Profiling::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lms.Request.Profiling)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string name = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->name().data(), this->name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "name");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_reset;
-        break;
-      }
-
-      // optional bool reset = 2 [default = false];
-      case 2: {
-        if (tag == 16) {
-         parse_reset:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &reset_)));
-          set_has_reset();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:lms.Request.Profiling)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:lms.Request.Profiling)
-  return false;
-#undef DO_
-}
-
-void Request_Profiling::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lms.Request.Profiling)
-  // optional string name = 1;
-  if (has_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->name(), output);
-  }
-
-  // optional bool reset = 2 [default = false];
-  if (has_reset()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->reset(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:lms.Request.Profiling)
-}
-
-::google::protobuf::uint8* Request_Profiling::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:lms.Request.Profiling)
-  // optional string name = 1;
-  if (has_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->name(), target);
-  }
-
-  // optional bool reset = 2 [default = false];
-  if (has_reset()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->reset(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:lms.Request.Profiling)
-  return target;
-}
-
-int Request_Profiling::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string name = 1;
-    if (has_name()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->name());
-    }
-
-    // optional bool reset = 2 [default = false];
-    if (has_reset()) {
-      total_size += 1 + 1;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void Request_Profiling::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const Request_Profiling* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Request_Profiling*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void Request_Profiling::MergeFrom(const Request_Profiling& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_name()) {
-      set_name(from.name());
-    }
-    if (from.has_reset()) {
-      set_reset(from.reset());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void Request_Profiling::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void Request_Profiling::CopyFrom(const Request_Profiling& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool Request_Profiling::IsInitialized() const {
-
-  return true;
-}
-
-void Request_Profiling::Swap(Request_Profiling* other) {
-  if (other != this) {
-    std::swap(name_, other->name_);
-    std::swap(reset_, other->reset_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata Request_Profiling::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Request_Profiling_descriptor_;
-  metadata.reflection = Request_Profiling_reflection_;
-  return metadata;
-}
-
-
-// -------------------------------------------------------------------
-
-#ifndef _MSC_VER
 const int Request_ListenBroadcastEvents::kEnableFieldNumber;
 #endif  // !_MSC_VER
 
@@ -3671,6 +3452,810 @@ void Request_Detach::Swap(Request_Detach* other) {
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
+const int Request_Runtime_LogFilter::kLogLevelFieldNumber;
+#endif  // !_MSC_VER
+
+Request_Runtime_LogFilter::Request_Runtime_LogFilter()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:lms.Request.Runtime.LogFilter)
+}
+
+void Request_Runtime_LogFilter::InitAsDefaultInstance() {
+}
+
+Request_Runtime_LogFilter::Request_Runtime_LogFilter(const Request_Runtime_LogFilter& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:lms.Request.Runtime.LogFilter)
+}
+
+void Request_Runtime_LogFilter::SharedCtor() {
+  _cached_size_ = 0;
+  log_level_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Request_Runtime_LogFilter::~Request_Runtime_LogFilter() {
+  // @@protoc_insertion_point(destructor:lms.Request.Runtime.LogFilter)
+  SharedDtor();
+}
+
+void Request_Runtime_LogFilter::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Request_Runtime_LogFilter::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Request_Runtime_LogFilter::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Request_Runtime_LogFilter_descriptor_;
+}
+
+const Request_Runtime_LogFilter& Request_Runtime_LogFilter::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
+  return *default_instance_;
+}
+
+Request_Runtime_LogFilter* Request_Runtime_LogFilter::default_instance_ = NULL;
+
+Request_Runtime_LogFilter* Request_Runtime_LogFilter::New() const {
+  return new Request_Runtime_LogFilter;
+}
+
+void Request_Runtime_LogFilter::Clear() {
+  log_level_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Request_Runtime_LogFilter::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:lms.Request.Runtime.LogFilter)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .lms.Response.LogEvent.Level log_level = 1 [default = ALL];
+      case 1: {
+        if (tag == 8) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::lms::Response_LogEvent_Level_IsValid(value)) {
+            set_log_level(static_cast< ::lms::Response_LogEvent_Level >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:lms.Request.Runtime.LogFilter)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:lms.Request.Runtime.LogFilter)
+  return false;
+#undef DO_
+}
+
+void Request_Runtime_LogFilter::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:lms.Request.Runtime.LogFilter)
+  // optional .lms.Response.LogEvent.Level log_level = 1 [default = ALL];
+  if (has_log_level()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->log_level(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:lms.Request.Runtime.LogFilter)
+}
+
+::google::protobuf::uint8* Request_Runtime_LogFilter::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Request.Runtime.LogFilter)
+  // optional .lms.Response.LogEvent.Level log_level = 1 [default = ALL];
+  if (has_log_level()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->log_level(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Request.Runtime.LogFilter)
+  return target;
+}
+
+int Request_Runtime_LogFilter::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .lms.Response.LogEvent.Level log_level = 1 [default = ALL];
+    if (has_log_level()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->log_level());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Request_Runtime_LogFilter::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Request_Runtime_LogFilter* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Request_Runtime_LogFilter*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Request_Runtime_LogFilter::MergeFrom(const Request_Runtime_LogFilter& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_log_level()) {
+      set_log_level(from.log_level());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Request_Runtime_LogFilter::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Request_Runtime_LogFilter::CopyFrom(const Request_Runtime_LogFilter& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Request_Runtime_LogFilter::IsInitialized() const {
+
+  return true;
+}
+
+void Request_Runtime_LogFilter::Swap(Request_Runtime_LogFilter* other) {
+  if (other != this) {
+    std::swap(log_level_, other->log_level_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Request_Runtime_LogFilter::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Request_Runtime_LogFilter_descriptor_;
+  metadata.reflection = Request_Runtime_LogFilter_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
+const int Request_Runtime_Profiling::kResetFieldNumber;
+#endif  // !_MSC_VER
+
+Request_Runtime_Profiling::Request_Runtime_Profiling()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:lms.Request.Runtime.Profiling)
+}
+
+void Request_Runtime_Profiling::InitAsDefaultInstance() {
+}
+
+Request_Runtime_Profiling::Request_Runtime_Profiling(const Request_Runtime_Profiling& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:lms.Request.Runtime.Profiling)
+}
+
+void Request_Runtime_Profiling::SharedCtor() {
+  _cached_size_ = 0;
+  reset_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Request_Runtime_Profiling::~Request_Runtime_Profiling() {
+  // @@protoc_insertion_point(destructor:lms.Request.Runtime.Profiling)
+  SharedDtor();
+}
+
+void Request_Runtime_Profiling::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Request_Runtime_Profiling::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Request_Runtime_Profiling::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Request_Runtime_Profiling_descriptor_;
+}
+
+const Request_Runtime_Profiling& Request_Runtime_Profiling::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
+  return *default_instance_;
+}
+
+Request_Runtime_Profiling* Request_Runtime_Profiling::default_instance_ = NULL;
+
+Request_Runtime_Profiling* Request_Runtime_Profiling::New() const {
+  return new Request_Runtime_Profiling;
+}
+
+void Request_Runtime_Profiling::Clear() {
+  reset_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Request_Runtime_Profiling::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:lms.Request.Runtime.Profiling)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool reset = 1 [default = false];
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &reset_)));
+          set_has_reset();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:lms.Request.Runtime.Profiling)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:lms.Request.Runtime.Profiling)
+  return false;
+#undef DO_
+}
+
+void Request_Runtime_Profiling::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:lms.Request.Runtime.Profiling)
+  // optional bool reset = 1 [default = false];
+  if (has_reset()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->reset(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:lms.Request.Runtime.Profiling)
+}
+
+::google::protobuf::uint8* Request_Runtime_Profiling::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Request.Runtime.Profiling)
+  // optional bool reset = 1 [default = false];
+  if (has_reset()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->reset(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Request.Runtime.Profiling)
+  return target;
+}
+
+int Request_Runtime_Profiling::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional bool reset = 1 [default = false];
+    if (has_reset()) {
+      total_size += 1 + 1;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Request_Runtime_Profiling::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Request_Runtime_Profiling* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Request_Runtime_Profiling*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Request_Runtime_Profiling::MergeFrom(const Request_Runtime_Profiling& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_reset()) {
+      set_reset(from.reset());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Request_Runtime_Profiling::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Request_Runtime_Profiling::CopyFrom(const Request_Runtime_Profiling& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Request_Runtime_Profiling::IsInitialized() const {
+
+  return true;
+}
+
+void Request_Runtime_Profiling::Swap(Request_Runtime_Profiling* other) {
+  if (other != this) {
+    std::swap(reset_, other->reset_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Request_Runtime_Profiling::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Request_Runtime_Profiling_descriptor_;
+  metadata.reflection = Request_Runtime_Profiling_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
+const int Request_Runtime::kNameFieldNumber;
+const int Request_Runtime::kFilterFieldNumber;
+const int Request_Runtime::kProfilingFieldNumber;
+#endif  // !_MSC_VER
+
+Request_Runtime::Request_Runtime()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:lms.Request.Runtime)
+}
+
+void Request_Runtime::InitAsDefaultInstance() {
+  Request_Runtime_default_oneof_instance_->filter_ = const_cast< ::lms::Request_Runtime_LogFilter*>(&::lms::Request_Runtime_LogFilter::default_instance());
+  Request_Runtime_default_oneof_instance_->profiling_ = const_cast< ::lms::Request_Runtime_Profiling*>(&::lms::Request_Runtime_Profiling::default_instance());
+}
+
+Request_Runtime::Request_Runtime(const Request_Runtime& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:lms.Request.Runtime)
+}
+
+void Request_Runtime::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  clear_has_content();
+}
+
+Request_Runtime::~Request_Runtime() {
+  // @@protoc_insertion_point(destructor:lms.Request.Runtime)
+  SharedDtor();
+}
+
+void Request_Runtime::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (has_content()) {
+    clear_content();
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Request_Runtime::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Request_Runtime::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Request_Runtime_descriptor_;
+}
+
+const Request_Runtime& Request_Runtime::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
+  return *default_instance_;
+}
+
+Request_Runtime* Request_Runtime::default_instance_ = NULL;
+
+Request_Runtime* Request_Runtime::New() const {
+  return new Request_Runtime;
+}
+
+void Request_Runtime::clear_content() {
+  switch(content_case()) {
+    case kFilter: {
+      delete content_.filter_;
+      break;
+    }
+    case kProfiling: {
+      delete content_.profiling_;
+      break;
+    }
+    case CONTENT_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = CONTENT_NOT_SET;
+}
+
+
+void Request_Runtime::Clear() {
+  if (has_name()) {
+    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      name_->clear();
+    }
+  }
+  clear_content();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Request_Runtime::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:lms.Request.Runtime)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string name = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_filter;
+        break;
+      }
+
+      // optional .lms.Request.Runtime.LogFilter filter = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_filter:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_filter()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_profiling;
+        break;
+      }
+
+      // optional .lms.Request.Runtime.Profiling profiling = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_profiling:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_profiling()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:lms.Request.Runtime)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:lms.Request.Runtime)
+  return false;
+#undef DO_
+}
+
+void Request_Runtime::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:lms.Request.Runtime)
+  // optional string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
+  }
+
+  // optional .lms.Request.Runtime.LogFilter filter = 2;
+  if (has_filter()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->filter(), output);
+  }
+
+  // optional .lms.Request.Runtime.Profiling profiling = 3;
+  if (has_profiling()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->profiling(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:lms.Request.Runtime)
+}
+
+::google::protobuf::uint8* Request_Runtime::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:lms.Request.Runtime)
+  // optional string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // optional .lms.Request.Runtime.LogFilter filter = 2;
+  if (has_filter()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->filter(), target);
+  }
+
+  // optional .lms.Request.Runtime.Profiling profiling = 3;
+  if (has_profiling()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->profiling(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:lms.Request.Runtime)
+  return target;
+}
+
+int Request_Runtime::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+  }
+  switch (content_case()) {
+    // optional .lms.Request.Runtime.LogFilter filter = 2;
+    case kFilter: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->filter());
+      break;
+    }
+    // optional .lms.Request.Runtime.Profiling profiling = 3;
+    case kProfiling: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->profiling());
+      break;
+    }
+    case CONTENT_NOT_SET: {
+      break;
+    }
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Request_Runtime::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Request_Runtime* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Request_Runtime*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Request_Runtime::MergeFrom(const Request_Runtime& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  switch (from.content_case()) {
+    case kFilter: {
+      mutable_filter()->::lms::Request_Runtime_LogFilter::MergeFrom(from.filter());
+      break;
+    }
+    case kProfiling: {
+      mutable_profiling()->::lms::Request_Runtime_Profiling::MergeFrom(from.profiling());
+      break;
+    }
+    case CONTENT_NOT_SET: {
+      break;
+    }
+  }
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Request_Runtime::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Request_Runtime::CopyFrom(const Request_Runtime& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Request_Runtime::IsInitialized() const {
+
+  return true;
+}
+
+void Request_Runtime::Swap(Request_Runtime* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(content_, other->content_);
+    std::swap(_oneof_case_[0], other->_oneof_case_[0]);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Request_Runtime::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Request_Runtime_descriptor_;
+  metadata.reflection = Request_Runtime_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
 const int Request::kInfoFieldNumber;
 const int Request::kShutdownFieldNumber;
 const int Request::kListClientsFieldNumber;
@@ -3679,9 +4264,9 @@ const int Request::kListProcessesFieldNumber;
 const int Request::kAttachFieldNumber;
 const int Request::kStopFieldNumber;
 const int Request::kModuleListFieldNumber;
-const int Request::kProfilingFieldNumber;
 const int Request::kListenBroadcastsFieldNumber;
 const int Request::kDetachFieldNumber;
+const int Request::kRuntimeFieldNumber;
 #endif  // !_MSC_VER
 
 Request::Request()
@@ -3699,9 +4284,9 @@ void Request::InitAsDefaultInstance() {
   Request_default_oneof_instance_->attach_ = const_cast< ::lms::Request_Attach*>(&::lms::Request_Attach::default_instance());
   Request_default_oneof_instance_->stop_ = const_cast< ::lms::Request_Stop*>(&::lms::Request_Stop::default_instance());
   Request_default_oneof_instance_->module_list_ = const_cast< ::lms::Request_ModuleList*>(&::lms::Request_ModuleList::default_instance());
-  Request_default_oneof_instance_->profiling_ = const_cast< ::lms::Request_Profiling*>(&::lms::Request_Profiling::default_instance());
   Request_default_oneof_instance_->listen_broadcasts_ = const_cast< ::lms::Request_ListenBroadcastEvents*>(&::lms::Request_ListenBroadcastEvents::default_instance());
   Request_default_oneof_instance_->detach_ = const_cast< ::lms::Request_Detach*>(&::lms::Request_Detach::default_instance());
+  Request_default_oneof_instance_->runtime_ = const_cast< ::lms::Request_Runtime*>(&::lms::Request_Runtime::default_instance());
 }
 
 Request::Request(const Request& from)
@@ -3785,16 +4370,16 @@ void Request::clear_content() {
       delete content_.module_list_;
       break;
     }
-    case kProfiling: {
-      delete content_.profiling_;
-      break;
-    }
     case kListenBroadcasts: {
       delete content_.listen_broadcasts_;
       break;
     }
     case kDetach: {
       delete content_.detach_;
+      break;
+    }
+    case kRuntime: {
+      delete content_.runtime_;
       break;
     }
     case CONTENT_NOT_SET: {
@@ -3920,19 +4505,6 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(74)) goto parse_profiling;
-        break;
-      }
-
-      // optional .lms.Request.Profiling profiling = 9;
-      case 9: {
-        if (tag == 74) {
-         parse_profiling:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_profiling()));
-        } else {
-          goto handle_unusual;
-        }
         if (input->ExpectTag(82)) goto parse_listen_broadcasts;
         break;
       }
@@ -3956,6 +4528,19 @@ bool Request::MergePartialFromCodedStream(
          parse_detach:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_detach()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(98)) goto parse_runtime;
+        break;
+      }
+
+      // optional .lms.Request.Runtime runtime = 12;
+      case 12: {
+        if (tag == 98) {
+         parse_runtime:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_runtime()));
         } else {
           goto handle_unusual;
         }
@@ -4036,12 +4621,6 @@ void Request::SerializeWithCachedSizes(
       8, this->module_list(), output);
   }
 
-  // optional .lms.Request.Profiling profiling = 9;
-  if (has_profiling()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      9, this->profiling(), output);
-  }
-
   // optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
   if (has_listen_broadcasts()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -4052,6 +4631,12 @@ void Request::SerializeWithCachedSizes(
   if (has_detach()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       11, this->detach(), output);
+  }
+
+  // optional .lms.Request.Runtime runtime = 12;
+  if (has_runtime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      12, this->runtime(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4120,13 +4705,6 @@ void Request::SerializeWithCachedSizes(
         8, this->module_list(), target);
   }
 
-  // optional .lms.Request.Profiling profiling = 9;
-  if (has_profiling()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        9, this->profiling(), target);
-  }
-
   // optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
   if (has_listen_broadcasts()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -4139,6 +4717,13 @@ void Request::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         11, this->detach(), target);
+  }
+
+  // optional .lms.Request.Runtime runtime = 12;
+  if (has_runtime()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        12, this->runtime(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4209,13 +4794,6 @@ int Request::ByteSize() const {
           this->module_list());
       break;
     }
-    // optional .lms.Request.Profiling profiling = 9;
-    case kProfiling: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->profiling());
-      break;
-    }
     // optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
     case kListenBroadcasts: {
       total_size += 1 +
@@ -4228,6 +4806,13 @@ int Request::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->detach());
+      break;
+    }
+    // optional .lms.Request.Runtime runtime = 12;
+    case kRuntime: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->runtime());
       break;
     }
     case CONTENT_NOT_SET: {
@@ -4292,16 +4877,16 @@ void Request::MergeFrom(const Request& from) {
       mutable_module_list()->::lms::Request_ModuleList::MergeFrom(from.module_list());
       break;
     }
-    case kProfiling: {
-      mutable_profiling()->::lms::Request_Profiling::MergeFrom(from.profiling());
-      break;
-    }
     case kListenBroadcasts: {
       mutable_listen_broadcasts()->::lms::Request_ListenBroadcastEvents::MergeFrom(from.listen_broadcasts());
       break;
     }
     case kDetach: {
       mutable_detach()->::lms::Request_Detach::MergeFrom(from.detach());
+      break;
+    }
+    case kRuntime: {
+      mutable_runtime()->::lms::Request_Runtime::MergeFrom(from.runtime());
       break;
     }
     case CONTENT_NOT_SET: {

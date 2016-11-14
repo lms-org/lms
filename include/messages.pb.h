@@ -43,9 +43,11 @@ class Request_ListProcesses;
 class Request_Attach;
 class Request_Stop;
 class Request_ModuleList;
-class Request_Profiling;
 class Request_ListenBroadcastEvents;
 class Request_Detach;
+class Request_Runtime;
+class Request_Runtime_LogFilter;
+class Request_Runtime_Profiling;
 class Response;
 class Response_Info;
 class Response_ClientList;
@@ -860,100 +862,6 @@ class Request_ModuleList : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Request_Profiling : public ::google::protobuf::Message {
- public:
-  Request_Profiling();
-  virtual ~Request_Profiling();
-
-  Request_Profiling(const Request_Profiling& from);
-
-  inline Request_Profiling& operator=(const Request_Profiling& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Request_Profiling& default_instance();
-
-  void Swap(Request_Profiling* other);
-
-  // implements Message ----------------------------------------------
-
-  Request_Profiling* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Request_Profiling& from);
-  void MergeFrom(const Request_Profiling& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional string name = 1;
-  inline bool has_name() const;
-  inline void clear_name();
-  static const int kNameFieldNumber = 1;
-  inline const ::std::string& name() const;
-  inline void set_name(const ::std::string& value);
-  inline void set_name(const char* value);
-  inline void set_name(const char* value, size_t size);
-  inline ::std::string* mutable_name();
-  inline ::std::string* release_name();
-  inline void set_allocated_name(::std::string* name);
-
-  // optional bool reset = 2 [default = false];
-  inline bool has_reset() const;
-  inline void clear_reset();
-  static const int kResetFieldNumber = 2;
-  inline bool reset() const;
-  inline void set_reset(bool value);
-
-  // @@protoc_insertion_point(class_scope:lms.Request.Profiling)
- private:
-  inline void set_has_name();
-  inline void clear_has_name();
-  inline void set_has_reset();
-  inline void clear_has_reset();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::std::string* name_;
-  bool reset_;
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static Request_Profiling* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class Request_ListenBroadcastEvents : public ::google::protobuf::Message {
  public:
   Request_ListenBroadcastEvents();
@@ -1102,6 +1010,288 @@ class Request_Detach : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_Runtime_LogFilter : public ::google::protobuf::Message {
+ public:
+  Request_Runtime_LogFilter();
+  virtual ~Request_Runtime_LogFilter();
+
+  Request_Runtime_LogFilter(const Request_Runtime_LogFilter& from);
+
+  inline Request_Runtime_LogFilter& operator=(const Request_Runtime_LogFilter& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Runtime_LogFilter& default_instance();
+
+  void Swap(Request_Runtime_LogFilter* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Runtime_LogFilter* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Runtime_LogFilter& from);
+  void MergeFrom(const Request_Runtime_LogFilter& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .lms.Response.LogEvent.Level log_level = 1 [default = ALL];
+  inline bool has_log_level() const;
+  inline void clear_log_level();
+  static const int kLogLevelFieldNumber = 1;
+  inline ::lms::Response_LogEvent_Level log_level() const;
+  inline void set_log_level(::lms::Response_LogEvent_Level value);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Runtime.LogFilter)
+ private:
+  inline void set_has_log_level();
+  inline void clear_has_log_level();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  int log_level_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Runtime_LogFilter* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Request_Runtime_Profiling : public ::google::protobuf::Message {
+ public:
+  Request_Runtime_Profiling();
+  virtual ~Request_Runtime_Profiling();
+
+  Request_Runtime_Profiling(const Request_Runtime_Profiling& from);
+
+  inline Request_Runtime_Profiling& operator=(const Request_Runtime_Profiling& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Runtime_Profiling& default_instance();
+
+  void Swap(Request_Runtime_Profiling* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Runtime_Profiling* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Runtime_Profiling& from);
+  void MergeFrom(const Request_Runtime_Profiling& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool reset = 1 [default = false];
+  inline bool has_reset() const;
+  inline void clear_reset();
+  static const int kResetFieldNumber = 1;
+  inline bool reset() const;
+  inline void set_reset(bool value);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Runtime.Profiling)
+ private:
+  inline void set_has_reset();
+  inline void clear_has_reset();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  bool reset_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Runtime_Profiling* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Request_Runtime : public ::google::protobuf::Message {
+ public:
+  Request_Runtime();
+  virtual ~Request_Runtime();
+
+  Request_Runtime(const Request_Runtime& from);
+
+  inline Request_Runtime& operator=(const Request_Runtime& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Runtime& default_instance();
+
+  enum ContentCase {
+    kFilter = 2,
+    kProfiling = 3,
+    CONTENT_NOT_SET = 0,
+  };
+
+  void Swap(Request_Runtime* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Runtime* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Runtime& from);
+  void MergeFrom(const Request_Runtime& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Request_Runtime_LogFilter LogFilter;
+  typedef Request_Runtime_Profiling Profiling;
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional .lms.Request.Runtime.LogFilter filter = 2;
+  inline bool has_filter() const;
+  inline void clear_filter();
+  static const int kFilterFieldNumber = 2;
+  inline const ::lms::Request_Runtime_LogFilter& filter() const;
+  inline ::lms::Request_Runtime_LogFilter* mutable_filter();
+  inline ::lms::Request_Runtime_LogFilter* release_filter();
+  inline void set_allocated_filter(::lms::Request_Runtime_LogFilter* filter);
+
+  // optional .lms.Request.Runtime.Profiling profiling = 3;
+  inline bool has_profiling() const;
+  inline void clear_profiling();
+  static const int kProfilingFieldNumber = 3;
+  inline const ::lms::Request_Runtime_Profiling& profiling() const;
+  inline ::lms::Request_Runtime_Profiling* mutable_profiling();
+  inline ::lms::Request_Runtime_Profiling* release_profiling();
+  inline void set_allocated_profiling(::lms::Request_Runtime_Profiling* profiling);
+
+  inline ContentCase content_case() const;
+  // @@protoc_insertion_point(class_scope:lms.Request.Runtime)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_filter();
+  inline void set_has_profiling();
+
+  inline bool has_content();
+  void clear_content();
+  inline void clear_has_content();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  union ContentUnion {
+    ::lms::Request_Runtime_LogFilter* filter_;
+    ::lms::Request_Runtime_Profiling* profiling_;
+  } content_;
+  ::google::protobuf::uint32 _oneof_case_[1];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Runtime* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request : public ::google::protobuf::Message {
  public:
   Request();
@@ -1134,9 +1324,9 @@ class Request : public ::google::protobuf::Message {
     kAttach = 6,
     kStop = 7,
     kModuleList = 8,
-    kProfiling = 9,
     kListenBroadcasts = 10,
     kDetach = 11,
+    kRuntime = 12,
     CONTENT_NOT_SET = 0,
   };
 
@@ -1176,9 +1366,9 @@ class Request : public ::google::protobuf::Message {
   typedef Request_Attach Attach;
   typedef Request_Stop Stop;
   typedef Request_ModuleList ModuleList;
-  typedef Request_Profiling Profiling;
   typedef Request_ListenBroadcastEvents ListenBroadcastEvents;
   typedef Request_Detach Detach;
+  typedef Request_Runtime Runtime;
 
   // accessors -------------------------------------------------------
 
@@ -1254,15 +1444,6 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_ModuleList* release_module_list();
   inline void set_allocated_module_list(::lms::Request_ModuleList* module_list);
 
-  // optional .lms.Request.Profiling profiling = 9;
-  inline bool has_profiling() const;
-  inline void clear_profiling();
-  static const int kProfilingFieldNumber = 9;
-  inline const ::lms::Request_Profiling& profiling() const;
-  inline ::lms::Request_Profiling* mutable_profiling();
-  inline ::lms::Request_Profiling* release_profiling();
-  inline void set_allocated_profiling(::lms::Request_Profiling* profiling);
-
   // optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
   inline bool has_listen_broadcasts() const;
   inline void clear_listen_broadcasts();
@@ -1281,6 +1462,15 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_Detach* release_detach();
   inline void set_allocated_detach(::lms::Request_Detach* detach);
 
+  // optional .lms.Request.Runtime runtime = 12;
+  inline bool has_runtime() const;
+  inline void clear_runtime();
+  static const int kRuntimeFieldNumber = 12;
+  inline const ::lms::Request_Runtime& runtime() const;
+  inline ::lms::Request_Runtime* mutable_runtime();
+  inline ::lms::Request_Runtime* release_runtime();
+  inline void set_allocated_runtime(::lms::Request_Runtime* runtime);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
  private:
@@ -1292,9 +1482,9 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_attach();
   inline void set_has_stop();
   inline void set_has_module_list();
-  inline void set_has_profiling();
   inline void set_has_listen_broadcasts();
   inline void set_has_detach();
+  inline void set_has_runtime();
 
   inline bool has_content();
   void clear_content();
@@ -1313,9 +1503,9 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_Attach* attach_;
     ::lms::Request_Stop* stop_;
     ::lms::Request_ModuleList* module_list_;
-    ::lms::Request_Profiling* profiling_;
     ::lms::Request_ListenBroadcastEvents* listen_broadcasts_;
     ::lms::Request_Detach* detach_;
+    ::lms::Request_Runtime* runtime_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -3438,110 +3628,6 @@ inline void Request_Stop::set_kill(bool value) {
 
 // -------------------------------------------------------------------
 
-// Request_Profiling
-
-// optional string name = 1;
-inline bool Request_Profiling::has_name() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Request_Profiling::set_has_name() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Request_Profiling::clear_has_name() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Request_Profiling::clear_name() {
-  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    name_->clear();
-  }
-  clear_has_name();
-}
-inline const ::std::string& Request_Profiling::name() const {
-  // @@protoc_insertion_point(field_get:lms.Request.Profiling.name)
-  return *name_;
-}
-inline void Request_Profiling::set_name(const ::std::string& value) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    name_ = new ::std::string;
-  }
-  name_->assign(value);
-  // @@protoc_insertion_point(field_set:lms.Request.Profiling.name)
-}
-inline void Request_Profiling::set_name(const char* value) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    name_ = new ::std::string;
-  }
-  name_->assign(value);
-  // @@protoc_insertion_point(field_set_char:lms.Request.Profiling.name)
-}
-inline void Request_Profiling::set_name(const char* value, size_t size) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    name_ = new ::std::string;
-  }
-  name_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lms.Request.Profiling.name)
-}
-inline ::std::string* Request_Profiling::mutable_name() {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    name_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:lms.Request.Profiling.name)
-  return name_;
-}
-inline ::std::string* Request_Profiling::release_name() {
-  clear_has_name();
-  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = name_;
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void Request_Profiling::set_allocated_name(::std::string* name) {
-  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete name_;
-  }
-  if (name) {
-    set_has_name();
-    name_ = name;
-  } else {
-    clear_has_name();
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:lms.Request.Profiling.name)
-}
-
-// optional bool reset = 2 [default = false];
-inline bool Request_Profiling::has_reset() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Request_Profiling::set_has_reset() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Request_Profiling::clear_has_reset() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Request_Profiling::clear_reset() {
-  reset_ = false;
-  clear_has_reset();
-}
-inline bool Request_Profiling::reset() const {
-  // @@protoc_insertion_point(field_get:lms.Request.Profiling.reset)
-  return reset_;
-}
-inline void Request_Profiling::set_reset(bool value) {
-  set_has_reset();
-  reset_ = value;
-  // @@protoc_insertion_point(field_set:lms.Request.Profiling.reset)
-}
-
-// -------------------------------------------------------------------
-
 // Request_ListenBroadcastEvents
 
 // optional bool enable = 1;
@@ -3572,6 +3658,238 @@ inline void Request_ListenBroadcastEvents::set_enable(bool value) {
 
 // Request_Detach
 
+// -------------------------------------------------------------------
+
+// Request_Runtime_LogFilter
+
+// optional .lms.Response.LogEvent.Level log_level = 1 [default = ALL];
+inline bool Request_Runtime_LogFilter::has_log_level() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_Runtime_LogFilter::set_has_log_level() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_Runtime_LogFilter::clear_has_log_level() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_Runtime_LogFilter::clear_log_level() {
+  log_level_ = 0;
+  clear_has_log_level();
+}
+inline ::lms::Response_LogEvent_Level Request_Runtime_LogFilter::log_level() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Runtime.LogFilter.log_level)
+  return static_cast< ::lms::Response_LogEvent_Level >(log_level_);
+}
+inline void Request_Runtime_LogFilter::set_log_level(::lms::Response_LogEvent_Level value) {
+  assert(::lms::Response_LogEvent_Level_IsValid(value));
+  set_has_log_level();
+  log_level_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Runtime.LogFilter.log_level)
+}
+
+// -------------------------------------------------------------------
+
+// Request_Runtime_Profiling
+
+// optional bool reset = 1 [default = false];
+inline bool Request_Runtime_Profiling::has_reset() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_Runtime_Profiling::set_has_reset() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_Runtime_Profiling::clear_has_reset() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_Runtime_Profiling::clear_reset() {
+  reset_ = false;
+  clear_has_reset();
+}
+inline bool Request_Runtime_Profiling::reset() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Runtime.Profiling.reset)
+  return reset_;
+}
+inline void Request_Runtime_Profiling::set_reset(bool value) {
+  set_has_reset();
+  reset_ = value;
+  // @@protoc_insertion_point(field_set:lms.Request.Runtime.Profiling.reset)
+}
+
+// -------------------------------------------------------------------
+
+// Request_Runtime
+
+// optional string name = 1;
+inline bool Request_Runtime::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_Runtime::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_Runtime::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_Runtime::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Request_Runtime::name() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Runtime.name)
+  return *name_;
+}
+inline void Request_Runtime::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Runtime.name)
+}
+inline void Request_Runtime::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Runtime.name)
+}
+inline void Request_Runtime::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Runtime.name)
+}
+inline ::std::string* Request_Runtime::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Runtime.name)
+  return name_;
+}
+inline ::std::string* Request_Runtime::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Runtime::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Runtime.name)
+}
+
+// optional .lms.Request.Runtime.LogFilter filter = 2;
+inline bool Request_Runtime::has_filter() const {
+  return content_case() == kFilter;
+}
+inline void Request_Runtime::set_has_filter() {
+  _oneof_case_[0] = kFilter;
+}
+inline void Request_Runtime::clear_filter() {
+  if (has_filter()) {
+    delete content_.filter_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Runtime_LogFilter& Request_Runtime::filter() const {
+  return has_filter() ? *content_.filter_
+                      : ::lms::Request_Runtime_LogFilter::default_instance();
+}
+inline ::lms::Request_Runtime_LogFilter* Request_Runtime::mutable_filter() {
+  if (!has_filter()) {
+    clear_content();
+    set_has_filter();
+    content_.filter_ = new ::lms::Request_Runtime_LogFilter;
+  }
+  return content_.filter_;
+}
+inline ::lms::Request_Runtime_LogFilter* Request_Runtime::release_filter() {
+  if (has_filter()) {
+    clear_has_content();
+    ::lms::Request_Runtime_LogFilter* temp = content_.filter_;
+    content_.filter_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request_Runtime::set_allocated_filter(::lms::Request_Runtime_LogFilter* filter) {
+  clear_content();
+  if (filter) {
+    set_has_filter();
+    content_.filter_ = filter;
+  }
+}
+
+// optional .lms.Request.Runtime.Profiling profiling = 3;
+inline bool Request_Runtime::has_profiling() const {
+  return content_case() == kProfiling;
+}
+inline void Request_Runtime::set_has_profiling() {
+  _oneof_case_[0] = kProfiling;
+}
+inline void Request_Runtime::clear_profiling() {
+  if (has_profiling()) {
+    delete content_.profiling_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Runtime_Profiling& Request_Runtime::profiling() const {
+  return has_profiling() ? *content_.profiling_
+                      : ::lms::Request_Runtime_Profiling::default_instance();
+}
+inline ::lms::Request_Runtime_Profiling* Request_Runtime::mutable_profiling() {
+  if (!has_profiling()) {
+    clear_content();
+    set_has_profiling();
+    content_.profiling_ = new ::lms::Request_Runtime_Profiling;
+  }
+  return content_.profiling_;
+}
+inline ::lms::Request_Runtime_Profiling* Request_Runtime::release_profiling() {
+  if (has_profiling()) {
+    clear_has_content();
+    ::lms::Request_Runtime_Profiling* temp = content_.profiling_;
+    content_.profiling_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request_Runtime::set_allocated_profiling(::lms::Request_Runtime_Profiling* profiling) {
+  clear_content();
+  if (profiling) {
+    set_has_profiling();
+    content_.profiling_ = profiling;
+  }
+}
+
+inline bool Request_Runtime::has_content() {
+  return content_case() != CONTENT_NOT_SET;
+}
+inline void Request_Runtime::clear_has_content() {
+  _oneof_case_[0] = CONTENT_NOT_SET;
+}
+inline Request_Runtime::ContentCase Request_Runtime::content_case() const {
+  return Request_Runtime::ContentCase(_oneof_case_[0]);
+}
 // -------------------------------------------------------------------
 
 // Request
@@ -3920,49 +4238,6 @@ inline void Request::set_allocated_module_list(::lms::Request_ModuleList* module
   }
 }
 
-// optional .lms.Request.Profiling profiling = 9;
-inline bool Request::has_profiling() const {
-  return content_case() == kProfiling;
-}
-inline void Request::set_has_profiling() {
-  _oneof_case_[0] = kProfiling;
-}
-inline void Request::clear_profiling() {
-  if (has_profiling()) {
-    delete content_.profiling_;
-    clear_has_content();
-  }
-}
-inline const ::lms::Request_Profiling& Request::profiling() const {
-  return has_profiling() ? *content_.profiling_
-                      : ::lms::Request_Profiling::default_instance();
-}
-inline ::lms::Request_Profiling* Request::mutable_profiling() {
-  if (!has_profiling()) {
-    clear_content();
-    set_has_profiling();
-    content_.profiling_ = new ::lms::Request_Profiling;
-  }
-  return content_.profiling_;
-}
-inline ::lms::Request_Profiling* Request::release_profiling() {
-  if (has_profiling()) {
-    clear_has_content();
-    ::lms::Request_Profiling* temp = content_.profiling_;
-    content_.profiling_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void Request::set_allocated_profiling(::lms::Request_Profiling* profiling) {
-  clear_content();
-  if (profiling) {
-    set_has_profiling();
-    content_.profiling_ = profiling;
-  }
-}
-
 // optional .lms.Request.ListenBroadcastEvents listen_broadcasts = 10;
 inline bool Request::has_listen_broadcasts() const {
   return content_case() == kListenBroadcasts;
@@ -4046,6 +4321,49 @@ inline void Request::set_allocated_detach(::lms::Request_Detach* detach) {
   if (detach) {
     set_has_detach();
     content_.detach_ = detach;
+  }
+}
+
+// optional .lms.Request.Runtime runtime = 12;
+inline bool Request::has_runtime() const {
+  return content_case() == kRuntime;
+}
+inline void Request::set_has_runtime() {
+  _oneof_case_[0] = kRuntime;
+}
+inline void Request::clear_runtime() {
+  if (has_runtime()) {
+    delete content_.runtime_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Runtime& Request::runtime() const {
+  return has_runtime() ? *content_.runtime_
+                      : ::lms::Request_Runtime::default_instance();
+}
+inline ::lms::Request_Runtime* Request::mutable_runtime() {
+  if (!has_runtime()) {
+    clear_content();
+    set_has_runtime();
+    content_.runtime_ = new ::lms::Request_Runtime;
+  }
+  return content_.runtime_;
+}
+inline ::lms::Request_Runtime* Request::release_runtime() {
+  if (has_runtime()) {
+    clear_has_content();
+    ::lms::Request_Runtime* temp = content_.runtime_;
+    content_.runtime_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request::set_allocated_runtime(::lms::Request_Runtime* runtime) {
+  clear_content();
+  if (runtime) {
+    set_has_runtime();
+    content_.runtime_ = runtime;
   }
 }
 

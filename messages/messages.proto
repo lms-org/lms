@@ -28,14 +28,28 @@ message Request {
 	    optional bool kill = 2;
 	}
 	message ModuleList {}
-    message Profiling {
-        optional string name = 1;
-        optional bool reset = 2 [default = false];
-    }
     message ListenBroadcastEvents {
         optional bool enable = 1;
     }
     message Detach {}
+    message Runtime {
+        optional string name = 1;
+
+        message LogFilter {
+            optional Response.LogEvent.Level log_level = 1 [default = ALL];
+        }
+        message Profiling {
+            optional bool reset = 1 [default = false];
+        }
+
+        oneof content {
+            LogFilter filter = 2;
+            Profiling profiling = 3;
+        }
+    }
+
+    // reserved does not work with this version of Protobuf
+    // reserved 9;
 
 	oneof content {
 		Info info = 1;
@@ -46,9 +60,9 @@ message Request {
 		Attach attach = 6;
 		Stop stop = 7;
 		ModuleList module_list = 8;
-		Profiling profiling = 9;
 		ListenBroadcastEvents listen_broadcasts = 10;
 		Detach detach = 11;
+		Runtime runtime = 12;
 	}
 }
 
@@ -66,17 +80,17 @@ message Response {
 
         repeated Client clients = 1;
     }
-    
+
     message ProcessList {
         message Process {
             optional int32 pid = 1;
             optional string config_file = 2;
             optional string name = 3;
         }
-        
+
         repeated Process processes = 1;
     }
-    
+
     message ModuleListResponse {
 	    enum Permission {
 		    READ = 1;
@@ -96,14 +110,14 @@ message Response {
 
 	    repeated Channel channels = 1;
     }
-    
+
     message LogEvent {
         optional Level level = 1;
         optional string tag = 2;
         optional string text = 3;
         optional bool close_after = 4 [default = false];
         optional int64 timestamp = 5;
-        
+
         enum Level {
             // must be compatible to lms::logging:Level
             ALL = 0;
@@ -115,7 +129,7 @@ message Response {
             OFF = 255;
         }
     }
-    
+
     message ProfilingSummary {
         message Trace {
             optional string name = 1;
@@ -126,10 +140,10 @@ message Response {
             optional int32 min = 6;
             optional int32 running_since = 7; // not running if not set
         }
-        
+
         repeated Trace traces = 1;
     }
-    
+
     oneof content {
         Info info = 1;
         ClientList client_list = 2;
