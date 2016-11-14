@@ -30,58 +30,6 @@
 namespace lms {
 namespace internal {
 
-void Profiler::addMeasurement(const Response::LogEvent &event) {
-    if(event.level() == Response::LogEvent::PROFILE) {
-        if(event.text() == "_begin") {
-            // memorize new begin timestamp
-            beginTimes[event.tag()] = lms::Time::fromMicros(event.timestamp());
-        } else if(event.text() == "_end") {
-            auto it = beginTimes.find(event.tag());
-            if(it == beginTimes.end()) {
-                // could not find begin time
-            } else {
-                lms::Time begin = it->second;
-                lms::Time end = lms::Time::fromMicros(event.timestamp());
-                auto &trace = measurements[event.tag()];
-                trace.update((end - begin).micros());
-                beginTimes.erase(it);
-            }
-        }
-    }
-}
-
-void Profiler::getOverview(Response::ProfilingSummary *summary) const {
-    for(const auto &pair : measurements) {
-        Response::ProfilingSummary::Trace *trace = summary->add_traces();
-        trace->set_name(pair.first);
-        trace->set_count(pair.second.count());
-        trace->set_avg(pair.second.avg());
-        trace->set_min(pair.second.min());
-        trace->set_max(pair.second.max());
-        trace->set_std(pair.second.std());
-        // add beginTimes
-        auto it = beginTimes.find(pair.first);
-        if(it != beginTimes.end()) {
-            trace->set_running_since((lms::Time::now() - it->second).micros());
-        }
-    }
-    // add all beginTimes that are not already in measurements
-    for(const auto &pair : beginTimes) {
-        auto it = measurements.find(pair.first);
-        if(it == measurements.end()) {
-            Response::ProfilingSummary::Trace *trace = summary->add_traces();
-            trace->set_name(pair.first);
-            trace->set_count(0);
-            trace->set_running_since((lms::Time::now() - pair.second).micros());
-        }
-    }
-}
-
-void Profiler::reset() {
-    beginTimes.clear();
-    measurements.clear();
-}
-
 std::string getPeer(sockaddr_storage &addr) {
     char ipstr[255];
     int port;
@@ -220,8 +168,10 @@ void MasterServer::start() {
             maxFD = std::max(maxFD, client.sock.getFD());
         }
         for(const Runtime &runtime : m_runtimes) {
-            FD_SET(runtime.sock.getFD(), &fds);
-            maxFD = std::max(runtime.sock.getFD(), maxFD);
+            FD_SET(runtime.logSock.getFD(), &fds);
+            maxFD = std::max(runtime.logSock.getFD(), maxFD);
+            FD_SET(runtime.commSock.getFD(), &fds);
+            maxFD = std::max(runtime.commSock.getFD(), maxFD);
         }
 
         timeval timeout;
@@ -278,15 +228,10 @@ void MasterServer::start() {
         }
         for(auto it = m_runtimes.begin(); it != m_runtimes.end(); ++it) {
             auto &runtime = *it;
-            if(FD_ISSET(runtime.sock.getFD(), &fds)) {
+            if(FD_ISSET(runtime.logSock.getFD(), &fds)) {
                 // forward log events to attached clients
                 Response response;
-                if(runtime.sock.readMessage(response) == ProtobufSocket::OK) {
-                    if(response.has_log_event() &&
-                            response.log_event().level() == Response::LogEvent::PROFILE) {
-                        runtime.profiler.addMeasurement(response.log_event());
-                    }
-
+                if(runtime.logSock.readMessage(response) == ProtobufSocket::OK) {
                     for(auto &client : m_clients) {
                         if(client.isAttached && client.attachedRuntime == runtime.pid) {
                             if(!response.has_log_event()
@@ -314,11 +259,23 @@ void MasterServer::start() {
                     broadcastResponse(response);
 
                     // close runtime connection
-                    runtime.sock.close();
+                    runtime.logSock.close();
+                    runtime.commSock.close();
                     m_runtimes.erase(it);
                     it--;
                     std::cout << "Could not read msg from runtime" << std::endl;
                     //TODO error handling
+                }
+            }
+            if(FD_ISSET(runtime.commSock.getFD(), &fds)) {
+                Response response;
+                if(runtime.commSock.readMessage(response) == ProtobufSocket::OK) {
+                    std::cout << "Got message via commSocket from " << runtime.name << "\n";
+                    for(auto &client : m_clients) {
+                        if(client.isAttached && client.attachedRuntime == runtime.pid) {
+                            client.sock.writeMessage(response);
+                        }
+                    }
                 }
             }
         }
@@ -360,6 +317,7 @@ void MasterServer::buildListClientsResponse(lms::Response &response) {
 
 void MasterServer::processClient(Client &client, const lms::Request &message) {
     Response response;
+    bool sendResponse = true;
 
     switch(message.content_case()) {
     case lms::Request::kInfo:
@@ -417,19 +375,22 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         }
         }
         break;
-    case lms::Request::kProfiling:
+    case lms::Request::kRuntime:
         {
         Runtime *rt = nullptr;
-        if(message.profiling().has_name()) {
-            rt = getRuntimeByName(message.profiling().name());
+        if(message.runtime().has_name()) {
+            rt = getRuntimeByName(message.runtime().name());
         } else if(m_runtimes.size() == 1) {
             rt = &m_runtimes[0];
         }
         if(rt != nullptr) {
-            rt->profiler.getOverview(response.mutable_profiling_summary());
-            if(message.profiling().reset()) {
-                rt->profiler.reset();
-            }
+            std::cout << "Got kRuntime request\n";
+            client.isAttached = true;
+            client.attachedRuntime = rt->pid;
+            client.shutdownRuntimeOnDetach = false;
+            client.logLevel = logging::Level::OFF;
+            rt->commSock.writeMessage(message);
+            sendResponse = false;
         }
         }
         break;
@@ -442,7 +403,9 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         break;
     }
 
-    client.sock.writeMessage(response);
+    if(sendResponse) {
+        client.sock.writeMessage(response);
+    }
 
     /*} else if (message == "tcpip") {
         int port = args.size() >= 1 ? atoi(args[0].c_str()) : 3344;
@@ -466,8 +429,10 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
 
 void MasterServer::runFramework(Client &client, const Request_Run &options) {
     pid_t childpid;
-    int fd[2];
-    socketpair(AF_UNIX, SOCK_STREAM, 0, fd);
+    int logFd[2];
+    int commFd[2];
+    socketpair(AF_UNIX, SOCK_STREAM, 0, logFd); // used in the logger
+    socketpair(AF_UNIX, SOCK_STREAM, 0, commFd); // used in communication thread of the framework
 
     // FORK
     if((childpid = fork()) == -1) {
@@ -479,17 +444,12 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         // init framework
 
         // close other end of socket
-        close(fd[0]);
+        close(logFd[0]);
+        close(commFd[0]);
 
         logging::Context &ctx = logging::Context::getDefault();
         logging::Level logLevel = options.production() ? logging::Level::WARN : logging::Level::ALL;
-        ctx.appendSink(new ProtobufSink(fd[1], logLevel));
-        //Write to file
-        //std::ofstream fs("/tmp/gangster.txt");
-        //ctx.appendSink(new logging::ConsoleSink(fs));
-
-        //logging::Logger logg("MyLogger");
-        //logg.info("test") << fd[0] << " " << fd[1];
+        ctx.appendSink(new ProtobufSink(logFd[1], logLevel));
 
         lms::internal::Framework fw(options.config_file());
         fw.setDebug(options.debug());
@@ -513,13 +473,15 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         SignalHandler::getInstance().addListener(SIGSEGV, &fw);
         SignalHandler::getInstance().addListener(SIGINT, &fw);
 
+        fw.startCommunicationThread(commFd[1]);
         fw.start();
         exit(0);
     } else {
         // master server
 
         // close writing ends of pipes
-        close(fd[1]);
+        close(logFd[1]);
+        close(commFd[1]);
 
         std::string name;
         if(options.has_name()) {
@@ -527,7 +489,7 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         } else {
             name = std::to_string(runtimeNameCounter++);
         }
-        Runtime rt{name, childpid, fd[0], options.config_file(), Profiler()};
+        Runtime rt{name, childpid, logFd[0], commFd[0], options.config_file()};
         if(! options.detached()) {
             client.isAttached = true;
             client.attachedRuntime = childpid;
@@ -770,12 +732,12 @@ void connectToMaster(int argc, char *argv[]) {
                 "r", "reset", "Reset profiling data after showing them", cmd, false);
             cmd.parse(argc-1, argv+1);
 
-            Request::Profiling *profiling = req.mutable_profiling();
+            Request::Runtime *profiling = req.mutable_runtime();
 
             if(nameArg.isSet()) {
                 profiling->set_name(nameArg.getValue());
             }
-            profiling->set_reset(resetSwitch.getValue());
+            profiling->mutable_profiling()->set_reset(resetSwitch.getValue());
             socket.writeMessage(req);
 
             Response res;

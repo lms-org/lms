@@ -85,6 +85,7 @@ set (HEADERS
     "src/internal/os.h"
     "src/internal/protobuf_sink.h"
     "src/internal/test_modules.h"
+    "src/internal/profiler.h"
 
     "include/lms/logging/level.h"
     "include/lms/logging/logger.h"
@@ -95,6 +96,7 @@ set (HEADERS
     "include/lms/logging/console_sink.h"
     "include/lms/logging/file_sink.h"
     "include/lms/logging/threshold_filter.h"
+    "include/lms/logging/trace.h"
 )
 
 set (SOURCE
@@ -131,6 +133,7 @@ set (SOURCE
     "src/internal/master.cpp"
     "src/internal/protobuf_sink.cpp"
     "src/internal/test_modules.cpp"
+    "src/internal/profiler.cpp"
 
     "src/logging/level.cpp"
     "src/logging/logger.cpp"

@@ -56,11 +56,11 @@ std::unique_ptr<Event> Logger::perror(const std::string &tag) {
 }
 
 void Logger::time(const std::string &tag) {
-    log(Level::PROFILE, tag) << "_begin";
+    context->time(tag.empty() ? name : name + "." + tag);
 }
 
 void Logger::timeEnd(const std::string &tag) {
-    log(Level::PROFILE, tag) << "_end";
+    context->timeEnd(tag.empty() ? name : name + "." + tag);
 }
 
 std::unique_ptr<Event> Logger::log(Level lvl, const std::string &tag) {

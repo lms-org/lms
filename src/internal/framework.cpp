@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "backtrace_formatter.h"
+#include "lms/protobuf_socket.h"
 
 namespace lms {
 namespace internal {
@@ -312,6 +313,49 @@ void Framework::printDAG() {
         }
         logger.info("dag") << node.first->getName() << " ( " << dependencies << ")";
     }
+}
+
+void Framework::startCommunicationThread(int sock) {
+    m_communicationThread = std::thread([sock, this] () {
+        ProtobufSocket socket(sock);
+        lms::Request message;
+        while(socket.readMessage(message) == ProtobufSocket::OK) {
+            using C = lms::Request::Runtime::ContentCase;
+            if(!message.has_runtime()) {
+                logger.error() << "Received unknown message via commSocket";
+                continue;
+            }
+
+            switch(message.runtime().content_case()) {
+            case C::kProfiling:
+                {
+                std::map<std::string, logging::Trace<float>> measurements;
+                logging::Context::getDefault().profilingSummary(measurements);
+                lms::Response summary;
+                for(const auto &pair : measurements) {
+                    Response::ProfilingSummary::Trace *trace = summary.mutable_profiling_summary()->add_traces();
+                    trace->set_name(pair.first);
+                    trace->set_count(pair.second.count());
+                    trace->set_avg(pair.second.avg());
+                    trace->set_min(pair.second.min());
+                    trace->set_max(pair.second.max());
+                    trace->set_std(pair.second.std());
+                }
+                socket.writeMessage(summary);
+                }
+                break;
+            case C::kFilter:
+                // TODO
+                break;
+            }
+
+
+            std::lock_guard<std::mutex> lock(m_queueMutex);
+            m_queue.push_back(message);
+
+
+        }
+    });
 }
 
 }  // namespace internal

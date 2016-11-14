@@ -5,6 +5,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <cstdint>
+
+#include "trace.h"
 
 namespace lms {
 namespace logging {
@@ -33,6 +36,13 @@ public:
      * @brief Create a new context with no filters and no sinks.
      */
     Context();
+
+    /**
+     * @brief Destroy context.
+     *
+     * This will make all dependent loggers invalid
+     */
+    ~Context();
 
     /**
      * @brief Do not allow copy constructing.
@@ -90,9 +100,39 @@ public:
      */
     void processMessage(const Event &message);
 
+    /**
+     * @brief Reset profiling. Set internal state back to zero.
+     */
+    void resetProfiling();
+
+    /**
+     * @brief Start profiling an
+     * @param tag Marker name
+     * @param timestamp
+     */
+    void time(const std::string &tag);
+
+    /**
+     * @brief End profiling and save
+     * @param tag Marker name
+     * @param timestamp
+     */
+    void timeEnd(const std::string &tag);
+
+    /**
+     * @brief Get summary of time()/timeEnd() calls.
+     *
+     * Every tag used in time()/timeEnd() leads to a pair in the mapping.
+     *
+     * @param measurements mapping of tag to summary
+     */
+    void profilingSummary(std::map<std::string, Trace<float>> &measurements) const;
+
 private:
-    std::vector<std::unique_ptr<Sink>> m_sinks;
-    std::unique_ptr<Filter> m_filter;
+    struct Private;
+    Private *dptr;
+    inline Private *dfunc() { return dptr; }
+    inline const Private *dfunc() const { return dptr; }
 };
 
 } // namespace logging

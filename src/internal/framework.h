@@ -10,6 +10,7 @@
 #include "file_monitor.h"
 #include "debug_server.h"
 #include "signalhandler.h"
+#include "messages.pb.h"
 
 namespace lms {
 namespace internal {
@@ -66,6 +67,8 @@ public:
     virtual void signal(int signal);
 
     void printDAG();
+
+    void startCommunicationThread(int sock);
 private:
     bool updateSystem(const RuntimeInfo &info);
     void printOverview();
@@ -98,6 +101,10 @@ private:
     std::string m_saveLogPath;
     bool m_isEnableLoad = false;
     bool m_isEnableSave = false;
+
+    std::thread m_communicationThread;
+    std::mutex m_queueMutex;
+    std::list<lms::Request> m_queue;
 };
 
 } // namespace internal
