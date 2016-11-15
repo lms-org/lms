@@ -331,7 +331,11 @@ void Framework::startCommunicationThread(int sock) {
                 {
                 std::map<std::string, logging::Trace<float>> measurements;
                 logging::Context::getDefault().profilingSummary(measurements);
+                if(message.runtime().profiling().reset()) {
+                    logging::Context::getDefault().resetProfiling();
+                }
                 lms::Response summary;
+                summary.mutable_profiling_summary(); // set type of response even if no measurements available
                 for(const auto &pair : measurements) {
                     Response::ProfilingSummary::Trace *trace = summary.mutable_profiling_summary()->add_traces();
                     trace->set_name(pair.first);
@@ -350,8 +354,8 @@ void Framework::startCommunicationThread(int sock) {
             }
 
 
-            std::lock_guard<std::mutex> lock(m_queueMutex);
-            m_queue.push_back(message);
+            /*std::lock_guard<std::mutex> lock(m_queueMutex);
+            m_queue.push_back(message);*/
 
 
         }
