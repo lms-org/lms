@@ -358,6 +358,10 @@ void Framework::startCommunicationThread(int sock) {
                 break;
             case C::kFilter:
                 // TODO
+                {
+                logging::Context::getDefault().setLevel(
+                    static_cast<logging::Level>(message.runtime().filter().log_level()));
+                }
                 break;
             }
 

@@ -18,7 +18,6 @@ public:
     void sink(const lms::logging::Event &message) override;
 private:
     lms::ProtobufSocket socket;
-    std::mutex mtx;
     logging::Level level;
 };
 

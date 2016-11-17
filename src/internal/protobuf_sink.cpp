@@ -16,10 +16,7 @@ void ProtobufSink::sink(const lms::logging::Event &message) {
     event->set_text(message.messageText());
     event->set_timestamp(message.timestamp.micros());
 
-    {
-        std::lock_guard<std::mutex> lck(mtx);
-        socket.writeMessage(response);
-    }
+    socket.writeMessage(response);
 }
 
 }

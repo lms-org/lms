@@ -11,6 +11,8 @@ struct Context::Private {
     std::unique_ptr<Filter> m_filter;
     internal::Profiler profiler;
     std::mutex profilerMutex;
+    std::mutex loggingMutex;
+    logging::Level level = logging::Level::ALL;
 };
 
 Context &Context::getDefault() {
@@ -25,6 +27,7 @@ Context::~Context() {
 }
 
 void Context::appendSink(Sink *sink) {
+    std::lock_guard<std::mutex> lock(dfunc()->loggingMutex);
     dfunc()->m_sinks.push_back(std::unique_ptr<Sink>(sink));
 }
 
@@ -37,8 +40,11 @@ void Context::filter(Filter *filter) { dfunc()->m_filter.reset(filter); }
 Filter *Context::filter() const { return dfunc()->m_filter.get(); }
 
 void Context::processMessage(const Event &message) {
-    for (size_t i = 0; i < dfunc()->m_sinks.size(); i++) {
-        dfunc()->m_sinks[i]->sink(message);
+    std::lock_guard<std::mutex> lock(dfunc()->loggingMutex);
+    if(message.level >= dfunc()->level) {
+        for (size_t i = 0; i < dfunc()->m_sinks.size(); i++) {
+            dfunc()->m_sinks[i]->sink(message);
+        }
     }
 }
 
@@ -60,6 +66,11 @@ void Context::timeEnd(const std::string &tag) {
 void Context::profilingSummary(std::map<std::string, Trace<double>> &measurements) {
     std::lock_guard<std::mutex> lock(dfunc()->profilerMutex);
     dfunc()->profiler.getOverview(measurements);
+}
+
+void Context::setLevel(logging::Level level) {
+    std::lock_guard<std::mutex> lock(dfunc()->loggingMutex);
+    dfunc()->level = level;
 }
 
 } // namespace logging

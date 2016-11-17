@@ -60,7 +60,11 @@ private:
     void buildListRuntimesResponse(lms::Response &response);
     void buildListClientsResponse(lms::Response &response);
     Runtime* getRuntimeByName(const std::string &name);
+    Runtime* getRuntimeByPid(pid_t id);
+    bool isSomeoneAttached(pid_t id);
 };
+
+void setLogLevel(ProtobufSocket &sock, logging::Level level);
 
 void connectToMaster(int argc, char *argv[]);
 }

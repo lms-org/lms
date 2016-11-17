@@ -220,9 +220,19 @@ void MasterServer::start() {
                     buildListClientsResponse(response);
                     broadcastResponse(response);
 
+                    pid_t rtPid = client.attachedRuntime;
+                    bool wasAttached = client.isAttached;
+
                     client.sock.close();
                     m_clients.erase(it);
                     --it;
+
+                    if(wasAttached) {
+                        Runtime *rt = getRuntimeByPid(rtPid);
+                        if(rt != nullptr && !isSomeoneAttached(rtPid)) {
+                            setLogLevel(rt->commSock, logging::Level::OFF);
+                        }
+                    }
                 }
             }
         }
@@ -286,6 +296,15 @@ void MasterServer::start() {
         std::cout << "Shutdown " << rt.pid << std::endl;
         kill(rt.pid, SIGINT);
     }
+}
+
+bool MasterServer::isSomeoneAttached(pid_t id) {
+    for(const auto &cl : m_clients) {
+        if(cl.isAttached && cl.attachedRuntime == id) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void MasterServer::broadcastResponse(const Response &response) {
@@ -358,6 +377,7 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
             client.attachedRuntime = rt->pid;
             client.shutdownRuntimeOnDetach = false;
             client.logLevel = static_cast<logging::Level>(message.attach().log_level());
+            setLogLevel(rt->commSock, logging::Level::ALL);
         }
         }
         break;
@@ -398,8 +418,20 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         client.listenBroadcats = message.listen_broadcasts().enable();
         break;
     case lms::Request::kDetach:
+        {
+        bool wasAttached = client.isAttached;
+        pid_t rtPid = client.attachedRuntime;
+
         client.isAttached = false;
         client.shutdownRuntimeOnDetach = false;
+
+        if(wasAttached) {
+            Runtime *rt = getRuntimeByPid(rtPid);
+            if(rt != nullptr && !isSomeoneAttached(rtPid)) {
+                setLogLevel(rt->commSock, logging::Level::OFF);
+            }
+        }
+        }
         break;
     }
 
@@ -427,6 +459,13 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
     }*/
 }
 
+void setLogLevel(ProtobufSocket &sock, logging::Level level) {
+    lms::Request req;
+    req.mutable_runtime()->mutable_filter()->set_log_level(
+                static_cast<Response::LogEvent::Level>(level));
+    sock.writeMessage(req);
+}
+
 void MasterServer::runFramework(Client &client, const Request_Run &options) {
     pid_t childpid;
     int logFd[2];
@@ -450,6 +489,10 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         logging::Context &ctx = logging::Context::getDefault();
         logging::Level logLevel = options.production() ? logging::Level::WARN : logging::Level::ALL;
         ctx.appendSink(new ProtobufSink(logFd[1], logLevel));
+
+        if(options.detached()) {
+            logging::Context::getDefault().setLevel(logging::Level::OFF);
+        }
 
         lms::internal::Framework fw(options.config_file());
         fw.setDebug(options.debug());
@@ -496,9 +539,19 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
             client.logLevel = static_cast<logging::Level>(options.log_level());
             client.shutdownRuntimeOnDetach = options.has_shutdown_runtime_on_detach()
                     && options.shutdown_runtime_on_detach();
+
         }
         m_runtimes.push_back(rt);
     }
+}
+
+MasterServer::Runtime* MasterServer::getRuntimeByPid(pid_t id) {
+    for(auto &rt : m_runtimes) {
+        if(rt.pid == id) {
+            return &rt;
+        }
+    }
+    return nullptr;
 }
 
 MasterServer::Runtime* MasterServer::getRuntimeByName(const std::string &name) {

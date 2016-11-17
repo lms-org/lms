@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "trace.h"
+#include "level.h"
 
 namespace lms {
 namespace logging {
@@ -127,6 +128,12 @@ public:
      * @param measurements mapping of tag to summary
      */
     void profilingSummary(std::map<std::string, Trace<double>> &measurements);
+
+    /**
+     * @brief Set global log level
+     * @param level new logging level
+     */
+    void setLevel(logging::Level level);
 
 private:
     struct Private;
