@@ -57,7 +57,7 @@ void Context::timeEnd(const std::string &tag) {
     dfunc()->profiler.addEnd(tag, lms::Time::now());
 }
 
-void Context::profilingSummary(std::map<std::string, Trace<float>> &measurements) {
+void Context::profilingSummary(std::map<std::string, Trace<double>> &measurements) {
     std::lock_guard<std::mutex> lock(dfunc()->profilerMutex);
     dfunc()->profiler.getOverview(measurements);
 }

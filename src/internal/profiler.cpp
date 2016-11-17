@@ -12,7 +12,7 @@ void Profiler::addEnd(const std::string &tag, lms::Time timestamp) {
     measurements[tag].updateEnd(timestamp);
 }
 
-void Profiler::getOverview(std::map<std::string, logging::Trace<float>> &result) const {
+void Profiler::getOverview(std::map<std::string, logging::Trace<double>> &result) const {
     result = measurements;
 }
 

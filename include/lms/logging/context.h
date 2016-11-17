@@ -126,7 +126,7 @@ public:
      *
      * @param measurements mapping of tag to summary
      */
-    void profilingSummary(std::map<std::string, Trace<float>> &measurements);
+    void profilingSummary(std::map<std::string, Trace<double>> &measurements);
 
 private:
     struct Private;

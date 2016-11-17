@@ -13,10 +13,10 @@ class Profiler {
 public:
     void addBegin(const std::string &tag, lms::Time timestamp);
     void addEnd(const std::string &tag, lms::Time timestamp);
-    void getOverview(std::map<std::string, logging::Trace<float>> &result) const;
+    void getOverview(std::map<std::string, logging::Trace<double>> &result) const;
     void reset();
 private:
-    std::map<std::string, logging::Trace<float>> measurements;
+    std::map<std::string, logging::Trace<double>> measurements;
 };
 
 }

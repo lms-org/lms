@@ -329,7 +329,7 @@ void Framework::startCommunicationThread(int sock) {
             switch(message.runtime().content_case()) {
             case C::kProfiling:
                 {
-                std::map<std::string, logging::Trace<float>> measurements;
+                std::map<std::string, logging::Trace<double>> measurements;
                 logging::Context::getDefault().profilingSummary(measurements);
                 if(message.runtime().profiling().reset()) {
                     logging::Context::getDefault().resetProfiling();
@@ -341,8 +341,13 @@ void Framework::startCommunicationThread(int sock) {
                     trace->set_name(pair.first);
                     trace->set_count(pair.second.count());
                     trace->set_avg(pair.second.avg());
-                    trace->set_min(pair.second.min());
-                    trace->set_max(pair.second.max());
+                    if(pair.second.count() > 0) {
+                        trace->set_min(pair.second.min());
+                        trace->set_max(pair.second.max());
+                    } else {
+                        trace->set_min(0);
+                        trace->set_max(0);
+                    }
                     trace->set_std(pair.second.std());
                     if(pair.second.hasBegin()) {
                         trace->set_running_since((lms::Time::now() - pair.second.begin()).micros());
