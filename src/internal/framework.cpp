@@ -344,6 +344,9 @@ void Framework::startCommunicationThread(int sock) {
                     trace->set_min(pair.second.min());
                     trace->set_max(pair.second.max());
                     trace->set_std(pair.second.std());
+                    if(pair.second.hasBegin()) {
+                        trace->set_running_since((lms::Time::now() - pair.second.begin()).micros());
+                    }
                 }
                 socket.writeMessage(summary);
                 }

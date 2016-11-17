@@ -43,22 +43,22 @@ void Context::processMessage(const Event &message) {
 }
 
 void Context::resetProfiling() {
-    std::lock_guard<std::mutex> lock(dptr->profilerMutex);
-    dptr->profiler.reset();
+    std::lock_guard<std::mutex> lock(dfunc()->profilerMutex);
+    dfunc()->profiler.reset();
 }
 
 void Context::time(const std::string &tag) {
-    std::lock_guard<std::mutex> lock(dptr->profilerMutex);
+    std::lock_guard<std::mutex> lock(dfunc()->profilerMutex);
     dfunc()->profiler.addBegin(tag, lms::Time::now());
 }
 
 void Context::timeEnd(const std::string &tag) {
-    std::lock_guard<std::mutex> lock(dptr->profilerMutex);
+    std::lock_guard<std::mutex> lock(dfunc()->profilerMutex);
     dfunc()->profiler.addEnd(tag, lms::Time::now());
 }
 
-void Context::profilingSummary(std::map<std::string, Trace<float>> &measurements) const {
-    std::lock_guard<std::mutex> lock(dptr->profilerMutex);
+void Context::profilingSummary(std::map<std::string, Trace<float>> &measurements) {
+    std::lock_guard<std::mutex> lock(dfunc()->profilerMutex);
     dfunc()->profiler.getOverview(measurements);
 }
 

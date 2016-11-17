@@ -16,7 +16,6 @@ public:
     void getOverview(std::map<std::string, logging::Trace<float>> &result) const;
     void reset();
 private:
-    std::map<std::string, lms::Time> beginTimes;
     std::map<std::string, logging::Trace<float>> measurements;
 };
 
