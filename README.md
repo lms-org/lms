@@ -1,5 +1,7 @@
 ![logo](https://github.com/Phibedy/LMS/blob/master/lms_banner.jpg)
 
+[![Build Status](https://travis-ci.org/lms-org/lms.svg?branch=develop)](https://travis-ci.org/lms-org/lms)
+
 LMS is a light-weight, highly modular and efficient framework capable of controlling
 near real-time systems like robots, vehicles or airplanes. It runs on Unix-like systems,
 Windows support is in progress. LMS manages dynamically loaded modules and data flow for you.
@@ -14,11 +16,13 @@ sudo apt-get install build-essential make git cmake
 
 You may need additional packages depending on the use case or the required libraries.
 
-Clone and install one of config repositories owned by [lms-org](https://github.com/lms-org).
+Clone and install LMS.
 
 ```sh
-git clone https://github.com/lms-org/config_dependency_test.git
-cd config_dependency_test
+git clone https://github.com/lms-org/LMS.git
+cd LMS
+git submodule init
+git submodule update
 mkdir build
 cd build
 cmake ..
@@ -29,15 +33,11 @@ Now start lms by simply executing its binary `./lms`. If you need further assist
 looking at the [wiki](https://github.com/Phibedy/LMS/wiki) or contact one
 of our developers by mail.
 
-## Known Issues
-- Signalhandler doesn't work properly.
-- Doesn't fully work on windows (it compiles).
-
 ## Special thanks go to
 - ngladitz from #cmake, who helped me a lot getting into cmake :)
 
 ## License
-Copyright 2015 LMS Team
+Copyright 2015-2016 LMS Team
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

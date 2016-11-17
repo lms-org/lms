@@ -1,5 +1,6 @@
 *~
 build/
+build-clang
 *.conf
 cbbuild
 codebuild
@@ -16,10 +17,8 @@ config/
 *.md~
 .metadata
 *.autosave
+*.pyc
 CMakeLists.txt.user
 doku/html
-lms/external/libraries/*
-!lms/external/libraries/CMakeLists.txt
-lms/external/modules/*
-!lms/external/modules/CMakeLists.txt
-lms/include/lms/definitions.h
+include/lms/definitions.h
+conanbuildinfo.txt

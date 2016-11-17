@@ -1,0 +1,23 @@
+language: cpp
+sudo: required
+dist: trusty
+compiler:
+- gcc
+- clang
+
+install:
+# Download conan
+- pip install conan
+- conan remote add lms http://mineforce.de:9300
+- conan install --build=missing
+
+
+
+script:
+- mkdir build
+- cd build
+- conan install .. --build=missing
+- cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON && make
+- bin/lmstest
+after_success:
+- bash <(curl -s https://codecov.io/bash)
