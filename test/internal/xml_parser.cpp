@@ -44,7 +44,7 @@ TEST(xml_parser, parseModuleConfig) {
             "<group name=\"size\">"
             "<int name=\"width\">400</int>"
             "<float name=\"height\">300.10</float>"
-            "<group name=\"deep\"><string name=\"down\">A B\n C\tD</string></group>"
+            "<group name=\"deep\"><string name=\"down\">A, B,\n C,\tD</string></group>"
             "</group>"
             "<bool name=\"flag\">true</bool>"
             "</config>");

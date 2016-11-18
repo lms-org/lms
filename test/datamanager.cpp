@@ -3,12 +3,17 @@
 #include "lms/inheritance.h"
 #include <iostream>
 
-struct ChannelType {
+struct ChannelType : public lms::Inheritance {
     std::string key;
     int val;
+
+    bool isSubType(std::type_index type) const {
+        // TODO base type needs Inheritance for getWithType
+        return false;
+    }
 };
 
-struct DerivedChannelType : public lms::Inheritance, public ChannelType {
+struct DerivedChannelType : public ChannelType {
     int extra;
 
     bool isSubType(std::type_index type) const {
@@ -83,9 +88,16 @@ TEST(DataManager, get) {
     ASSERT_EQ(ch.get(), &(*ch));
 }
 
+TEST(DataManager, castableTo) {
+    lms::DataManager dm;
+    auto ch = dm.writeChannel<DerivedChannelType>("Struct");
+    ASSERT_TRUE(ch.castableTo<ChannelType>());
+}
+
 TEST(DataManager, getWithType) {
     lms::DataManager dm;
     auto ch = dm.writeChannel<DerivedChannelType>("Struct");
+    ASSERT_TRUE(ch.castableTo<ChannelType>());
     ChannelType *ct = ch.getWithType<ChannelType>();
 
     ct->key = "hallo";
