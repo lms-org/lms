@@ -4,9 +4,11 @@
 #include <memory>
 #include <csignal>
 #include <sys/types.h>
+#include <stdio.h>
 #include <unistd.h>
 #include "backtrace_formatter.h"
 #include "lms/protobuf_socket.h"
+#include "os.h"
 
 namespace lms {
 namespace internal {
@@ -191,9 +193,29 @@ bool Framework::cycle() {
 
     m_clock.beforeLoopIteration();
     executionManager().validate(modules);
+
+    {
+        std::lock_guard<std::mutex> lock(m_recordingMutex);
+        if(m_recordingState == RecordingState::LOAD) {
+            for(auto &stream : m_recordingStreams) {
+                m_dataManager.writeChannel<lms::Any>(stream.first).deserialize(stream.second);
+            }
+        }
+    }
+
     logger.time("cycle");
     m_executionManager.loop();
     logger.timeEnd("cycle");
+
+    {
+        std::lock_guard<std::mutex> lock(m_recordingMutex);
+        if(m_recordingState == RecordingState::SAVE) {
+            for(auto &stream : m_recordingStreams) {
+                m_dataManager.readChannel<lms::Any>(stream.first).serialize(stream.second);
+            }
+        }
+    }
+
     return true;
 }
 
@@ -363,6 +385,40 @@ void Framework::startCommunicationThread(int sock) {
                     static_cast<logging::Level>(message.runtime().filter().log_level()));
                 }
                 break;
+            case C::kStartRecording:
+                {
+                // TODO better do this during a cycle
+                std::lock_guard<std::mutex> lock(m_recordingMutex);
+                if(m_recordingState == RecordingState::NONE) {
+                    m_recordingState = RecordingState::SAVE;
+                    const auto &channels = message.runtime().start_recording().channels();
+                    std::string path = homepath() + "/lmslogs/temp";
+                    ::mkdir(path.c_str(), MODE);
+                    for(int i = 0; i < channels.size(); i++) {
+                        std::fstream &stream = m_recordingStreams[channels.Get(i)];
+                        stream.open(path + "/" + channels.Get(i), std::fstream::out);
+                    }
+                } else {
+                    logger.error() << "Can't start recording.";
+                }
+                }
+                break;
+            case C::kStopRecording:
+                {
+                // TODO better do this during a cycle
+                std::lock_guard<std::mutex> lock(m_recordingMutex);
+                if(m_recordingState == RecordingState::SAVE) {
+                    for(auto &stream : m_recordingStreams) {
+                        stream.second.close();
+                    }
+                    std::string oldPath = homepath() + "/lmslogs/temp";
+                    std::string newPath = homepath() + "/lmslogs/" + message.runtime().stop_recording().tag();
+                    ::rename(oldPath.c_str(), newPath.c_str());
+                } else {
+                    logger.error() << "Can't stop recording";
+                }
+                }
+                break;
             }
 
 
@@ -372,6 +428,18 @@ void Framework::startCommunicationThread(int sock) {
 
         }
     });
+}
+
+void Framework::loadRecordings(const std::string &absPath, const std::vector<std::string> &channels) {
+    std::lock_guard<std::mutex> lock(m_recordingMutex);
+    logger.info() << "Loading records from " << absPath;
+    m_recordingState = RecordingState::LOAD;
+    for(const auto &ch : channels) {
+        std::string path = absPath + "/" + ch;
+        logger.info() << "Loading channel " << ch << " from " + path;
+        std::fstream &stream = m_recordingStreams[ch];
+        stream.open(path, std::fstream::out);
+    }
 }
 
 }  // namespace internal

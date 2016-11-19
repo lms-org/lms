@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "lms/datamanager.h"
 #include "signalhandler.h"
 #include "argumenthandler.h"
@@ -69,6 +72,8 @@ public:
     void printDAG();
 
     void startCommunicationThread(int sock);
+
+    void loadRecordings(const std::string &absPath, const std::vector<std::string> &channels);
 private:
     bool updateSystem(const RuntimeInfo &info);
     void printOverview();
@@ -105,6 +110,14 @@ private:
     std::thread m_communicationThread;
     std::mutex m_queueMutex;
     std::list<lms::Request> m_queue;
+
+    // recording
+    enum RecordingState {
+        NONE, LOAD, SAVE
+    };
+    std::mutex m_recordingMutex;
+    RecordingState m_recordingState = NONE;
+    std::map<std::string, std::fstream> m_recordingStreams;
 };
 
 } // namespace internal

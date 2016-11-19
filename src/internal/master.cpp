@@ -512,6 +512,13 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
             fw.executionManager().enabledMultithreading(true);
             fw.executionManager().numThreads(options.num_threads());
         }
+        if(options.has_load_path() && options.load_channels_size() > 0) {
+            std::vector<std::string> channels;
+            for(int i = 0; i < options.load_channels().size(); i++) {
+                channels.push_back(options.load_channels().Get(i));
+            }
+            fw.loadRecordings(options.load_path(), channels);
+        }
 
         SignalHandler::getInstance().addListener(SIGSEGV, &fw);
         SignalHandler::getInstance().addListener(SIGINT, &fw);
@@ -691,6 +698,8 @@ void connectToMaster(int argc, char *argv[]) {
             TCLAP::ValueArg<int> multithreadingArg(
                 "j", "", "Enable multithreading and set number of threads",
                 false, 4, "NUM", cmd);
+            TCLAP::MultiArg<std::string> loadChannelsArg(
+                "", "ch", "Add channel to load from", false, "Channel", cmd);
             cmd.parse(argc-1, argv+1);
 
             lms::Request_Run *run = req.mutable_run();
@@ -729,6 +738,9 @@ void connectToMaster(int argc, char *argv[]) {
             }
             if(multithreadingArg.isSet()) {
                 run->set_num_threads(multithreadingArg.getValue());
+            }
+            for(const auto& ch : loadChannelsArg) {
+                *run->add_load_channels() = ch;
             }
 
             char *lms_path = std::getenv("LMS_PATH");
@@ -776,6 +788,42 @@ void connectToMaster(int argc, char *argv[]) {
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "modules") == 0) {
             lms::Request_ModuleList *modules = req.mutable_module_list();
+            socket.writeMessage(req);
+        } else if(strcmp(argv[1], "start-recording")) {
+            TCLAP::CmdLine cmd("lms start-recording", ' ', LMS_VERSION_STRING);
+            TCLAP::UnlabeledValueArg<std::string> nameArg(
+                "name", "Runtime name", false, "my_runtime", "NAME", cmd);
+            TCLAP::MultiArg<std::string> loadChannelsArg(
+                "", "ch", "Add channel to load from", false, "Channel", cmd);
+            cmd.parse(argc-1, argv+1);
+
+            lms::Request::Runtime::StartRecording *startRecording =
+                    req.mutable_runtime()->mutable_start_recording();
+
+            if(nameArg.isSet()) {
+                req.mutable_runtime()->set_name(nameArg.getValue());
+            }
+            for(const auto& ch : loadChannelsArg) {
+                *startRecording->add_channels() = ch;
+            }
+            socket.writeMessage(req);
+        } else if(strcmp(argv[1], "stop-recording")) {
+            TCLAP::CmdLine cmd("lms stop-recording", ' ', LMS_VERSION_STRING);
+            TCLAP::UnlabeledValueArg<std::string> nameArg(
+                "name", "Runtime name", false, "my_runtime", "NAME", cmd);
+            TCLAP::ValueArg<std::string> tagArg(
+                "", "tag",
+                "Set folder name for recorded data", true, "",
+                "tag", cmd);
+            cmd.parse(argc-1, argv+1);
+
+            lms::Request::Runtime::StopRecording *stopRecording =
+                req.mutable_runtime()->mutable_stop_recording();
+
+            if(nameArg.isSet()) {
+                req.mutable_runtime()->set_name(nameArg.getValue());
+            }
+            stopRecording->set_tag(tagArg.getValue());
             socket.writeMessage(req);
         } else if(strcmp(argv[1], "profiling") == 0 || strcmp(argv[1], "prof") == 0) {
             TCLAP::CmdLine cmd("lms profiling", ' ', LMS_VERSION_STRING);
