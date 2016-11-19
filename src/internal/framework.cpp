@@ -414,6 +414,7 @@ void Framework::startCommunicationThread(int sock) {
                     std::string oldPath = homepath() + "/lmslogs/temp";
                     std::string newPath = homepath() + "/lmslogs/" + message.runtime().stop_recording().tag();
                     ::rename(oldPath.c_str(), newPath.c_str());
+                    m_recordingState = NONE;
                 } else {
                     logger.error() << "Can't stop recording";
                 }

@@ -789,7 +789,7 @@ void connectToMaster(int argc, char *argv[]) {
         } else if(strcmp(argv[1], "modules") == 0) {
             lms::Request_ModuleList *modules = req.mutable_module_list();
             socket.writeMessage(req);
-        } else if(strcmp(argv[1], "start-recording")) {
+        } else if(strcmp(argv[1], "start-recording") == 0) {
             TCLAP::CmdLine cmd("lms start-recording", ' ', LMS_VERSION_STRING);
             TCLAP::UnlabeledValueArg<std::string> nameArg(
                 "name", "Runtime name", false, "my_runtime", "NAME", cmd);
@@ -807,7 +807,7 @@ void connectToMaster(int argc, char *argv[]) {
                 *startRecording->add_channels() = ch;
             }
             socket.writeMessage(req);
-        } else if(strcmp(argv[1], "stop-recording")) {
+        } else if(strcmp(argv[1], "stop-recording") == 0) {
             TCLAP::CmdLine cmd("lms stop-recording", ' ', LMS_VERSION_STRING);
             TCLAP::UnlabeledValueArg<std::string> nameArg(
                 "name", "Runtime name", false, "my_runtime", "NAME", cmd);
