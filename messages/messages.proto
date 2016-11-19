@@ -17,6 +17,7 @@ message Request {
         optional string load_path = 10;
         optional string save_path = 11;
         optional int32 num_threads = 12;
+        repeated string load_channels = 13;
 	}
 	message ListProcesses {}
 	message Attach {
@@ -41,10 +42,18 @@ message Request {
         message Profiling {
             optional bool reset = 1 [default = false];
         }
+        message StartRecording {
+            repeated string channels = 1;
+        }
+        message StopRecording {
+            optional string tag = 1;
+        }
 
         oneof content {
             LogFilter filter = 2;
             Profiling profiling = 3;
+            StartRecording start_recording = 4;
+            StopRecording stop_recording = 5;
         }
     }
 

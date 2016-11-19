@@ -48,6 +48,8 @@ class Request_Detach;
 class Request_Runtime;
 class Request_Runtime_LogFilter;
 class Request_Runtime_Profiling;
+class Request_Runtime_StartRecording;
+class Request_Runtime_StopRecording;
 class Response;
 class Response_Info;
 class Response_ClientList;
@@ -488,6 +490,22 @@ class Request_Run : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 num_threads() const;
   inline void set_num_threads(::google::protobuf::int32 value);
 
+  // repeated string load_channels = 13;
+  inline int load_channels_size() const;
+  inline void clear_load_channels();
+  static const int kLoadChannelsFieldNumber = 13;
+  inline const ::std::string& load_channels(int index) const;
+  inline ::std::string* mutable_load_channels(int index);
+  inline void set_load_channels(int index, const ::std::string& value);
+  inline void set_load_channels(int index, const char* value);
+  inline void set_load_channels(int index, const char* value, size_t size);
+  inline ::std::string* add_load_channels();
+  inline void add_load_channels(const ::std::string& value);
+  inline void add_load_channels(const char* value);
+  inline void add_load_channels(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& load_channels() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_load_channels();
+
   // @@protoc_insertion_point(class_scope:lms.Request.Run)
  private:
   inline void set_has_config_file();
@@ -526,6 +544,7 @@ class Request_Run : public ::google::protobuf::Message {
   ::std::string* name_;
   ::std::string* load_path_;
   ::std::string* save_path_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> load_channels_;
   ::google::protobuf::int32 num_threads_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1168,6 +1187,176 @@ class Request_Runtime_Profiling : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_Runtime_StartRecording : public ::google::protobuf::Message {
+ public:
+  Request_Runtime_StartRecording();
+  virtual ~Request_Runtime_StartRecording();
+
+  Request_Runtime_StartRecording(const Request_Runtime_StartRecording& from);
+
+  inline Request_Runtime_StartRecording& operator=(const Request_Runtime_StartRecording& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Runtime_StartRecording& default_instance();
+
+  void Swap(Request_Runtime_StartRecording* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Runtime_StartRecording* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Runtime_StartRecording& from);
+  void MergeFrom(const Request_Runtime_StartRecording& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated string channels = 1;
+  inline int channels_size() const;
+  inline void clear_channels();
+  static const int kChannelsFieldNumber = 1;
+  inline const ::std::string& channels(int index) const;
+  inline ::std::string* mutable_channels(int index);
+  inline void set_channels(int index, const ::std::string& value);
+  inline void set_channels(int index, const char* value);
+  inline void set_channels(int index, const char* value, size_t size);
+  inline ::std::string* add_channels();
+  inline void add_channels(const ::std::string& value);
+  inline void add_channels(const char* value);
+  inline void add_channels(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& channels() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_channels();
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Runtime.StartRecording)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> channels_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Runtime_StartRecording* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Request_Runtime_StopRecording : public ::google::protobuf::Message {
+ public:
+  Request_Runtime_StopRecording();
+  virtual ~Request_Runtime_StopRecording();
+
+  Request_Runtime_StopRecording(const Request_Runtime_StopRecording& from);
+
+  inline Request_Runtime_StopRecording& operator=(const Request_Runtime_StopRecording& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Runtime_StopRecording& default_instance();
+
+  void Swap(Request_Runtime_StopRecording* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Runtime_StopRecording* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Runtime_StopRecording& from);
+  void MergeFrom(const Request_Runtime_StopRecording& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string tag = 1;
+  inline bool has_tag() const;
+  inline void clear_tag();
+  static const int kTagFieldNumber = 1;
+  inline const ::std::string& tag() const;
+  inline void set_tag(const ::std::string& value);
+  inline void set_tag(const char* value);
+  inline void set_tag(const char* value, size_t size);
+  inline ::std::string* mutable_tag();
+  inline ::std::string* release_tag();
+  inline void set_allocated_tag(::std::string* tag);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Runtime.StopRecording)
+ private:
+  inline void set_has_tag();
+  inline void clear_has_tag();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* tag_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Runtime_StopRecording* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request_Runtime : public ::google::protobuf::Message {
  public:
   Request_Runtime();
@@ -1194,6 +1383,8 @@ class Request_Runtime : public ::google::protobuf::Message {
   enum ContentCase {
     kFilter = 2,
     kProfiling = 3,
+    kStartRecording = 4,
+    kStopRecording = 5,
     CONTENT_NOT_SET = 0,
   };
 
@@ -1227,6 +1418,8 @@ class Request_Runtime : public ::google::protobuf::Message {
 
   typedef Request_Runtime_LogFilter LogFilter;
   typedef Request_Runtime_Profiling Profiling;
+  typedef Request_Runtime_StartRecording StartRecording;
+  typedef Request_Runtime_StopRecording StopRecording;
 
   // accessors -------------------------------------------------------
 
@@ -1260,6 +1453,24 @@ class Request_Runtime : public ::google::protobuf::Message {
   inline ::lms::Request_Runtime_Profiling* release_profiling();
   inline void set_allocated_profiling(::lms::Request_Runtime_Profiling* profiling);
 
+  // optional .lms.Request.Runtime.StartRecording start_recording = 4;
+  inline bool has_start_recording() const;
+  inline void clear_start_recording();
+  static const int kStartRecordingFieldNumber = 4;
+  inline const ::lms::Request_Runtime_StartRecording& start_recording() const;
+  inline ::lms::Request_Runtime_StartRecording* mutable_start_recording();
+  inline ::lms::Request_Runtime_StartRecording* release_start_recording();
+  inline void set_allocated_start_recording(::lms::Request_Runtime_StartRecording* start_recording);
+
+  // optional .lms.Request.Runtime.StopRecording stop_recording = 5;
+  inline bool has_stop_recording() const;
+  inline void clear_stop_recording();
+  static const int kStopRecordingFieldNumber = 5;
+  inline const ::lms::Request_Runtime_StopRecording& stop_recording() const;
+  inline ::lms::Request_Runtime_StopRecording* mutable_stop_recording();
+  inline ::lms::Request_Runtime_StopRecording* release_stop_recording();
+  inline void set_allocated_stop_recording(::lms::Request_Runtime_StopRecording* stop_recording);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request.Runtime)
  private:
@@ -1267,6 +1478,8 @@ class Request_Runtime : public ::google::protobuf::Message {
   inline void clear_has_name();
   inline void set_has_filter();
   inline void set_has_profiling();
+  inline void set_has_start_recording();
+  inline void set_has_stop_recording();
 
   inline bool has_content();
   void clear_content();
@@ -1280,6 +1493,8 @@ class Request_Runtime : public ::google::protobuf::Message {
   union ContentUnion {
     ::lms::Request_Runtime_LogFilter* filter_;
     ::lms::Request_Runtime_Profiling* profiling_;
+    ::lms::Request_Runtime_StartRecording* start_recording_;
+    ::lms::Request_Runtime_StopRecording* stop_recording_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -3409,6 +3624,60 @@ inline void Request_Run::set_num_threads(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:lms.Request.Run.num_threads)
 }
 
+// repeated string load_channels = 13;
+inline int Request_Run::load_channels_size() const {
+  return load_channels_.size();
+}
+inline void Request_Run::clear_load_channels() {
+  load_channels_.Clear();
+}
+inline const ::std::string& Request_Run::load_channels(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Request.Run.load_channels)
+  return load_channels_.Get(index);
+}
+inline ::std::string* Request_Run::mutable_load_channels(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Request.Run.load_channels)
+  return load_channels_.Mutable(index);
+}
+inline void Request_Run::set_load_channels(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:lms.Request.Run.load_channels)
+  load_channels_.Mutable(index)->assign(value);
+}
+inline void Request_Run::set_load_channels(int index, const char* value) {
+  load_channels_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Run.load_channels)
+}
+inline void Request_Run::set_load_channels(int index, const char* value, size_t size) {
+  load_channels_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Run.load_channels)
+}
+inline ::std::string* Request_Run::add_load_channels() {
+  return load_channels_.Add();
+}
+inline void Request_Run::add_load_channels(const ::std::string& value) {
+  load_channels_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:lms.Request.Run.load_channels)
+}
+inline void Request_Run::add_load_channels(const char* value) {
+  load_channels_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:lms.Request.Run.load_channels)
+}
+inline void Request_Run::add_load_channels(const char* value, size_t size) {
+  load_channels_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:lms.Request.Run.load_channels)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+Request_Run::load_channels() const {
+  // @@protoc_insertion_point(field_list:lms.Request.Run.load_channels)
+  return load_channels_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+Request_Run::mutable_load_channels() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Request.Run.load_channels)
+  return &load_channels_;
+}
+
 // -------------------------------------------------------------------
 
 // Request_ListProcesses
@@ -3717,6 +3986,144 @@ inline void Request_Runtime_Profiling::set_reset(bool value) {
 
 // -------------------------------------------------------------------
 
+// Request_Runtime_StartRecording
+
+// repeated string channels = 1;
+inline int Request_Runtime_StartRecording::channels_size() const {
+  return channels_.size();
+}
+inline void Request_Runtime_StartRecording::clear_channels() {
+  channels_.Clear();
+}
+inline const ::std::string& Request_Runtime_StartRecording::channels(int index) const {
+  // @@protoc_insertion_point(field_get:lms.Request.Runtime.StartRecording.channels)
+  return channels_.Get(index);
+}
+inline ::std::string* Request_Runtime_StartRecording::mutable_channels(int index) {
+  // @@protoc_insertion_point(field_mutable:lms.Request.Runtime.StartRecording.channels)
+  return channels_.Mutable(index);
+}
+inline void Request_Runtime_StartRecording::set_channels(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:lms.Request.Runtime.StartRecording.channels)
+  channels_.Mutable(index)->assign(value);
+}
+inline void Request_Runtime_StartRecording::set_channels(int index, const char* value) {
+  channels_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Runtime.StartRecording.channels)
+}
+inline void Request_Runtime_StartRecording::set_channels(int index, const char* value, size_t size) {
+  channels_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Runtime.StartRecording.channels)
+}
+inline ::std::string* Request_Runtime_StartRecording::add_channels() {
+  return channels_.Add();
+}
+inline void Request_Runtime_StartRecording::add_channels(const ::std::string& value) {
+  channels_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:lms.Request.Runtime.StartRecording.channels)
+}
+inline void Request_Runtime_StartRecording::add_channels(const char* value) {
+  channels_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:lms.Request.Runtime.StartRecording.channels)
+}
+inline void Request_Runtime_StartRecording::add_channels(const char* value, size_t size) {
+  channels_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:lms.Request.Runtime.StartRecording.channels)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+Request_Runtime_StartRecording::channels() const {
+  // @@protoc_insertion_point(field_list:lms.Request.Runtime.StartRecording.channels)
+  return channels_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+Request_Runtime_StartRecording::mutable_channels() {
+  // @@protoc_insertion_point(field_mutable_list:lms.Request.Runtime.StartRecording.channels)
+  return &channels_;
+}
+
+// -------------------------------------------------------------------
+
+// Request_Runtime_StopRecording
+
+// optional string tag = 1;
+inline bool Request_Runtime_StopRecording::has_tag() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_Runtime_StopRecording::set_has_tag() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_Runtime_StopRecording::clear_has_tag() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_Runtime_StopRecording::clear_tag() {
+  if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    tag_->clear();
+  }
+  clear_has_tag();
+}
+inline const ::std::string& Request_Runtime_StopRecording::tag() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Runtime.StopRecording.tag)
+  return *tag_;
+}
+inline void Request_Runtime_StopRecording::set_tag(const ::std::string& value) {
+  set_has_tag();
+  if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    tag_ = new ::std::string;
+  }
+  tag_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Runtime.StopRecording.tag)
+}
+inline void Request_Runtime_StopRecording::set_tag(const char* value) {
+  set_has_tag();
+  if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    tag_ = new ::std::string;
+  }
+  tag_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Runtime.StopRecording.tag)
+}
+inline void Request_Runtime_StopRecording::set_tag(const char* value, size_t size) {
+  set_has_tag();
+  if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    tag_ = new ::std::string;
+  }
+  tag_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Runtime.StopRecording.tag)
+}
+inline ::std::string* Request_Runtime_StopRecording::mutable_tag() {
+  set_has_tag();
+  if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    tag_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Runtime.StopRecording.tag)
+  return tag_;
+}
+inline ::std::string* Request_Runtime_StopRecording::release_tag() {
+  clear_has_tag();
+  if (tag_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = tag_;
+    tag_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Runtime_StopRecording::set_allocated_tag(::std::string* tag) {
+  if (tag_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete tag_;
+  }
+  if (tag) {
+    set_has_tag();
+    tag_ = tag;
+  } else {
+    clear_has_tag();
+    tag_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Runtime.StopRecording.tag)
+}
+
+// -------------------------------------------------------------------
+
 // Request_Runtime
 
 // optional string name = 1;
@@ -3878,6 +4285,92 @@ inline void Request_Runtime::set_allocated_profiling(::lms::Request_Runtime_Prof
   if (profiling) {
     set_has_profiling();
     content_.profiling_ = profiling;
+  }
+}
+
+// optional .lms.Request.Runtime.StartRecording start_recording = 4;
+inline bool Request_Runtime::has_start_recording() const {
+  return content_case() == kStartRecording;
+}
+inline void Request_Runtime::set_has_start_recording() {
+  _oneof_case_[0] = kStartRecording;
+}
+inline void Request_Runtime::clear_start_recording() {
+  if (has_start_recording()) {
+    delete content_.start_recording_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Runtime_StartRecording& Request_Runtime::start_recording() const {
+  return has_start_recording() ? *content_.start_recording_
+                      : ::lms::Request_Runtime_StartRecording::default_instance();
+}
+inline ::lms::Request_Runtime_StartRecording* Request_Runtime::mutable_start_recording() {
+  if (!has_start_recording()) {
+    clear_content();
+    set_has_start_recording();
+    content_.start_recording_ = new ::lms::Request_Runtime_StartRecording;
+  }
+  return content_.start_recording_;
+}
+inline ::lms::Request_Runtime_StartRecording* Request_Runtime::release_start_recording() {
+  if (has_start_recording()) {
+    clear_has_content();
+    ::lms::Request_Runtime_StartRecording* temp = content_.start_recording_;
+    content_.start_recording_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request_Runtime::set_allocated_start_recording(::lms::Request_Runtime_StartRecording* start_recording) {
+  clear_content();
+  if (start_recording) {
+    set_has_start_recording();
+    content_.start_recording_ = start_recording;
+  }
+}
+
+// optional .lms.Request.Runtime.StopRecording stop_recording = 5;
+inline bool Request_Runtime::has_stop_recording() const {
+  return content_case() == kStopRecording;
+}
+inline void Request_Runtime::set_has_stop_recording() {
+  _oneof_case_[0] = kStopRecording;
+}
+inline void Request_Runtime::clear_stop_recording() {
+  if (has_stop_recording()) {
+    delete content_.stop_recording_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Runtime_StopRecording& Request_Runtime::stop_recording() const {
+  return has_stop_recording() ? *content_.stop_recording_
+                      : ::lms::Request_Runtime_StopRecording::default_instance();
+}
+inline ::lms::Request_Runtime_StopRecording* Request_Runtime::mutable_stop_recording() {
+  if (!has_stop_recording()) {
+    clear_content();
+    set_has_stop_recording();
+    content_.stop_recording_ = new ::lms::Request_Runtime_StopRecording;
+  }
+  return content_.stop_recording_;
+}
+inline ::lms::Request_Runtime_StopRecording* Request_Runtime::release_stop_recording() {
+  if (has_stop_recording()) {
+    clear_has_content();
+    ::lms::Request_Runtime_StopRecording* temp = content_.stop_recording_;
+    content_.stop_recording_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request_Runtime::set_allocated_stop_recording(::lms::Request_Runtime_StopRecording* stop_recording) {
+  clear_content();
+  if (stop_recording) {
+    set_has_stop_recording();
+    content_.stop_recording_ = stop_recording;
   }
 }
 
