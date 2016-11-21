@@ -1,6 +1,6 @@
 ![logo](https://github.com/Phibedy/LMS/blob/master/lms_banner.jpg)
 
-[![Build Status](https://travis-ci.org/lms-org/lms.svg?branch=develop)](https://travis-ci.org/lms-org/lms)
+[![Build Status](https://travis-ci.org/lms-org/lms.svg)](https://travis-ci.org/lms-org/lms)
 
 LMS is a light-weight, highly modular and efficient framework capable of controlling
 near real-time systems like robots, vehicles or airplanes. It runs on Unix-like systems,
