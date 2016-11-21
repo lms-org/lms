@@ -44,15 +44,23 @@ void Framework::start() {
                 logger.error("XML") << error;
             }
 
+            if(parser.errors().size() > 0) {
+                logger.error("XML") << "Fix XML errors first. Shutting down...";
+                m_running = false;
+                break;
+            }
+
             try {
                 logger.time("updateSystem");
                 if(! updateSystem(runtime)) {
                     m_running = false;
+                    break;
                 }
                 logger.timeEnd("updateSystem");
             } catch(std::exception const &ex) {
                 logger.error() << lms::typeName(ex) << ": " <<  ex.what();
                 m_running = false;
+                break;
             }
 
             if(isDebug()) {
