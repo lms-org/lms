@@ -135,6 +135,14 @@ public:
      */
     void setLevel(logging::Level level);
 
+    /**
+     * Creates two pipes that will be duplicated to stdout and stderr.
+     * A thread is started that reads from the other of the pipes
+     * and generates error log messages from that.
+     *
+     * DANGER: Do only ever call this once per process!
+     */
+    void hookStdoutAndStderr();
 private:
     struct Private;
     Private *dptr;

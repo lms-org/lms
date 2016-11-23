@@ -489,6 +489,7 @@ void MasterServer::runFramework(Client &client, const Request_Run &options) {
         logging::Context &ctx = logging::Context::getDefault();
         logging::Level logLevel = options.production() ? logging::Level::WARN : logging::Level::ALL;
         ctx.appendSink(new ProtobufSink(logFd[1], logLevel));
+        ctx.hookStdoutAndStderr();
 
         if(options.detached()) {
             logging::Context::getDefault().setLevel(logging::Level::OFF);

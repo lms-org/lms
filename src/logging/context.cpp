@@ -1,4 +1,7 @@
 #include <memory>
+#include <fcntl.h>
+#include <unistd.h>
+#include <thread>
 
 #include <lms/logger.h>
 #include "../internal/profiler.h"
@@ -13,6 +16,7 @@ struct Context::Private {
     std::mutex profilerMutex;
     std::mutex loggingMutex;
     logging::Level level = logging::Level::ALL;
+    std::thread hookThread;
 };
 
 Context &Context::getDefault() {
@@ -71,6 +75,65 @@ void Context::profilingSummary(std::map<std::string, Trace<double>> &measurement
 void Context::setLevel(logging::Level level) {
     std::lock_guard<std::mutex> lock(dfunc()->loggingMutex);
     dfunc()->level = level;
+}
+
+void processFD(int fd, char* buf, size_t bufSize, Context *ctx, const char* tag, Level lvl) {
+    size_t readBytes = read(fd, buf, bufSize);
+    if(readBytes > 0) {
+        Event evt(*ctx, lvl, tag, lms::Time::now());
+        std::string msg(buf, readBytes);
+        if(msg.size() > 0 && msg[msg.size()-1] == '\n') {
+            msg = msg.substr(0, msg.size()-1);
+        }
+        evt.messageStream << msg;
+    }
+}
+
+void Context::hookStdoutAndStderr() {
+    // create pipes
+    int out[2];
+    int err[2];
+    ::pipe(out);
+    ::pipe(err);
+
+    // close old stdout and stderr (ignoring any errors)
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    // replace stdout and stderr by our pipes
+    dup2(out[1], STDOUT_FILENO);
+    dup2(err[1], STDERR_FILENO);
+
+    // now start the thread that does all the magic
+    dfunc()->hookThread = std::thread([this, out, err] () {
+        fd_set fds;
+        constexpr int BUF_SIZE = 1024;
+        char buf[BUF_SIZE];
+
+        while(true) {
+            FD_ZERO(&fds);
+            FD_SET(out[0], &fds);
+            FD_SET(err[0], &fds);
+
+            timeval timeout;
+            timeout.tv_sec = 1;
+            timeout.tv_usec = 0;
+
+            int ret = select(std::max(out[0], err[0]) + 1, &fds, nullptr, nullptr, &timeout);
+
+            if (ret == -1) {
+                break;
+            }
+
+            if(FD_ISSET(out[0], &fds)) {
+                processFD(out[0], buf, BUF_SIZE, this, "stdout", Level::INFO);
+            }
+            if(FD_ISSET(err[0], &fds)) {
+                processFD(err[0], buf, BUF_SIZE, this, "stderr", Level::ERROR);
+            }
+        }
+    });
+    dfunc()->hookThread.detach();
 }
 
 } // namespace logging
