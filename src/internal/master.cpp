@@ -433,6 +433,17 @@ void MasterServer::processClient(Client &client, const lms::Request &message) {
         }
         }
         break;
+    case lms::Request::kStdin:
+        {
+        if(client.isAttached) {
+            Runtime *rt = getRuntimeByPid(client.attachedRuntime);
+            if(rt != nullptr) {
+                rt->commSock.writeMessage(message);
+                sendResponse = false;
+            }
+        }
+        }
+        break;
     }
 
     if(sendResponse) {
@@ -573,28 +584,62 @@ MasterServer::Runtime* MasterServer::getRuntimeByName(const std::string &name) {
 
 void streamLogs(ProtobufSocket &socket) {
     Response response;
-    while(socket.readMessage(response) == ProtobufSocket::OK) {
-        if(!response.has_log_event()) continue;
+    fd_set fds;
+    constexpr size_t BUF_SIZE = 2014;
+    char buf[BUF_SIZE];
 
-        const auto &event = response.log_event();
-        // get time now
-        time_t rawtime = event.timestamp() / 1000 / 1000;
-        //std::time(&rawtime);
-        struct tm *now = std::localtime(&rawtime);
+    while(true) {
+        FD_ZERO(&fds);
+        FD_SET(socket.getFD(), &fds);
+        FD_SET(STDIN_FILENO, &fds);
 
-        // format time to "HH:MM:SS"
-        char buffer[10];
-        std::strftime(buffer, 10, "%T", now);
+        timeval timeout;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
 
-        std::cout << buffer << " ";
+        int ret = select(std::max(socket.getFD(), STDIN_FILENO) + 1, &fds, nullptr, nullptr, &timeout);
 
-        std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
-        std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
-        std::cout << lms::internal::COLOR_WHITE;
-        std::cout << " " << event.text() << std::endl;
-
-        if(event.has_close_after() && event.close_after()) {
+        if (ret == -1) {
             break;
+        }
+
+        if(FD_ISSET(STDIN_FILENO, &fds)) {
+            int readBytes = ::read(STDIN_FILENO, buf, BUF_SIZE);
+
+            if(readBytes > 0) {
+                Request req;
+                Request::Stdin *reqStdin = req.mutable_stdin();
+                reqStdin->set_buffer(std::string(buf, readBytes));
+                socket.writeMessage(req);
+            }
+        }
+        if(FD_ISSET(socket.getFD(), &fds)) {
+            if(socket.readMessage(response) != ProtobufSocket::OK) {
+                break;
+            }
+
+            if(!response.has_log_event()) continue;
+
+            const auto &event = response.log_event();
+            // get time now
+            time_t rawtime = event.timestamp() / 1000 / 1000;
+            //std::time(&rawtime);
+            struct tm *now = std::localtime(&rawtime);
+
+            // format time to "HH:MM:SS"
+            char buffer[10];
+            std::strftime(buffer, 10, "%T", now);
+
+            std::cout << buffer << " ";
+
+            std::cout << lms::logging::levelColor(static_cast<lms::logging::Level>(event.level()));
+            std::cout << lms::logging::levelName(static_cast<lms::logging::Level>(event.level())) << " " << event.tag();
+            std::cout << lms::internal::COLOR_WHITE;
+            std::cout << " " << event.text() << std::endl;
+
+            if(event.has_close_after() && event.close_after()) {
+                break;
+            }
         }
     }
 }

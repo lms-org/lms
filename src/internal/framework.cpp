@@ -346,10 +346,22 @@ void Framework::printDAG() {
 }
 
 void Framework::startCommunicationThread(int sock) {
-    m_communicationThread = std::thread([sock, this] () {
+    int in[2];
+    pipe(in);
+    ::close(STDIN_FILENO);
+    dup2(in[0], STDIN_FILENO);
+    int hookedStdin = in[1];
+
+    m_communicationThread = std::thread([sock, hookedStdin, this] () {
         ProtobufSocket socket(sock);
         lms::Request message;
         while(socket.readMessage(message) == ProtobufSocket::OK) {
+            if(message.has_stdin()) {
+                const std::string &buf = message.stdin().buffer();
+                ::write(hookedStdin, buf.c_str(), buf.size());
+                continue;
+            }
+
             using C = lms::Request::Runtime::ContentCase;
             if(!message.has_runtime()) {
                 logger.error() << "Received unknown message via commSocket";

@@ -56,6 +56,9 @@ message Request {
             StopRecording stop_recording = 5;
         }
     }
+    message Stdin {
+        optional bytes buffer = 1;
+    }
 
     // reserved does not work with this version of Protobuf
     // reserved 9;
@@ -72,6 +75,7 @@ message Request {
 		ListenBroadcastEvents listen_broadcasts = 10;
 		Detach detach = 11;
 		Runtime runtime = 12;
+        Stdin stdin = 13;
 	}
 }
 

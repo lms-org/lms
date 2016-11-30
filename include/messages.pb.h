@@ -50,6 +50,7 @@ class Request_Runtime_LogFilter;
 class Request_Runtime_Profiling;
 class Request_Runtime_StartRecording;
 class Request_Runtime_StopRecording;
+class Request_Stdin;
 class Response;
 class Response_Info;
 class Response_ClientList;
@@ -1507,6 +1508,90 @@ class Request_Runtime : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Request_Stdin : public ::google::protobuf::Message {
+ public:
+  Request_Stdin();
+  virtual ~Request_Stdin();
+
+  Request_Stdin(const Request_Stdin& from);
+
+  inline Request_Stdin& operator=(const Request_Stdin& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request_Stdin& default_instance();
+
+  void Swap(Request_Stdin* other);
+
+  // implements Message ----------------------------------------------
+
+  Request_Stdin* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request_Stdin& from);
+  void MergeFrom(const Request_Stdin& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes buffer = 1;
+  inline bool has_buffer() const;
+  inline void clear_buffer();
+  static const int kBufferFieldNumber = 1;
+  inline const ::std::string& buffer() const;
+  inline void set_buffer(const ::std::string& value);
+  inline void set_buffer(const char* value);
+  inline void set_buffer(const void* value, size_t size);
+  inline ::std::string* mutable_buffer();
+  inline ::std::string* release_buffer();
+  inline void set_allocated_buffer(::std::string* buffer);
+
+  // @@protoc_insertion_point(class_scope:lms.Request.Stdin)
+ private:
+  inline void set_has_buffer();
+  inline void clear_has_buffer();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* buffer_;
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request_Stdin* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Request : public ::google::protobuf::Message {
  public:
   Request();
@@ -1542,6 +1627,7 @@ class Request : public ::google::protobuf::Message {
     kListenBroadcasts = 10,
     kDetach = 11,
     kRuntime = 12,
+    kStdin = 13,
     CONTENT_NOT_SET = 0,
   };
 
@@ -1584,6 +1670,7 @@ class Request : public ::google::protobuf::Message {
   typedef Request_ListenBroadcastEvents ListenBroadcastEvents;
   typedef Request_Detach Detach;
   typedef Request_Runtime Runtime;
+  typedef Request_Stdin Stdin;
 
   // accessors -------------------------------------------------------
 
@@ -1686,6 +1773,15 @@ class Request : public ::google::protobuf::Message {
   inline ::lms::Request_Runtime* release_runtime();
   inline void set_allocated_runtime(::lms::Request_Runtime* runtime);
 
+  // optional .lms.Request.Stdin stdin = 13;
+  inline bool has_stdin() const;
+  inline void clear_stdin();
+  static const int kStdinFieldNumber = 13;
+  inline const ::lms::Request_Stdin& stdin() const;
+  inline ::lms::Request_Stdin* mutable_stdin();
+  inline ::lms::Request_Stdin* release_stdin();
+  inline void set_allocated_stdin(::lms::Request_Stdin* stdin);
+
   inline ContentCase content_case() const;
   // @@protoc_insertion_point(class_scope:lms.Request)
  private:
@@ -1700,6 +1796,7 @@ class Request : public ::google::protobuf::Message {
   inline void set_has_listen_broadcasts();
   inline void set_has_detach();
   inline void set_has_runtime();
+  inline void set_has_stdin();
 
   inline bool has_content();
   void clear_content();
@@ -1721,6 +1818,7 @@ class Request : public ::google::protobuf::Message {
     ::lms::Request_ListenBroadcastEvents* listen_broadcasts_;
     ::lms::Request_Detach* detach_;
     ::lms::Request_Runtime* runtime_;
+    ::lms::Request_Stdin* stdin_;
   } content_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -4385,6 +4483,86 @@ inline Request_Runtime::ContentCase Request_Runtime::content_case() const {
 }
 // -------------------------------------------------------------------
 
+// Request_Stdin
+
+// optional bytes buffer = 1;
+inline bool Request_Stdin::has_buffer() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Request_Stdin::set_has_buffer() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Request_Stdin::clear_has_buffer() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request_Stdin::clear_buffer() {
+  if (buffer_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    buffer_->clear();
+  }
+  clear_has_buffer();
+}
+inline const ::std::string& Request_Stdin::buffer() const {
+  // @@protoc_insertion_point(field_get:lms.Request.Stdin.buffer)
+  return *buffer_;
+}
+inline void Request_Stdin::set_buffer(const ::std::string& value) {
+  set_has_buffer();
+  if (buffer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    buffer_ = new ::std::string;
+  }
+  buffer_->assign(value);
+  // @@protoc_insertion_point(field_set:lms.Request.Stdin.buffer)
+}
+inline void Request_Stdin::set_buffer(const char* value) {
+  set_has_buffer();
+  if (buffer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    buffer_ = new ::std::string;
+  }
+  buffer_->assign(value);
+  // @@protoc_insertion_point(field_set_char:lms.Request.Stdin.buffer)
+}
+inline void Request_Stdin::set_buffer(const void* value, size_t size) {
+  set_has_buffer();
+  if (buffer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    buffer_ = new ::std::string;
+  }
+  buffer_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:lms.Request.Stdin.buffer)
+}
+inline ::std::string* Request_Stdin::mutable_buffer() {
+  set_has_buffer();
+  if (buffer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    buffer_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:lms.Request.Stdin.buffer)
+  return buffer_;
+}
+inline ::std::string* Request_Stdin::release_buffer() {
+  clear_has_buffer();
+  if (buffer_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = buffer_;
+    buffer_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Request_Stdin::set_allocated_buffer(::std::string* buffer) {
+  if (buffer_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete buffer_;
+  }
+  if (buffer) {
+    set_has_buffer();
+    buffer_ = buffer;
+  } else {
+    clear_has_buffer();
+    buffer_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:lms.Request.Stdin.buffer)
+}
+
+// -------------------------------------------------------------------
+
 // Request
 
 // optional .lms.Request.Info info = 1;
@@ -4857,6 +5035,49 @@ inline void Request::set_allocated_runtime(::lms::Request_Runtime* runtime) {
   if (runtime) {
     set_has_runtime();
     content_.runtime_ = runtime;
+  }
+}
+
+// optional .lms.Request.Stdin stdin = 13;
+inline bool Request::has_stdin() const {
+  return content_case() == kStdin;
+}
+inline void Request::set_has_stdin() {
+  _oneof_case_[0] = kStdin;
+}
+inline void Request::clear_stdin() {
+  if (has_stdin()) {
+    delete content_.stdin_;
+    clear_has_content();
+  }
+}
+inline const ::lms::Request_Stdin& Request::stdin() const {
+  return has_stdin() ? *content_.stdin_
+                      : ::lms::Request_Stdin::default_instance();
+}
+inline ::lms::Request_Stdin* Request::mutable_stdin() {
+  if (!has_stdin()) {
+    clear_content();
+    set_has_stdin();
+    content_.stdin_ = new ::lms::Request_Stdin;
+  }
+  return content_.stdin_;
+}
+inline ::lms::Request_Stdin* Request::release_stdin() {
+  if (has_stdin()) {
+    clear_has_content();
+    ::lms::Request_Stdin* temp = content_.stdin_;
+    content_.stdin_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void Request::set_allocated_stdin(::lms::Request_Stdin* stdin) {
+  clear_content();
+  if (stdin) {
+    set_has_stdin();
+    content_.stdin_ = stdin;
   }
 }
 
