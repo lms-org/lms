@@ -11,6 +11,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <termios.h>
 
 #include "messages.pb.h"
 #include "lms/protobuf_socket.h"
@@ -588,6 +589,13 @@ void streamLogs(ProtobufSocket &socket) {
     constexpr size_t BUF_SIZE = 2014;
     char buf[BUF_SIZE];
 
+    // disable stdin buffering
+    static struct termios oldt, newt;
+    tcgetattr( STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON);
+    tcsetattr( STDIN_FILENO, TCSANOW, &newt);
+
     while(true) {
         FD_ZERO(&fds);
         FD_SET(socket.getFD(), &fds);
@@ -642,6 +650,9 @@ void streamLogs(ProtobufSocket &socket) {
             }
         }
     }
+
+    // restore previous settings
+    tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
 }
 
 void expectResponseType(const Response &response, Response::ContentCase type) {
