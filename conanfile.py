@@ -21,7 +21,8 @@ class LMSConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["lmscore"]
-        
+
     def imports(self):
         self.copy("protoc", "bin", "bin")
         #self.run('./bin/protoc ../messages/messages.proto --proto_path=../messages --cpp_out="../include"')
+        #self.run('./bin/protoc ../messages/recording_meta.proto --proto_path=../messages --cpp_out="../include"')

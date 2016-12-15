@@ -154,6 +154,7 @@ add_library (lmscore SHARED
     ${HEADERS}
     ${SOURCE}
     "include/messages.pb.cc"
+    "include/recording_meta.pb.cc"
     ${ProtoSources} ${ProtoHeaders}
 )
 

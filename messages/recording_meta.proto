@@ -1,0 +1,11 @@
+package lms;
+
+message MetaFile {
+    message Channel {
+        optional string name = 1;
+        optional string type = 2;
+        repeated string writing_modules = 3;
+    }
+
+    repeated Channel channels = 1;
+}
