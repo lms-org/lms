@@ -18,7 +18,7 @@ void dumpModuleChannelGraph(ModuleChannelGraph<Module *> &graph,
                 dot.label(std::to_string(prio));
             }
             if (access.permission ==
-                ModuleChannelGraph<Module *>::Permission::WRITE) {
+                MCGPermission::WRITE) {
                 dot.edge(prefix + "_" + access.module->getName(),
                          prefix + "_" + ch.first);
             } else {

@@ -1,8 +1,9 @@
 <lms>
+    <library lib="lmscore" />
     <module lib="lmscore" class="NumberGenerator" name="gen1">
         <channelHint name="OUT" mapTo="FACTOR_1" />
         <config>
-            <sleep>0</sleep>
+            <sleep>1000000</sleep>
         </config>
     </module>
     <module lib="lmscore" class="NumberGenerator" name="gen2">
@@ -24,8 +25,7 @@
     </module>
     <module lib="lmscore" class="ExitAfter" name="exit">
         <config>
-            <cycles>10</cycles>
+            <cycles>1000</cycles>
         </config>
     </module>
 </lms>
-

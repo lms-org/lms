@@ -174,6 +174,14 @@ public:
 
     virtual ~DataChannelInternal() {}
 
+    std::string typeName() const {
+        if(main) {
+            return main->typeName();
+        } else {
+            return "";
+        }
+    }
+
     std::string name;
 };
 
@@ -190,6 +198,14 @@ protected:
 
 public:
     std::string name() const { return m_internal->name; }
+
+    std::string typeName() const {
+        if(m_internal) {
+            return m_internal->typeName();
+        } else {
+            return "";
+        }
+    }
 
     /**
      * return returns SUBTYPE if the current object is a subtype of the given

@@ -51,10 +51,15 @@ struct ClockInfo {
     bool slowWarnings = false;
 };
 
+struct LibraryInfo {
+    std::string lib;
+};
+
 struct RuntimeInfo {
     ClockInfo clock;
     std::vector<ModuleInfo> modules;
     std::vector<ServiceInfo> services;
+    std::vector<LibraryInfo> libraries;
 };
 
 /**
@@ -144,6 +149,8 @@ public:
     bool parseModule(pugi::xml_node node, ModuleInfo &info);
 
     bool parseService(pugi::xml_node node, ServiceInfo &info);
+
+    bool parseLibrary(pugi::xml_node node, LibraryInfo &info);
 
     bool parseFile(std::istream &is, const std::string &file);
     bool parseFile(const std::string &file);

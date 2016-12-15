@@ -9,6 +9,7 @@
 #include "backtrace_formatter.h"
 #include "lms/protobuf_socket.h"
 #include "os.h"
+#include "recording_meta.pb.h"
 
 namespace lms {
 namespace internal {
@@ -49,6 +50,13 @@ void Framework::start() {
                 m_running = false;
                 break;
             }
+
+            // Add libraries
+            for(const auto &libraryInfo : runtime.libraries) {
+                m_loader.registerLib(libraryInfo.lib);
+            }
+
+            initChannelTypes();
 
             try {
                 logger.time("updateSystem");
@@ -129,6 +137,10 @@ bool Framework::updateSystem(const RuntimeInfo &info) {
 
     // Update or load modules
     for (const ModuleInfo &moduleInfo : info.modules) {
+        if(m_ignoreModules.count(moduleInfo.name) == 1) {
+            logger.warn() << "Ignoring module " << moduleInfo.name;
+            continue;
+        }
         if(isDebug()) {
             logger.debug() << "Loading module " << moduleInfo.name;
         }
@@ -220,6 +232,26 @@ bool Framework::cycle() {
         if(m_recordingState == RecordingState::SAVE) {
             for(auto &stream : m_recordingStreams) {
                 m_dataManager.readChannel<lms::Any>(stream.first).serialize(stream.second);
+            }
+            if(m_firstRecordSavingCycle) {
+                m_firstRecordSavingCycle = false;
+
+                lms::MetaFile metaMessage;
+                for(auto &channels : m_recordingStreams) {
+                    lms::MetaFile::Channel *channelMessage = metaMessage.add_channels();
+                    std::string channelName = channels.first;
+                    channelMessage->set_name(channelName);
+                    channelMessage->set_type(m_dataManager.accessChannel<lms::Any>(channelName)->typeName());
+                    auto accessors = m_executionManager.getModuleChannelGraph().getChannelAccessors(channelName);
+                    for(const auto &access : accessors) {
+                        if(access.permission == MCGPermission::WRITE) {
+                            *channelMessage->add_writing_modules() = access.module->getName();
+                        }
+                    }
+                }
+                std::ofstream metaFile(homepath() + "/lmslogs/temp/__meta");
+                metaMessage.SerializePartialToOstream(&metaFile);
+                metaFile.close();
             }
         }
     }
@@ -410,7 +442,9 @@ void Framework::startCommunicationThread(int sock) {
                 // TODO better do this during a cycle
                 std::lock_guard<std::mutex> lock(m_recordingMutex);
                 if(m_recordingState == RecordingState::NONE) {
+                    logger.info() << "Start recording...";
                     m_recordingState = RecordingState::SAVE;
+                    m_firstRecordSavingCycle = true;
                     const auto &channels = message.runtime().start_recording().channels();
                     std::string path = homepath() + "/lmslogs/temp";
                     ::mkdir(path.c_str(), MODE);
@@ -455,11 +489,34 @@ void Framework::loadRecordings(const std::string &absPath, const std::vector<std
     std::lock_guard<std::mutex> lock(m_recordingMutex);
     logger.info() << "Loading records from " << absPath;
     m_recordingState = RecordingState::LOAD;
+    m_firstRecordLoadingCycle = true;
+    m_absLoadPath = absPath;
     for(const auto &ch : channels) {
         std::string path = absPath + "/" + ch;
         logger.info() << "Loading channel " << ch << " from " + path;
         std::fstream &stream = m_recordingStreams[ch];
         stream.open(path, std::fstream::out);
+    }
+}
+
+void Framework::initChannelTypes() {
+    std::lock_guard<std::mutex> lock(m_recordingMutex);
+    if(m_recordingState == RecordingState::LOAD && m_firstRecordLoadingCycle) {
+        m_firstRecordLoadingCycle = false;
+        lms::MetaFile metaMessage;
+        std::ifstream metaFile(m_absLoadPath + "/__meta");
+        metaMessage.ParseFromIstream(&metaFile);
+        for(const auto &channelMessage : metaMessage.channels()) {
+            logger.info("loadRecordings") << "Init channel " << channelMessage.name()
+                                          << " with type " << channelMessage.type() << " ...";
+            const auto &channel = m_loader.getChannel(m_dataManager, channelMessage.name(), channelMessage.type());
+            if(!channel) {
+                logger.error("loadRecordings") << "Could not init channel " << channelMessage.name();
+            }
+            for(const auto &writingModule : channelMessage.writing_modules()) {
+                m_ignoreModules.insert(writingModule);
+            }
+        }
     }
 }
 

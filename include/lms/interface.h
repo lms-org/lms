@@ -21,6 +21,21 @@
 
 #define LMS_EXPORT_END }
 
+#define LMS_REGISTER_BEGIN                                                     \
+    extern "C" {                                                               \
+    std::shared_ptr<lms::DataChannelInternal>                                  \
+    get_type(lms::DataManager &dm, const std::string &name,                    \
+             const std::string &type) {
+
+#define LMS_REGISTER(CLASS)                                                    \
+    if (type == #CLASS)                                                        \
+        return dm.accessChannel<CLASS>(name);
+
+#define LMS_REGISTER_END                                                       \
+    return nullptr;                                                            \
+    }                                                                          \
+    }
+
 // DEPRECATED
 #define LMS_MODULE_INTERFACE(CLASS)                                            \
     LMS_EXPORT_BEGIN                                                           \
@@ -33,4 +48,4 @@
     LMS_EXPORT_SERVICE(CLASS)                                                  \
     LMS_EXPORT_END
 
-#endif // LMS_INTERFACE_H
+#endif  // LMS_INTERFACE_H

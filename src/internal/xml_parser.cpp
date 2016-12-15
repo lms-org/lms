@@ -349,6 +349,15 @@ bool XmlParser::parseService(pugi::xml_node node, ServiceInfo &info) {
     return true;
 }
 
+bool XmlParser::parseLibrary(pugi::xml_node node, LibraryInfo &info) {
+    pugi::xml_attribute libAttr = node.attribute("lib");
+
+    if(! libAttr) return errorMissingAttr(node, libAttr);
+
+    info.lib = libAttr.as_string();
+    return true;
+}
+
 bool XmlParser::parseFile(std::istream &is, const std::string &file) {
     PutOnStack<std::string> put(m_filestack, file);
     m_files.push_back(file);
@@ -376,6 +385,11 @@ bool XmlParser::parseFile(std::istream &is, const std::string &file) {
             ServiceInfo service;
             if(parseService(node, service)) {
                 runtime.services.push_back(service);
+            }
+        } else if(std::string("library") == node.name()) {
+            LibraryInfo library;
+            if(parseLibrary(node, library)) {
+                runtime.libraries.push_back(library);
             }
         } else {
             errorUnknownNode(node);

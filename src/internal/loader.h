@@ -26,16 +26,34 @@ public:
      */
     void addSearchPath(std::string const &path);
 
-    Module* loadModule(const ModuleInfo &info);
+    Module *loadModule(const ModuleInfo &info);
 
-    Service* loadService(const ServiceInfo &info);
+    Service *loadService(const ServiceInfo &info);
+
+    void registerLib(const std::string &lib);
+
+    /**
+     * @brief Calls get_type in all registered libs.
+     * @param dm Framework's current data manager instance
+     * @param name Channel name
+     * @param type Demangled channel type
+     * @return initialized channel or nullptr
+     */
+    std::shared_ptr<lms::DataChannelInternal>
+    getChannel(lms::DataManager &dm, const std::string &name,
+               const std::string &type);
+
 private:
     /**
      * @brief Open a so/dylib/dll file and load the wrapper with an instance.
      * @param wrapper Wrapper object to load
      * @return true if successful, false otherwise
      */
-    LifeCycle* load(const std::string &libname, const std::string &function);
+    LifeCycle *load(const std::string &libname, const std::string &function);
+
+    std::shared_ptr<lms::DataChannelInternal>
+    getChannelByLib(const std::string &libpath, lms::DataManager &dm,
+                    const std::string &name, const std::string &type);
 
     bool exists(const std::string &fileName);
 
@@ -58,9 +76,10 @@ private:
 
     logging::Logger logger;
     std::vector<std::string> m_paths;
+    std::vector<std::string> m_libs;
 };
 
-} // namespace internal
-} // namespace lms
+}  // namespace internal
+}  // namespace lms
 
 #endif /* LMS_LOADER_H */

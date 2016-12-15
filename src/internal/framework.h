@@ -117,7 +117,13 @@ private:
     };
     std::mutex m_recordingMutex;
     RecordingState m_recordingState = NONE;
+    bool m_firstRecordSavingCycle = false;
     std::map<std::string, std::fstream> m_recordingStreams;
+    // modules that write into channels that were serialized
+    std::set<std::string> m_ignoreModules;
+    std::string m_absLoadPath;
+    bool m_firstRecordLoadingCycle = false;
+    void initChannelTypes();
 };
 
 } // namespace internal

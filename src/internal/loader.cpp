@@ -17,19 +17,20 @@ bool Loader::exists(const std::string &fileName) {
     return infile.good();
 }
 
-void Loader::addSearchPath(std::string const &path) {
-    m_paths.push_back(path);
+void Loader::addSearchPath(std::string const &path) { m_paths.push_back(path); }
+
+Module *Loader::loadModule(const ModuleInfo &info) {
+    return static_cast<Module *>(
+        load(info.lib, std::string("lms_module_") + info.clazz));
 }
 
-Module* Loader::loadModule(const ModuleInfo &info) {
-    return static_cast<Module*>(load(info.lib, std::string("lms_module_") + info.clazz));
+Service *Loader::loadService(const ServiceInfo &info) {
+    return static_cast<Service *>(
+        load(info.lib, std::string("lms_service_") + info.clazz));
 }
 
-Service* Loader::loadService(const ServiceInfo &info) {
-    return static_cast<Service*>(load(info.lib, std::string("lms_service_") + info.clazz));
-}
-
-LifeCycle* Loader::load(const std::string &libname, const std::string &function) {
+LifeCycle *Loader::load(const std::string &libname,
+                        const std::string &function) {
 #ifdef _WIN32
 
     // TODO implementation for Win32
@@ -43,17 +44,17 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
     bool foundLib = false;
     std::string libpath;
 
-    if(m_paths.size() == 0){
-        logger.error("LMS_PATH")<<"no path to modules given!";
+    if (m_paths.size() == 0) {
+        logger.error("LMS_PATH") << "no path to modules given!";
     }
 
-    for(const std::string &path : m_paths) {
-        if(exists(libpath = path + "/lib" + libname + ".so")) {
+    for (const std::string &path : m_paths) {
+        if (exists(libpath = path + "/lib" + libname + ".so")) {
             foundLib = true;
             break;
         }
 #if __APPLE__
-        if(exists(libpath = path + "/lib" + libname + ".dylib")) {
+        if (exists(libpath = path + "/lib" + libname + ".dylib")) {
             foundLib = true;
             break;
         }
@@ -61,7 +62,7 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
     }
 
     if (!foundLib) {
-        for(const auto &path : m_paths) {
+        for (const auto &path : m_paths) {
             logger.debug("LMS_PATH") << path;
         }
         LMS_EXCEPTION(std::string("Could not find lib ") + libname);
@@ -72,7 +73,8 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
 
     // check for errors while opening
     if (lib == NULL) {
-        LMS_EXCEPTION(std::string("Could not open dynamic lib ") + libpath + ": " + dlerror());
+        LMS_EXCEPTION(std::string("Could not open dynamic lib ") + libpath +
+                      ": " + dlerror());
     }
 
     // clear error code
@@ -93,9 +95,10 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
         if ((libVersion & MAJOR_MASK) != (LMS_VERSION_CODE & MAJOR_MASK) ||
             (LMS_VERSION_CODE & MINOR_MASK) < (libVersion & MINOR_MASK)) {
 
-            LMS_EXCEPTION(std::string("Lib ") + libpath + " has bad version. "
-                          + "LMS Version " + LMS_VERSION_STRING
-                          + ", Lib was compiled for " + versionCodeToString(libVersion));
+            LMS_EXCEPTION(std::string("Lib ") + libpath + " has bad version. " +
+                          "LMS Version " + LMS_VERSION_STRING +
+                          ", Lib was compiled for " +
+                          versionCodeToString(libVersion));
         }
     }
 
@@ -112,12 +115,84 @@ LifeCycle* Loader::load(const std::string &libname, const std::string &function)
 
     // check for errors while calling dlsym
     if ((err = dlerror()) != NULL) {
-        LMS_EXCEPTION(std::string("Could not get symbol ") + function + ": " + err);
+        LMS_EXCEPTION(std::string("Could not get symbol ") + function + ": " +
+                      err);
     }
 
     // call the interface function -> should return a newly created object
     return conv.target();
 }
 
-} // namespace internal
-} // namespace lms
+void Loader::registerLib(const std::string &lib) {
+    bool found = false;
+    for (const auto &l : m_libs) {
+        if (l == lib) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        m_libs.push_back(lib);
+    }
+}
+
+std::shared_ptr<lms::DataChannelInternal>
+Loader::getChannel(lms::DataManager &dm, const std::string &name,
+                   const std::string &type) {
+    std::string libpath;
+    std::shared_ptr<lms::DataChannelInternal> channel;
+
+    for (const std::string &path : m_paths) {
+        for (const auto &lib : m_libs) {
+            if (exists(libpath = path + "/lib" + lib + ".so")) {
+                channel = getChannelByLib(libpath, dm, name, type);
+                if (channel) {
+                    return channel;
+                }
+            }
+#if __APPLE__
+            if (exists(libpath = path + "/lib" + lib + ".dylib")) {
+                channel = getChannelByLib(libpath, dm, name, type);
+                if (channel) {
+                    return channel;
+                }
+            }
+#endif
+        }
+    }
+
+    return channel;
+}
+
+std::shared_ptr<lms::DataChannelInternal>
+Loader::getChannelByLib(const std::string &libpath, DataManager &dm,
+                        const std::string &name, const std::string &type) {
+    // open dynamic library (*.so file)
+    void *lib = dlopen(libpath.c_str(), RTLD_NOW);
+
+    // check for errors while opening
+    if (lib == NULL) {
+        LMS_EXCEPTION(std::string("Could not open dynamic lib ") + libpath +
+                      ": " + dlerror());
+    }
+
+    // clear error code
+    dlerror();
+
+    using get_type = std::shared_ptr<lms::DataChannelInternal>(
+        *)(lms::DataManager &dm, const std::string &name,
+           const std::string &type);
+    UnionHack<void *, get_type> conv;
+    conv.src = dlsym(lib, "get_type");
+
+    char *err;
+    // check for errors while calling dlsym
+    if ((err = dlerror()) != NULL) {
+        return nullptr;
+    }
+
+    return conv.target(dm, name, type);
+}
+
+}  // namespace internal
+}  // namespace lms

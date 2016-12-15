@@ -12,13 +12,13 @@
 namespace lms {
 namespace internal {
 
+enum class MCGPermission { READ, WRITE };
+
 template <typename T> class ModuleChannelGraph {
 public:
-    enum class Permission { READ, WRITE };
-
     struct Access {
         T module;
-        Permission permission;
+        MCGPermission permission;
         int priority;
     };
 
@@ -28,14 +28,14 @@ public:
     void readChannel(const std::string &channel, const T &module,
                      int priority = 0) {
         if (!isReaderOrWriter(channel, module)) {
-            m_data[channel].push_back({module, Permission::READ, priority});
+            m_data[channel].push_back({module, MCGPermission::READ, priority});
         }
     }
 
     void writeChannel(const std::string &channel, const T &module,
                       int priority = 0) {
         if (!isReaderOrWriter(channel, module)) {
-            m_data[channel].push_back({module, Permission::WRITE, priority});
+            m_data[channel].push_back({module, MCGPermission::WRITE, priority});
         }
     }
 
@@ -51,11 +51,20 @@ public:
         return false;
     }
 
+    std::vector<Access> getChannelAccessors(const std::string &channel) const {
+        auto it = m_data.find(channel);
+        if(it != m_data.end()) {
+            return it->second;
+        } else {
+            return {};
+        }
+    }
+
     bool hasReaders(const std::string &channel) const {
         auto it = m_data.find(channel);
         if(it != m_data.end()) {
             for(const auto &access : it->second) {
-                if(access.permission == Permission::READ) {
+                if(access.permission == MCGPermission::READ) {
                     return true;
                 }
             }
@@ -86,8 +95,8 @@ public:
                         dag.edge(mw1, mw2);
                     } else {
                         // check if it's reader vs writer
-                        bool mw1Write = it->permission == Permission::WRITE;
-                        bool mw2Write = jt->permission == Permission::WRITE;
+                        bool mw1Write = it->permission == MCGPermission::WRITE;
+                        bool mw2Write = jt->permission == MCGPermission::WRITE;
 
                         if (mw1Write && !mw2Write) {
                             dag.edge(mw1, mw2);
