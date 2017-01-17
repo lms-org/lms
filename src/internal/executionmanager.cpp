@@ -219,8 +219,25 @@ void ExecutionManager::validate(const std::map<std::string, std::shared_ptr<Modu
 
         if(m_runtime.isDebug()) {
             m_runtime.printDAG();
+            dumpGraphs();
         }
     }
+}
+
+void ExecutionManager::dumpGraphs() {
+    std::ofstream mcgFile("/tmp/lms-module-channel-graph.dot");
+    DotExporter mcgExport(mcgFile);
+    mcgExport.startDigraph("MCG");
+    dumpModuleChannelGraph(getModuleChannelGraph(), mcgExport, "def");
+    mcgExport.endDigraph();
+    mcgFile.close();
+
+    std::ofstream dagFile("/tmp/lms-dag.dot");
+    DotExporter dagExport(dagFile);
+    dagExport.startDigraph("DAG");
+    dumpDAG(getDAG(), dagExport, "def");
+    dagExport.endDigraph();
+    dagFile.close();
 }
 
 void ExecutionManager::numThreads(int num) { m_numThreads = num; }

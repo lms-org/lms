@@ -132,6 +132,7 @@ private:
     std::vector<Module *> sortedCycleList;
 
     void printCycleList(DAG<Module *> &list);
+    void dumpGraphs();
 };
 
 } // namespace internal
