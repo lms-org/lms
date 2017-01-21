@@ -139,3 +139,32 @@ TEST(DataManager, inheritance) {
     ASSERT_EQ(std::string("test"), chWrite->key);
     ASSERT_EQ(42, chWrite->val);
 }
+
+TEST(DataManager, publishAndHasNewData) {
+    lms::DataManager dm;
+    auto chWrite = dm.writeChannel<int>("A");
+    auto chRead1 = dm.readChannel<int>("A");
+    auto chRead2 = dm.readChannel<int>("A");
+
+    // initially there is no new data
+    ASSERT_FALSE(chRead1.hasNewData());
+    ASSERT_FALSE(chRead2.hasNewData());
+
+    // now publish something
+    chWrite.publish();
+
+    // now there should be new data
+    ASSERT_TRUE(chRead1.hasNewData());
+    ASSERT_TRUE(chRead2.hasNewData());
+
+    // But not a second time
+    ASSERT_FALSE(chRead1.hasNewData());
+    ASSERT_FALSE(chRead2.hasNewData());
+
+    // publish a second time
+    chWrite.publish();
+
+    // now there should be again new data
+    ASSERT_TRUE(chRead1.hasNewData());
+    ASSERT_TRUE(chRead2.hasNewData());
+}

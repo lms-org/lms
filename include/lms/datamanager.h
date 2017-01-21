@@ -171,6 +171,8 @@ template <typename T> struct Object : public FakeObject<T> {
 class DataChannelInternal {
 public:
     std::unique_ptr<ObjectBase> main;
+    std::mutex lastPublishMutex;
+    lms::Time lastPublish;
 
     virtual ~DataChannelInternal() {}
 
@@ -191,10 +193,10 @@ template <typename T> class DataChannel {
 
 public:
     DataChannel(std::shared_ptr<DataChannelInternal> internal)
-        : m_internal(internal) {}
-
+        : m_internal(internal), m_lastRead() {}
 protected:
     std::shared_ptr<DataChannelInternal> m_internal;
+    lms::Time m_lastRead;
 
 public:
     std::string name() const { return m_internal->name; }
@@ -238,6 +240,32 @@ public:
         } else {
             return false;
         }
+    }
+
+    /**
+     * @brief Updates the internal timestamp for this data channel.
+     * The internal timestamp is shared for all modules.
+     * @param t custom timestamp
+     */
+    void publish(lms::Time t = lms::Time::now()) {
+        std::lock_guard<std::mutex> lock(m_internal->lastPublishMutex);
+        m_internal->lastPublish = t;
+    }
+
+    /**
+     * @brief Checks if the publish() method has been called
+     * at least once for this data channel and publish has
+     * been called after the last time this check was done.
+     *
+     * You should call this method only once per cycle.
+     *
+     * @return true if publish was called
+     */
+    bool hasNewData() {
+        std::lock_guard<std::mutex> lock(m_internal->lastPublishMutex);
+        const bool hasNew = m_internal->lastPublish > m_lastRead;
+        m_lastRead = m_internal->lastPublish;
+        return hasNew;
     }
 
 protected:
