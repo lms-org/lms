@@ -358,7 +358,7 @@ void Framework::printOverview() {
 void Framework::printModuleChannelGraph() {
     const auto &graph = m_executionManager.getModuleChannelGraph();
     for(const auto &node : graph) {
-        logger.info("graph") << node.first;
+        logger.info("graph") << node.first << " " << m_dataManager.accessChannel<lms::Any>(node.first)->typeName();
         for(const auto &access : node.second) {
             logger.info("graph") << "  "
                 << access.module->getName()
@@ -497,7 +497,7 @@ void Framework::loadRecordings(const std::string &absPath, const std::vector<std
         std::string path = absPath + "/" + ch;
         logger.info() << "Loading channel " << ch << " from " + path;
         std::fstream &stream = m_recordingStreams[ch];
-        stream.open(path, std::fstream::out);
+        stream.open(path, std::fstream::in);
     }
 }
 
