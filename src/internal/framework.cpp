@@ -218,7 +218,12 @@ bool Framework::cycle() {
         std::lock_guard<std::mutex> lock(m_recordingMutex);
         if(m_recordingState == RecordingState::LOAD) {
             for(auto &stream : m_recordingStreams) {
-                m_dataManager.writeChannel<lms::Any>(stream.first).deserialize(stream.second);
+                try {
+                    m_dataManager.writeChannel<lms::Any>(stream.first).deserialize(stream.second);
+                } catch(std::exception &ex) {
+                    // jump to beginning in case of an error
+                    stream.second.seekg(0, std::ios::beg);
+                }
             }
         }
     }
