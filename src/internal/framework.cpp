@@ -323,6 +323,7 @@ void Framework::addFlag(const std::string &flag) {
 
 void Framework::signal(int signal) {
     switch(signal) {
+    case SIGFPE:
     case SIGSEGV:
         {
         std::ofstream of(std::string("/tmp/lms-segfault-") +
