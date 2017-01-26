@@ -329,6 +329,7 @@ void Framework::signal(int signal) {
                          std::to_string(getpid()) + "-" + std::to_string(std::time(NULL)) + ".txt");
         printStacktrace(of);
         of.close();
+        shutdown();
         _exit(1);
         }
         break;
