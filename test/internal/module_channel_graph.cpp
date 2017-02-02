@@ -5,21 +5,28 @@ TEST(ModuleChannelGraph, readChannel) {
     using MCG = lms::internal::ModuleChannelGraph<int>;
     MCG mcg;
 
-    mcg.readChannel("INPUT", 1, 0);
+    ASSERT_TRUE(mcg.readChannel("INPUT", 1, 0));
 
     ASSERT_TRUE(mcg.isReaderOrWriter("INPUT", 1));
     ASSERT_FALSE(mcg.isReaderOrWriter("INPUT", 2));
     ASSERT_FALSE(mcg.isReaderOrWriter("OUTPUT", 1));
+
+    // reading or writing a second should change the graph
+    ASSERT_FALSE(mcg.readChannel("INPUT", 1, 0));
+    ASSERT_FALSE(mcg.writeChannel("INPUT", 1, 0));
 }
 
 TEST(ModuleChannelGraph, writeChannel) {
     lms::internal::ModuleChannelGraph<int> mcg;
 
-    mcg.writeChannel("OUTPUT", 2, 0);
+    ASSERT_TRUE(mcg.writeChannel("OUTPUT", 2, 0));
 
     ASSERT_TRUE(mcg.isReaderOrWriter("OUTPUT", 2));
     ASSERT_FALSE(mcg.isReaderOrWriter("OUTPUT", 1));
     ASSERT_FALSE(mcg.isReaderOrWriter("INPUT", 2));
+
+    ASSERT_FALSE(mcg.readChannel("OUTPUT", 2, 0));
+    ASSERT_FALSE(mcg.writeChannel("OUTPUT", 2, 0));
 }
 
 TEST(ModuleChannelGraph, generateDAG) {

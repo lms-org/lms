@@ -25,17 +25,31 @@ public:
     typedef std::unordered_map<std::string, std::vector<Access>> GraphType;
     GraphType m_data;
 
-    void readChannel(const std::string &channel, const T &module,
+    /**
+     * @brief readChannel An edge from channel to module is inserted into the graph.
+     * @return  true, if an edge was inserted
+     */
+    bool readChannel(const std::string &channel, const T &module,
                      int priority = 0) {
         if (!isReaderOrWriter(channel, module)) {
             m_data[channel].push_back({module, MCGPermission::READ, priority});
+            return true;
+        } else {
+            return false;
         }
     }
 
-    void writeChannel(const std::string &channel, const T &module,
+    /**
+     * @brief An edge from module to channel is inserted into the graph.
+     * @return true, if an edge was inserted
+     */
+    bool writeChannel(const std::string &channel, const T &module,
                       int priority = 0) {
         if (!isReaderOrWriter(channel, module)) {
             m_data[channel].push_back({module, MCGPermission::WRITE, priority});
+            return true;
+        } else {
+            return false;
         }
     }
 
