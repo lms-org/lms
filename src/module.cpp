@@ -87,16 +87,18 @@ std::string Module::mapChannel(const std::string &channelName) {
 
 void Module::gainReadAccess(const std::string &channelName) {
     auto mapped = dfunc()->m_info.mapChannel(channelName);
-    dfunc()->m_fw->executionManager().getModuleChannelGraph().readChannel(mapped.first, this,
-                                                            mapped.second);
-    dfunc()->m_fw->executionManager().invalidate();
+    if(dfunc()->m_fw->executionManager().getModuleChannelGraph().readChannel(mapped.first, this,
+                                                            mapped.second)) {
+        dfunc()->m_fw->executionManager().invalidate();
+    }
 }
 
 void Module::gainWriteAccess(const std::string &channelName) {
     auto mapped = dfunc()->m_info.mapChannel(channelName);
-    dfunc()->m_fw->executionManager().getModuleChannelGraph().writeChannel(mapped.first, this,
-                                                             mapped.second);
-    dfunc()->m_fw->executionManager().invalidate();
+    if(dfunc()->m_fw->executionManager().getModuleChannelGraph().writeChannel(mapped.first, this,
+                                                             mapped.second)) {
+        dfunc()->m_fw->executionManager().invalidate();
+    }
 }
 
 bool Module::isChannelInUse(const std::string &channelName) const {
