@@ -18,7 +18,8 @@ You may need additional packages depending on the use case or the required libra
 
 ###Using conan
 As lms moved to [conan](https://www.conan.io/) you can easily install it using`conan install lms/2.0@lms/stable --build=missing`
-We haven't automated the upload on [conan](https://www.conan.io/) yet ask some developer about for the remote :)
+
+We haven't automated the upload on [conan](https://www.conan.io/) yet ask some developer for the remote :)
 ###Manually
 Clone and install LMS.
 
