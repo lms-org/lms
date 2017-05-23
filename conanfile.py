@@ -5,7 +5,7 @@ class LMSConan(ConanFile):
     version = "2.0"
     settings = "os", "compiler", "build_type", "arch"
     exports = "include/*","src/*","README.md","CMakeLists.txt","cmake/*","CMakeData.txt"
-    requires = "gtest/1.8.0@lms/stable","pugixml/1.7@lms/stable","tclap/1.2.1@lms/stable","Protobuf/2.6.1@memsharded/testing"
+    requires = "gtest/1.8.0@lms/stable","pugixml/1.8@lms/stable","tclap/1.2.1@lms/stable","Protobuf/2.6.1@memsharded/testing"
     generators = "cmake"
 
     def build(self):
